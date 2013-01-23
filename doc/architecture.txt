@@ -1,0 +1,23 @@
+Equipment Reserve
+
+This is a system / application to enable efficient use of limited resources via scheduling.
+
+The file structure is
+- app root : license, readme, config files, and all the php code
+        ## index.php
+        ## institution.cfg.php - this file has all the institution specific and/or sensitive info (e.g. db connection strings)
+        ## auth.cfg.php - local config info specifically related to the authentication system that the app uses
+  + css : all the style sheets
+        ## style.css - general styling of HTML elements and web page layout
+        ## calendar.css - making a calendar look good
+        ## ui.css - styling specific to interactivity
+  + db_setup : files / documents relating to setting up the database, but unused once the app is up and running
+        ## schema.sql - the sql code necessary to create the table structure for this app
+  + doc : documentation for/about the system
+        ## architecture.txt - an overview of how the app is organized 
+  + js : local javascript; there's a jquery dir here, but only as a palce to organize plugins as the main jquerylibrary will be loaded form a cdn source
+        ## app.js - general javascript for the application
+    * jquery
+        % plugins : has sub-folders for each plugin
+
+
