@@ -1,0 +1,14 @@
+<?php
+
+# copy this file to institution.cfg.php and replace the example values
+# below with the ones appropriate for you institution
+
+$INSTITUTION_NAME = 'Institition Name';
+$APP_NAME = 'Equipment Reservations';
+
+$DB_SERVER = 'localhost';
+$DB_USER = 'eqreserveweb';
+$DB_PASS = '';
+$DB_NAME = 'eqreserve';
+
+?>

@@ -1,3 +1,5 @@
 *.cfg.php
 *~
 *.bak
+temp
+*/temp
