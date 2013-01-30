@@ -1,0 +1,55 @@
+tables:
+
+eq_groups - top-level organizational unit; permisions/roles are managed with respect to eq groups
+    name
+    descr
+    scheduling_rule_id - required
+    
+eq_subgroups
+    name
+    descr
+    eq_group_id
+    scheduling_rule_id - optional, if empty refer to eq_group one
+
+eq_items
+    name
+    descr
+    eq_subgroup_id
+    scheduling_rule_id - optional, if empty refer to eq_subgroup one
+    
+users - linked to / derived from LDAP info
+    username
+    fname
+    lname
+    email
+    advisor
+    
+groups - linked to / derived from LDAP info
+    name: fac, staff, student, org unit, classes/courses, etc.('none' is implied by a lack of an entry in the link_user_groups table)
+    
+link_user_groups
+    user_id
+    group_id
+
+roles
+    name: admin, manager, user ('none' is implied by a lack of an entry in the link_user_roles table)
+    
+link_entity_roles_eq_groups
+    entity_id - foreign key into either the user table or the groups table
+    entity_type : user, group
+    role_id
+    eq_group_id
+
+time_blocks
+    type: not_available, admin_reserve, user_reserve
+    user_id - link to the user that created the block
+    block_group - a unique id, but not tied to another table
+    replication: solo, group, indefinite
+    start_time
+    end_time
+        
+scheduling_rules
+    start_minute - comma separated list of minutes of the hour on which a time block may be created
+    min_duration_minutes - smalled allowed spand between time block start and end
+    max_duration_minutes - largest allowed spand between time block start and end
+    duration_chunk_minutes - block time span must be an integer multiple of this
