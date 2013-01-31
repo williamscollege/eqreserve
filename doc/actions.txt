@@ -1,0 +1,308 @@
+Equipment Reserve Actions
+
+A list of actions that the people using the system can take, and the role(s) necessary to take each action.
+
+------------------------------------
+ALL USERS
+------------------------------------
+
+View index page w/ log in form
+    reqs: 
+        currently in an unauthenticated session
+    effects:
+        WEB:
+            display tool title & other relevant public info
+            display log in form (https)
+        
+Log in
+    reqs:
+        has an LDAP account
+        currently in an unauthenticated session
+    effects:
+        WEB:
+            establish an authenticated session
+        DB:
+            if no eqreserve users table entry, create one and associated groups (if needed) and link_users_groups
+            else update users table, groups, and link_users_groups
+        LOG?:
+            track user log in event
+
+Log out
+    reqs:
+        currently in an authenticated session
+    effects:
+        WEB:
+            unauthenticate the session
+        LOG?:
+            track user log out event
+
+View index page w/ tool active
+    reqs: 
+        currently in an authenticated session
+    effects:
+        WEB:
+            show list of allowed system actions
+            show list of eq_groups, indicating level of access for each one
+        LOG?:
+            track user index view
+
+------------------------------------
+ADMINS
+------------------------------------
+
+System action: create user
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    notes:
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+System action: look up user
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+System action: edit base user info
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+System action: ban user
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+System action: edit user roles for eq_groups
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+System action: create equipment group
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+System action: delete equipment groups
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+------------------------------------
+MANAGERS (and ADMINS)
+------------------------------------
+
+Group action: edit group info
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: make scheduling rules for this group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create availability block for this group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create an admin reserve block for this group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: re-order sub-groups
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    notes: this can also be done individually by editing specific sub-groups, but this is conceptually a separate action
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create sub-group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: edit sub-group info
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: delete sub-group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: make scheduling rules for this sub-group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create availability block for this sub-group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create an admin reserve block for this sub-group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: re-order items within this sub-group
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    notes: this can also be done individually by editing specific items, but this is conceptually a separate action
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create item
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: edit item
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: delete item
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: make scheduling rules for this item
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create availability block for this item
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action
+
+Group action: create an admin reserve block for this item
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+        DB:
+        LOG?:
+            track user action

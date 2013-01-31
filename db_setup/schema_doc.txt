@@ -4,18 +4,22 @@ eq_groups - top-level organizational unit; permisions/roles are managed with res
     name
     descr
     scheduling_rule_id - required
+    flag_delete
     
 eq_subgroups
     name
     descr
+    ordering
     eq_group_id
     scheduling_rule_id - optional, if empty refer to eq_group one
+    flag_delete
 
 eq_items
     name
     descr
     eq_subgroup_id
     scheduling_rule_id - optional, if empty refer to eq_subgroup one
+    flag_delete
     
 users - linked to / derived from LDAP info
     username
@@ -23,33 +27,43 @@ users - linked to / derived from LDAP info
     lname
     email
     advisor
+    flag_banned
+    flag_delete
     
 groups - linked to / derived from LDAP info
     name: fac, staff, student, org unit, classes/courses, etc.('none' is implied by a lack of an entry in the link_user_groups table)
+    flag_delete
     
-link_user_groups
+link_users_groups
     user_id
     group_id
+    flag_delete
 
 roles
     name: admin, manager, user ('none' is implied by a lack of an entry in the link_user_roles table)
+    flag_delete
     
 link_entity_roles_eq_groups
     entity_id - foreign key into either the user table or the groups table
     entity_type : user, group
     role_id
     eq_group_id
+    flag_delete
 
 time_blocks
     type: not_available, admin_reserve, user_reserve
     user_id - link to the user that created the block
+    entity_id - foreign key into eq_groups, eq_subgroups, or eq_items
+    entity_type: eq_group, eq_subgroup, eq_item
     block_group - a unique id, but not tied to another table
     replication: solo, group, indefinite
     start_time
     end_time
+    flag_delete
         
 scheduling_rules
     start_minute - comma separated list of minutes of the hour on which a time block may be created
     min_duration_minutes - smalled allowed spand between time block start and end
     max_duration_minutes - largest allowed spand between time block start and end
     duration_chunk_minutes - block time span must be an integer multiple of this
+    flag_delete
