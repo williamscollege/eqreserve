@@ -2,6 +2,10 @@ Equipment Reserve Actions
 
 A list of actions that the people using the system can take, and the role(s) necessary to take each action.
 
+GENERAL DESIGN/IMPLEMENTATION NOTE: 
+    all data manipulation actions should be implemented as ajax calls when possible, 
+    but navigation uses full page reloads
+
 ------------------------------------
 ALL USERS
 ------------------------------------
@@ -54,50 +58,73 @@ System action: create user
     reqs: 
         currently in an authenticated session
         user has admin role
-    notes:
+    notes: needs an LDAP search feature
     effects:
-        WEB:
-        DB:
+        WEB: display a user creation form
+        DB: create a users record, or update it if one already exists
         LOG?:
             track user action
 
-System action: look up user
+System action: look up user or institutional (LDAP) group
     reqs: 
         currently in an authenticated session
         user has admin role
     effects:
         WEB:
-        DB:
+            display a search form
+            display result set w/ record summaries for 2+ results
+                w/ links to single user or inst group view/edit
+                visual cue users vs inst groups
+            jump directly to single user or inst_group view/edit if 1 result
+            ??? if no local user, jump to LDAP search?
+        DB: select set of users based on criteria
         LOG?:
             track user action
 
-System action: edit base user info
+System action: view/edit base user info
     reqs: 
         currently in an authenticated session
         user has admin role
     effects:
-        WEB:
-        DB:
+        WEB: display user info, with each field that can be edited in an editable form
+        DB: retrieve and update a single users record
         LOG?:
             track user action
 
-System action: ban user
+System action: view/edit institutional (LDAP) group info
     reqs: 
         currently in an authenticated session
         user has admin role
     effects:
-        WEB:
-        DB:
+        WEB: display inst_group info, with each field that can be edited in an editable form
+        DB: retrieve and update a single inst_groups record
         LOG?:
             track user action
 
-System action: edit user roles for eq_groups
+System action: globally ban a user or institutional (LDAP) group
     reqs: 
         currently in an authenticated session
         user has admin role
     effects:
+        WEB: a button/check on the edit user page
+        DB: flip the flag_is_banned field for the user
+        LOG?:
+            track user action
+
+System action: edit user/inst_group roles for eq_groups
+    reqs: 
+        currently in an authenticated session
+        user has admin role
+    notes: 
+        editing access / roles from a group perspective is described / handled in the Group actions below
+        'banned' has the same effects as 'none', but can be reported on and is actively indicative of state
+    effects:
         WEB:
-        DB:
+            select a user or entity from a list / search result, or from the view / edit form for that user / inst_group
+            for a given user or group entity, list all eq groups, with current role for each group (banned, none, user, manager)
+            allow changing of roles
+        DB: 
+            adds, or deletes (or updates - maybe? might just do ti all w/ adds/deletes) link_entity_roles_eq_groups records
         LOG?:
             track user action
 
@@ -106,10 +133,12 @@ System action: create equipment group
         currently in an authenticated session
         user has admin role
     effects:
-        WEB:
-        DB:
+        WEB: displays form for creating an equipment group
+        DB: eq_groups record created
         LOG?:
             track user action
+
+NOTE: editing an equipment group is described / handled in the Group actions below
 
 System action: delete equipment groups
     reqs: 
@@ -117,15 +146,45 @@ System action: delete equipment groups
         user has admin role
     effects:
         WEB:
+            list all equipment groups
+            'delete' them
         DB:
+            mark appropriate eq_group record(s) as deleted
         LOG?:
             track user action
 
 ------------------------------------
-MANAGERS (and ADMINS)
+MANAGERS (and ADMINS? might just require an admin to grant themselves manager role for the relevant group)
 ------------------------------------
 
-Group action: edit group info
+Group action: view/edit group info
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+            display eq group info, with each field that can be edited in an editable form
+            show list of entities that have roles in the group (sortable by entity type, name, and role) - see DKC's work w/ sortable tables
+                quick-form (ajax-y) for adding a new entity role
+                    include on-the-fly entity creation?
+            list eq sub-groups and eq items, appropriately organized
+                with link to relevant controls
+                with links to Adds for each
+            show scheduling rule, and allow editing there-of
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
+            create availability block(s)
+            create admin reserve block(s)
+            show links to any reporting
+        DB:
+            retrieve and update a single eq_groups record
+            adds, or deletes (or updates - maybe? might just do ti all w/ adds/deletes) link_entity_roles_eq_groups records
+            retrieve and update a single scheduling_rules record
+        LOG?:
+            track user action
+
+Group action: (sub-action of view/edit group) make scheduling rules for this group
     reqs: 
         currently in an authenticated session
         user has manager role for this group
@@ -135,7 +194,7 @@ Group action: edit group info
         LOG?:
             track user action
 
-Group action: make scheduling rules for this group
+Group action: (sub-action of view/edit group) create availability block for this group
     reqs: 
         currently in an authenticated session
         user has manager role for this group
@@ -145,7 +204,7 @@ Group action: make scheduling rules for this group
         LOG?:
             track user action
 
-Group action: create availability block for this group
+Group action: (sub-action of view/edit group) create an admin reserve block for this group
     reqs: 
         currently in an authenticated session
         user has manager role for this group
@@ -155,17 +214,7 @@ Group action: create availability block for this group
         LOG?:
             track user action
 
-Group action: create an admin reserve block for this group
-    reqs: 
-        currently in an authenticated session
-        user has manager role for this group
-    effects:
-        WEB:
-        DB:
-        LOG?:
-            track user action
-
-Group action: re-order sub-groups
+Group action: (sub-action of view/edit group) re-order sub-groups
     reqs: 
         currently in an authenticated session
         user has manager role for this group
@@ -176,7 +225,7 @@ Group action: re-order sub-groups
         LOG?:
             track user action
 
-Group action: create sub-group
+Group action: (sub-action of view/edit group) create sub-group
     reqs: 
         currently in an authenticated session
         user has manager role for this group
@@ -185,6 +234,27 @@ Group action: create sub-group
         DB:
         LOG?:
             track user action
+
+Group action: REPORTS on eq_group 
+    reqs: 
+        currently in an authenticated session
+        user has manager role for this group
+    effects:
+        WEB:
+            over all activity, per item
+                # users
+                % in use
+                ????
+                specific users and times
+            filter by time
+                all
+                historical
+                upcoming/future
+        DB: various SELECTs
+        LOG?:
+            track user action
+
+-------------------
 
 Group action: edit sub-group info
     reqs: 
