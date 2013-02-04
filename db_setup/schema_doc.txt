@@ -17,6 +17,7 @@ eq_subgroups
 eq_items
     name
     descr
+    ordering
     eq_subgroup_id
     scheduling_rule_id - optional, if empty refer to eq_subgroup one
     flag_delete
@@ -34,16 +35,16 @@ inst_groups - linked to / derived from LDAP info
     name: fac, staff, student, org unit, classes/courses, etc.('none' is implied by a lack of an entry in the link_user_groups table)
     flag_delete
     
-link_users_groups
+link_users_inst_groups
     user_id
     group_id
     flag_delete
 
 roles
-    name: admin, manager, user ('none' is implied by a lack of an entry in the link_user_roles table)
+    name: admin, manager, consumer ('none' is implied by a lack of an entry in the link_user_roles table)
     flag_delete
     
-link_entity_roles_eq_groups
+link_entities_roles_eq_groups
     entity_id - foreign key into either the user table or the groups table
     entity_type : user, group
     role_id
@@ -51,7 +52,7 @@ link_entity_roles_eq_groups
     flag_delete
 
 time_blocks
-    type: not_available, admin_reserve, user_reserve
+    type: not_available, manager_reserve, consumer_reserve
     user_id - link to the user that created the block
     entity_id - foreign key into eq_groups, eq_subgroups, or eq_items
     entity_type: eq_group, eq_subgroup, eq_item

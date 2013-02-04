@@ -57,7 +57,7 @@ ADMINS
 System action: create user
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     notes: needs an LDAP search feature
     effects:
         WEB: display a user creation form
@@ -68,7 +68,7 @@ System action: create user
 System action: look up user or institutional (LDAP) group
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     effects:
         WEB:
             display a search form
@@ -84,9 +84,13 @@ System action: look up user or institutional (LDAP) group
 System action: view/edit base user info
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     effects:
-        WEB: display user info, with each field that can be edited in an editable form
+        WEB:
+            display user info, with each field that can be edited in an editable form
+            display user roles
+                direct - via user id
+                indirect - via group membership
         DB: retrieve and update a single users record
         LOG?:
             track user action
@@ -94,7 +98,7 @@ System action: view/edit base user info
 System action: view/edit institutional (LDAP) group info
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     effects:
         WEB: display inst_group info, with each field that can be edited in an editable form
         DB: retrieve and update a single inst_groups record
@@ -104,7 +108,7 @@ System action: view/edit institutional (LDAP) group info
 System action: globally ban a user or institutional (LDAP) group
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     effects:
         WEB: a button/check on the edit user page
         DB: flip the flag_is_banned field for the user
@@ -114,14 +118,14 @@ System action: globally ban a user or institutional (LDAP) group
 System action: edit user/inst_group roles for eq_groups
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     notes: 
         editing access / roles from a group perspective is described / handled in the Group actions below
         'banned' has the same effects as 'none', but can be reported on and is actively indicative of state
     effects:
         WEB:
             select a user or entity from a list / search result, or from the view / edit form for that user / inst_group
-            for a given user or group entity, list all eq groups, with current role for each group (banned, none, user, manager)
+            for a given user or group entity, list all eq groups, with current role for each group (banned, none, customer, manager)
             allow changing of roles
         DB: 
             adds, or deletes (or updates - maybe? might just do ti all w/ adds/deletes) link_entity_roles_eq_groups records
@@ -131,7 +135,7 @@ System action: edit user/inst_group roles for eq_groups
 System action: create equipment group
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     effects:
         WEB: displays form for creating an equipment group
         DB: eq_groups record created
@@ -140,14 +144,15 @@ System action: create equipment group
 
 NOTE: editing an equipment group is described / handled in the Group actions below
 
-System action: delete equipment groups
+System action: delete equipment group
     reqs: 
         currently in an authenticated session
-        user has admin role
+        current user has admin role
     effects:
         WEB:
             list all equipment groups
-            'delete' them
+            confirm action check
+            'delete' selected one
         DB:
             mark appropriate eq_group record(s) as deleted
         LOG?:
@@ -160,85 +165,102 @@ MANAGERS (and ADMINS? might just require an admin to grant themselves manager ro
 Group action: view/edit group info
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
+    notes: there are many actions associated with groups and which would appear on main group view page, these are detailed below
     effects:
         WEB:
             display eq group info, with each field that can be edited in an editable form
+        DB:
+            retrieve and update a single eq_groups record
+        LOG?:
+            track user action
+
+Group action: (sub-action of view/edit group) manage entity roles for this group
+    reqs: 
+        currently in an authenticated session
+        current user has manager role for this group
+    effects:
+        WEB:
             show list of entities that have roles in the group (sortable by entity type, name, and role) - see DKC's work w/ sortable tables
                 quick-form (ajax-y) for adding a new entity role
                     include on-the-fly entity creation?
-            list eq sub-groups and eq items, appropriately organized
-                with link to relevant controls
-                with links to Adds for each
-            show scheduling rule, and allow editing there-of
-            show overview of scheduling/reservations for the group
-                calendar format (days horizontally and items (sub-grouped) vertically?)
-                list format
-            create availability block(s)
-            create admin reserve block(s)
-            show links to any reporting
         DB:
-            retrieve and update a single eq_groups record
             adds, or deletes (or updates - maybe? might just do ti all w/ adds/deletes) link_entity_roles_eq_groups records
-            retrieve and update a single scheduling_rules record
         LOG?:
             track user action
 
 Group action: (sub-action of view/edit group) make scheduling rules for this group
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
+            show scheduling rule, and allow editing there-of
         DB:
+            retrieve and update a single scheduling_rules record
         LOG?:
             track user action
 
 Group action: (sub-action of view/edit group) create availability block for this group
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
         DB:
+            create availability block(s)
         LOG?:
             track user action
 
-Group action: (sub-action of view/edit group) create an admin reserve block for this group
+Group action: (sub-action of view/edit group) create an manager reserve block for this group
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
         DB:
+            create manager reserve block(s) for the group
         LOG?:
             track user action
 
-Group action: (sub-action of view/edit group) re-order sub-groups
+Group action: (sub-action of view/edit group) view and re-order sub-groups and items for this group
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     notes: this can also be done individually by editing specific sub-groups, but this is conceptually a separate action
     effects:
         WEB:
+            list eq sub-groups and eq items, appropriately organized
         DB:
+            alter the ordering values for the relevant record(s)
         LOG?:
             track user action
 
-Group action: (sub-action of view/edit group) create sub-group
+Group action: (sub-action of view/edit group) create sub-group for this group
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
+            show add button at top and/or bottom of sub-group list
+            show sub-group creation form in-place (i.e. no page reload)
+            hide form on creation
+            dynamically add new sub-group info on creation / form hiding
         DB:
+            create eq_subgroups record
         LOG?:
             track user action
 
 Group action: REPORTS on eq_group 
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
             over all activity, per item
@@ -256,123 +278,290 @@ Group action: REPORTS on eq_group
 
 -------------------
 
-Group action: edit sub-group info
+THIS IS HANDLED AT THE GROUP LEVEL
+XGroup action: edit sub-group info
+X    reqs: 
+X        currently in an authenticated session
+X        current user has manager role for this group
+X    effects:
+X        WEB:
+X            in-place editing form
+X        DB:
+X            update eq_subgroups record
+X        LOG?:
+X            track user action
+
+THIS IS HANDLED AT THE GROUP LEVEL
+XGroup action: delete sub-group
+X    reqs: 
+X        currently in an authenticated session
+X        current user has manager role for this group
+X    effects:
+X        WEB:
+X            delete button
+X            confirm action check
+X        DB:
+X            mark eq_subgroups record as deleted
+X        LOG?:
+X            track user action
+
+[Group action: make scheduling rules for this sub-group
+[    reqs: 
+[        currently in an authenticated session
+[        current user has manager role for this group
+[    notes:
+[        fail back to group level rule
+[    effects:
+[        WEB:
+[        DB:
+[        LOG?:
+[            track user action
+
+[Group action: create availability block for this sub-group
+[    reqs: 
+[        currently in an authenticated session
+[        current user has manager role for this group
+[    notes:
+[        fail back to group level availability
+[    effects:
+[        WEB:
+[        DB:
+[        LOG?:
+[            track user action
+
+Group action: create an manager reserve block for this sub-group
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
         DB:
+            create manager reserve block(s) for the sub-group
         LOG?:
             track user action
 
-Group action: delete sub-group
+THIS IS HANDLED AT THE GROUP LEVEL
+XGroup action: re-order items within this sub-group
+X    reqs: 
+X        currently in an authenticated session
+X        current user has manager role for this group
+X    notes: this can also be done individually by editing specific items, but this is conceptually a separate action
+X    effects:
+X        WEB:
+X        DB:
+X        LOG?:
+X            track user action
+
+THIS IS HANDLED AT THE GROUP LEVEL
+XGroup action: create item
+X    reqs: 
+X        currently in an authenticated session
+X        current user has manager role for this group
+X    effects:
+X        WEB:
+X        DB:
+X        LOG?:
+X            track user action
+
+THIS IS HANDLED AT THE GROUP LEVEL
+XGroup action: edit item
+X    reqs: 
+X        currently in an authenticated session
+X        current user has manager role for this group
+X    effects:
+X        WEB:
+X        DB:
+X        LOG?:
+X            track user action
+
+THIS IS HANDLED AT THE GROUP LEVEL
+XGroup action: delete item
+X    reqs: 
+X        currently in an authenticated session
+X        current user has manager role for this group
+X    effects:
+X        WEB:
+X        DB:
+X        LOG?:
+X            track user action
+
+[Group action: make scheduling rules for this item
+[    reqs: 
+[        currently in an authenticated session
+[        current user has manager role for this group
+[    notes:
+[        fail back to group level availability
+[    effects:
+[        WEB:
+[        DB:
+[        LOG?:
+[            track user action
+
+[Group action: create availability block for this item
+[    reqs: 
+[        currently in an authenticated session
+[        current user has manager role for this group
+[    effects:
+[        WEB:
+[        DB:
+[        LOG?:
+[            track user action
+
+Group action: create an manager reserve block for this item
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has manager role for this group
     effects:
         WEB:
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
         DB:
+            create manager reserve block(s) for the sub-group
         LOG?:
             track user action
 
-Group action: make scheduling rules for this sub-group
+------------------------------------
+CONSUMERS (and MANAGERS and ADMINS? might require them to grant themselves the consumer role for the group...)
+------------------------------------
+
+Consumer action: see group info
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has consumer role for the group (direct or indirect)
     effects:
         WEB:
+            show eq_group info
+            show eq_subgroups - mouse over for descr
+            show eq_items - mouse over for descr and image (if the latter exists)
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
         DB:
+            many selects
         LOG?:
             track user action
 
-Group action: create availability block for this sub-group
+Consumer action: specify a reservation
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has consumer role for the group (direct or indirect)
+    notes: there's a complex interplay between choosing items and choosing times- as items are chosen, various times become unavailable, and as times are chosen various items become unavailable. Try to make UI handle this in a flexible manner...
     effects:
         WEB:
+            show overview of scheduling/reservations for the group
+                calendar format (days horizontally and items (sub-grouped) vertically?)
+                list format
+            user chooses eq_items - limited by availability
+            user specifies time block (start, end) - limited by scheduling rules and availability
         DB:
+            many selects
         LOG?:
             track user action
 
-Group action: create an admin reserve block for this sub-group
+Consumer action: create/make a reservations
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+        current user has consumer role for the group (direct or indirect)
+        reservation spec-ed by above process
+    notes: 
     effects:
         WEB:
+            post-creation, jump to the reservation view page
         DB:
+            create the relevant time blocks, linked with a unique block_group identifier
         LOG?:
             track user action
 
-Group action: re-order items within this sub-group
+Consumer action: see reservation details
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
-    notes: this can also be done individually by editing specific items, but this is conceptually a separate action
+        user is the creator/owner of the reservation
     effects:
         WEB:
+            show eq_group, eq_subgroups, eq_items, and time_blocks
         DB:
+            selects
         LOG?:
             track user action
 
-Group action: create item
+
+THIS IS HANDLED ON THE VIEW RESERVATION PAGE
+XConsumer action: delete a reservations
+X    reqs: 
+X        currently in an authenticated session
+X        current user has consumer role for the group (direct or indirect)
+X        reservation spec-ed by above process
+X    notes: handled by a button on the view page
+X    effects:
+X        WEB:
+X            confirm action check
+X            post delete head to either the reservations list or the group info page, depending on where the user last visited
+X        DB:
+X            mark the relvant time blocks as deleted
+X        LOG?:
+X            track user action
+
+
+[NOT SURE HOW / IF TO HANDLE THIS... certainly easier to have user just delete and re-create
+[    - also relatively simple to allow reductive edits (remove items, shrink times)
+[    - adding items is tricky
+[    - altering times (extending and/or shifting) is tricky
+[Consumer action: edit reservation
+[    reqs: 
+[        currently in an authenticated session
+[        user is the creator/owner of the reservation
+[    effects:
+[        WEB:
+[            show reservation details
+[            show other eq_group info
+[               sub-groups and items
+[               calendar / time list
+[            allow alteration of time blocks
+[            allow addition of items
+[            allow removal of items
+[        DB:
+[            create, alter, or delete time blocks
+[        LOG?:
+[            track user action
+
+
+------------------------------------
+USERS
+------------------------------------
+
+User action: see available groups
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
     effects:
         WEB:
+            show list of eq_groups for which the current user has access
+                direct, via user id
+                indirect, via group membership
+            indicate role in each group, and from whence the role derives)
         DB:
+            selects against
+                users
+                inst_groups
+                link_users_inst_groups
+                link_entities_roles_eq_groups
         LOG?:
             track user action
 
-Group action: edit item
+User action: see reservations list
     reqs: 
         currently in an authenticated session
-        user has manager role for this group
+    notes: this is driven by the user_id and grouped by the block_group
     effects:
         WEB:
+            show list of reservations the user has made
+                flag manager_reservations
+            show a single entry per block_group, with a list of the items/entities that are tied together in that block group
         DB:
+            selects
         LOG?:
             track user action
 
-Group action: delete item
-    reqs: 
-        currently in an authenticated session
-        user has manager role for this group
-    effects:
-        WEB:
-        DB:
-        LOG?:
-            track user action
-
-Group action: make scheduling rules for this item
-    reqs: 
-        currently in an authenticated session
-        user has manager role for this group
-    effects:
-        WEB:
-        DB:
-        LOG?:
-            track user action
-
-Group action: create availability block for this item
-    reqs: 
-        currently in an authenticated session
-        user has manager role for this group
-    effects:
-        WEB:
-        DB:
-        LOG?:
-            track user action
-
-Group action: create an admin reserve block for this item
-    reqs: 
-        currently in an authenticated session
-        user has manager role for this group
-    effects:
-        WEB:
-        DB:
-        LOG?:
-            track user action
