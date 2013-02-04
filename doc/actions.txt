@@ -176,7 +176,7 @@ System action: create equipment group
 
 NOTE: editing an equipment group is described / handled in the Group actions below
 
-System action: delete equipment group
+Group action: delete equipment group
     reqs: 
         currently in an authenticated session
         current user has admin role
@@ -237,6 +237,7 @@ Group action: (sub-action of view/edit group) create availability block for this
     reqs: 
         currently in an authenticated session
         current user has manager role for this group
+        this group has a scheduling rule
     effects:
         WEB:
             show overview of scheduling/reservations for the group
@@ -251,6 +252,7 @@ Group action: (sub-action of view/edit group) create an manager reserve block fo
     reqs: 
         currently in an authenticated session
         current user has manager role for this group
+        this group has a scheduling rule
     effects:
         WEB:
             show overview of scheduling/reservations for the group
@@ -365,6 +367,7 @@ Group action: create an manager reserve block for this sub-group
     reqs: 
         currently in an authenticated session
         current user has manager role for this group
+        this group has a scheduling rule
     effects:
         WEB:
             show overview of scheduling/reservations for the group
@@ -446,6 +449,7 @@ Group action: create an manager reserve block for this item
     reqs: 
         currently in an authenticated session
         current user has manager role for this group
+        this group has a scheduling rule
     effects:
         WEB:
             show overview of scheduling/reservations for the group
@@ -464,6 +468,7 @@ Consumer action: see group info
     reqs: 
         currently in an authenticated session
         current user has consumer role for the group (direct or indirect)
+        this group has a scheduling rule
     effects:
         WEB:
             show eq_group info
@@ -481,6 +486,7 @@ Consumer action: specify a reservation
     reqs: 
         currently in an authenticated session
         current user has consumer role for the group (direct or indirect)
+        this group has a scheduling rule
     notes: there's a complex interplay between choosing items and choosing times- as items are chosen, various times become unavailable, and as times are chosen various items become unavailable. Try to make UI handle this in a flexible manner...
     effects:
         WEB:
@@ -499,6 +505,7 @@ Consumer action: create/make a reservations
         currently in an authenticated session
         current user has consumer role for the group (direct or indirect)
         reservation spec-ed by above process
+        this group has a scheduling rule
     notes: 
     effects:
         WEB:

@@ -12,6 +12,11 @@ body {
     background-color: #ddd;
 }
 
+div {
+    margin: 3px 6px;
+    padding: 3px;
+}
+
 h1 {
     text-align: center;
 }
@@ -23,3 +28,34 @@ h2, h3, h4, h5, h6 {
     color: #777;
     font-style: italic;
 }
+
+.legend {
+    width: 120px;
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 3px 6px;
+    margin: 3px 12px;
+    float: left;
+    border: 1px solid #bbb;
+}
+
+.general_user {
+    background-color: #ddd;
+}
+
+.admin_user {
+    background-color: #edd;
+}
+
+.manager_user {
+    background-color: #ddf;
+}
+
+.consumer_user {
+    background-color: #ded;
+}
+
+.left { float: left; }
+.right { float: right; }
+.center { text-align: center; }

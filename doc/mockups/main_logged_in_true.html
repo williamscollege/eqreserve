@@ -7,9 +7,61 @@
  </head>
  <body>
 
+<div class="legend general_user">general user</div>
+<div class="legend admin_user">system admin</div>
+<div class="legend manager_user">equipment mananger</div>
+<div class="legend consumer_user">consumer</div>
+<br clear="all"/>
 <h1 class="commentary">main page, logged in</h1>
 
-<h2>MOCK UP EqReserve: </h2>
+<h2>MOCK UP EqReserve: Home</h2>
+
+<p>This page provides high-level navigation of the eqreserve system. It provides links to all the groups to which the user has access, with an indicaiton of why/how/degree of access. Admins also see admin tools and reports linked on this page. Users also access their prefs on this page (e.g. preferred contact email, displayed name, etc.).</p>
+
+<div class="right">You are logged in as <a href="">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<br clear="all"/>
+
+<p>General instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here</p>
+
+
+<div class="left">
+<h3>Equipment Groups</h3>
+<p class="admin_user">system admins will be able to drag groups to re-order them - a small drag-handle will be shown for them</p>
+ <ul>
+  <li class="manager_user"><span class="admin_user"><b>drag</b></span> <a href="">lasers</a> - you manage this group</li>
+  <li class="consumer_user"><span class="admin_user"><b>drag</b></span> <a href="">very small things</a> - you may reserve items in this group</li>
+  <li class="consumer_user"><span class="admin_user"><b>drag</b></span> <a href="">gargantuan things</a> - members of 13S-BIOL-750 may reserve items in this group</li>
+  <li class="admin_user"><span class="admin_user"><b>drag</b></span> <a href="">funky smells - you are a system admin</a><br/>
+ </ul>
+ <div class="admin_user">
+  <input type="button" value="+create a new equipment group+"/><br/>
+  <p>On clicking the above, shows in place the creation form:</p>
+  <form>
+   Name of group:<input type="text"/><br/>
+   Description of group:<input type="text"/><br/>
+   <input type="submit" value="create"/>
+  </form>
+  Once created then the link for the group shows up in the list
+ </div>
+</div>
+
+<div class="left admin_user">
+<h3>Administration</h3>
+ <ul>
+  <li><a href="">manage users</a></li>
+  <li><a href="">manage LDAP groups / courses</a></li>
+  <li><a href="">reports</a></li>
+ </ul>
+</div>
+
+
+
+<br clear="all"/>
+<br clear="all"/>
+
+<h3 class="center"><a href="">HELP</a> | <a href="">about</a></h3>
+
+<br clear="all"/>
 
  </body>
 <html>
