@@ -50,6 +50,38 @@ View index page w/ tool active
         LOG?:
             track user index view
 
+See available groups
+    reqs: 
+        currently in an authenticated session
+    effects:
+        WEB:
+            show list of eq_groups for which the current user has access
+                direct, via user id
+                indirect, via group membership
+            indicate role in each group, and from whence the role derives)
+        DB:
+            selects against
+                users
+                inst_groups
+                link_users_inst_groups
+                link_entities_roles_eq_groups
+        LOG?:
+            track user action
+
+See reservations list
+    reqs: 
+        currently in an authenticated session
+    notes: this is driven by the user_id and grouped by the block_group
+    effects:
+        WEB:
+            show list of reservations the user has made
+                flag manager_reservations
+            show a single entry per block_group, with a list of the items/entities that are tied together in that block group
+        DB:
+            selects
+        LOG?:
+            track user action
+
 ------------------------------------
 ADMINS
 ------------------------------------
@@ -528,40 +560,4 @@ X            track user action
 [        LOG?:
 [            track user action
 
-
-------------------------------------
-USERS
-------------------------------------
-
-User action: see available groups
-    reqs: 
-        currently in an authenticated session
-    effects:
-        WEB:
-            show list of eq_groups for which the current user has access
-                direct, via user id
-                indirect, via group membership
-            indicate role in each group, and from whence the role derives)
-        DB:
-            selects against
-                users
-                inst_groups
-                link_users_inst_groups
-                link_entities_roles_eq_groups
-        LOG?:
-            track user action
-
-User action: see reservations list
-    reqs: 
-        currently in an authenticated session
-    notes: this is driven by the user_id and grouped by the block_group
-    effects:
-        WEB:
-            show list of reservations the user has made
-                flag manager_reservations
-            show a single entry per block_group, with a list of the items/entities that are tied together in that block group
-        DB:
-            selects
-        LOG?:
-            track user action
 
