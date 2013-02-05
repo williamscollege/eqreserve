@@ -1,8 +1,7 @@
 X main, not logged in
 X main, logged in
 X account managment, logged in
-  manage users
-  manage groups
+X manage entities
   eq group
   eq item details
   make reservation

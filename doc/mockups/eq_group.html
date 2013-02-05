@@ -1,0 +1,108 @@
+<html xmlns="https://www.w3.org/1999/xhtml">
+ <head>
+  <title>MOCK UP EqReserve: Equipment Group</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <link rel='stylesheet' href='mockup_style.css' type='text/css' media='all' />
+ </head>
+ <body class="consumer_user">
+
+<div class="legend general_user">general user</div>
+<div class="legend admin_user">system admin</div>
+<div class="legend manager_user">equipment mananger</div>
+<div class="legend consumer_user">consumer</div>
+<br clear="all"/>
+<h1 class="commentary">Equipment Group, logged in and has access to the group</h1>
+
+<h2>MOCK UP EqReserve: Equipment Group</h2>
+
+<div class="right">You are logged in as <a href="">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<br clear="all"/>
+
+<h2>Lasers</h2>
+
+<p>Description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description</p>
+
+Managed by: <a>Prof. Rumina</a><br/>
+<br/>
+<h3>Reservation Rules</h3>
+Reservations must start and end on one of these minutes of the hour: 0,30<br/>
+The minumum length of time that can be reserved: 30 minutes<br/>
+The maximum length of time that can be reserved: 24 hours<br/>
+
+<div class="manager_user">
+<p class="commentary">manager have the above replaced with a form</p>
+<h3>Reservation Rules</h3>
+Reservations must start and end on one of these minutes of the hour: <input type="text" value="0,30"/><br/>
+The minumum length of time that can be reserved: <input type="text" value="30"/><select><option>minutes</option></select><br/>
+The maximum length of time that can be reserved: <input type="text" value="24"/><select><option>hours</option></select><br/>
+</div>
+<br/>
+<div class="right schedule_placeholder">schedule display controls</div><br clear="both"/>
+<input type="button" value="Reserve some equipment"/> <span class="commentary">causes the form / controls below to appear, and the checkboxes and radio button to appear next to the items below.</span><br/>
+<div style="border: 1px dashed black;">
+<div class="right schedule_placeholder">scheduling gui</div>
+enter values or<br/>
+user the gui to the right<br/>
+start date/time: <input type="text"/><br/>
+end date/time: <input type="text"/><br/>
+repeat: <input type="radio" name="repeatrate" checked="true"/> not repeated |
+        <input type="radio" name="repeatrate"/> daily |
+        <input type="radio" name="repeatrate"/> weekly |
+        <input type="radio" name="repeatrate"/> monthly<br/>
+<p class="commentary">repeat rates cause addition ui elements to appear to support specifying days of week, or month, and an end date</p>
+<div class="manager_user"><input type="checkbox"/> make this a manager / maintenance reservation</div>
+</p>
+</div>
+
+<ul id="items_list">
+ <li><h4>General Items</h4>
+  <ul>
+   <li><div class="left"><input type="checkbox"/> Full mirror</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="checkbox"/> Half mirror</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="checkbox"/> Half-gainer</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="checkbox"/> Gainer-loser</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>
+  </ul>
+ </li>
+ <li><h4>Beam Generators</h4>
+  <ul>
+   <li><div class="left"><input type="radio" name="r_bg"/> Red</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="radio" name="r_bg"/> Green</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="radio" name="r_bg"/> Plaid</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>
+  </ul>
+ </li>
+ <li><h4>Lenses</h4>
+  <ul>
+   <li><div class="left"><input type="radio" name="r_l"/> Concentrater</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="radio" name="r_l"/> Diffuser</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="radio" name="r_l"/> Bifocal</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>
+  </ul>
+ </li>
+ <li><div class="left manager_user"><input type="button" value="+add a sub-group+"/></li>
+</ul>
+
+<br clear="both"/>
+<br/>
+<input type="button" value="View reservations as a list"/>
+<div style="border: 1px dashed black;">
+list of reservations (as opposed to calendar / gui view)
+</div>
+
+
+<hr>
+
+<div class="manager_user">
+user / entity access controls for this eq group
+</div>
+
+<hr>
+
+<div class="manager_user">
+reports for this group
+</div>
+
+ </body>
+<html>

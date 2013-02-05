@@ -1,7 +1,6 @@
 html {
     background-color: #000;
     margin: 0;
-    padding: 1 0 0 0;
 }
 
 body {
@@ -59,3 +58,15 @@ h2, h3, h4, h5, h6 {
 .left { float: left; }
 .right { float: right; }
 .center { text-align: center; }
+
+#items_list li {
+    list-style: none;
+    clear: both;
+}
+
+.schedule_placeholder {
+    width: 720px;
+    height: 18px;
+    background-color: #999;
+    text-align: center;
+}
