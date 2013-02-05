@@ -1,0 +1,140 @@
+<html xmlns="https://www.w3.org/1999/xhtml">
+ <head>
+  <title>MOCK UP EqReserve: manage entities</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <link rel='stylesheet' href='mockup_style.css' type='text/css' media='all' />
+ </head>
+ <body class="admin_user">
+
+<div class="legend general_user">general user</div>
+<div class="legend admin_user">system admin</div>
+<div class="legend manager_user">equipment mananger</div>
+<div class="legend consumer_user">consumer</div>
+<br clear="all"/>
+<h1 class="commentary">manage entities, system admin</h1>
+
+<h2>MOCK UP EqReserve: manage entities</h2>
+<div class="right">You are logged in as <a href="">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<br clear="all"/>
+
+<div class="commentary">If the search for the user or group does not find any results in the eq reserve sysem it queries the LDAP system and then creates the user/s and/or group/s in eq reserve if it gets any results from LDAP.</div>
+
+Find:<input type="text" value=""/><br/>
+<input type="button" value="all"/> <input type="button" value="users"/> <input type="button" value="Wms Groups"/>
+
+<br/><br/>
+
+<hr/>
+<h3 class="commentary">sample multi results - search for 'biol'</h3>
+
+<a href="">person: Jared Curbiol</a><br/>
+<a href="">person: Nin Abiolo</a><br/>
+<a href="">group: 13S-BIOL-101</a><br/>
+<a href="">group: 13S-BIOL-105</a><br/>
+<a href="">group: 13S-BIOL-248</a><br/>
+<a href="">group: 13S-BIOL-750 Very Advanced Biology</a><br/>
+
+
+<br/><br/>
+
+<hr/>
+<h3 class="commentary">sample user result</h3>
+
+Username: pgr1<br/>
+First name: Poa<br/>
+Last name: Rumina<br/>
+<br/>
+Is banned? <input type="checkbox"/><br/>
+<br/>
+Screen name:<input type="text" value="Prof. Rumina"/><br/>
+Email: Poa.G.Rumina@williams.edu<br/>
+Phone: <input type="text" value=""/><br/>
+<br/>
+Williams groups:<br/>
+	Faculty<br/>
+	13S-BIOL-101<br/>
+	13S-BIOL-248<br/>
+	13S-BIOL-750<br/>
+
+<br/>
+<br/>
+
+<h3>Access</h3>
+
+<table>
+ <tr><td>group</td><td>type</td><td>how</td></tr>
+ <tr><td><a href="">lasers</a></td><td>consumer</td><td>member of <a href="">13S-BIOL-750 (Very Advanced Biology)</a></td></tr>
+ <tr><td><a href="">lasers</a></td><td><select><option>manager</option></select></td><td>direct</td></tr>
+ <tr><td><a href="">very small things</a></td><td><select><option>consumer</option></select></td><td>direct</td></tr>
+ <tr><td><a href="">gargantuan things</a></td><td><select><option>none</option></select></td><td></td></tr>
+ <tr><td><a href="">funky smells</a></td><td><select><option>manager</option></select></td><td>direct</td></tr>
+ <tr><td><a href="">other things</a></td><td><select><option>none</option></select></td><td></td></tr>
+</table>
+
+<br/>
+<br/>
+
+<h3>Upcoming Reserves</h3>
+
+<table>
+ <tr><td>time</td><td>equipment</td></tr>
+ <tr><td>2013/02/17 9:00PM-11:00PM</td><td><a href="">very small things: tweezers A, magnifier B</a></td></tr>
+</table>
+
+<br/>
+<br/>
+
+<h3>Historical Reserves</h3>
+
+<table>
+ <tr><td>time</td><td>equipment</td></tr>
+ <tr><td>2012/11/22 3:00PM-8:00PM</td><td><a href="">very small things: tweezers B, magnifier C, lights A</a></td></tr>
+</table>
+
+
+<br/><br/>
+
+<hr/>
+<h3 class="commentary">sample group result</h3>
+
+Group: 13S-BIOL-750<br/>
+
+Screen name:<input type="text" value="Very Advanced Biology"/><br/>
+
+<br/>
+<br/>
+
+<h3>Access</h3>
+
+<table>
+ <tr><td>group</td><td>type</td><td>how</td></tr>
+ <tr><td><a href="">lasers</a></td><td><select><option>consumer</option></select></td></tr>
+ <tr><td><a href="">very small things</a></td><td><select><option>none</option></select></td></tr>
+ <tr><td><a href="">gargantuan things</a></td><td><select><option>none</option></select></td></tr>
+ <tr><td><a href="">funky smells</a></td><td><select><option>none</option></select></td></tr>
+ <tr><td><a href="">other things</a></td><td><select><option>none</option></select></td></tr>
+</table>
+
+<br/>
+<br/>
+
+<h3>Upcoming Reserves</h3>
+
+<table>
+ <tr><td>user</td><td>time</td><td>equipment</td></tr>
+ <tr><td><a href="">Violet Bovinea</a></td><td>2013/02/17 9:00PM-11:00PM</td><td><a href="">lasers : nose cone A, tray B, computer A</a></td></tr>
+</table>
+
+<br/>
+<br/>
+
+<h3>Historical Reserves</h3>
+
+<table>
+ <tr><td>user</td><td>time</td><td>equipment</td></tr>
+ <tr><td><a href="">Violet Bovinea</a><td>2012/11/22 3:00PM-8:00PM</td><td><a href="">lasers : nose cone B, tray A, computer A</a></td></tr>
+</table>
+
+ </body>
+<html>

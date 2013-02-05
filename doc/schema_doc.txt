@@ -40,6 +40,14 @@ link_users_inst_groups
     group_id
     flag_delete
 
+comm_prefs - allows a user to set their communication preferences w.r.t. a group
+    user_id
+    eq_group_id
+    flag_contact_on_reserve_create
+    flag_contact_on_reserve_cancel
+    
+    
+
 roles
     name: admin, manager, consumer ('none' is implied by a lack of an entry in the link_user_roles table)
     flag_delete
