@@ -6,8 +6,7 @@ PROJECT:
 	Equipment Reserve (eqreserve)
 
 TODO:
-	link_entities_roles_eq_groups, entity_id, entity_type
-	time_block_groups	
+	time_block_groups
 	all TODO items
 
 NOTES:
@@ -88,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`inst_groups` (
     `name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='inst_groups are linked to and derived from LDAP info;';
-/* TODO: name: faculty, staff, student, org unit, classes/courses, none, etc. ("none" is implied by a lack of an entry in the link_user_groups table) */
+/* name: faculty, staff, student, org unit, classes/courses, none, etc. ("none" is implied by a lack of an entry in the link_user_groups table) */
 
 
 CREATE TABLE IF NOT EXISTS `eqreserve`.`link_users_inst_groups` (
@@ -115,17 +114,19 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`roles` (
     `name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
-/* TODO: name: admin, manager, consumer ("none" is implied by a lack of an entry in the link_entities_roles_eq_groups table) */
+/* name: admin, manager, consumer ("none" is implied by a lack of an entry in the link_entities_roles_eq_groups table) */
 
 
 CREATE TABLE IF NOT EXISTS `eqreserve`.`link_entities_roles_eq_groups` (
-    `entity_id` INT NOT NULL,
     `entity_type` VARCHAR(255) NULL,
     `role_id` INT NOT NULL,
     `eq_group_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='entity_id - foreign key into either the user table or the groups table; entity_type : user, group;';
-/* TODO: FK: ?entity_id? */
+/* This is an Entity Table (single inheritance table), meaning it is a linking table that links dependant upon the value of entity_type */
+/* entity_type: user, group  */
+/* FK: roles.role_id */
+/* FK: eq_groups.eq_group_id */
 
 
 CREATE TABLE IF NOT EXISTS `eqreserve`.`link_items_time_block_groups` (
@@ -143,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`time_block_groups` (
     `notes` TEXT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
-/* TODO: type: manager_reserve, consumer_reserve */
+/* type: manager_reserve, consumer_reserve */
 
 
 CREATE TABLE IF NOT EXISTS `eqreserve`.`time_blocks` (
