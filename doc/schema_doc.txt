@@ -4,8 +4,8 @@ eq_groups - top-level organizational unit; permisions/roles are managed with res
     name
     descr
     start_minute - comma separated list of minutes of the hour on which a time block may be created (e.g. 0,30)
-    min_duration_minutes - smalled allowed spand between time block start and end
-    max_duration_minutes - largest allowed spand between time block start and end
+    min_duration_minutes - smallest allowed span between time block start and end
+    max_duration_minutes - largest allowed span between time block start and end
     duration_chunk_minutes - block time span must be an integer multiple of this
     flag_delete
     
