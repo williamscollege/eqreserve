@@ -14,24 +14,35 @@
 <br clear="all"/>
 <h1 class="commentary">main page, logged in</h1>
 
-<h2>MOCK UP EqReserve: Home</h2>
+<h2><a href="main_logged_in_true.html">MOCK UP EqReserve</a>: Home</h2>
 
 <p>This page provides high-level navigation of the eqreserve system. It provides links to all the groups to which the user has access, with an indicaiton of why/how/degree of access. Admins also see admin tools and reports linked on this page. Users also access their prefs on this page (e.g. preferred contact email, displayed name, etc.).</p>
 
-<div class="right">You are logged in as <a href="">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<div class="right">You are logged in as <a href="account_mgt.html">Violet Bovinea</a>. <input type="button" value="logout"/></div>
 <br clear="all"/>
 
 <p>General instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here general instructions here</p>
 
+<div>
+
+<h3>Your reservations coming up in the next 3 days</h3>
+
+<table>
+ <tr><td>time</td><td>equipment</td></tr>
+ <tr class="manager_user"><td><a href="view_reservation.html">2013/02/17 9:00PM-11:00PM</a></td><td><a href="eq_group.html">MANAGER RESERVE lasers : diffuser, refractor, reflector</a></td></tr>
+ <tr class="consumer_user"><td><a href="view_reservation.html">2013/02/19 11:30AM-4:00PM</a></td><td><a href="eq_group.html">very small things : miniscope, microscope, nanoscope</a></td></tr>
+</table>
+
+</div>
 
 <div class="left">
 <h3>Equipment Groups</h3>
 <p class="admin_user">system admins will be able to drag groups to re-order them - a small drag-handle will be shown for them</p>
  <ul>
-  <li class="manager_user"><span class="admin_user"><b>drag</b></span> <a href="">lasers</a> - you manage this group</li>
-  <li class="consumer_user"><span class="admin_user"><b>drag</b></span> <a href="">very small things</a> - you may reserve items in this group</li>
-  <li class="consumer_user"><span class="admin_user"><b>drag</b></span> <a href="">gargantuan things</a> - members of 13S-BIOL-750 may reserve items in this group</li>
-  <li class="admin_user"><span class="admin_user"><b>drag</b></span> <a href="">funky smells - you are a system admin</a><br/>
+  <li class="manager_user"><span class="admin_user"><b>drag</b></span> <a href="eq_group.html">lasers</a> - you manage this group</li>
+  <li class="consumer_user"><span class="admin_user"><b>drag</b></span> <a href="eq_group.html">very small things</a> - you may reserve items in this group</li>
+  <li class="consumer_user"><span class="admin_user"><b>drag</b></span> <a href="eq_group.html">gargantuan things</a> - members of 13S-BIOL-750 may reserve items in this group</li>
+  <li class="admin_user"><span class="admin_user"><b>drag</b></span> <a href="eq_group.html">funky smells - you are a system admin</a><br/>
  </ul>
  <div class="admin_user">
   <input type="button" value="+create a new equipment group+"/><br/>
@@ -48,8 +59,8 @@
 <div class="left admin_user">
 <h3>Administration</h3>
  <ul>
-  <li><a href="">manage users</a></li>
-  <li><a href="">manage LDAP groups / courses</a></li>
+  <li><a href="manage_entities.html">manage users</a></li>
+  <li><a href="manage_entities.html">manage LDAP groups / courses</a></li>
   <li><a href="">reports</a></li>
  </ul>
 </div>

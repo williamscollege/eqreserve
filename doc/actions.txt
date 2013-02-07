@@ -363,20 +363,20 @@ X            track user action
 [        LOG?:
 [            track user action
 
-Group action: create an manager reserve block for this sub-group
-    reqs: 
-        currently in an authenticated session
-        current user has manager role for this group
-        this group has a scheduling rule
-    effects:
-        WEB:
-            show overview of scheduling/reservations for the group
-                calendar format (days horizontally and items (sub-grouped) vertically?)
-                list format
-        DB:
-            create manager reserve block(s) for the sub-group
-        LOG?:
-            track user action
+[Group action: create an manager reserve block for this sub-group
+[    reqs: 
+[        currently in an authenticated session
+[        current user has manager role for this group
+[        this group has a scheduling rule
+[    effects:
+[        WEB:
+[            show overview of scheduling/reservations for the group
+[                calendar format (days horizontally and items (sub-grouped) vertically?)
+[                list format
+[        DB:
+[            create manager reserve block(s) for the sub-group
+[        LOG?:
+[            track user action
 
 THIS IS HANDLED AT THE GROUP LEVEL
 XGroup action: re-order items within this sub-group
@@ -450,6 +450,7 @@ Group action: create an manager reserve block for this item
         currently in an authenticated session
         current user has manager role for this group
         this group has a scheduling rule
+    notes: the UI for this is the same as consumer reservation, but there's a checkbox to make it a manager reservation; ALSO, the back-end implementation is the same, except- conflicts do not cause an abort, over-rides of non-manager reservations send an alert to the person that made the other reservation, and the other reservation is removed/deleted
     effects:
         WEB:
             show overview of scheduling/reservations for the group
@@ -500,7 +501,7 @@ Consumer action: specify a reservation
         LOG?:
             track user action
 
-Consumer action: create/make a reservations
+Consumer action: (related to the above) create/make a reservations
     reqs: 
         currently in an authenticated session
         current user has consumer role for the group (direct or indirect)

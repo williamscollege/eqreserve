@@ -3,7 +3,10 @@ tables:
 eq_groups - top-level organizational unit; permisions/roles are managed with respect to eq groups
     name
     descr
-    scheduling_rule_id - required
+    start_minute - comma separated list of minutes of the hour on which a time block may be created (e.g. 0,30)
+    min_duration_minutes - smalled allowed spand between time block start and end
+    max_duration_minutes - largest allowed spand between time block start and end
+    duration_chunk_minutes - block time span must be an integer multiple of this
     flag_delete
     
 eq_subgroups
@@ -11,7 +14,6 @@ eq_subgroups
     descr
     ordering
     eq_group_id
-    scheduling_rule_id - optional, if empty refer to eq_group one
     flag_delete
 
 eq_items
@@ -19,7 +21,6 @@ eq_items
     descr
     ordering
     eq_subgroup_id
-    scheduling_rule_id - optional, if empty refer to eq_subgroup one
     flag_delete
     
 users - linked to / derived from LDAP info
@@ -28,6 +29,7 @@ users - linked to / derived from LDAP info
     lname
     email
     advisor
+    notes - a general text/comments field
     flag_is_banned
     flag_delete
     
@@ -43,11 +45,11 @@ link_users_inst_groups
 comm_prefs - allows a user to set their communication preferences w.r.t. a group
     user_id
     eq_group_id
+    flag_alert_on_upcoming_reservation
     flag_contact_on_reserve_create
     flag_contact_on_reserve_cancel
+    flag_delete
     
-    
-
 roles
     name: admin, manager, consumer ('none' is implied by a lack of an entry in the link_user_roles table)
     flag_delete
@@ -59,21 +61,19 @@ link_entities_roles_eq_groups
     eq_group_id
     flag_delete
 
-time_blocks
-    type: not_available, manager_reserve, consumer_reserve
+link_items_time_block_groups
+    item_id
+    time_block_group_id
+    flag_delete
+
+time_block_groups
+    type: manager_reserve, consumer_reserve
     user_id - link to the user that created the block
-    entity_id - foreign key into eq_groups, eq_subgroups, or eq_items
-    entity_type: eq_group, eq_subgroup, eq_item
-    block_group - a unique id, but not tied to another table
-    replication: solo, group, indefinite
     notes - brief descriptive text, used in emails and web displays
+    flag_delete
+
+time_blocks
+    time_block_group_id
     start_time
     end_time
-    flag_delete
-        
-scheduling_rules
-    start_minute - comma separated list of minutes of the hour on which a time block may be created
-    min_duration_minutes - smalled allowed spand between time block start and end
-    max_duration_minutes - largest allowed spand between time block start and end
-    duration_chunk_minutes - block time span must be an integer multiple of this
     flag_delete

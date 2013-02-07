@@ -14,9 +14,9 @@
 <br clear="all"/>
 <h1 class="commentary">Equipment Group, logged in and has access to the group</h1>
 
-<h2>MOCK UP EqReserve: Equipment Group</h2>
+<h2><a href="main_logged_in_true.html">MOCK UP EqReserve</a>: Equipment Group</h2>
 
-<div class="right">You are logged in as <a href="">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<div class="right">You are logged in as <a href="account_mgt.html">Violet Bovinea</a>. <input type="button" value="logout"/></div>
 <br clear="all"/>
 
 <h2>Lasers</h2>
@@ -52,6 +52,7 @@ repeat: <input type="radio" name="repeatrate" checked="true"/> not repeated |
         <input type="radio" name="repeatrate"/> monthly<br/>
 <p class="commentary">repeat rates cause addition ui elements to appear to support specifying days of week, or month, and an end date</p>
 <div class="manager_user"><input type="checkbox"/> make this a manager / maintenance reservation</div>
+Notes/comments:<br/><textarea style="width: 100%;"></textarea>
 </p>
 </div>
 
@@ -59,7 +60,18 @@ repeat: <input type="radio" name="repeatrate" checked="true"/> not repeated |
  <li><h4>General Items</h4>
   <ul>
    <li><div class="left"><input type="checkbox"/> Full mirror</div><div class="right schedule_placeholder">schedule</div></li>
-   <li><div class="left"><input type="checkbox"/> Half mirror</div><div class="right schedule_placeholder">schedule</div></li>
+   <li><div class="left"><input type="checkbox"/> Diffuser</div><div class="right schedule_placeholder">schedule</div>
+    <br clear="all"/>
+    <div style="border: 1px dashed black;">
+     <p class="commentary">on mouse over, or perhaps on click</p>
+     <img src="" width="300" height="200" class="right">
+     Name: <a href="eq_item.html">Diffuser</a><br/>
+     Description: ffuses two things<br/>
+     <br clear="all"/>
+     <div class="manager_user">managers get an editable form instead of a read-only display</div>
+    </div>
+   </li>
+   <li><div class="left"><input type="checkbox"/> Half-mirror</div><div class="right schedule_placeholder">schedule</div></li>
    <li><div class="left"><input type="checkbox"/> Half-gainer</div><div class="right schedule_placeholder">schedule</div></li>
    <li><div class="left"><input type="checkbox"/> Gainer-loser</div><div class="right schedule_placeholder">schedule</div></li>
    <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>
@@ -88,7 +100,7 @@ repeat: <input type="radio" name="repeatrate" checked="true"/> not repeated |
 <br/>
 <input type="button" value="View reservations as a list"/>
 <div style="border: 1px dashed black;">
-list of reservations (as opposed to calendar / gui view)
+<i>list</i> of reservations (as opposed to calendar / gui view)
 </div>
 
 
@@ -102,6 +114,12 @@ user / entity access controls for this eq group
 
 <div class="manager_user">
 reports for this group
+</div>
+
+<hr>
+
+<div class="manager_user">
+<input type="button" value="-delete this equipment group"/>
 </div>
 
  </body>

@@ -1,0 +1,66 @@
+<html xmlns="https://www.w3.org/1999/xhtml">
+ <head>
+  <title>MOCK UP EqReserve: view reservation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <link rel='stylesheet' href='mockup_style.css' type='text/css' media='all' />
+ </head>
+ <body class="consumer_user">
+
+<div class="legend general_user">general user</div>
+<div class="legend admin_user">system admin</div>
+<div class="legend manager_user">equipment mananger</div>
+<div class="legend consumer_user">consumer</div>
+<br clear="all"/>
+<h1 class="commentary">view reservation, creator or eq manager</h1>
+
+<h2><a href="main_logged_in_true.html">MOCK UP EqReserve</a>: View Reservation</h2>
+
+<div class="right">You are logged in as <a href="account_mgt.html">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<br clear="all"/>
+
+<div class="manager_user">
+<p class="commentary">if this is a management reservation (as opposed to a normal reservation made by someone who has manager role)</p>
+<h1 style="color: #b22;">MANAGER RESERVATION</h1>
+</div>
+
+Notes/comments:<br/><textarea style="width: 100%;">this is a very important project</textarea>
+<br/>
+<br/>
+
+The following <a href="eq_group.html">lasers</a> equipment is reserved:
+<ul>
+   <li>Diffuser
+    <br clear="all"/>
+    <div style="border: 1px dashed black;">
+     <p class="commentary">on mouse over, or perhaps on click</p>
+     <img src="" width="300" height="200" class="right">
+     Name: Diffuser<br/>
+     Description: ffuses both the things<br/>
+     <br clear="all"/>
+    </div>
+   </li>
+ <li>Refractor</li>
+ <li>Reflector</li>
+</ul>
+
+<p class="commentary">list of time blocks in this time block group, ordered from past to future; past ones grayed out, next upcoming bolded</p>
+For the following times:  <input type="button" value="cancel all"/><br/>
+<ul>
+ <li style="color:#777;">past: 2012/10/17 9:00 PM - 11:00 PM</li>
+ <li><b>2013/02/17 9:00 PM - 11:00 PM</b> <input type="button" value="edit this"/> <input type="button" value="cancel this"/>
+	<div style="border: 1px dashed black;">
+	<p class="commentary">on clicking the edit button</p>
+<div class="right schedule_placeholder">scheduling gui</div>
+	enter values or<br/>
+	user the gui to the right<br/>
+	start date/time: <input type="text"/><br/>
+	end date/time: <input type="text"/><br/>
+	<br clear="all"/>
+	</div>
+ </li>
+ <li>2013/06/17 9:00 PM - 11:00 PM <input type="button" value="edit this"/> <input type="button" value="cancel this"/></li>
+</ul>
+
+ </body>
+<html>

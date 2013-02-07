@@ -1,0 +1,65 @@
+<html xmlns="https://www.w3.org/1999/xhtml">
+ <head>
+  <title>MOCK UP EqReserve: item details</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <link rel='stylesheet' href='mockup_style.css' type='text/css' media='all' />
+ </head>
+ <body>
+
+<div class="legend general_user">general user</div>
+<div class="legend admin_user">system admin</div>
+<div class="legend manager_user">equipment mananger</div>
+<div class="legend consumer_user">consumer</div>
+<br clear="all"/>
+<h1 class="commentary">item details - possibly redundant to the summaryinfo int eh eq group page, but it makes a handy place for pseudo-reporting specific to the item</h1>
+
+<h2><a href="main_logged_in_true.html">MOCK UP EqReserve</a>: item details</h2>
+
+<div class="right">You are logged in as <a href="account_mgt.html">Violet Bovinea</a>. <input type="button" value="logout"/></div>
+<br clear="all"/>
+
+<p class="commentary">managers get editable versions of the below (e.g text fields instead of just text, spec-url for the image, etc.)</p>
+
+<h2>Diffuser</span></h2>
+<h2 class="manager_user">or else <input type="text" value="Diffuser" style="font-size: 24px;"/></h2>
+
+<h4>This item is in the <a href="eq_group.html">lasers</a> group.</h4>
+
+<div class="right" style="width: 400px;">
+<img src="" width="300" height="200">
+<div class="manager_user">img url: <input type="text" value="http://web.williams.edu/foo/bar.png"/></div>
+</div>
+
+<p>Description: ffuses two things</p>
+<div class="manager_user" style="width: 400px;">or else<br/>
+Description:<br/><textarea>ffuses two things</textarea>
+</div>
+
+<br clear="all"/>
+
+<hr/>
+
+<h3>Reservations</h3>
+
+<p class="commentary">number of reservation could get overwhelming - consider incremental, ajax-driven, load-on-demand approach</p>
+
+<h4>upcoming</h4>
+
+<table>
+ <tr><td>who</td><td>when</td><td>equipment</td></tr>
+ <tr><td><a href="account_mgt.html">Violet Bovinea</a></td><td><a href="view_reservation.html">2013/02/17 9:00PM-11:00PM</a></td><td><a href="eq_group.html">lasers : diffuser, refractor, reflector</a></td></tr>
+</table>
+
+<br clear="all"/>
+
+<h4>historical</h4>
+
+<table>
+ <tr><td>who</td><td>when</td><td>equipment</td></tr>
+ <tr><td><a href="account_mgt.html">Violet Bovinea</a></td><td><a href="view_reservation.html">2012/11/22 3:00PM-8:00PM</a></td><td><a href="eq_group.html">lasers : diffuser, tray A, computer A</a></td></tr>
+ <tr><td><a href="account_mgt.html">Prof. Rumina</a></td><td><a href="view_reservation.html">MANAGER RESERVE 2012/10/16 12:00AM- 2012/10/22 12:00AM</a></td><td><a href="eq_group.html">lasers : diffuser, reflector</a></td></tr>
+</table>
+
+ </body>
+<html>

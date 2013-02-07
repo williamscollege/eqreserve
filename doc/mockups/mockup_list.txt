@@ -2,10 +2,10 @@ X main, not logged in
 X main, logged in
 X account managment, logged in
 X manage entities
-  eq group
+X eq group
   eq item details
-  make reservation
-  view reservation
+?  make reservation
+X  view reservation
   
   
   
