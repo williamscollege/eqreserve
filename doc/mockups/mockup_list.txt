@@ -1,10 +1,10 @@
-X main, not logged in
-X main, logged in
-X account managment, logged in
-X manage entities
-X eq group
-  eq item details
-?  make reservation
+X  main, not logged in
+X  main, logged in
+X  account managment, logged in
+X  manage entities
+X  eq group
+X  eq item details
+?  make reservation - this seems it can be fully subsumed into the eq_group page
 X  view reservation
   
   
