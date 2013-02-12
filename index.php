@@ -1,7 +1,17 @@
 <?php
 require_once('head.php');
 
+?>
 
+<form id="" class="" action="">
+
+	<input type="text" id="username" name="username" value="" />
+	<input type="password" id="password" name="password" value="" />
+	<input type="submit" id="submit_login" name="submit_login" value="Submit" />
+
+</form>
+
+<?php
 
 require_once('foot.php');
 ?>
