@@ -3,10 +3,11 @@ Equipment Reserve
 This is a system / application to enable efficient use of limited resources via scheduling.
 
 The file structure is
-- app root : license, readme, config files, and all the php code
+- app root : license, readme, config files, primary php files
         ## index.php
         ## institution.cfg.php - this file has all the institution specific and/or sensitive info (e.g. db connection strings)
         ## auth.cfg.php - local config info specifically related to the authentication system that the app uses
+  + classes : various PHP class files
   + css : all the style sheets
         ## style.css - general styling of HTML elements and web page layout
         ## calendar.css - making a calendar look good
@@ -19,5 +20,36 @@ The file structure is
         ## app.js - general javascript for the application
     * jquery
         % plugins : has sub-folders for each plugin
+  + tests : automated tests (unit, functional, integration)
+    * simpletest : the SimpleTest php unit testing framework
 
+
+
+The general approach is individual PHP pages for primary navigation / functional grouping:
+    index/login/landing
+    group
+    own account
+    item details
+    reservation details
+    
+Within each functional grouping individual functions are implemented as ajax calls and/or other in-place behavior (i.e. whenever DB info/interaction is not needed then there's no reason for a call to the server).
+
+The classes fall into 2 general categories: data objects, and application infrastructure.
+
+The data object classes are all based on a root db_linked class which handles all basic MySQL DB IO and also has some static methods that handle some basic library-like DB methods (e.g. automatically correctly quote a constant, build pre-set sections of queries, etc.).
+
+The app infrastructure classes are:
+    Session - a basic session handling wrapper, with sugar methods to make other code easier to read (e.g. session.isAuthenticated)
+    AuthRoot - defines an interface that any auth module must support
+        AuthLDAP - a simple implementation of AuthRoot that uses LDAP as the authority
+    
+
+The PHP pages use a general approach of
+<?php
+include header - handles session stuff, as well as basic HTML header+ output
+
+do stuff
+
+include footer - handles any clean up necessary, as well as basic end-of-page HTML
+?>
 
