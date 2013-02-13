@@ -1,0 +1,5 @@
+<?php
+
+require_once('classes/auth_base.class.php');
+
+$AUTH = new Auth_Base();

@@ -9,13 +9,17 @@ class IndexPageAuthTest extends WebTestCase {
 		$this->assertField('password'); //$value
 	}
 
-    function testIndexLoggedIn() {
+    function testIndexLoggingIn() {
         $this->get('http://localhost/eqreserve/');
         $this->assertCookie('PHPSESSID');
-        $this->setField('username', 'Me');
-        $this->setField('password', 'Secret');
-        $this->click('Log in');        $this->assertFalse($this->assertField('username')); //$value
-        $this->assertFalse($this->assertField('password')); //$value
+        $this->setField('username', TESTINGUSER);
+        $this->setField('password', TESTINGPASSWORD);
+        
+        $this->click('Log In');
+
+        $this->assertFalse($this->setField('username','foo')); //$value
+        $this->assertFalse($this->setField('password','bar')); //$value
+        $this->assertPattern('/You are logged in as/');
     }
 
 }
