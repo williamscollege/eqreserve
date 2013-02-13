@@ -10,13 +10,6 @@ class IndexPageLoadTest extends WebTestCase {
         $this->get('http://localhost/eqreserve/');
         $this->assertNoPattern('/error/i');
         $this->assertNoPattern('/warning/i');
-        
+        $this->assertTitle(new PatternExpectation('/'.APP_NAME.': /'));
     }
-
-	function testIndexLoginForm() {
-		$this->get('http://localhost/eqreserve/');
-		$this->assertField('username'); //$value
-		$this->assertField('password'); //$value
-	}
-
 }

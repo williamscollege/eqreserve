@@ -21,7 +21,7 @@ require_once dirname(__FILE__).'/../../institution.cfg.php';
  *    @package  SimpleTest
  *    @subpackage   UnitTester
  */
-class UnitTestCaseDB extends UnitTestCase {
+abstract class UnitTestCaseDB extends UnitTestCase {
     //public $DB = 'foo';
     public $DB;
 
