@@ -2,8 +2,9 @@
 $pageTitle = 'Home';
 require_once('head.php');
 
+
 ?>
-<form id="" class="" action="">
+<form id="frmIndex" class="" type="post" action="">
 
 	<input type="text" id="username" name="username" value="" />
 	<input type="password" id="password" name="password" value="" />
