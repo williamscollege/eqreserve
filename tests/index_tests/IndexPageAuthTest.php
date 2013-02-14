@@ -1,6 +1,6 @@
 <?php
 
-class IndexPageAuthTest extends WebTestCase {
+class IndexPageAuthTest extends WebTestCaseWMS {
 
 	function testIndexNotLoggedIn() {
 		$this->get('http://localhost/eqreserve/');
@@ -19,7 +19,10 @@ class IndexPageAuthTest extends WebTestCase {
 
         $this->assertFalse($this->setField('username','foo')); //$value
         $this->assertFalse($this->setField('password','bar')); //$value
-        $this->assertPattern('/You are logged in as/');
+        $this->assertPattern('/You are logged in as '.TESTINGUSER.'/');
+
+//        $this->assertEltByIdHasAttrOfValue('logout_btn','value','log out');
+        $this->assertEltByIdHasAttrOfValue('logout_btn','value',new PatternExpectation('/log\s?out/i'));
     }
 
 }

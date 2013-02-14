@@ -11,7 +11,11 @@ if ((! isset($_SESSION['isAuthenticated'])) || (! $_SESSION['isAuthenticated']))
 //echo 'username = '.$_REQUEST['username']."\n";
 //echo 'password = '.$_REQUEST['password']."\n";
         require_once('auth.cfg.php');
-        $_SESSION['isAuthenticated'] = $AUTH->authenticate($_REQUEST['username'],$_REQUEST['password']);
+        if ($AUTH->authenticate($_REQUEST['username'],$_REQUEST['password'])) {
+            session_regenerate_id(TRUE);
+            $_SESSION['isAuthenticated'] = true;
+            $_SESSION['username'] = $_REQUEST['username'];
+        }
 //echo "post authenticate attempt\n";
 # echo '<br />isAuthenticated = '.$_SESSION['isAuthenticated']."<br />\n";
 #TESTING OUTPUT

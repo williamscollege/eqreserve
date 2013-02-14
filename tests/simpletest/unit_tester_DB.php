@@ -1,8 +1,8 @@
 <?php
 /**
- *  base include file for SimpleTest
+ *  base include file for SimpleTest, extended by CSW to have a DB connection
  *  @package    SimpleTest
- *  @subpackage UnitTester
+ *  @subpackage UnitTesterDB
  *  @version    $Id: unit_tester.php 1882 2009-07-01 14:30:05Z lastcraft $
  */
 
