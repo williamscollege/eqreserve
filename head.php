@@ -13,7 +13,9 @@ if ((! isset($_SESSION['isAuthenticated'])) || (! $_SESSION['isAuthenticated']))
         require_once('auth.cfg.php');
         $_SESSION['isAuthenticated'] = $AUTH->authenticate($_REQUEST['username'],$_REQUEST['password']);
 //echo "post authenticate attempt\n";
-//echo 'isAuthenticated = '.$_SESSION['isAuthenticated']."\n";
+# echo '<br />isAuthenticated = '.$_SESSION['isAuthenticated']."<br />\n";
+#TESTING OUTPUT
+# echo $ldap_msg;
     }    
 }
 
