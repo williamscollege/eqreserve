@@ -1,167 +1,0 @@
-[33mcommit 0ed485a9593705428469d1989dbb4065f28ddc8e[m
-Author: Chris Warren <cwarren@williams.edu>
-Date:   Tue Feb 5 17:05:38 2013 -0500
-
-    more functiona mock-up work - eq group
-
-[1mdiff --git a/doc/mockups/eq_group.html b/doc/mockups/eq_group.html[m
-[1mnew file mode 100755[m
-[1mindex 0000000..0592377[m
-[1m--- /dev/null[m
-[1m+++ b/doc/mockups/eq_group.html[m
-[36m@@ -0,0 +1,108 @@[m
-[32m+[m[32m<html xmlns="https://www.w3.org/1999/xhtml">[m[41m[m
-[32m+[m[32m <head>[m[41m[m
-[32m+[m[32m  <title>MOCK UP EqReserve: Equipment Group</title>[m[41m[m
-[32m+[m[32m  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m  <link rel='stylesheet' href='mockup_style.css' type='text/css' media='all' />[m[41m[m
-[32m+[m[32m </head>[m[41m[m
-[32m+[m[32m <body class="consumer_user">[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<div class="legend general_user">general user</div>[m[41m[m
-[32m+[m[32m<div class="legend admin_user">system admin</div>[m[41m[m
-[32m+[m[32m<div class="legend manager_user">equipment mananger</div>[m[41m[m
-[32m+[m[32m<div class="legend consumer_user">consumer</div>[m[41m[m
-[32m+[m[32m<br clear="all"/>[m[41m[m
-[32m+[m[32m<h1 class="commentary">Equipment Group, logged in and has access to the group</h1>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<h2>MOCK UP EqReserve: Equipment Group</h2>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<div class="right">You are logged in as <a href="">Violet Bovinea</a>. <input type="button" value="logout"/></div>[m[41m[m
-[32m+[m[32m<br clear="all"/>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<h2>Lasers</h2>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<p>Description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description description</p>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32mManaged by: <a>Prof. Rumina</a><br/>[m[41m[m
-[32m+[m[32m<br/>[m[41m[m
-[32m+[m[32m<h3>Reservation Rules</h3>[m[41m[m
-[32m+[m[32mReservations must start and end on one of these minutes of the hour: 0,30<br/>[m[41m[m
-[32m+[m[32mThe minumum length of time that can be reserved: 30 minutes<br/>[m[41m[m
-[32m+[m[32mThe maximum length of time that can be reserved: 24 hours<br/>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<div class="manager_user">[m[41m[m
-[32m+[m[32m<p class="commentary">manager have the above replaced with a form</p>[m[41m[m
-[32m+[m[32m<h3>Reservation Rules</h3>[m[41m[m
-[32m+[m[32mReservations must start and end on one of these minutes of the hour: <input type="text" value="0,30"/><br/>[m[41m[m
-[32m+[m[32mThe minumum length of time that can be reserved: <input type="text" value="30"/><select><option>minutes</option></select><br/>[m[41m[m
-[32m+[m[32mThe maximum length of time that can be reserved: <input type="text" value="24"/><select><option>hours</option></select><br/>[m[41m[m
-[32m+[m[32m</div>[m[41m[m
-[32m+[m[32m<br/>[m[41m[m
-[32m+[m[32m<div class="right schedule_placeholder">schedule display controls</div><br clear="both"/>[m[41m[m
-[32m+[m[32m<input type="button" value="Reserve some equipment"/> <span class="commentary">causes the form / controls below to appear, and the checkboxes and radio button to appear next to the items below.</span><br/>[m[41m[m
-[32m+[m[32m<div style="border: 1px dashed black;">[m[41m[m
-[32m+[m[32m<div class="right schedule_placeholder">scheduling gui</div>[m[41m[m
-[32m+[m[32menter values or<br/>[m[41m[m
-[32m+[m[32muser the gui to the right<br/>[m[41m[m
-[32m+[m[32mstart date/time: <input type="text"/><br/>[m[41m[m
-[32m+[m[32mend date/time: <input type="text"/><br/>[m[41m[m
-[32m+[m[32mrepeat: <input type="radio" name="repeatrate" checked="true"/> not repeated |[m[41m[m
-[32m+[m[32m        <input type="radio" name="repeatrate"/> daily |[m[41m[m
-[32m+[m[32m        <input type="radio" name="repeatrate"/> weekly |[m[41m[m
-[32m+[m[32m        <input type="radio" name="repeatrate"/> monthly<br/>[m[41m[m
-[32m+[m[32m<p class="commentary">repeat rates cause addition ui elements to appear to support specifying days of week, or month, and an end date</p>[m[41m[m
-[32m+[m[32m<div class="manager_user"><input type="checkbox"/> make this a manager / maintenance reservation</div>[m[41m[m
-[32m+[m[32m</p>[m[41m[m
-[32m+[m[32m</div>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<ul id="items_list">[m[41m[m
-[32m+[m[32m <li><h4>General Items</h4>[m[41m[m
-[32m+[m[32m  <ul>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="checkbox"/> Full mirror</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="checkbox"/> Half mirror</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="checkbox"/> Half-gainer</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="checkbox"/> Gainer-loser</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>[m[41m[m
-[32m+[m[32m  </ul>[m[41m[m
-[32m+[m[32m </li>[m[41m[m
-[32m+[m[32m <li><h4>Beam Generators</h4>[m[41m[m
-[32m+[m[32m  <ul>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="radio" name="r_bg"/> Red</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="radio" name="r_bg"/> Green</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="radio" name="r_bg"/> Plaid</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>[m[41m[m
-[32m+[m[32m  </ul>[m[41m[m
-[32m+[m[32m </li>[m[41m[m
-[32m+[m[32m <li><h4>Lenses</h4>[m[41m[m
-[32m+[m[32m  <ul>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="radio" name="r_l"/> Concentrater</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="radio" name="r_l"/> Diffuser</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left"><input type="radio" name="r_l"/> Bifocal</div><div class="right schedule_placeholder">schedule</div></li>[m[41m[m
-[32m+[m[32m   <li><div class="left manager_user"><input type="button" value="+add an item+"/></li>[m[41m[m
-[32m+[m[32m  </ul>[m[41m[m
-[32m+[m[32m </li>[m[41m[m
-[32m+[m[32m <li><div class="left manager_user"><input type="button" value="+add a sub-group+"/></li>[m[41m[m
-[32m+[m[32m</ul>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<br clear="both"/>[m[41m[m
-[32m+[m[32m<br/>[m[41m[m
-[32m+[m[32m<input type="button" value="View reservations as a list"/>[m[41m[m
-[32m+[m[32m<div style="border: 1px dashed black;">[m[41m[m
-[32m+[m[32mlist of reservations (as opposed to calendar / gui view)[m[41m[m
-[32m+[m[32m</div>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<hr>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<div class="manager_user">[m[41m[m
-[32m+[m[32muser / entity access controls for this eq group[m[41m[m
-[32m+[m[32m</div>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<hr>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m<div class="manager_user">[m[41m[m
-[32m+[m[32mreports for this group[m[41m[m
-[32m+[m[32m</div>[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m </body>[m[41m[m
-[32m+[m[32m<html>[m
-\ No newline at end of file[m
-[1mdiff --git a/doc/mockups/mockup_list.txt b/doc/mockups/mockup_list.txt[m
-[1mindex 18e2dea..581cf3e 100755[m
-[1m--- a/doc/mockups/mockup_list.txt[m
-[1m+++ b/doc/mockups/mockup_list.txt[m
-[36m@@ -1,8 +1,7 @@[m
- X main, not logged in[m
- X main, logged in[m
- X account managment, logged in[m
-[31m-  manage users[m
-[31m-  manage groups[m
-[32m+[m[32mX manage entities[m[41m[m
-   eq group[m
-   eq item details[m
-   make reservation[m
-[1mdiff --git a/doc/mockups/mockup_style.css b/doc/mockups/mockup_style.css[m
-[1mindex 49bb1fc..d4bcee1 100644[m
-[1m--- a/doc/mockups/mockup_style.css[m
-[1m+++ b/doc/mockups/mockup_style.css[m
-[36m@@ -1,7 +1,6 @@[m
- html {[m
-     background-color: #000;[m
-     margin: 0;[m
-[31m-    padding: 1 0 0 0;[m
- }[m
- [m
- body {[m
-[36m@@ -58,4 +57,16 @@[m [mh2, h3, h4, h5, h6 {[m
- [m
- .left { float: left; }[m
- .right { float: right; }[m
-[31m-.center { text-align: center; }[m
-\ No newline at end of file[m
-[32m+[m[32m.center { text-align: center; }[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m#items_list li {[m[41m[m
-[32m+[m[32m    list-style: none;[m[41m[m
-[32m+[m[32m    clear: both;[m[41m[m
-[32m+[m[32m}[m[41m[m
-[32m+[m[41m[m
-[32m+[m[32m.schedule_placeholder {[m[41m[m
-[32m+[m[32m    width: 720px;[m[41m[m
-[32m+[m[32m    height: 18px;[m[41m[m
-[32m+[m[32m    background-color: #999;[m[41m[m
-[32m+[m[32m    text-align: center;[m[41m[m
-[32m+[m[32m}[m
-\ No newline at end of file[m
