@@ -50,8 +50,9 @@ else {
 if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 ?>
 <div id="loggedInControls">
-	You are logged in as:<br />
+	You are logged in as <?php echo $_SESSION['userdata']['username'] . "." ?>
 		<?php 
+			echo "<br /><br /><b>User Info:</b><br />";
 			echo "username: " . $_SESSION['userdata']['username'] . "<br />";
 			echo "email: " . $_SESSION['userdata']['email'] . "<br />";
 			echo "fullname: " . $_SESSION['userdata']['fullname'] . "<br />";
