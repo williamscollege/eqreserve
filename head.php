@@ -2,6 +2,8 @@
 session_start();
 require_once('institution.cfg.php');
 
+$MESSAGE = '';
+
 if ((! isset($_SESSION['isAuthenticated'])) || (! $_SESSION['isAuthenticated'])) {
     if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) {
         require_once('auth.cfg.php');
@@ -10,6 +12,8 @@ if ((! isset($_SESSION['isAuthenticated'])) || (! $_SESSION['isAuthenticated']))
             $_SESSION['isAuthenticated'] = true;
             $_SESSION['userdata'] = array();
             $_SESSION['userdata']['username'] = $_REQUEST['username'];
+        } else {
+            $MESSAGE = 'Log in failed';
         }
     }
 }
@@ -30,9 +34,13 @@ else {
  </head>
  <body>
 <?php 
+if ($MESSAGE) { ?>
+  <div id="message"><?php echo $MESSAGE; ?></div><?php
+}
+
 if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 ?>
-<div id="loggedInControls">You are logged in as <?php echo $_SESSION['userdata']['username']; ?>. <form id="frmLogout" class="" type="post" action=""><input type="submit" name="logout" id="logout_btn" value="log out"/></form></div>
+<div id="loggedInControls">You are logged in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a>. <form id="frmLogout" class="" type="post" action=""><input type="submit" name="logout" id="logout_btn" value="log out"/></form></div>
 <?php
 } 
 else if ((! isset($_SESSION['isAuthenticated'])) || (! $_SESSION['isAuthenticated'])) {
