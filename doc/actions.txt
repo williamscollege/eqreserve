@@ -160,7 +160,7 @@ System action: edit user/inst_group roles for eq_groups
             for a given user or group entity, list all eq groups, with current role for each group (banned, none, customer, manager)
             allow changing of roles
         DB: 
-            adds, or deletes (or updates - maybe? might just do ti all w/ adds/deletes) link_entity_roles_eq_groups records
+            adds, or deletes (or updates - maybe? might just do to all w/ adds/deletes) link_entity_roles_eq_groups records
         LOG?:
             track user action
 
