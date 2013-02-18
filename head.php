@@ -17,6 +17,12 @@ if ((! isset($_SESSION['isAuthenticated'])) || (! $_SESSION['isAuthenticated']))
             $_SESSION['userdata']['lastname']	= $AUTH->auth_lname;
             $_SESSION['userdata']['sortname']	= $AUTH->auth_sortname;
             $_SESSION['userdata']['position']	= $AUTH->auth_position; // e.g. (STUDENT, FACULTY, STAFF)
+            
+            $_SESSION['userdata']['eq_groups']	= $AUTH->getGroups($_SESSION['userdata']['username']); // hash of groups and roles?
+            
+            if($AUTH->getGroups($_SESSION['userdata']['username'])) {
+            	
+            }
         }
         
 		# START: Debugging Info

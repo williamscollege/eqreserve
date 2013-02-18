@@ -13,14 +13,11 @@ class Auth_LDAP extends Auth_Base
 		# [run this fxn checkLDAP which utilizes the $AUTH object]
 		if ($this->checkLDAP($user,$pass,AUTH_SERVER)) {
 			# passes authentication
-			
-			# next: authorization against local database store of users
-			
 			return true;
 		}
 		else {
 	        # fails authentication
-	        return false;		
+	        return false;
 		}
 	}
 

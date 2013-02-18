@@ -118,12 +118,14 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`roles` (
 
 
 CREATE TABLE IF NOT EXISTS `eqreserve`.`link_entities_roles_eq_groups` (
-    `entity_type` VARCHAR(255) NULL,
+    `entity_id`  INT NOT NULL,
+	`entity_type` VARCHAR(255) NULL,
     `role_id` INT NOT NULL,
     `eq_group_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='entity_id - foreign key into either the user table or the groups table; entity_type : user, group;';
 /* This is an Entity Table (single inheritance table), meaning it is a linking table that links dependant upon the value of entity_type */
+/* FK: entity_id: this is the FK that will link this roles record with either the users.user_id OR eq_groups.eq_group_id  */
 /* entity_type: user, group  */
 /* FK: roles.role_id */
 /* FK: eq_groups.eq_group_id */

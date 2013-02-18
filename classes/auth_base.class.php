@@ -33,5 +33,7 @@ class Auth_Base
     }
 
     public function getGroups($user) {
+    	$this->group_name		= '';
+
     }
 }
