@@ -9,6 +9,7 @@ class Db_Linked
     //  echo $efoo->name;
 
     public $fields = array();
+    public $primaryKeyField = '';
     public $dbTable = '';
 
     public $fieldValues = array();
@@ -62,7 +63,7 @@ class Db_Linked
     public static function loadFromDbInto($identHash,&$recipient) {
         $fetchStmt = self::_buildFetchStatement($identHash,$recipient);
         $fetchStmt->execute($identHash);
-        if ($fetchStmt->rowCOunt() < 1) {
+        if ($fetchStmt->rowCount() < 1) {
             $recipient->matchesDb = false;
             return;
         }
@@ -114,10 +115,12 @@ class Db_Linked
         if ($this->matchesDb) {
             return;
         }
-        if (! $this->id) {
+        if (! $this->fieldValues[$this->primaryKeyField]) {
             $insertSql = 'INSERT INTO '.$this->dbTable.' VALUES(NULL';
             foreach ($this->fieldValues as $k=>$v) {
-                $insertSql .= ', :'.$k;
+                if ($k != $this->primaryKeyField) {
+                    $insertSql .= ', :'.$k;
+                }
             }
             $insertSql .= ')';
             $insertStmt = $this->dbConnection->prepare($insertSql);
@@ -125,11 +128,13 @@ class Db_Linked
             $this->matchesDb = true;
         } 
         else {
-            $updateSql = 'UDPATE '.$this->dbTable.' SET id=id';
+            $updateSql = 'UDPATE '.$this->dbTable.' SET '.$this->primaryKeyField.'='.$this->fieldValues[$this->primaryKeyField];
             foreach ($this->fieldValues as $k=>$v) {
-                $updateSql .= ', '.$k.' = :'.$k;
+                if ($k != $this->primaryKeyField) {
+                    $updateSql .= ', '.$k.' = :'.$k;
+                }
             }
-            $updateSql .= ' WHERE id= :id';
+            $updateSql .= ' WHERE '.$this->primaryKeyField.'= :'.$this->primaryKeyField;
             $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->fieldValues);
             $this->matchesDb = true;
