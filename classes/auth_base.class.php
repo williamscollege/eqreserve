@@ -3,25 +3,25 @@ class Auth_Base
 {
 
 	# define attributes of object
-	public $auth_msg;
-	public $auth_position;
-	public $auth_mail;
-	public $auth_lname;
-	public $auth_fname;
-	public $auth_name;
-	public $auth_sortname;
-	public $auth_debug;
+	public $msg;
+	public $position;
+	public $mail;
+	public $lname;
+	public $fname;
+	public $name;
+	public $sortname;
+	public $debug;
 
 	
     public function authenticate($user,$pass) {
-		$this->auth_msg			= '';
-		$this->auth_position	= '';
-		$this->auth_mail		= '';
-		$this->auth_lname		= '';
-		$this->auth_fname		= '';
-		$this->auth_name		= '';
-		$this->auth_sortname	= '';
-		$this->auth_debug		= '';
+		$this->msg			= '';
+		$this->position	= '';
+		$this->mail		= '';
+		$this->lname		= '';
+		$this->fname		= '';
+		$this->name		= '';
+		$this->sortname	= '';
+		$this->debug		= '';
 
 		//echo "authenticating...\n";
 		//echo 'user='.$user."\n";

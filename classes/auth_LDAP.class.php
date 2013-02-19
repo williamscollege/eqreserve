@@ -25,7 +25,7 @@ class Auth_LDAP extends Auth_Base
 	public function checkLDAP($user = "", $pass = "", $ldap_server = AUTH_SERVER) {
 		# debugging info: set $chat to true for debugging, false to hide messages
 		$chat = true;
-		if ($chat) { $this->auth_debug .= "passed - beginning fxn 'checkLDAP'<br />"; }
+		if ($chat) { $this->debug .= "passed - beginning fxn 'checkLDAP'<br />"; }
 
 		// HTTP and HTTPS connections
 		# Note: LIVE  SERVER: ldaps://nwldap.williams.edu/; LOCAL SERVER: nwldap.williams.edu
@@ -36,22 +36,22 @@ class Auth_LDAP extends Auth_Base
 		
 		// ensure username supplied
 		if (!$user) {
-			$this->auth_msg = "No username specified.";
+			$this->msg = "No username specified.";
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - username supplied<br/>"; }
+		if ($chat) { $this->debug .= "passed - username supplied<br/>"; }
 
 
 		// ensure password supplied
 		if (!$pass) {
-			$this->auth_msg = "No password specified.";
+			$this->msg = "No password specified.";
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - password supplied<br/>"; }
+		if ($chat) { $this->debug .= "passed - password supplied<br/>"; }
 
 
 		// Connect to the LDAP server
@@ -59,14 +59,14 @@ class Auth_LDAP extends Auth_Base
 //		if (($connect = @ldap_connect($ldap_server)) == false) {
 		# TODO: Production Code should ignore errors, using "@" as prefix to: @ldap_connect, @ldap_close
 		if (($connect = ldap_connect($ldap_server)) == false) {
-			$this->auth_msg = "Could not connect to the LDAP server ($ldap_server)." . ldap_error($connect);
+			$this->msg = "Could not connect to the LDAP server ($ldap_server)." . ldap_error($connect);
 //			@ldap_close($connect);
 			ldap_close($connect);
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - connected to $ldap_server<br/>"; }
+		if ($chat) { $this->debug .= "passed - connected to $ldap_server<br/>"; }
 
 
 		ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -77,46 +77,46 @@ class Auth_LDAP extends Auth_Base
 			"cn=$user",
 			array("dn", "sn", "mail", "gecos", "initials"))) == false
 		) {
-			$this->auth_msg = "Could not find the user in the LDAP tree.";
+			$this->msg = "Could not find the user in the LDAP tree.";
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - LDAP tree searched for username <b>$user</b>.<br/>"; }
-		if ($chat) { $this->auth_debug .= "passed - " . ldap_count_entries($connect, $res_id) . " records found.<br/>"; }
+		if ($chat) { $this->debug .= "passed - LDAP tree searched for username <b>$user</b>.<br/>"; }
+		if ($chat) { $this->debug .= "passed - " . ldap_count_entries($connect, $res_id) . " records found.<br/>"; }
 
 
 		// get the first search result
 		if (($entry_id = ldap_first_entry($connect, $res_id)) == false) {
-			$this->auth_msg = "User record could not be fetched.";
+			$this->msg = "User record could not be fetched.";
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - first record fetched<br/>"; }
+		if ($chat) { $this->debug .= "passed - first record fetched<br/>"; }
 
 
 		// get the user dn for use in authentication
 		if (($user_dn = ldap_get_dn($connect, $entry_id)) == false) {
-			$this->auth_msg = "The user-dn could not be fetched.";
+			$this->msg = "The user-dn could not be fetched.";
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - user-dn found: <b>$user_dn</b><br/>"; }
+		if ($chat) { $this->debug .= "passed - user-dn found: <b>$user_dn</b><br/>"; }
 
 
 		// get the e-mail address from the record
 		$mail = ldap_get_values($connect, $entry_id, "mail");
 		if (isset($mail[0])) {
 			# email retrieved
-			$this->auth_mail = $mail[0];
+			$this->mail = $mail[0];
 		} else {
 			# email constructed
-			$this->auth_mail = $user . '@williams.edu';
+			$this->mail = $user . '@williams.edu';
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - email address retrieved or constructed<br/>"; }
+		if ($chat) { $this->debug .= "passed - email address retrieved or constructed<br/>"; }
 
 
 		// Get the name from the record
@@ -124,44 +124,44 @@ class Auth_LDAP extends Auth_Base
 		$initials = ldap_get_values($connect, $entry_id, "initials");
 		$gecos    = ldap_get_values($connect, $entry_id, "gecos");
 
-		$this->auth_name  = (isset($gecos[0]) ? $gecos[0] : ''); // Nicholas Baker or Nicholas C. Baker
-		$this->auth_lname = (isset($sn[0]) ? $sn[0] : $this->auth_name); // Baker
+		$this->name  = (isset($gecos[0]) ? $gecos[0] : ''); // Nicholas Baker or Nicholas C. Baker
+		$this->lname = (isset($sn[0]) ? $sn[0] : $this->name); // Baker
 
 		$middle = (isset($initials[0]) ? $initials[0] : ''); // empty or C.
 		$middle = preg_replace("/\.$/", "", trim($middle));
 
-		$this->auth_fname = preg_replace("/\s+$this->auth_lname$/", "", $this->auth_name); // strip surname
-		$this->auth_fname = preg_replace("/\s+$middle$/", "", $this->auth_fname); // strip initial
+		$this->fname = preg_replace("/\s+$this->lname$/", "", $this->name); // strip surname
+		$this->fname = preg_replace("/\s+$middle$/", "", $this->fname); // strip initial
 
 		// Get a sortable name - Baker, Nicholas C.
-		if ($this->auth_fname && $this->auth_fname != $this->auth_name) {
+		if ($this->fname && $this->fname != $this->name) {
 			if ($middle) {
-				$this->auth_sortname = "$this->auth_lname, $this->auth_fname $middle.";
+				$this->sortname = "$this->lname, $this->fname $middle.";
 			} else {
-				$this->auth_sortname = "$this->auth_lname, $this->auth_fname";
+				$this->sortname = "$this->lname, $this->fname";
 			}
 		} else {
-			$this->auth_sortname = $this->auth_lname;
+			$this->sortname = $this->lname;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - name retrieved<br/>"; }
+		if ($chat) { $this->debug .= "passed - name retrieved<br/>"; }
 
 
 		// get the position (STUDENT, FACULTY, STAFF)
 		if (preg_match("/ou=(\w+),/", $user_dn, $Matches)) {
-			$this->auth_position = $Matches[1];
+			$this->position = $Matches[1];
 		} else {
-			$this->auth_position = "OTHER";
+			$this->position = "OTHER";
 		}
 
 		// try to log in
 		if (($link_id = ldap_bind($connect, $user_dn, $pass)) == false) {
-			$this->auth_msg = "The username and password don't match."; //: $user_dn";
+			$this->msg = "The username and password don't match."; //: $user_dn";
 			error_reporting($errorLevel);
 			return false;
 		}
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - bound successfully with user-dn and password<br/>"; }
+		if ($chat) { $this->debug .= "passed - bound successfully with user-dn and password<br/>"; }
 
 
 //		@ldap_close($connect);
@@ -170,7 +170,7 @@ class Auth_LDAP extends Auth_Base
 		error_reporting($errorLevel);
 
 		# debugging info
-		if ($chat) { $this->auth_debug .= "passed - completed fxn 'checkLDAP'; return true.<br />"; }
+		if ($chat) { $this->debug .= "passed - completed fxn 'checkLDAP'; return true.<br />"; }
 		
 		return true;
     }
