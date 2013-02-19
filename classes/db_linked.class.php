@@ -8,13 +8,13 @@ class Db_Linked
     //  var $efoo = new Eq_Group();
     //  echo $efoo->name;
 
-    public static $fields = array();
-    private static $dbTable = '';
+    public $fields = array();
+    public $dbTable = '';
 
     public $fieldValues = array();
     public $matchesDb = false;
 
-    private $dbConnection;
+    public $dbConnection;
 
     /////////////////////////////////////////////////////
 
@@ -22,8 +22,13 @@ class Db_Linked
         if (! isset($initsHash)) {
             $initsHash = array();
         }
-        foreach (self::$fields as $fieldName) {
-            $initVal = '';
+//print "class is ".get_class($this)."<br/>\n";
+//print_r($initsHash);
+//print_r($this->fields );
+
+        foreach ($this->fields as $fieldName) {
+// print "fieldName is $fieldName<br/>\n";
+            $initVal = NULL;
             if (array_key_exists($fieldName,$initsHash)) { 
                 $initVal = $initsHash[$fieldName];            
             }
@@ -51,26 +56,27 @@ class Db_Linked
 
     /////////////////////////////////////////////////////
     
-    // takes: an identity hash - i.e. a hash of col names to values
-    // returns: a new object with attributes set to the corresponding values from the DB
+    // takes: an identity hash - i.e. a hash of col names to values, a recipient object into which the results are loaded
     // NOTE: in the case of multiple rows found, only the first is used
-    // NOTE: in the case of no rows found, null is returned
-    public static function loadFromDb($identHash) {
-        $fetchStmt = self::_buildFetchStatement($identHash);
-        $fetchStmt->setFetchMode(PDO::FETCH_INTO, new Eq_Group());
+    // NOTE: in the case of no rows found the recipient->matchesDB is false
+    public static function loadFromDbInto($identHash,&$recipient) {
+        $fetchStmt = self::_buildFetchStatement($identHash,$recipient);
         $fetchStmt->execute($identHash);
-        $newGroup = $fetchStmt->fetch();
-        $newGroup->matchesDb = true;
-        return $newGroup;
+        if ($fetchStmt->rowCOunt() < 1) {
+            $recipient->matchesDb = false;
+            return;
+        }
+        $recipient = $fetchStmt->fetch(PDO::FETCH_INTO);
+        $recipient->matchesDb = true;
     } 
 
-    private static function _buildFetchStatement($identHash) {
+    private static function _buildFetchStatement($identHash,$recipient) {
         // construct the SQL statement
-        $fetchSql = 'SELECT '.implode(',',self::$fields).' FROM '.self::$dbTable.' WHERE 1=1';
+        $fetchSql = 'SELECT '.implode(',',$recipient->fields).' FROM '.$recipient->dbTable.' WHERE 1=1';
         foreach ($identHash as $k=>$v) {
             $fetchSql .= ' AND '.$k.' = :'.$k;
         }
-        $fetchStmt = $DB->prepare($fetchSql);
+        $fetchStmt = $recipient->dbConnection->prepare($fetchSql);
         return $fetchStmt;
     }
 
@@ -80,12 +86,26 @@ class Db_Linked
         if ($this->matchesDb) {
             return;
         }
-        if (! $this->id) {            
+        $fetchAttr = array();
+        foreach ($this->fields as $fieldName) {
+
+            //TODO: figure out a better way to handle tricky values: '',0,false
+//            if ($this->fieldValues[$fieldName] !== '') { 
+//                $fetchAttr[$fieldName] = $this->fieldValues[$fieldName];
+//            }
+
+            if (! is_null($this->fieldValues[$fieldName])) { 
+                $fetchAttr[$fieldName] = $this->fieldValues[$fieldName];
+            }
+        }
+        
+        $fetchStmt = self::_buildFetchStatement($fetchAttr, $this);
+        $fetchStmt->setFetchMode(PDO::FETCH_INTO, $this);
+        $fetchStmt->execute($fetchAttr);
+        if ($fetchStmt->rowCOunt() < 1) {
+            $this->matchesDb = false;
             return;
         }
-        $fetchStmt = self::_buildFetchStatement(array('id' => $this->id ));
-        $fetchStmt->setFetchMode(PDO::FETCH_INTO, $this);
-        $fetchStmt->execute(array('id' => $this->id));
         $fetchStmt->fetch();
         $this->matchesDb = true;
     }
@@ -95,22 +115,22 @@ class Db_Linked
             return;
         }
         if (! $this->id) {
-            $insertSql = 'INSERT INTO '.self::$dbTable.' VALUES(NULL';
+            $insertSql = 'INSERT INTO '.$this->dbTable.' VALUES(NULL';
             foreach ($this->fieldValues as $k=>$v) {
                 $insertSql .= ', :'.$k;
             }
             $insertSql .= ')';
-            $insertStmt = $DB->prepare($insertSql);
+            $insertStmt = $this->dbConnection->prepare($insertSql);
             $this->id = $insertStmt->execute($this->fieldValues);
             $this->matchesDb = true;
         } 
         else {
-            $updateSql = 'UDPATE '.self::$dbTable.' SET id=id';
+            $updateSql = 'UDPATE '.$this->dbTable.' SET id=id';
             foreach ($this->fieldValues as $k=>$v) {
                 $updateSql .= ', '.$k.' = :'.$k;
             }
             $updateSql .= ' WHERE id= :id';
-            $updateStmt = $DB->prepare($updateSql);
+            $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->fieldValues);
             $this->matchesDb = true;
         }
