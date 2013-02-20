@@ -12,8 +12,8 @@ class Auth_Base
 	public $name;
 	public $sortname;
 	public $debug;
-	#getGroups
-	public $eq_groups;
+	#get_Inst_Groups
+	public $inst_groups;
 
 	
     public function authenticate($user,$pass) {
@@ -35,25 +35,16 @@ class Auth_Base
         return (($user == TESTINGUSER) && ($pass==TESTINGPASSWORD));
     }
 
-    public function getGroups($user) {
-    	$this->eq_groups	= array();
+    public function get_Inst_Groups($user) {
+    	$this->inst_groups	= array();
 
 		if ($_SESSION['isAuthenticated'] == true) {
 			# continue: session is authenticated
-
-			# test data (real data would call the DB and build eq_groups array based on rowcount of groups)
-	    	$this->eq_groups = array();
-	    	$this->eq_groups[0]['name'] = TESTGROUP1_NAME;
-	    	$this->eq_groups[0]['role'] = TESTGROUP1_ROLE;
-	    	$this->eq_groups[1]['name'] = TESTGROUP2_NAME;
-	    	$this->eq_groups[1]['role'] = TESTGROUP2_ROLE;
-	    	$this->eq_groups[2]['name'] = TESTGROUP3_NAME;
-	    	$this->eq_groups[2]['role'] = TESTGROUP3_ROLE;
-	    	
 			return true;
 		} else {
 			# exit: session is not authenticated
 			return false;
 		}
     }
+   
 }
