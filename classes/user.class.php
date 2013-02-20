@@ -8,8 +8,9 @@ class User extends Db_Linked
     //  var $efoo = new Eq_Group();
     //  echo $efoo->name;
 
-    public static $fields = array('id');
-    public static $dbTable = 'users';
+    public $fields = array('user_id','username','fname','lname','email','advisor','notes','flag_is_banned','flag_delete');
+    public $primaryKeyField = 'user_id';    
+    public $dbTable = 'users';
 } 
 
 ?>
