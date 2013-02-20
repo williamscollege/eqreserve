@@ -15,4 +15,5 @@ class AcctMgtTest extends WebTestCaseWMS {
         $this->assertResponse(200);
         $this->assertPattern('/You are logged in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
     }
+
 }

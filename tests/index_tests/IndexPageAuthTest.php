@@ -48,6 +48,14 @@ class IndexPageAuthTest extends WebTestCaseWMS {
 
         $this->assertField('username'); //$value
         $this->assertField('password'); //$value
-
+    }
+    
+    function testGetEQGroups() {
+    	$this->get('http://localhost/eqreserve/');
+    	$this->setField('username', TESTINGUSER);
+    	$this->setField('password', TESTINGPASSWORD);
+    	$this->click('log In');
+		$this->assertPattern('/List of your equipment groups:/');
+		$this->assertPattern('/<li>Science: Spectometers \[role: 2\]<\/li>/');
     }
 }

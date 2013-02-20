@@ -21,6 +21,11 @@ class Auth_LDAP extends Auth_Base
 		}
 	}
 
+	public function getGroups($user) {
+		if (parent::getGroups($user)) {
+			return true;
+		}
+	}
 
 	public function checkLDAP($user = "", $pass = "", $ldap_server = AUTH_SERVER) {
 		# debugging info: set $chat to true for debugging, false to hide messages
@@ -56,8 +61,8 @@ class Auth_LDAP extends Auth_Base
 
 		// Connect to the LDAP server
 		# Note: LIVE  SERVER: $ldap_server, 636; LOCAL SERVER: $ldap_server
-//		if (($connect = @ldap_connect($ldap_server)) == false) {
 		# TODO: Production Code should ignore errors, using "@" as prefix to: @ldap_connect, @ldap_close
+//		if (($connect = @ldap_connect($ldap_server)) == false) {
 		if (($connect = ldap_connect($ldap_server)) == false) {
 			$this->msg = "Could not connect to the LDAP server ($ldap_server)." . ldap_error($connect);
 //			@ldap_close($connect);
