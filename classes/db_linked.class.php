@@ -48,7 +48,8 @@ See the tests for this class (TestOfDB_Linked.class.php) for more examples.
 
 */
 
-class Db_Linked
+
+abstract class Db_Linked
 {
     /////////////////////////////////////////////////////
     // this array defined the db-tied properties of this object
@@ -117,6 +118,19 @@ class Db_Linked
     }
 
     /////////////////////////////////////////////////////
+    
+    // returns an empty object of the type of this class
+    public static function loadAllFromDb($searchHash) {
+        // NOTE: THIS MUST BE OVERRIDDEN/IMPLEMENTED IN THE SUB-CLASS!!
+        trigger_error('DB_Linked loadAllFromDb method must be overridden by implementing sub-classes',E_USER_ERROR);   
+    }
+
+    protected static function _loadAllFromDb($searchHash,$template) {
+        //$template =  self::factory($usingDb);
+        $fetchStmt = self::_buildFetchStatement($searchHash,$template);
+        $fetchStmt->execute($searchHash);
+        return $fetchStmt->fetchAll(PDO::FETCH_CLASS| PDO::FETCH_PROPS_LATE, get_class($template),[['DB'=>$template->dbConnection]]);
+    }
     
     // takes: an identity hash - i.e. a hash of col names to values, a recipient object into which the results are loaded
     // NOTE: in the case of multiple rows found, only the first is used

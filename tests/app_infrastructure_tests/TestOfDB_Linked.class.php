@@ -6,12 +6,15 @@ class Trial_Db_Linked extends Db_Linked {
     public $fields = array('dblinktest_id','charfield','intfield','flagfield');
     public $primaryKeyField = 'dblinktest_id';
     public $dbTable = 'dblinktest';
-    //public function __construct($initsHash) { parent::__construct($initsHash); }
 
+    public static $DB;
+    
+    public static function loadAllFromDb($searchHash) { return Db_Linked::_loadAllFromDb($searchHash, new Trial_Db_Linked(['DB'=>self::$DB])); }
 }
 
 class TestOfDB_Linked extends UnitTestCaseDB {
 
+    /////////////////////////////////////////
 
     function setUp() {
         $this->_dbClear();
@@ -24,11 +27,26 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $setUpStmt->execute();
     }
 
-    function _dbInsertTestRecord() {
-        $insertSql = "INSERT INTO dblinktest VALUES (5,'char data',1,0)";
+    function _dbInsertTestRecord($dataHash=false) {
+        if (! $dataHash) { $dataHash = array(); }
+        if (! array_key_exists('id',$dataHash)) { $dataHash['id'] = 5; }
+        if (! array_key_exists('char',$dataHash)) { $dataHash['char'] = 'char data'; }
+        if (! array_key_exists('int',$dataHash)) { $dataHash['int'] = 1; }
+        if (! array_key_exists('flag',$dataHash)) { $dataHash['flag'] = 0; }
+        $insertSql = "INSERT INTO dblinktest VALUES (".$dataHash['id'].",'".$dataHash['char']."',".$dataHash['int'].",".$dataHash['flag'].")";
         $insertStmt = $this->DB->prepare($insertSql);
         $insertStmt->execute();
     }
+
+
+    /////////////////////////////////////////
+
+    function testloadAllFromDbMethodNotDirectlyCallable() {
+        $this->expectError();
+        $junk = Db_Linked::loadAllFromDb([],new Trial_Db_Linked(['DB'=>$this->DB]));
+    }
+
+    /////////////////////////////////////////
 
     function testConnectedToDatabase() {
        $this->assertNotNull($this->DB);
@@ -195,6 +213,26 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertEqual($selectResult['charfield'],'even stringier');
         $this->assertEqual($selectResult['intfield'],42);
         $this->assertEqual($selectResult['flagfield'],false);
+    }
+
+    /////////////////////////////////////////
+
+    function testLoadMultipleFromDb() {
+        $this->_dbClear();
+        $this->_dbInsertTestRecord(['id'=>1]);
+        $this->_dbInsertTestRecord(['id'=>2]);
+        $this->_dbInsertTestRecord(['id'=>3]);
+
+        Trial_Db_Linked::$DB = $this->DB;
+        $matchingObjects = Trial_Db_Linked::loadAllFromDb(['intfield'=>1]);
+
+        $this->assertEqual(count($matchingObjects),3);
+        $this->assertPattern('/[123]/',$matchingObjects[0]->dblinktest_id);
+        $this->assertPattern('/[123]/',$matchingObjects[1]->dblinktest_id);
+        $this->assertPattern('/[123]/',$matchingObjects[2]->dblinktest_id);
+        $this->assertNotEqual($matchingObjects[0]->dblinktest_id,$matchingObjects[1]->dblinktest_id);
+        $this->assertNotEqual($matchingObjects[0]->dblinktest_id,$matchingObjects[2]->dblinktest_id);
+        $this->assertNotEqual($matchingObjects[1]->dblinktest_id,$matchingObjects[2]->dblinktest_id);
     }
 
 }
