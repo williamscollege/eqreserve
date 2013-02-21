@@ -6,6 +6,8 @@
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) {
+		// SECTION: not yet authenticated, wants to log in
+
 			require_once('auth.cfg.php');
 
 			if ($AUTH->authenticate($_REQUEST['username'], $_REQUEST['password'])) {
@@ -19,18 +21,9 @@
 				$_SESSION['userdata']['lastname']  = $AUTH->lname;
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
 				$_SESSION['userdata']['position']  = $AUTH->position; // e.g. (STUDENT, FACULTY, STAFF)
-
-				// hash of groups and roles for this user
-				$eq_groups = array();
-				if ($AUTH->getGroups($_SESSION['userdata']['username'])) {
-					for ($i = 0, $size = count($AUTH->eq_groups); $i < $size; ++$i) {
-						$eq_groups[$i]['name'] = $AUTH->eq_groups[$i]['name'];
-						$eq_groups[$i]['role'] = $AUTH->eq_groups[$i]['role'];
-					}
-				}
-				# pop eq_groups array onto existing session variable (it will be an array with 0 or more elements)
-				$_SESSION['userdata']['eq_groups'] = $eq_groups;
-				
+				// array of institutional groups for this user
+				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array				
+								
 			} else {
 				$MESSAGE = 'Log in failed';
 			}
@@ -47,12 +40,23 @@
 
 		}
 	} else {
+		// SECTION: authenticated
+		
 		if (isset($_REQUEST['logout'])) {
+			// SECTION: wants to log out
 			unset($_SESSION['isAuthenticated']);
 			unset($_SESSION['userdata']);
-		} else {
-			$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
 		}
+	}
+
+    if (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated'])) {
+			// SECTION: is logged in
+			
+			$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
+			
+			// now create user object
+			
+			// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 	}
 ?>
 <html>
@@ -70,31 +74,6 @@
 	if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	?>
 		<div id="loggedInControls">You are logged in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a>.
-			<?php
-				echo "<h3>Equipment Groups</h3>";
-				echo "<ul>";
-				if (count($_SESSION['userdata']['eq_groups']) > 0) {
-					for ($i = 0, $cnt = count($_SESSION['userdata']['eq_groups']); $i < $cnt; ++$i) {
-						echo "<li><a href=\"\" title=\"\">" . $_SESSION['userdata']['eq_groups'][$i]['name'] . "</a> [role: " . $_SESSION['userdata']['eq_groups'][$i]['role'] . "]</li>";
-					}
-				} else {
-					echo "<li>You do not belong to any equipment groups.</li>";
-				}
-				echo "</ul>";
-
-				echo "<div class=\"DEVINFO\">";
-				echo "<h3>User Info:</h3>";
-				echo "username: " . $_SESSION['userdata']['username'] . "<br />";
-				echo "email: " . $_SESSION['userdata']['email'] . "<br />";
-				echo "fullname: " . $_SESSION['userdata']['fullname'] . "<br />";
-				echo "firstname: " . $_SESSION['userdata']['firstname'] . "<br />";
-				echo "lastname: " . $_SESSION['userdata']['lastname'] . "<br />";
-				echo "sortname: " . $_SESSION['userdata']['sortname'] . "<br />";
-				echo "position: " . $_SESSION['userdata']['position'] . "<br />";
-				echo "<br />";
-				echo "</div>";
-			?>
-		
 		    <form id="frmLogout" class="" type="post" action="">
 		        <input type="submit" name="logout" id="logout_btn" value="log out" />
 		    </form>
@@ -102,12 +81,12 @@
 	<?php
 	} else {
 	?>
-	    <form id="frmIndex" class="" type="post" action="">
+	    <form id="frmLogin" class="" type="post" action="">
 	        <input type="text" id="username" name="username" value="" />
 	        <input type="password" id="password" name="password" value="" />
 	        <input type="submit" id="submit_login" name="submit_login" value="log In" />
 	    </form>
-	<?php	
+	<?php
 		require_once('foot.php');
 		exit;	
 	}

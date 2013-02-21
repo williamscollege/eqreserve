@@ -12,7 +12,6 @@ class Auth_Base
 	public $name;
 	public $sortname;
 	public $debug;
-	#get_Inst_Groups
 	public $inst_groups;
 
 	
@@ -25,6 +24,7 @@ class Auth_Base
 		$this->name			= '';
 		$this->sortname		= '';
 		$this->debug		= '';
+		$this->inst_groups	= '';
 
 		//echo "authenticating...\n";
 		//echo 'user='.$user."\n";
@@ -35,16 +35,8 @@ class Auth_Base
         return (($user == TESTINGUSER) && ($pass==TESTINGPASSWORD));
     }
 
-    public function get_Inst_Groups($user) {
-    	$this->inst_groups	= array();
+    public function getInstGroups($user) {
 
-		if ($_SESSION['isAuthenticated'] == true) {
-			# continue: session is authenticated
-			return true;
-		} else {
-			# exit: session is not authenticated
-			return false;
-		}
     }
    
 }

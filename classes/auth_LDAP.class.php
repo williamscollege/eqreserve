@@ -21,9 +21,17 @@ class Auth_LDAP extends Auth_Base
 		}
 	}
 
-	public function getGroups($user) {
-		if (parent::getGroups($user)) {
+	public function getInstGroups($user) {
+		if (parent::getInstGroups($user)) {
 			return true;
+		}
+		
+		if ($_SESSION['isAuthenticated'] == true) {
+			# continue: session is authenticated
+			return true;
+		} else {
+			# exit: session is not authenticated
+			return false;
 		}
 	}
 
@@ -80,7 +88,7 @@ class Auth_LDAP extends Auth_Base
 		if (($res_id = ldap_search($connect,
 			"o=williams",
 			"cn=$user",
-			array("dn", "sn", "mail", "gecos", "initials"))) == false
+			array("dn", "sn", "mail", "gecos", "initials", "groupmembership"))) == false
 		) {
 			$this->msg = "Could not find the user in the LDAP tree.";
 			error_reporting($errorLevel);
@@ -128,7 +136,7 @@ class Auth_LDAP extends Auth_Base
 		$sn       = ldap_get_values($connect, $entry_id, "sn");
 		$initials = ldap_get_values($connect, $entry_id, "initials");
 		$gecos    = ldap_get_values($connect, $entry_id, "gecos");
-
+		
 		$this->name  = (isset($gecos[0]) ? $gecos[0] : ''); // Nicholas Baker or Nicholas C. Baker
 		$this->lname = (isset($sn[0]) ? $sn[0] : $this->name); // Baker
 
@@ -158,6 +166,19 @@ class Auth_LDAP extends Auth_Base
 		} else {
 			$this->position = "OTHER";
 		}
+		
+		// Get the groupmemberships from the record
+		$inst_groups = array();
+		$gmembers = ldap_get_values($connect, $entry_id, "groupmembership");
+		for ($i = 0, $size = count($gmembers); $i < $size; ++$i) {
+			// ensure no empty items
+			if(($tmp = preg_replace('/cn=(.*)\,.*/','$1',$gmembers[$i])) != ''){
+				$inst_groups[$i] = $tmp;
+			}
+		}
+		// append the position, as this is another kind of institutional group we want to know about
+		$inst_groups[$i + 1] = $this->position;
+		$this->inst_groups = $inst_groups;
 
 		// try to log in
 		if (($link_id = ldap_bind($connect, $user_dn, $pass)) == false) {
