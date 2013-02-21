@@ -1,9 +1,9 @@
 <?php
 class Role extends Db_Linked
 {
-    public $fields = array('role_id','name','flag_delete');
-    public $primaryKeyField = 'role_id';    
-    public $dbTable = 'roles';
+    public static $fields = array('role_id','name','flag_delete');
+    public static $primaryKeyField = 'role_id';    
+    public static $dbTable = 'roles';
 
 
 } 

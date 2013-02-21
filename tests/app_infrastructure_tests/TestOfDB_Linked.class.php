@@ -3,13 +3,9 @@ require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
 require_once dirname(__FILE__) . '/../../classes/db_linked.class.php';
 
 class Trial_Db_Linked extends Db_Linked {
-    public $fields = array('dblinktest_id','charfield','intfield','flagfield');
-    public $primaryKeyField = 'dblinktest_id';
-    public $dbTable = 'dblinktest';
-
-    public static $DB;
-    
-    public static function loadAllFromDb($searchHash) { return Db_Linked::_loadAllFromDb($searchHash, new Trial_Db_Linked(['DB'=>self::$DB])); }
+    public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
+    public static $primaryKeyField = 'dblinktest_id';
+    public static $dbTable = 'dblinktest';
 }
 
 class TestOfDB_Linked extends UnitTestCaseDB {
@@ -36,14 +32,6 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $insertSql = "INSERT INTO dblinktest VALUES (".$dataHash['id'].",'".$dataHash['char']."',".$dataHash['int'].",".$dataHash['flag'].")";
         $insertStmt = $this->DB->prepare($insertSql);
         $insertStmt->execute();
-    }
-
-
-    /////////////////////////////////////////
-
-    function testloadAllFromDbMethodNotDirectlyCallable() {
-        $this->expectError();
-        $junk = Db_Linked::loadAllFromDb([],new Trial_Db_Linked(['DB'=>$this->DB]));
     }
 
     /////////////////////////////////////////
@@ -80,7 +68,7 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertNull($testObj->dblinktest_id);
         $this->assertFalse($testObj->matchesDb);
 
-        Trial_Db_Linked::loadFromDbInto( ['dblinktest_id'=>'1'],$testObj);
+        $testObj = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'1'],$this->DB);
 
         $this->assertFalse($testObj->matchesDb);
         $this->assertNull($testObj->dblinktest_id);
@@ -108,7 +96,7 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertNull($testObj->dblinktest_id);
         $this->assertFalse($testObj->matchesDb);
 
-        Trial_Db_Linked::loadFromDbInto( ['dblinktest_id'=>'5'],$testObj);
+        $testObj = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
 
         $this->assertTrue($testObj->matchesDb);
         $this->assertEqual($testObj->dblinktest_id,5);
@@ -142,7 +130,7 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertNull($testObj->dblinktest_id);
         $this->assertFalse($testObj->matchesDb);
 
-        Trial_Db_Linked::loadFromDbInto( ['dblinktest_id'=>'5'],$testObj);
+        $testObj = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
         $this->assertTrue($testObj->matchesDb);
 
         $testObj->charfield = 'new char data';
@@ -222,9 +210,9 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->_dbInsertTestRecord(['id'=>1]);
         $this->_dbInsertTestRecord(['id'=>2]);
         $this->_dbInsertTestRecord(['id'=>3]);
+        $this->_dbInsertTestRecord(['id'=>5,'int'=>2]);
 
-        Trial_Db_Linked::$DB = $this->DB;
-        $matchingObjects = Trial_Db_Linked::loadAllFromDb(['intfield'=>1]);
+        $matchingObjects = Trial_Db_Linked::loadAllFromDb(['intfield'=>1],$this->DB);
 
         $this->assertEqual(count($matchingObjects),3);
         $this->assertPattern('/[123]/',$matchingObjects[0]->dblinktest_id);
@@ -233,6 +221,12 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertNotEqual($matchingObjects[0]->dblinktest_id,$matchingObjects[1]->dblinktest_id);
         $this->assertNotEqual($matchingObjects[0]->dblinktest_id,$matchingObjects[2]->dblinktest_id);
         $this->assertNotEqual($matchingObjects[1]->dblinktest_id,$matchingObjects[2]->dblinktest_id);
+        $this->assertTrue($matchingObjects[0]->matchesDb);
+        $this->assertTrue($matchingObjects[1]->matchesDb);
+        $this->assertTrue($matchingObjects[2]->matchesDb);
+
+        $noMatchingObjects = Trial_Db_Linked::loadAllFromDb(['intfield'=>7],$this->DB);
+        $this->assertEqual(count($noMatchingObjects),0);
     }
 
 }
