@@ -99,7 +99,26 @@ class Auth_LDAP extends Auth_Base
 		if ($chat) { $this->debug .= "passed - " . ldap_count_entries($connect, $res_id) . " records found.<br/>"; }
 
 
-		// get the first search result
+		# get all entries
+		if (($results = ldap_get_entries($connect, $res_id)) == false) {
+			$this->msg = "User record could not be fetched.";
+			error_reporting($errorLevel);
+			return false;
+		}
+		else if ($results['count'] == 0) {
+			# no results - user does not exists
+			$this->msg = "User record could not be fetched: no (count == 0) data in search results";
+			error_reporting($errorLevel);
+			return false;
+		}
+		else if ($results['count'] > 1) {
+			# multiple results - username appears more than once - invalid
+			$this->msg = "User record appears more than once - invalid";
+			error_reporting($errorLevel);
+			return false;
+		}
+
+		# get the single entry we actually want
 		if (($entry_id = ldap_first_entry($connect, $res_id)) == false) {
 			$this->msg = "User record could not be fetched.";
 			error_reporting($errorLevel);
@@ -170,16 +189,18 @@ class Auth_LDAP extends Auth_Base
 		// Get the groupmemberships from the record
 		$inst_groups = array();
 		$gmembers = ldap_get_values($connect, $entry_id, "groupmembership");
-		for ($i = 0, $size = count($gmembers); $i < $size; ++$i) {
+		$group_finder_pattern = '/cn=([^\,]*)\,.*/';
+		for ($i = 0; $i < $gmembers['count']; ++$i) {
 			// ensure no empty items
-			if(($tmp = preg_replace('/cn=(.*)\,.*/','$1',$gmembers[$i])) != ''){
-				$inst_groups[$i] = $tmp;
-			}
+			if (preg_match($group_finder_pattern,$gmembers[$i],$matches)) { 
+				array_push($inst_groups,$matches[1]);
+			} 
 		}
 		// append the position, as this is another kind of institutional group we want to know about
-		$inst_groups[$i + 1] = $this->position;
+		array_push($inst_groups,$this->position);
 		$this->inst_groups = $inst_groups;
-
+		// print_r($inst_groups); // debugging info
+		
 		// try to log in
 		if (($link_id = ldap_bind($connect, $user_dn, $pass)) == false) {
 			$this->msg = "The username and password don't match."; //: $user_dn";
