@@ -22,7 +22,7 @@
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
 				$_SESSION['userdata']['position']  = $AUTH->position; // e.g. (STUDENT, FACULTY, STAFF)
 				// array of institutional groups for this user
-				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array				
+				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array
 								
 			} else {
 				$MESSAGE = 'Log in failed';
@@ -55,6 +55,8 @@
 			$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
 			
 			// now create user object
+			require_once('/classes/user.class.php');
+			$USER = new User(['username'=>$_SESSION['userdata']['username']],$DB);
 			
 			// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 	}

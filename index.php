@@ -7,12 +7,13 @@ require_once('/classes/eq_group.class.php');
 if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 /*
 	# Equipment Groups
-	echo "<h3>Equipment Groups</h3>";
+	echo "<h3>(User) Equipment Groups</h3>";
+	# instantiate the equipment groups and roles for this user
+	$UserEqGroups = new EqGroup();
 	echo "<ul>";
 
 	# instantiate the equipment groups and roles for this user
-	# ??? Will this be instantiated upon every visit to this page? wasteful! need to fix.
-	$EqGroups = new EqGroup();
+	$AdminEqGroups = new EqGroup();
 	if ($EqGroups->getEqGroups($_SESSION['userdata']['username'])) {
 		for ($i = 0, $size = count($EqGroups->eq_group_id); $i < $size; ++$i) {
 			echo "<li><a href=\"equipment_group.php?eid=" . $EqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $EqGroups[$i]['name'] . "</a> [description: " . $EqGroups[$i]['descr'] . "]</li>";
@@ -22,6 +23,21 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	}
 	echo "</ul>";
 */
+	
+	echo "<h3>(Sys Admin) Equipment Groups</h3>";
+	echo "<ul>";
+
+	# instantiate the equipment groups for the system administrator
+	$AdminEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],$DB); //EqGroup::getAllEqGroups($DB);
+	if (count($AdminEqGroups)>0) {
+		for ($i = 0, $size = count($AdminEqGroups); $i < $size; ++$i) {
+			echo "<li><a href=\"equipment_group.php?eid=" . $EqGroups[$i]->eq_group_id . "\" title=\"\">" . $EqGroups[$i]->name . "</a> [description: " . $EqGroups[$i]->descr . "]</li>";
+		}
+	} else {
+		echo "<li>There are currently no equipment groups.</li>";
+	}
+	echo "</ul>";
+
 	# DEVINFO
 	echo "<div class=\"DEVINFO\">";
 	echo "<h3>User Info:</h3>";

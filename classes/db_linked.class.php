@@ -1,7 +1,7 @@
 <?php
 /*
 
-Db_Linked is a basic root class for objects that tied to a DB record - e.g. users, eq_groups, eq_items, etc. It provides simple functions to select, insert, and update the DB record associated with the object. NOTE: it does NOT support a delete method, and it does NOT load associations (e.g. group membership). If that kind of functionality is needed it should be implemented in a sub-class (for now, anyway - trying to keep this pretty streamlined).
+Db_Linked is a basic root class for objects that are tied to a DB record - e.g. users, eq_groups, eq_items, etc. It provides simple functions to select, insert, and update the DB record associated with the object. NOTE: it does NOT support a delete method, and it does NOT load associations (e.g. group membership). If that kind of functionality is needed it should be implemented in a sub-class (for now, anyway, we're trying to keep this pretty streamlined).
 
 To use this, make a sub-class of it and set the fields, primaryKeyField, and dbTable atttributes as appropriate. E.g. 
 
@@ -11,11 +11,11 @@ To use this, make a sub-class of it and set the fields, primaryKeyField, and dbT
         public static $dbTable = 'dblinktest';
     }
 
-The create objects of the subclass. When creating objects you must provide a DB connection, and may provide additional initial values for the fields. E.g.
+To create objects of the subclass: when creating objects you must provide a DB connection, and may provide additional initial values for the fields. E.g.
 
     $testObj = new Trial_Db_Linked( ['DB'=>$this->DB,'dblinktest_id'=>'1']);
 
-Objects also have a field called matchesDb, which indicated whether the values stored in the object match the values stored in the corresponding database record. When a new object is created matchesDb is always false;
+Objects also have a field called matchesDb, which indicates whether the values stored in the object match the values stored in the corresponding database record. When a new object is created matchesDb is always false;
 
 
 You may access the fields listed in the class definition as if they were real attributes. E.g.
@@ -23,11 +23,11 @@ You may access the fields listed in the class definition as if they were real at
     $testObj->charfield = 'some character data';
 
 
-The class has a static function to load a single object from the database
+The class has a static function to load a single object from the database (e.g. load where PK 'dblinktest_id' = 1)
 
     $o1 = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'1'],$DB);
 
-and a corresponding static function to load a set of matching objects
+and a corresponding static function to load a set of matching objects (e.g. load all where 'intfield' value = 5)
 
     $objList = Trial_Db_Linked::loadAllFromDb( ['intfield'=>'5'],$DB);
 
@@ -37,7 +37,8 @@ For a single object you can also use the refreshFromDb method of the object itse
     $o2 = new Trial_Db_Linked( ['DB'=>$DB,'dblinktest_id'=>'1'] );
     $o2->refreshFromDb();
 
-NOTE: for either single-load approach, if the data has no matching record then the matchesDb attribute of the object will be false - check that attribute in your code before relying on the object! Also, if there is more than one matching row then only the first one found will be used (and remember that the ordering comign from the DB is arbitrary)!
+NOTE: for either single-load approach, if the data has no matching record then the matchesDb attribute of the object will be false - check that attribute in your code before relying on the object! Also, if there is more than one matching row then only the first one found will be used (and remember that the ordering coming from the DB is arbitrary)!
+	<<EXAMPLE HERE OF CHECKING matchesDB attribute>>
 
 
 The object has a method updateDb which persists the object data in the DB. If there's already a record for the object, then that record is updated. If there is NOT a record, then a new one is inserted.
@@ -105,9 +106,11 @@ abstract class Db_Linked
     public function __set($name, $value)
     {
         if (array_key_exists($name, $this->fieldValues)) {
-            $this->fieldValues[$name] = $value;
+            if ($this->fieldValues[$name] != $value) {
+	            $this->fieldValues[$name] = $value;
+    		    $this->matchesDb = false;
+    		}
         }
-        $this->matchesDb = false;
     }
 
     /////////////////////////////////////////////////////

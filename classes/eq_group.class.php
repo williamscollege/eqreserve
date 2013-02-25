@@ -9,8 +9,19 @@ class EqGroup extends Db_Linked
     public static $primaryKeyField = 'eq_group_id';    
     public static $dbTable = 'eq_groups';
 
+/*
+	public static function getAllEqGroups() {
 
+		global $DB; //import this "global" variable
+
+		$sysAdminAllEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],'DB'=>$DB);
+		return($sysAdminAllEqGroups);
+	}
+
+  */
     public function getEqGroups($user) {
+
+		global $DB;
 
 		if ($_SESSION['isAuthenticated'] == true) {
 

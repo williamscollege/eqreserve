@@ -58,6 +58,15 @@ class TestOfDB_Linked extends UnitTestCaseDB {
 
         $this->assertEqual($testObj->charfield,'hello world');
         $this->assertEqual($testObj->charfield,$testObj->fieldValues['charfield']);
+
+		// update an attribute with the same value as existing value; we want matchesDb to still be true
+        $testObj->matchesDb = true;
+        $this->assertTrue($testObj->matchesDb);
+
+        $testObj->charfield = 'hello world';
+
+        $this->assertTrue($testObj->matchesDb);
+        $this->assertEqual($testObj->charfield,'hello world');
     }
 
     function testLoadNothing() {
