@@ -5,6 +5,7 @@ require_once('/classes/eq_group.class.php');
 
 
 if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
+
 /*
 	# Equipment Groups
 	echo "<h3>(User) Equipment Groups</h3>";
@@ -13,8 +14,8 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	echo "<ul>";
 
 	# instantiate the equipment groups and roles for this user
-	$AdminEqGroups = new EqGroup();
-	if ($EqGroups->getEqGroups($_SESSION['userdata']['username'])) {
+	$EqGroups = new EqGroup();
+	if ($EqGroups->EqGroup::getEqGroups($_SESSION['userdata']['username'])) {
 		for ($i = 0, $size = count($EqGroups->eq_group_id); $i < $size; ++$i) {
 			echo "<li><a href=\"equipment_group.php?eid=" . $EqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $EqGroups[$i]['name'] . "</a> [description: " . $EqGroups[$i]['descr'] . "]</li>";
 		}
