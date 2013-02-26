@@ -123,7 +123,7 @@ print_r($eqs);
 			$this->assertEqual($eqs[2]->role->name, 'consumer');
 		}
 
-
+		# TODO: Create test for EqGroup::cmpPermissionLevels($inst, $eq)
 		# TODO: Create TEST_DB that mimics live db with purpose of independently running TESTS on it w/o effecting live db
 
 	}
