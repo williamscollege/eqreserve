@@ -116,9 +116,9 @@
 		public function TestOfGetAllEqGroupsForNonAdminUser()
 		{
 			$user = new User(['user_id' => 1, 'DB' => $this->DB]);
-			$eqs = EqGroup::loadEqGroupsForUser($user);
+			$eqs = EqGroup::getEqGroupsForUser($user);
 
-print_r($eqs);
+#print_r($eqs);
 			$this->assertNotNull($eqs);
 			$this->assertTrue(is_array($eqs));
 

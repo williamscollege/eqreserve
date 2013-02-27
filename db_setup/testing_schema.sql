@@ -10,9 +10,12 @@ NOTE:
 
 */
 
-# Select which database you wish to run this script against
+# ----------------------------
+# IMPORTANT: Select which database you wish to run this script against
+# ----------------------------
 # USE eqreserve;
 USE eqreservetest;
+
 
 CREATE TABLE IF NOT EXISTS `dblinktest` (
     `dblinktest_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

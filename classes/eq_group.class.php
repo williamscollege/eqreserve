@@ -48,14 +48,15 @@ class EqGroup extends Db_Linked
 		return $user_perms;
 	}
 
-	public static function loadEqGroupsForUser($user) {
-		$user->inst_groups;
+	public static function getEqGroupsForUser($user) {
+		#$user->inst_groups;
+		print_r($user->inst_groups);
 
-		# print_r($user_inst_groups);
+		#print_r($user->inst_groups);
 
 		// for each inst group, get all associated eq_groups
 		$user_inst_eq_groups = array();
-		foreach ($user_inst_groups as $inst) {
+		foreach ($user->inst_groups as $inst) {
 			$eq_groups = Permissions::loadAllFromDb(['entitity_id'=>$inst->inst_group_id,'entity_type'=>'inst_group'],$user->dbConnection);
 			array_push($user_inst_eq_groups, $eq_groups);
 		}
