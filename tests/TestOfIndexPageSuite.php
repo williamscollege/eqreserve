@@ -8,8 +8,8 @@ require_once('../institution.cfg.php');
 class TestOfIndexSuite extends TestSuite {
     function TestOfIndexSuite() {
         $this->TestSuite('Index page tests');
-        $this->addFile('index_tests/IndexPageLoadTest.php');
-        $this->addFile('index_tests/IndexPageAuthTest.php');
+        $this->addFile('index_page_tests/IndexPageLoadTest.php');
+        $this->addFile('index_page_tests/IndexPageAuthTest.php');
      }
 }
 ?>

@@ -7,9 +7,9 @@ require_once('../institution.cfg.php');
 class TestOfAllSuite extends TestSuite {
     function TestOfAllSuite() {
         $this->TestSuite('Full application test');
-        $this->addFile('TestOfIndexSuite.php');
         $this->addFile('TestOfAppInfrastructureSuite.php');
-        $this->addFile('TestOfAccountManagementSuite.php');
+        $this->addFile('TestOfAccountManagementPageSuite.php');
+        $this->addFile('TestOfIndexPageSuite.php');
      }
 }
 ?>

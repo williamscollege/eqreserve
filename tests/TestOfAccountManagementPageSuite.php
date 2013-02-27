@@ -8,7 +8,7 @@ require_once('../institution.cfg.php');
 class TestOfAccountManagementSuite extends TestSuite {
     function TestOfAccountManagementSuite() {
         $this->TestSuite('Account management page tests');
-        $this->addFile('account_management_tests/AcctMgtTest.php');
+        $this->addFile('account_management_page_tests/AcctMgtTest.php');
      }
 }
 ?>
