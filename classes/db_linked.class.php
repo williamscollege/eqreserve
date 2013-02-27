@@ -71,18 +71,46 @@ abstract class Db_Linked
     // NOTE: this is a VERY IMPORTANT attribute - use it to make sure the record matches the database
     public $matchesDb = false;
 
-
     public $fieldValues = array();
 
     public $dbConnection;
 
-    /////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
 
-    // NOTE: the initsHash passed to the constructor MUST have at least one entry of DB => a pdo db connection object
+	// "final", but PHP doesn't allow final attributes :(
+	public static $ERR_MSG_NO_PK = "missing primary key in db_linked sub-class definition";
+	public static $ERR_MSG_NO_TABLE = "missing table name in db_linked sub-class definition";
+	public static $ERR_MSG_NO_DB = "no db connection provided to db_linked sub-class constructor";
+	public static $ERR_MSG_BAD_DB = "empty db connection provided to db_linked sub-class constructor";
+
+	/////////////////////////////////////////////////////
+
+	// NOTE: the initsHash passed to the constructor MUST have at least one entry of DB => a pdo db connection object
     public function __construct($initsHash) {
-        if (! isset($initsHash)) {
-            $initsHash = array();
-        }
+
+		if (! static::$primaryKeyField) {
+			trigger_error(Db_Linked::$ERR_MSG_NO_PK,E_USER_ERROR);
+			return;
+		}
+		if (! static::$dbTable) {
+			trigger_error(Db_Linked::$ERR_MSG_NO_TABLE,E_USER_ERROR);
+			return;
+		}
+
+		if (! isset($initsHash)) {
+			$initsHash = array();
+		}
+
+		if (! array_key_exists('DB',$initsHash)) {
+			trigger_error(Db_Linked::$ERR_MSG_NO_DB,E_USER_ERROR);
+			return;
+		}
+
+		if ($initsHash['DB'] == '') {
+			# consider a more rigorous comparison, instead of simply empty string?
+			trigger_error(Db_Linked::$ERR_MSG_BAD_DB,E_USER_ERROR);
+			return;
+		}
 
         foreach (static::$fields as $fieldName) {
             $initVal = NULL;
