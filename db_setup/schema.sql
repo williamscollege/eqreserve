@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `username` VARCHAR(255) NULL,
     `fname` VARCHAR(255) NULL,
     `lname` VARCHAR(255) NULL,
+    `sortname` VARCHAR(255) NULL,
     `email` VARCHAR(255) NULL,
     `advisor` VARCHAR(255) NULL,
     `notes` TEXT NULL,
