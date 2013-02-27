@@ -21,18 +21,13 @@ class Auth_LDAP extends Auth_Base
 		}
 	}
 
-	public function getInstGroups($user) {
-		if (parent::getInstGroups($user)) {
-			return true;
-		}
-		
-		if ($_SESSION['isAuthenticated'] == true) {
-			# continue: session is authenticated
-			return true;
-		} else {
-			# exit: session is not authenticated
-			return false;
-		}
+    public function getInstGroupsFromAuthSource($username) {
+        $group_names = parent::getInstGroupsFromAuthSource($username);
+        if (count($group_names) > 0) {
+            return $group_names;
+        }
+
+        echo "TODO: implement fetching of group names<br/>\n";
 	}
 
 	public function checkLDAP($user = "", $pass = "", $ldap_server = AUTH_SERVER) {
@@ -142,10 +137,10 @@ class Auth_LDAP extends Auth_Base
 		$mail = ldap_get_values($connect, $entry_id, "mail");
 		if (isset($mail[0])) {
 			# email retrieved
-			$this->mail = $mail[0];
+			$this->email = $mail[0];
 		} else {
 			# email constructed
-			$this->mail = $user . '@williams.edu';
+			$this->email = $user . '@williams.edu';
 		}
 		# debugging info
 		if ($chat) { $this->debug .= "passed - email address retrieved or constructed<br/>"; }
@@ -156,17 +151,18 @@ class Auth_LDAP extends Auth_Base
 		$initials = ldap_get_values($connect, $entry_id, "initials");
 		$gecos    = ldap_get_values($connect, $entry_id, "gecos");
 		
-		$this->name  = (isset($gecos[0]) ? $gecos[0] : ''); // Nicholas Baker or Nicholas C. Baker
-		$this->lname = (isset($sn[0]) ? $sn[0] : $this->name); // Baker
+        //$this->name  = (isset($gecos[0]) ? $gecos[0] : ''); // Nicholas Baker or Nicholas C. Baker
+        $full_name  = (isset($gecos[0]) ? $gecos[0] : ''); // Nicholas Baker or Nicholas C. Baker
+        $this->lname = (isset($sn[0]) ? $sn[0] : $full_name); // Baker
 
 		$middle = (isset($initials[0]) ? $initials[0] : ''); // empty or C.
 		$middle = preg_replace("/\.$/", "", trim($middle));
 
-		$this->fname = preg_replace("/\s+$this->lname$/", "", $this->name); // strip surname
+        $this->fname = preg_replace("/\s+$this->lname$/", "", $full_name); // strip surname
 		$this->fname = preg_replace("/\s+$middle$/", "", $this->fname); // strip initial
 
 		// Get a sortable name - Baker, Nicholas C.
-		if ($this->fname && $this->fname != $this->name) {
+        if ($this->fname && $this->fname != $full_name) {
 			if ($middle) {
 				$this->sortname = "$this->lname, $this->fname $middle.";
 			} else {
@@ -179,15 +175,9 @@ class Auth_LDAP extends Auth_Base
 		if ($chat) { $this->debug .= "passed - name retrieved<br/>"; }
 
 
-		// get the position (STUDENT, FACULTY, STAFF)
-		if (preg_match("/ou=(\w+),/", $user_dn, $Matches)) {
-			$this->position = $Matches[1];
-		} else {
-			$this->position = "OTHER";
-		}
 		
-		// Get the groupmemberships from the record
-		$inst_groups = array();
+        // Get the groupmemberships from the record
+        $inst_groups = array();
 		$gmembers = ldap_get_values($connect, $entry_id, "groupmembership");
 		# $group_finder_pattern = '/cn=([^\,]*)\,.*/';	// match all groups
 		$group_finder_pattern = '/cn=((Everyone|Jesup|[A-Z]{4}-[0-9]{3}|\d\dstudents)[^\,]*)/'; // match only desired groups, exclude all others
@@ -198,7 +188,13 @@ class Auth_LDAP extends Auth_Base
 			} 
 		}
 		// append the position, as this is another kind of institutional group we want to know about
-		array_push($inst_groups,$this->position);
+        // get the position (STUDENT, FACULTY, STAFF)
+        $position= "OTHER";        
+        if (preg_match("/ou=(\w+),/", $user_dn, $Matches)) {
+            $position = $Matches[1];
+        }
+
+		array_push($inst_groups,$position);
 		$this->inst_groups = $inst_groups;
 		// print_r($inst_groups); // debugging info
 		

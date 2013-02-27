@@ -27,5 +27,17 @@ class TestOfAuth_LDAP extends UnitTestCase {
         $this->assertFalse($AUTH->authenticate(TESTINGUSER,TESTINGPASSWORD.'foo'));
     }
 
+    function testAuthHasNecessaryFieldsForEqUserCreation() {
+        $AUTH = new Auth_LDAP();
+
+        $AUTH->authenticate(TESTINGUSER,TESTINGPASSWORD);
+
+        $this->assertEqual($AUTH->username,Auth_Base::$TEST_USERNAME);
+        $this->assertEqual($AUTH->fname,Auth_Base::$TEST_FNAME);
+        $this->assertEqual($AUTH->lname,Auth_Base::$TEST_LNAME);
+        $this->assertEqual($AUTH->sortname,Auth_Base::$TEST_SORTNAME);
+        $this->assertEqual($AUTH->email,Auth_Base::$TEST_EMAIL);
+        $this->assertEqual($AUTH->inst_groups,Auth_Base::$TEST_INST_GROUPS);
+    }
 }
 ?>
