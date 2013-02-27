@@ -3,7 +3,6 @@ require_once dirname(__FILE__) . '/db_linked.class.php';
 require_once dirname(__FILE__) . '/permissions.class.php';
 require_once dirname(__FILE__) . '/role.class.php';
 require_once dirname(__FILE__) . '/inst_group.class.php';
-require_once dirname(__FILE__) . '/link_users_instgroups.class.php';
 
 class EqGroup extends Db_Linked
 {
@@ -49,17 +48,10 @@ class EqGroup extends Db_Linked
 		return $user_perms;
 	}
 
-	public static function getAllEqGroupsForInstGroup($ig) {
-		# dkc: for better or worse, this functionality is located inside the function 'getAllEqGroupsForUser'
-	}
+	public static function loadEqGroupsForUser($user) {
+		$user->inst_groups;
 
-	public static function getAllEqGroupsForUser($user) {
-		// get all inst groups and associated permissions for this user
-		$user_inst_groups = LinkUsersInstGroups::loadAllFromDb(['user_id'=>$user->user_id],$user->dbConnection);
-		/* e.g.
-			'user_id','inst_group_id','flag_delete'
-		 	1, STUDENT, 0
-		*/
+		# print_r($user_inst_groups);
 
 		// for each inst group, get all associated eq_groups
 		$user_inst_eq_groups = array();

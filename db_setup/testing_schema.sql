@@ -10,9 +10,11 @@ NOTE:
 
 */
 
-USE eqreserve;
+# Select which database you wish to run this script against
+# USE eqreserve;
+USE eqreservetest;
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`dblinktest` (
+CREATE TABLE IF NOT EXISTS `dblinktest` (
     `dblinktest_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `charfield` VARCHAR(255) NULL,
     `intfield` INT NOT NULL,

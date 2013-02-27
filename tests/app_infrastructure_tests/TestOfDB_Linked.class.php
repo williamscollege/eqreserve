@@ -8,7 +8,19 @@ class Trial_Db_Linked extends Db_Linked {
     public static $dbTable = 'dblinktest';
 }
 
-class TestOfDB_Linked extends UnitTestCaseDB {
+class Trial_Bad_Db_Linked_No_PK extends Db_Linked {
+    public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
+    public static $primaryKeyField = '';
+    public static $dbTable = 'dblinktest';
+}
+
+class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
+	public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
+	public static $primaryKeyField = 'dblinktest_id';
+	public static $dbTable = '';
+}
+
+	class TestOfDB_Linked extends UnitTestCaseDB {
 
     /////////////////////////////////////////
 
@@ -34,7 +46,7 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $insertStmt->execute();
     }
 
-    /////////////////////////////////////////
+	# BELOW: TESTS FOR INSTANCE METHODS
 
     function testConnectedToDatabase() {
        $this->assertNotNull($this->DB);
@@ -47,6 +59,26 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertEqual($testObj->dblinktest_id,1);
         $this->assertEqual($testObj->dblinktest_id,$testObj->fieldValues['dblinktest_id']);
     }
+
+	function testInstantiationFailsClassDefHasNoPK() {
+		$this->expectError(Db_Linked::$ERR_MSG_NO_PK);
+		$testObj = new Trial_Bad_Db_Linked_No_PK( ['DB'=>$this->DB ,'dblinktest_id'=>'1'] );
+	}
+
+	function testInstantiationFailsClassDefHasNoTable() {
+		$this->expectError(Db_Linked::$ERR_MSG_NO_TABLE);
+		$testObj = new Trial_Bad_Db_Linked_No_Table( ['DB'=>$this->DB ,'dblinktest_id'=>'1'] );
+	}
+
+	function testInstantiationFailsNoDBGiven() {
+		$this->expectError(Db_Linked::$ERR_MSG_NO_DB);
+		$testObj = new Trial_Db_Linked( [ 'dblinktest_id'=>'1'] );
+	}
+
+	function testInstantiationFailsBadDBGiven() {
+		$this->expectError(Db_Linked::$ERR_MSG_BAD_DB);
+		$testObj = new Trial_Db_Linked( ['DB'=>'' ,'dblinktest_id'=>'1'] );
+	}
 
     function testGetSet() {
         $testObj = new Trial_Db_Linked( ['DB'=>$this->DB
@@ -212,7 +244,21 @@ class TestOfDB_Linked extends UnitTestCaseDB {
         $this->assertEqual($selectResult['flagfield'],false);
     }
 
-    /////////////////////////////////////////
+
+    # BELOW: TESTS FOR STATIC METHODS
+
+	function testLoadOneFromDb() {
+		$this->_dbClear();
+		$this->_dbInsertTestRecord(['id'=>1]);
+
+		$matchingObject = Trial_Db_Linked::loadOneFromDb(['intfield'=>1],$this->DB);
+
+		$this->assertNotNull($matchingObject);
+		$this->assertTrue($matchingObject->matchesDb);
+		$this->assertEqual($matchingObject->charfield,'char data');
+		$this->assertEqual($matchingObject->intfield,1);
+		$this->assertEqual($matchingObject->flagfield,false);
+	}
 
     function testLoadMultipleFromDb() {
         $this->_dbClear();

@@ -59,6 +59,16 @@
 																						";
 			$addTestPermissionsStmt = $this->DB->prepare($addTestPermissionsSql);
 			$addTestPermissionsStmt->execute();
+
+			# link_users_inst_groups: user_id, inst_group_id, flag_delete
+			$insertTestLinkUsersInstGroupsSql = "INSERT INTO link_users_inst_groups VALUES (1,2,0),
+																							(1,3,0),
+																							(1,6,0),
+																							(2,4,0)
+																							(3,5,1)
+																							";
+			$insertTestLinkUsersInstGroupsStmt = $this->DB->prepare($insertTestLinkUsersInstGroupsSql);
+			$insertTestLinkUsersInstGroupsStmt->execute();
 		}
 
 		function tearDown() {
@@ -81,6 +91,10 @@
 			$rmTestPermissionsSql = "DELETE FROM ".Permissions::$dbTable;
 			$rmTestPermissionsStmt = $this->DB->prepare($rmTestPermissionsSql);
 			$rmTestPermissionsStmt->execute();
+
+			$rmTestLinkUsersInstGroupsSql = "DELETE FROM link_users_inst_groups";
+			$rmTestLinkUsersInstGroupsStmt = $this->DB->prepare($rmTestLinkUsersInstGroupsSql);
+			$rmTestLinkUsersInstGroupsStmt->execute();
 		}
 
 		public function TestOfEqGroupCmp()
@@ -102,13 +116,12 @@
 		public function TestOfGetAllEqGroupsForNonAdminUser()
 		{
 			$user = new User(['user_id' => 1, 'DB' => $this->DB]);
+			$eqs = EqGroup::loadEqGroupsForUser($user);
 
-			// obsolete; exists within eq_group class: $insts = EqGroup::getAllInstGroupsForUser($user);
-
-			$eqs = EqGroup::getAllEqGroupsForUser($user);
-
-# problem on Line 115: I'm returning an array, instead of the expected EqGroup object
 print_r($eqs);
+			$this->assertNotNull($eqs);
+			$this->assertTrue(is_array($eqs));
+
 			usort($eqs, "EqGroup::cmpAlphabetical");
 
 			$this->assertTrue(is_array($eqs));
