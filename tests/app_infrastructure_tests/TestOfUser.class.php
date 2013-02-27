@@ -13,6 +13,15 @@ class TestOfUser extends UnitTestCaseDB {
 		$addTestUserStmt = $this->DB->prepare($addTestUserSql);
 		$addTestUserStmt->execute();
 
+        $addTestInstGroupSql = "INSERT INTO ".InstGroup::$dbTable." VALUES (1,'".Auth_Base::$TEST_INST_GROUPS[0]."',0),(2,'".Auth_Base::$TEST_INST_GROUPS[1]."',0),(3,'".Auth_Base::$TEST_INST_GROUPS[2]."',1),(4,'".Auth_Base::$TEST_INST_GROUPS[3]."',0)";
+        // normal, normal, deleted, normal
+        $addTestInstGroupStmt = $this->DB->prepare($addTestInstGroupSql);
+        $addTestInstGroupStmt->execute();
+
+        $linkUserToInstGroupSql = "INSERT INTO link_users_inst_groups  VALUES (1,1,0),(1,2,1),(1,3,0)"; // normal, link deleted, group deleted
+        $linkUserToInstGroupStmt = $this->DB->prepare($linkUserToInstGroupSql);
+        $linkUserToInstGroupStmt->execute();
+
 		$this->auth = new MockAuth_Base();
         $this->auth->username       = Auth_Base::$TEST_USERNAME;
         $this->auth->email          = Auth_Base::$TEST_EMAIL;
@@ -25,9 +34,17 @@ class TestOfUser extends UnitTestCaseDB {
 	}
 	
 	function tearDown() {
-		$rmTestUserSql = "DELETE FROM ".User::$dbTable." WHERE user_id = 1";
-		$rmTestUserStmt = $this->DB->prepare($rmTestUserSql);
-		$rmTestUserStmt->execute();
+        $rmTestUserSql = "DELETE FROM ".User::$dbTable;
+        $rmTestUserStmt = $this->DB->prepare($rmTestUserSql);
+        $rmTestUserStmt->execute();
+
+        $rmTestInstGroupSql = "DELETE FROM ".InstGroup::$dbTable;
+        $rmTestInstGroupStmt = $this->DB->prepare($rmTestInstGroupSql);
+        $rmTestInstGroupStmt->execute();
+
+        $rmLinkUserInstGroupSql = "DELETE FROM link_users_inst_groups";
+        $rmLinkUserInstGroupStmt = $this->DB->prepare($rmLinkUserInstGroupSql);
+        $rmLinkUserInstGroupStmt->execute();
 	}
 
 	function testUserAtributesExist() {
@@ -44,10 +61,8 @@ class TestOfUser extends UnitTestCaseDB {
 		$this->assertTrue(in_array('flag_delete',User::$fields));		
 	}
 
-/*
-	function testUser() {
-	}	
-*/
+    // DB interaction tests
+
 	function testUserRetrievedFromDb() {
 		$u = new User(['user_id'=>1,'DB'=>$this->DB]);
 		$this->assertNull($u->username);
@@ -55,6 +70,20 @@ class TestOfUser extends UnitTestCaseDB {
 		$u->refreshFromDb();
         $this->assertEqual($u->username,Auth_Base::$TEST_USERNAME);
 	}	
+
+    function testUserInstGroupsLoaded() {
+        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+
+        $u->loadInstGroups();
+
+        $this->assertTrue(is_array($u->inst_groups));
+        $this->assertEqual(count($u->inst_groups),1);        
+        $this->assertEqual(get_class($u->inst_groups[0]),'InstGroup');
+        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+
+    }   
+
+    /// auth-related tests
 
 	function testUserUpdatesDbWhenValidAuthDataIsDifferent() {
 		$u = User::loadOneFromDb(['user_id'=>1],$this->DB);
@@ -93,7 +122,8 @@ class TestOfUser extends UnitTestCaseDB {
 
         // should let caller/program know there's a problem
         $this->assertFalse($status);
-    }   
+    }
+   
 /*
 store and output on user account page:
 	comm_prefs

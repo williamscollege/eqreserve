@@ -14,13 +14,11 @@
 				session_regenerate_id(TRUE);
 				$_SESSION['isAuthenticated']       = TRUE;
 				$_SESSION['userdata']              = array();
-				$_SESSION['userdata']['username']  = $_REQUEST['username'];
-				$_SESSION['userdata']['email']     = $AUTH->mail;
-				$_SESSION['userdata']['fullname']  = $AUTH->name;
+                $_SESSION['userdata']['username']  = $AUTH->username;
+				$_SESSION['userdata']['email']     = $AUTH->email;
 				$_SESSION['userdata']['firstname'] = $AUTH->fname;
 				$_SESSION['userdata']['lastname']  = $AUTH->lname;
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
-				$_SESSION['userdata']['position']  = $AUTH->position; // e.g. (STUDENT, FACULTY, STAFF)
 				// array of institutional groups for this user
 				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array
 								

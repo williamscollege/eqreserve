@@ -156,7 +156,6 @@ abstract class Db_Linked
 
     public static function loadAllFromDb($searchHash,$usingDb) {
         $whichClass = get_called_class();
-        $template = new $whichClass(['DB'=>$usingDb]);
         $fetchStmt = self::_buildFetchStatement($searchHash,$usingDb);
         $fetchStmt->execute($searchHash);
         $res = $fetchStmt->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $whichClass,[['DB'=>$usingDb]]);

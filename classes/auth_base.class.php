@@ -19,7 +19,7 @@ class Auth_Base
     public static $TEST_LNAME = 'Bovine';
     public static $TEST_SORTNAME = 'Bovine, Violet C.';
     public static $TEST_EMAIL = 'vbovine@institution.edu';
-    public static $TEST_INST_GROUPS = ['STUDENT','helpdesk-staff','13S-BIOL-710','13S-BIOL-710-01'];
+    public static $TEST_INST_GROUPS = ['STUDENT','helpdesk-staff','BIOL-710','13S-BIOL-710-01'];
 
     // TAKES: this function takes two parameters, a username and a password, both strings
     // DOES: checks the username and password against an authentication source (details implemented by subclass); if the authentication checks out, the various attributes of this object are populated with the appropriate user data
