@@ -13,28 +13,22 @@ NOTES:
 	reservations are for items, not groups. if a manager reserves a group, she is really reserving all items (i.e. to take the group offline for a period of time)
 
 FOR TESTING ONLY:
-	USE eqreserve;
-	DROP TABLE `eqreserve`.`eq_groups`;
-	DROP TABLE `eqreserve`.`eq_subgroups`;
-	DROP TABLE `eqreserve`.`eq_items`;
-	DROP TABLE `eqreserve`.`users`;
-	DROP TABLE `eqreserve`.`inst_groups`;
-	DROP TABLE `eqreserve`.`link_users_inst_groups`;
-	DROP TABLE `eqreserve`.`comm_prefs`;
-	DROP TABLE `eqreserve`.`roles`;
-	DROP TABLE `eqreserve`.`permissions`;
-	DROP TABLE `eqreserve`.`link_items_time_block_groups`;
-	DROP TABLE `eqreserve`.`time_block_groups`;
-	DROP TABLE `eqreserve`.`time_blocks`;
+	DROP TABLE `eq_groups`;
+	DROP TABLE `eq_subgroups`;
+	DROP TABLE `eq_items`;
+	DROP TABLE `users`;
+	DROP TABLE `inst_groups`;
+	DROP TABLE `link_users_inst_groups`;
+	DROP TABLE `comm_prefs`;
+	DROP TABLE `roles`;
+	DROP TABLE `permissions`;
+	DROP TABLE `link_items_time_block_groups`;
+	DROP TABLE `time_block_groups`;
+	DROP TABLE `time_blocks`;
 */
 
-CREATE SCHEMA IF NOT EXISTS
-eqreserve;
 
-USE eqreserve;
-
-
-CREATE TABLE IF NOT EXISTS `eqreserve`.`eq_groups` (
+CREATE TABLE IF NOT EXISTS `eq_groups` (
     `eq_group_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
@@ -47,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`eq_groups` (
 /* start_minute: comma separated list of minutes of the hour on which a time block may be created (e.g. 0,30) */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`eq_subgroups` (
+CREATE TABLE IF NOT EXISTS `eq_subgroups` (
     `eq_subgroup_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `eq_group_id` INT NOT NULL,
     `name` VARCHAR(255) NULL,
@@ -58,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`eq_subgroups` (
 /* FK: eq_groups.eq_group_id */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`eq_items` (
+CREATE TABLE IF NOT EXISTS `eq_items` (
     `eq_item_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `eq_subgroup_id` INT NOT NULL,
     `name` VARCHAR(255) NULL,
@@ -69,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`eq_items` (
 /* FK: eq_subgroups.eq_subgroup_id */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`users` (
+CREATE TABLE IF NOT EXISTS `users` (
     `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(255) NULL,
     `fname` VARCHAR(255) NULL,
@@ -82,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`users` (
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='linked to and derived from LDAP info';
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`inst_groups` (
+CREATE TABLE IF NOT EXISTS `inst_groups` (
     `inst_group_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -90,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`inst_groups` (
 /* name: faculty, staff, student, org unit, classes/courses, none, etc. ("none" is implied by a lack of an entry in the link_user_groups table) */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`link_users_inst_groups` (
+CREATE TABLE IF NOT EXISTS `link_users_inst_groups` (
     `user_id` INT NOT NULL,
     `inst_group_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -98,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`link_users_inst_groups` (
 /* FK: users.user_id */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`comm_prefs` (
+CREATE TABLE IF NOT EXISTS `comm_prefs` (
     `comm_pref_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
     `eq_group_id` INT NOT NULL,
@@ -109,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`comm_prefs` (
 /* FK: users.user_id */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`roles` (
+CREATE TABLE IF NOT EXISTS `roles` (
     `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -117,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`roles` (
 /* name: admin, manager, consumer ("none" is implied by a lack of an entry in the permissions table) */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`permissions` (
+CREATE TABLE IF NOT EXISTS `permissions` (
     `permission_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `entity_id`  INT NOT NULL,
 	`entity_type` VARCHAR(255) NULL,
@@ -132,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`permissions` (
 /* FK: eq_groups.eq_group_id */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`link_items_time_block_groups` (
+CREATE TABLE IF NOT EXISTS `link_items_time_block_groups` (
     `eq_item_id` INT NOT NULL,
     `time_block_group_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -140,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`link_items_time_block_groups` (
 /* FK: eq_items.eq_item_id */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`time_block_groups` (
+CREATE TABLE IF NOT EXISTS `time_block_groups` (
     `time_block_group_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `type` VARCHAR(255) NULL,
     `user_id` INT NOT NULL,
@@ -150,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `eqreserve`.`time_block_groups` (
 /* type: manager_reserve, consumer_reserve */
 
 
-CREATE TABLE IF NOT EXISTS `eqreserve`.`time_blocks` (
+CREATE TABLE IF NOT EXISTS `time_blocks` (
     `time_block_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `time_block_group_id` INT NOT NULL,
     `start_time` DATETIME NULL,
