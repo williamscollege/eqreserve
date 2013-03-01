@@ -54,7 +54,7 @@
 			
 			// now create user object
 			require_once('/classes/user.class.php');
-			$USER = new User(['username'=>$_SESSION['userdata']['username']],$DB);
+			$USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
 			
 			// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 	}
