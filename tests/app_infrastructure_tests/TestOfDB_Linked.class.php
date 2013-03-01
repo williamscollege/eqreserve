@@ -297,6 +297,30 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertPattern('/[12]/',$matchingObjects[1]->dblinktest_id);
     }
 
+    function testArrayToPkHash() {
+        $objAr = [
+            new Trial_Db_Linked( ['dblinktest_id'=>'3','DB'=>$this->DB]),
+            new Trial_Db_Linked( ['dblinktest_id'=>'8','DB'=>$this->DB]),
+            new Trial_Db_Linked( ['dblinktest_id'=>'11','DB'=>$this->DB]),
+            new Trial_Db_Linked( ['dblinktest_id'=>'5','DB'=>$this->DB])
+        ];
+
+        $this->assertEqual(count($objAr),4);
+        $this->assertEqual(array_keys($objAr),[0,1,2,3]);
+
+        $pkHash = Trial_Db_Linked::arrayToPkHash($objAr);
+
+        $this->assertEqual(count($pkHash),4);
+        $newKeys = array_keys($pkHash);
+        sort($newKeys);
+        $this->assertEqual($newKeys,[3,5,8,11]);
+
+        $this->assertEqual($pkHash[3]->dblinktest_id,3);
+        $this->assertEqual($pkHash[5]->dblinktest_id,5);
+        $this->assertEqual($pkHash[8]->dblinktest_id,8);
+        $this->assertEqual($pkHash[11]->dblinktest_id,11);
+    }
+
 }
 
 

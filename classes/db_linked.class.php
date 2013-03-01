@@ -160,6 +160,16 @@ abstract class Db_Linked
 
     /////////////////////////////////////////////////////
 
+    public static function arrayToPkHash($arrayOfDbLinkedObjects) {
+        $pkHash = [];
+        $pkField = static::$primaryKeyField;
+        foreach ($arrayOfDbLinkedObjects as $obj) {
+            $pkHash[$obj->$pkField] = $obj;
+        }
+        return $pkHash;
+    }
+
+
     public static function loadAllFromDb($searchHash,$usingDb) {
         $whichClass = get_called_class();
         $fetchStmt = self::_buildFetchStatement($searchHash,$usingDb);
