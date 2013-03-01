@@ -124,12 +124,6 @@ class TestOfUser extends UnitTestCaseDB {
         $this->assertFalse($status);
     }
    
-/*
-store and output on user account page:
-	comm_prefs
-	eq_groups and permissions
-	inst_groups: add permissions to SESSION variable
-*/
 
 }
 ?>
