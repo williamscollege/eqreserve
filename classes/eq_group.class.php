@@ -2,7 +2,7 @@
 require_once dirname(__FILE__) . '/db_linked.class.php';
 require_once dirname(__FILE__) . '/permission.class.php';
 require_once dirname(__FILE__) . '/role.class.php';
-#require_once dirname(__FILE__) . '/inst_group.class.php';
+
 
 class EqGroup extends Db_Linked
 {

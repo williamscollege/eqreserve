@@ -23,14 +23,19 @@ You may access the fields listed in the class definition as if they were real at
     $testObj->charfield = 'some character data';
 
 
-The class has a static function to load a single object from the database (e.g. load where PK 'dblinktest_id' = 1)
+The class has a static function to load a single object from the database (e.g. load where PK 'dblinktest_id' = 1). This first parameter is a search hash - i.e. a hash where the keys are the names of the fields and the values are used to create conditions of the select statement that retrieves the record from the DB. 
+NOTE 1: in the event that multiple records match the search hash, the first (as arbitrarily given by the DB) is used
+NOTE 2: if the value in the search hash is scalar then equality is used; if the value is an array then the IN operation is used
 
     $o1 = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'1'],$DB);
 
-and a corresponding static function to load a set of matching objects (e.g. load all where 'intfield' value = 5)
+There is also a corresponding static function to load a set of matching objects (e.g. load all where 'intfield' value = 5).
 
     $objList = Trial_Db_Linked::loadAllFromDb( ['intfield'=>'5'],$DB);
 
+and an example using an array as a the value in the search hash
+
+    $objList = Trial_Db_Linked::loadAllFromDb( ['intfield'=>[2,3,5]],$DB);
 
 For a single object you can also use the refreshFromDb method of the object itself, which loads information based on the attributes currently set in the object. E.g.
 
@@ -81,7 +86,8 @@ abstract class Db_Linked
 	public static $ERR_MSG_NO_PK = "missing primary key in db_linked sub-class definition";
 	public static $ERR_MSG_NO_TABLE = "missing table name in db_linked sub-class definition";
 	public static $ERR_MSG_NO_DB = "no db connection provided to db_linked sub-class constructor";
-	public static $ERR_MSG_BAD_DB = "empty db connection provided to db_linked sub-class constructor";
+    public static $ERR_MSG_BAD_DB = "empty db connection provided to db_linked sub-class constructor";
+    public static $ERR_MSG_BAD_SEARCH_PARAM = "an invalid value was given in the search hash";
 
 	/////////////////////////////////////////////////////
 
@@ -154,6 +160,16 @@ abstract class Db_Linked
 
     /////////////////////////////////////////////////////
 
+    public static function arrayToPkHash($arrayOfDbLinkedObjects) {
+        $pkHash = [];
+        $pkField = static::$primaryKeyField;
+        foreach ($arrayOfDbLinkedObjects as $obj) {
+            $pkHash[$obj->$pkField] = $obj;
+        }
+        return $pkHash;
+    }
+
+
     public static function loadAllFromDb($searchHash,$usingDb) {
         $whichClass = get_called_class();
         $fetchStmt = self::_buildFetchStatement($searchHash,$usingDb);
@@ -186,12 +202,37 @@ abstract class Db_Linked
         return $recipient;
     } 
 
-    private static function _buildFetchStatement($identHash,$usingDb) {
+    // takes: a hash of field names to values (the latter may be scalar or array)
+    // returns: a prepared select statement based on the data in the hash
+    // SIDE EFFECT: if any of the values in the hash are arrays then the hash will be altered to create those values top-level keys and to remove the initial top-level key - this enables the hash to be used in the execute statement later
+    private static function _buildFetchStatement(&$identHash,$usingDb) {
         $fetchSql = 'SELECT '.implode(',',static::$fields).' FROM '.static::$dbTable.' WHERE 1=1';
+        $keys_to_remove = [];
         foreach ($identHash as $k=>$v) {
-            $fetchSql .= ' AND '.$k.' = :'.$k;
+            if (is_array($v)) {
+                if (count($v) <= 0) {
+                    trigger_error(Db_Linked::$ERR_MSG_BAD_SEARCH_PARAM,E_USER_ERROR);
+                    return;
+                }
+                array_push($keys_to_remove,$k);
+                $fetchSql .= ' AND '.$k.' IN (';
+                for ($i = 0,$numElts = count($v); $i<$numElts;$i++) {
+                    $identHash["$k$i"] = $v[$i];
+                    if ($i > 0) { $fetchSql .= ','; }
+                    $fetchSql .= ":$k$i";
+                }
+                $fetchSql .= ')';
+            }
+            else {
+                $fetchSql .= ' AND '.$k.' = :'.$k;
+            }
         }
         $fetchStmt = $usingDb->prepare($fetchSql);
+
+        foreach ($keys_to_remove as $k) {
+            unset($identHash[$k]);
+        }
+
         return $fetchStmt;
     }
 

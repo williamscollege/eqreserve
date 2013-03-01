@@ -9,15 +9,14 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 /*
 	# Equipment Groups
 	echo "<h3>(User) Equipment Groups</h3>";
+
 	# instantiate the equipment groups and roles for this user
 	$UserEqGroups = new EqGroup();
 	echo "<ul>";
-
-	# instantiate the equipment groups and roles for this user
-	$EqGroups = new EqGroup();
-	if ($EqGroups->EqGroup::getEqGroups($_SESSION['userdata']['username'])) {
-		for ($i = 0, $size = count($EqGroups->eq_group_id); $i < $size; ++$i) {
-			echo "<li><a href=\"equipment_group.php?eid=" . $EqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $EqGroups[$i]['name'] . "</a> [description: " . $EqGroups[$i]['descr'] . "]</li>";
+	$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($_SESSION['userdata']['username']);
+	if (count($UserEqGroups)>0) {
+		for ($i = 0, $size = count($UserEqGroups); $i < $size; ++$i) {
+			echo "<li><a href=\"equipment_group.php?eid=" . $UserEqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $UserEqGroups[$i]['name'] . "</a> [description: " . $UserEqGroups[$i]['descr'] . "]</li>";
 		}
 	} else {
 		echo "<li>You do not belong to any equipment groups.</li>";
@@ -32,7 +31,7 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	$AdminEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],$DB); //EqGroup::getAllEqGroups($DB);
 	if (count($AdminEqGroups)>0) {
 		for ($i = 0, $size = count($AdminEqGroups); $i < $size; ++$i) {
-			echo "<li><a href=\"equipment_group.php?eid=" . $EqGroups[$i]->eq_group_id . "\" title=\"\">" . $EqGroups[$i]->name . "</a> [description: " . $EqGroups[$i]->descr . "]</li>";
+			echo "<li><a href=\"equipment_group.php?eid=" . $AdminEqGroups[$i]->eq_group_id . "\" title=\"\">" . $AdminEqGroups[$i]->name . "</a> [description: " . $AdminEqGroups[$i]->descr . "]</li>";
 		}
 	} else {
 		echo "<li>There are currently no equipment groups.</li>";

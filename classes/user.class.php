@@ -54,9 +54,18 @@ class User extends Db_Linked
 
 		$this->updateDb();
 		
+        // TODO: handle inst groups here        
+        $this->loadInstGroups();
+
+        // cycle through auth inst groups
+        // load each one, creating if necessary
+        // if there's an auth inst group that's not in the users list, add it (and create the relevant link)
+
+        // cycle through user inst groups
+        // if one isn't in the auth groups, un-link it (but do not delete the group)
+
 		return true;
 
-		// TODO: handle inst groups here		
 	}
 } 
 
