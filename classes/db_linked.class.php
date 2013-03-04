@@ -206,6 +206,17 @@ abstract class Db_Linked
     // returns: a prepared select statement based on the data in the hash
     // SIDE EFFECT: if any of the values in the hash are arrays then the hash will be altered to create those values top-level keys and to remove the initial top-level key - this enables the hash to be used in the execute statement later
     private static function _buildFetchStatement(&$identHash,$usingDb) {
+        $fetchSql = static::buildFetchSql($identHash);
+
+        $fetchStmt = $usingDb->prepare($fetchSql);
+
+        return $fetchStmt;
+    }
+
+    // takes: a hash of field names to values (the latter may be scalar or array)
+    // returns: a select statement based on the data in the hash
+    // SIDE EFFECT: if any of the values in the hash are arrays then the hash will be altered to create those values top-level keys and to remove the initial top-level key - this enables the hash to be used in the execute statement later
+    public static function buildFetchSql(&$identHash) {
         $fetchSql = 'SELECT '.implode(',',static::$fields).' FROM '.static::$dbTable.' WHERE 1=1';
         $keys_to_remove = [];
         $key_vals_to_add = [];
@@ -218,9 +229,10 @@ abstract class Db_Linked
                 array_push($keys_to_remove,$k);
                 $fetchSql .= ' AND '.$k.' IN (';
                 for ($i = 0,$numElts = count($v); $i<$numElts;$i++) {
-                    $key_vals_to_add["$k$i"] = $v[$i];
+                    $newKey = "__$k$i";
+                    $key_vals_to_add[$newKey] = $v[$i];
                     if ($i > 0) { $fetchSql .= ','; }
-                    $fetchSql .= ":$k$i";
+                    $fetchSql .= ":$newKey";
                 }
                 $fetchSql .= ')';
             }
@@ -228,8 +240,6 @@ abstract class Db_Linked
                 $fetchSql .= ' AND '.$k.' = :'.$k;
             }
         }
-        $fetchStmt = $usingDb->prepare($fetchSql);
-
         foreach ($keys_to_remove as $k) {
             unset($identHash[$k]);
         }
@@ -237,7 +247,7 @@ abstract class Db_Linked
             $identHash[$k] = $v;
         }
 
-        return $fetchStmt;
+        return $fetchSql;
     }
 
     /////////////////////////////////////////////////////
