@@ -6,14 +6,12 @@ require_once('/classes/eq_group.class.php');
 
 if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 
-/*
-	# Equipment Groups
-	echo "<h3>(User) Equipment Groups</h3>";
 
+	echo "<h3>(User) Equipment Groups</h3>";
 	# instantiate the equipment groups and roles for this user
-	$UserEqGroups = new EqGroup();
+	$UserEqGroups = new EqGroup([$USER, 'DB'=>$DB]);
 	echo "<ul>";
-	$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($_SESSION['userdata']['username']);
+	$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
 	if (count($UserEqGroups)>0) {
 		for ($i = 0, $size = count($UserEqGroups); $i < $size; ++$i) {
 			echo "<li><a href=\"equipment_group.php?eid=" . $UserEqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $UserEqGroups[$i]['name'] . "</a> [description: " . $UserEqGroups[$i]['descr'] . "]</li>";
@@ -22,11 +20,10 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 		echo "<li>You do not belong to any equipment groups.</li>";
 	}
 	echo "</ul>";
-*/
-	
+
+
 	echo "<h3>(Sys Admin) Equipment Groups</h3>";
 	echo "<ul>";
-
 	# instantiate the equipment groups for the system administrator
 	$AdminEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],$DB); //EqGroup::getAllEqGroups($DB);
 	if (count($AdminEqGroups)>0) {
@@ -37,6 +34,7 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 		echo "<li>There are currently no equipment groups.</li>";
 	}
 	echo "</ul>";
+
 
 	# DEVINFO
 	echo "<div class=\"DEVINFO\">";
