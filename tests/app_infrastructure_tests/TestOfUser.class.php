@@ -18,7 +18,7 @@ class TestOfUser extends UnitTestCaseDB {
         $addTestInstGroupStmt = $this->DB->prepare($addTestInstGroupSql);
         $addTestInstGroupStmt->execute();
 
-        $linkUserToInstGroupSql = "INSERT INTO link_users_inst_groups  VALUES (1,1,0),(1,2,1),(1,3,0)"; // normal, link deleted, group deleted
+        $linkUserToInstGroupSql = "INSERT INTO ".InstMembership::$dbTable."  VALUES (1,1,1,0),(2,1,2,1),(3,1,3,0)"; // normal, link deleted, group deleted
         $linkUserToInstGroupStmt = $this->DB->prepare($linkUserToInstGroupSql);
         $linkUserToInstGroupStmt->execute();
 
@@ -80,7 +80,6 @@ class TestOfUser extends UnitTestCaseDB {
         $this->assertEqual(count($u->inst_groups),1);        
         $this->assertEqual(get_class($u->inst_groups[0]),'InstGroup');
         $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
-
     }   
 
     /// auth-related tests
@@ -103,7 +102,7 @@ class TestOfUser extends UnitTestCaseDB {
 		$this->assertEqual($u2->lname,$this->auth->lname);
 	}	
 
-    function ASIDE_testUserInstGroupsAddedDbWhenValidAuthDataIsDifferent() {
+    function ASIDEtestUserInstGroupsAddedDbWhenValidAuthDataIsDifferent() {
         $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual(count($u->inst_groups),1);

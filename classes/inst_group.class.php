@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/db_linked.class.php';
+require_once dirname(__FILE__) . '/inst_membership.class.php';
 
 
 class InstGroup extends Db_Linked
@@ -12,47 +13,48 @@ class InstGroup extends Db_Linked
 
     // links the given user to this group; makes the given user a member of this group
     public function linkUser($u) {
-        $linkInstGroupToUserSql = "INSERT INTO link_users_inst_groups VALUES (".$u->user_id.",".$this->inst_group_id.",0)";
-        $linkInstGroupToUserStmt = $this->dbConnection->prepare($linkInstGroupToUserSql);
-        $linkInstGroupToUserStmt->execute();
+        $m = InstMembership::loadOneFromDb(['user_id'=>$u->user_id,'inst_group_id'=>$this->inst_group_id],$this->dbConnection);
+
+        if (! $m->matchesDb) {
+            $m = new InstMembership(['user_id'=>$u->user_id,'inst_group_id'=>$this->inst_group_id,'flag_delete'=>false,'DB'=>$this->dbConnection]);
+            $m->updateDb();
+        } 
+        elseif ($m->flag_delete) {
+            $m->flag_delete = false;
+            $m->updateDb();
+        }
         $u->loadInstGroups();
     }
 
     // unlinks the given user from this group; makes the given user a NOT member of this group
     public function unlinkUser($u) {
-        $unlinkInstGroupFromUserSql = "UPDATE link_users_inst_groups SET flag_delete = 1 WHERE user_id=".$u->user_id." AND inst_group_id=".$this->inst_group_id;
-        $unlinkInstGroupFromUserStmt = $this->dbConnection->prepare($unlinkInstGroupFromUserSql);
-        $unlinkInstGroupFromUserStmt->execute();
+        $m = InstMembership::loadOneFromDb(['user_id'=>$u->user_id,'inst_group_id'=>$this->inst_group_id,'flag_delete'=>false],$this->dbConnection);
+        if ($m->matchesDb) {
+            $m->flag_delete = true;
+            $m->updateDb();
+        }
         $u->loadInstGroups();
     }
 
     // returns an array of all users that are members of this group
     public function getAllUsers() {
-        $getUserIdsSql = "SELECT user_id FROM link_users_inst_groups WHERE inst_group_id=".$this->inst_group_id." AND flag_delete = 0";
-        $getUserIdsStmt = $this->dbConnection->prepare($getUserIdsSql);
-        $getUserIdsStmt->execute();
-        $users = [];
-        while ($row = $getUserIdsStmt->fetch(PDO::FETCH_ASSOC)) {
-            array_push($users,User::loadOneFromDb($row,$this->dbConnection));
+        $memberships = InstMembership::loadAllFromDb(['inst_group_id'=>$this->inst_group_id,'flag_delete'=>false],$this->dbConnection);
+        if (count($memberships) <= 0) {
+            return [];
         }
-        return $users;
+        $userIds = array_map(function($e){return $e->user_id;},$memberships);
+        return User::loadAllFromDb(['user_id'=>$userIds,'flag_delete'=>false],$this->dbConnection);
     }
 
     /////////////////////
 
     public static function getInstGroupsForUser($user) {
-        $getInstGroupsSql = "SELECT ig.inst_group_id, ig.name, ig.flag_delete 
-                             FROM ".InstGroup::$dbTable." AS ig, link_users_inst_groups AS link 
-                             WHERE link.user_id = ".$user->user_id." AND ig.inst_group_id = link.inst_group_id
-                                AND link.flag_delete = 0 AND ig.flag_delete = 0";
-        $getInstGroupsStmt = $user->dbConnection->prepare($getInstGroupsSql);
-        $getInstGroupsStmt->execute();
-        $groups = [];
-        while ($row = $getInstGroupsStmt->fetch()) {
-            $ig = new InstGroup(['DB'=>$user->dbConnection,'inst_group_id'=>$row['inst_group_id'],'name'=>$row['name'],'flag_delete'=>0]);
-            array_push($groups,$ig);
+        $memberships = InstMembership::loadAllFromDb(['user_id'=>$user->user_id,'flag_delete'=>false],$user->dbConnection);
+        if (count($memberships) <= 0) {
+            return [];
         }
-        return $groups;
+        $instGroupIds = array_map(function($e){return $e->inst_group_id;},$memberships);
+        return InstGroup::loadAllFromDb(['inst_group_id'=>$instGroupIds,'flag_delete'=>false],$user->dbConnection);
     }
 
 

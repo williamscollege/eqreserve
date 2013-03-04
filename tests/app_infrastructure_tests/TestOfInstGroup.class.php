@@ -16,7 +16,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
         $addTestInstGroupStmt = $this->DB->prepare($addTestInstGroupSql);
         $addTestInstGroupStmt->execute();
 
-        $linkUserToInstGroupSql = "INSERT INTO link_users_inst_groups  VALUES (1,1,0),(1,2,1),(1,3,0)"; // normal, link deleted, group deleted
+        $linkUserToInstGroupSql = "INSERT INTO ".InstMembership::$dbTable."  VALUES (1,1,1,0),(2,1,2,1),(3,1,3,0)"; // normal, link deleted, group deleted
         $linkUserToInstGroupStmt = $this->DB->prepare($linkUserToInstGroupSql);
         $linkUserToInstGroupStmt->execute();
 	}
@@ -30,7 +30,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
         $rmTestInstGroupStmt = $this->DB->prepare($rmTestInstGroupSql);
         $rmTestInstGroupStmt->execute();
 
-        $rmLinkUserInstGroupSql = "DELETE FROM link_users_inst_groups";
+        $rmLinkUserInstGroupSql = "DELETE FROM ".InstMembership::$dbTable;
         $rmLinkUserInstGroupStmt = $this->DB->prepare($rmLinkUserInstGroupSql);
         $rmLinkUserInstGroupStmt->execute();
 	}
@@ -48,9 +48,22 @@ class TestOfInstGroup extends UnitTestCaseDB {
 	}
 
 
+    // DB interaction tests - static method tests
+
+    function testGetUserInstGroups() {
+        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+
+        $groups = InstGroup::getInstGroupsForUser($u);
+
+        $this->assertTrue(is_array($groups));
+        $this->assertEqual(count($groups),1);        
+        $this->assertEqual(get_class($groups[0]),'InstGroup');
+        $this->assertEqual($groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+    }
+
     // DB interaction tests - object instance tests
 
-    function testLinkUser() {
+    function testLinkUserNew() {
         $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual(count($u->inst_groups),1);
@@ -58,10 +71,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
         $g = InstGroup::loadOneFromDb(['inst_group_id'=>4],$this->DB);
         $this->assertNotEqual($u->inst_groups[0]->inst_group_id,$g->inst_gorup_id);
 
-
         $g->linkUser($u);
-        //$u->loadInstGroups();
-
 
         $this->assertEqual(count($u->inst_groups),2);
 
@@ -70,6 +80,35 @@ class TestOfInstGroup extends UnitTestCaseDB {
             $new_g = $u->inst_groups[1];
         }
         $this->assertEqual($new_g->inst_group_id,4);
+    } 
+
+    function testLinkUserReactivate() {
+        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u->loadInstGroups();
+        $this->assertEqual(count($u->inst_groups),1);
+
+        $g = InstGroup::loadOneFromDb(['inst_group_id'=>2],$this->DB);
+        $this->assertNotEqual($u->inst_groups[0]->inst_group_id,$g->inst_gorup_id);
+
+        $m = InstMembership::loadOneFromDb(['inst_membership_id'=>2],$this->DB);
+        $this->assertTrue($m->flag_delete);
+        $this->assertEqual($m->user_id,$u->user_id);
+        $this->assertEqual($m->inst_group_id,$g->inst_group_id);
+
+        $g->linkUser($u);
+
+        $this->assertEqual(count($u->inst_groups),2);
+
+        $new_g = $u->inst_groups[0];
+        if ($new_g->inst_group_id != 2) {
+            $new_g = $u->inst_groups[1];
+        }
+        $this->assertEqual($new_g->inst_group_id,2);
+
+        $m = InstMembership::loadOneFromDb(['inst_membership_id'=>2],$this->DB);
+        $this->assertFalse($m->flag_delete);
+        $this->assertEqual($m->user_id,$u->user_id);
+        $this->assertEqual($m->inst_group_id,$g->inst_group_id);
     } 
 
     function testUnlinkUser() {
@@ -108,19 +147,6 @@ class TestOfInstGroup extends UnitTestCaseDB {
 
         $this->assertEqual(count($users),0);
     } 
-
-    // DB interaction tests - static method tests
-
-    function testGetUserInstGroups() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
-
-        $groups = InstGroup::getInstGroupsForUser($u);
-
-        $this->assertTrue(is_array($groups));
-        $this->assertEqual(count($groups),1);        
-        $this->assertEqual(get_class($groups[0]),'InstGroup');
-        $this->assertEqual($groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
-    }
 
 }
 ?>

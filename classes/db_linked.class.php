@@ -208,6 +208,7 @@ abstract class Db_Linked
     private static function _buildFetchStatement(&$identHash,$usingDb) {
         $fetchSql = 'SELECT '.implode(',',static::$fields).' FROM '.static::$dbTable.' WHERE 1=1';
         $keys_to_remove = [];
+        $key_vals_to_add = [];
         foreach ($identHash as $k=>$v) {
             if (is_array($v)) {
                 if (count($v) <= 0) {
@@ -217,7 +218,7 @@ abstract class Db_Linked
                 array_push($keys_to_remove,$k);
                 $fetchSql .= ' AND '.$k.' IN (';
                 for ($i = 0,$numElts = count($v); $i<$numElts;$i++) {
-                    $identHash["$k$i"] = $v[$i];
+                    $key_vals_to_add["$k$i"] = $v[$i];
                     if ($i > 0) { $fetchSql .= ','; }
                     $fetchSql .= ":$k$i";
                 }
@@ -231,6 +232,9 @@ abstract class Db_Linked
 
         foreach ($keys_to_remove as $k) {
             unset($identHash[$k]);
+        }
+        foreach ($key_vals_to_add as $k=>$v) {
+            $identHash[$k] = $v;
         }
 
         return $fetchStmt;
@@ -260,7 +264,8 @@ abstract class Db_Linked
         $this->matchesDb = true;
     }
 
-    public function updateDb() {
+    public function updateDb($debug=0) {
+        if ($debug) { echo "<pre>\n"; }
         if ($this->matchesDb) {
             return;
         }
@@ -273,7 +278,7 @@ abstract class Db_Linked
             $doInsert = ($this->fieldValues[static::$primaryKeyField] != $checkResult[static::$primaryKeyField]);
         }
 
-
+        if ($debug) { echo "doInsert is $doInsert\n"; }
         if ($doInsert) {
             $insertSql = 'INSERT INTO '.static::$dbTable.' VALUES(:'.static::$primaryKeyField;
             foreach (static::$fields as $k) {
@@ -282,8 +287,11 @@ abstract class Db_Linked
                 }
             }
             $insertSql .= ')';
+            if ($debug) { echo "insertSql is $insertSql\n"; }
+
             $insertStmt = $this->dbConnection->prepare($insertSql);
-            $this->fieldValues[static::$primaryKeyField] = $insertStmt->execute($this->_getQueryValuesArray());
+            $res = $insertStmt->execute($this->_getQueryValuesArray());
+            $this->fieldValues[static::$primaryKeyField] = $res;
             $this->matchesDb = true;
         } 
         else {
@@ -294,11 +302,16 @@ abstract class Db_Linked
                 }
             }
             $updateSql .= ' WHERE '.static::$primaryKeyField.'= :'.static::$primaryKeyField;
+
+            if ($debug) { echo "updateSql is $updateSql\n"; }
+
             $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->_getQueryValuesArray());
 
             $this->matchesDb = true;
         }
+
+        if ($debug) { echo "</pre>\n"; }
     }
 
 } 

@@ -18,11 +18,11 @@ FOR TESTING ONLY:
 	DROP TABLE `eq_items`;
 	DROP TABLE `users`;
 	DROP TABLE `inst_groups`;
-	DROP TABLE `link_users_inst_groups`;
+    DROP TABLE `inst_memberships`;
 	DROP TABLE `comm_prefs`;
 	DROP TABLE `roles`;
 	DROP TABLE `permissions`;
-	DROP TABLE `link_items_time_block_groups`;
+    DROP TABLE `reservations`;
 	DROP TABLE `time_block_groups`;
 	DROP TABLE `time_blocks`;
 */
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `notes` TEXT NULL,
     `flag_is_banned` BIT(1) NOT NULL DEFAULT 0,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='linked to and derived from LDAP info';
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='linked to and derived from remote auth source info';
 
 
 CREATE TABLE IF NOT EXISTS `inst_groups` (
@@ -88,11 +88,12 @@ CREATE TABLE IF NOT EXISTS `inst_groups` (
 /* name: faculty, staff, student, org unit, classes/courses, none, etc. ("none" is implied by a lack of an entry in the link_user_groups table) */
 
 
-CREATE TABLE IF NOT EXISTS `link_users_inst_groups` (
+CREATE TABLE IF NOT EXISTS `inst_memberships` (
+    `inst_membership_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
     `inst_group_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='link between users and inst groups';
 /* FK: users.user_id */
 
 
@@ -111,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
     `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the eqreserve system';
 /* name: admin, manager, consumer ("none" is implied by a lack of an entry in the permissions table) */
 
 
@@ -130,11 +131,12 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 /* FK: eq_groups.eq_group_id */
 
 
-CREATE TABLE IF NOT EXISTS `link_items_time_block_groups` (
+CREATE TABLE IF NOT EXISTS `reservations` (
+    `reservation_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `eq_item_id` INT NOT NULL,
     `time_block_group_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='links an eq_item to blocks of time (i.e. a time block group)';
 /* FK: eq_items.eq_item_id */
 
 
@@ -144,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `time_block_groups` (
     `user_id` INT NOT NULL,
     `notes` TEXT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='collects multiple time blocks into a related group';
 /* type: manager_reserve, consumer_reserve */
 
 
