@@ -42,7 +42,7 @@ class TestOfUser extends UnitTestCaseDB {
         $rmTestInstGroupStmt = $this->DB->prepare($rmTestInstGroupSql);
         $rmTestInstGroupStmt->execute();
 
-        $rmLinkUserInstGroupSql = "DELETE FROM link_users_inst_groups";
+        $rmLinkUserInstGroupSql = "DELETE FROM ".InstMembership::$dbTable;
         $rmLinkUserInstGroupStmt = $this->DB->prepare($rmLinkUserInstGroupSql);
         $rmLinkUserInstGroupStmt->execute();
 	}
@@ -86,13 +86,17 @@ class TestOfUser extends UnitTestCaseDB {
 
 	function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
 		$u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u->loadInstGroups();
         $this->assertEqual($u->username,Auth_Base::$TEST_USERNAME);
 		$this->assertTrue($u->matchesDb);
 
         $this->auth->lname = 'Newlastname';
+        $this->auth->inst_groups = array_map(function($e){return $e->name;},$u->inst_groups);
 		$this->assertNotEqual($u->lname,$this->auth->lname);
 		
+
 		$u->updateDbFromAuth($this->auth);
+
 
 		$this->assertEqual($u->lname,$this->auth->lname);
 		$this->assertTrue($u->matchesDb);
@@ -105,20 +109,90 @@ class TestOfUser extends UnitTestCaseDB {
     function ASIDEtestUserInstGroupsAddedDbWhenValidAuthDataIsDifferent() {
         $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
+        $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[1]];
+
         $this->assertEqual(count($u->inst_groups),1);
-        $this->assertEqual(count($this->auth->inst_groups),count(Auth_Base::$TEST_INST_GROUPS));
-        
+        $this->assertEqual(count($this->auth->inst_groups),2);
+        $ag0 = InstGroup::loadOneFromDb(['name'=>$this->auth->inst_groups[0]],$this->DB);
+        $ag1 = InstGroup::loadOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
+        $this->assertTrue($ag0->matchesDb);
+        $this->assertFalse($ag0->flag_delete);
+        $this->assertTrue($ag1->matchesDb);
+        $this->assertFalse($ag1->flag_delete);
+
+        $this->assertEqual($u->inst_groups[0]->name,$this->auth->inst_groups[0]);
+
+
         $u->updateDbFromAuth($this->auth);
 
-        $this->assertEqual(count($u->inst_groups),count(Auth_Base::$TEST_INST_GROUPS));
-
-        for ($i=0;$i<count(Auth_Base::$TEST_INST_GROUPS);$i++) {
-            $this->assertTrue($u->inst_groups[$i]->matchesDb);
-            $this->assertFalse($u->inst_groups[$i]->flag_delete);
-            $this->assertEqual($u->inst_groups[$i]->name,Auth_Base::$TEST_INST_GROUPS[$i]);
-        }
+        $this->assertEqual(count($u->inst_groups),2);
+        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+        $this->assertTrue($u->inst_groups[0]->matchesDb);
+        $this->assertEqual($u->inst_groups[1]->name,Auth_Base::$TEST_INST_GROUPS[1]);
+        $this->assertTrue($u->inst_groups[1]->matchesDb);
     }   
 
+    function testUserInstGroupsUndeletedDbWhenValidAuthDataIsDifferent() {
+        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u->loadInstGroups();
+
+        $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[2]];
+
+        $deletedGroup = InstGroup::loadOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
+
+        $this->assertTrue($deletedGroup->matchesDb);
+        $this->assertTrue($deletedGroup->flag_delete);
+        $this->assertEqual(count($u->inst_groups),1);
+        $this->assertEqual(count($this->auth->inst_groups),2);
+        $this->assertEqual($u->inst_groups[0]->name,$this->auth->inst_groups[0]);
+
+
+        $u->updateDbFromAuth($this->auth);
+
+        $this->assertEqual(count($u->inst_groups),2);
+        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+        $this->assertTrue($u->inst_groups[0]->matchesDb);
+        $this->assertEqual($u->inst_groups[1]->name,Auth_Base::$TEST_INST_GROUPS[2]);
+        $this->assertTrue($u->inst_groups[1]->matchesDb);
+        $this->assertFalse($u->inst_groups[1]->flag_delete);
+    }
+
+    function testUserInstGroupsRemovedDbWhenValidAuthDataIsDifferent() {
+        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u->loadInstGroups();
+        $this->auth->inst_groups = [];
+
+        $this->assertEqual(count($u->inst_groups),1);
+
+
+        $u->updateDbFromAuth($this->auth);
+
+
+        $this->assertEqual(count($u->inst_groups),0);
+
+    }   
+
+    function testUserDeletedMembershipReactivatedOnAuth() {
+        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u->loadInstGroups();
+
+        $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[1]];
+
+        $this->assertEqual(count($u->inst_groups),1);
+        $this->assertEqual(count($this->auth->inst_groups),2);
+        $this->assertEqual($u->inst_groups[0]->name,$this->auth->inst_groups[0]);
+
+
+        $u->updateDbFromAuth($this->auth);
+
+
+        $this->assertEqual(count($u->inst_groups),2);
+        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+        $this->assertTrue($u->inst_groups[0]->matchesDb);
+        $this->assertEqual($u->inst_groups[1]->name,Auth_Base::$TEST_INST_GROUPS[1]);
+        $this->assertTrue($u->inst_groups[1]->matchesDb);
+        $this->assertFalse($u->inst_groups[1]->flag_delete);
+    }   
     
 
 	function testUserUpdatesBaseDbWhenAuthDataIsInvalid() {

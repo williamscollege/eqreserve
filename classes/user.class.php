@@ -35,13 +35,7 @@ class User extends Db_Linked
     }
 
 	public function updateDbFromAuth($auth) {
-/*
-		foreach (User::$fields as $f) {
-			if ($auth->$f != $this->$f) {
-				$this->$f = $auth->$f;
-			}
-		}
-*/
+
 		// test for basic invalid data
 		if ($auth->fname == '') { return false;}
 		if ($auth->lname == '') { return false;}
@@ -54,15 +48,50 @@ class User extends Db_Linked
 
 		$this->updateDb();
 		
-        // TODO: handle inst groups here        
-        $this->loadInstGroups();
+        // get the user's current inst groups and the corresponding array of inst group names
+        $initialInstGroups = InstGroup::getInstGroupsForUser($this);
+        $userInstGroupNames = array_map(function($e){return $e->name;},$initialInstGroups);
 
-        // cycle through auth inst groups
-        // load each one, creating if necessary
-        // if there's an auth inst group that's not in the users list, add it (and create the relevant link)
+        // determine the differences between the user inst groups and the auth inst groups
+        $extraUserInstGroupNames = array_diff($userInstGroupNames,$auth->inst_groups);
+        $extraAuthInstGroupNames = array_diff($auth->inst_groups,$userInstGroupNames);
 
-        // cycle through user inst groups
-        // if one isn't in the auth groups, un-link it (but do not delete the group)
+        // if there are differences, handle them...
+        if ((count($extraUserInstGroupNames) > 0) || (count($extraAuthInstGroupNames) > 0)) {
+
+            // remove extras (i.e. user group that aren't in the auth list)
+            foreach ($initialInstGroups as $ig) {
+                if (in_array($ig->name,$extraUserInstGroupNames)) {
+                    $ig->unlinkUser($this);
+                }
+            }
+
+            // add new ones (i.e. auth list groups that the user doesn't have)
+            foreach ($extraAuthInstGroupNames as $newGroupName) {
+                $groupToAddToUser = InstGroup::loadOneFromDb(['name'=>$newGroupName],$this->dbConnection);
+
+                // check if the group didn't exist in the DB
+                if (! $groupToAddToUser->matchesDb) {
+//                    echo "handling new group creation";
+                    $groupToAddToUser->name = $newGroupName;
+                    $groupToAddToUser->flag_delete = false;
+                    $groupToAddToUser->updateDb();
+                }
+                // else check if the group was prevriously deleted
+                elseif ($groupToAddToUser->flag_delete) {
+//                    echo "handling group undelete";
+                    $groupToAddToUser->flag_delete = false;
+                    $groupToAddToUser->updateDb();
+                }
+
+                $groupToAddToUser->linkUser($this);
+            }
+
+            $this->loadInstGroups();
+        }
+        else { //...otherwise the current groups are OK, so assign them to this user object
+            $this->inst_groups = $initialInstGroups;
+        }
 
 		return true;
 

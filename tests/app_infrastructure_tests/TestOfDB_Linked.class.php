@@ -247,7 +247,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
 
     # BELOW: TESTS FOR STATIC METHODS
 
-	function testLoadOneFromDb() {
+	function testLoadExistingOneFromDb() {
 		$this->_dbClear();
 		$this->_dbInsertTestRecord(['id'=>1]);
 
@@ -259,6 +259,14 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
 		$this->assertEqual($matchingObject->intfield,1);
 		$this->assertEqual($matchingObject->flagfield,false);
 	}
+
+    function testLoadNonexistingOneFromDb() {
+        $this->_dbClear();
+
+        $matchingObject = Trial_Db_Linked::loadOneFromDb(['dblinktest_id'=>28],$this->DB);
+
+        $this->assertFalse($matchingObject->matchesDb);
+    }
 
     function testLoadMultipleFromDbUsingScalarsInSearchHash() {
         $this->_dbClear();
