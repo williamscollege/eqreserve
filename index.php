@@ -41,11 +41,9 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	echo "<h3>User Info:</h3>";
 	echo "username: " . $_SESSION['userdata']['username'] . "<br />";
 	echo "email: " . $_SESSION['userdata']['email'] . "<br />";
-	echo "fullname: " . $_SESSION['userdata']['fullname'] . "<br />";
 	echo "firstname: " . $_SESSION['userdata']['firstname'] . "<br />";
 	echo "lastname: " . $_SESSION['userdata']['lastname'] . "<br />";
 	echo "sortname: " . $_SESSION['userdata']['sortname'] . "<br />";
-	echo "position: " . $_SESSION['userdata']['position'] . "<br />";
 	echo "institutional groups:<br />";
 	echo "<ul>";
 	for ($i = 0, $size = count($_SESSION['userdata']['inst_groups']); $i < $size; ++$i) {
