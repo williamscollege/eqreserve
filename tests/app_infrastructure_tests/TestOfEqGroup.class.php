@@ -7,38 +7,30 @@
 	{
 
 		function setUp() {
-			# Role: role_id, name, descr
-			$addTestRolesSql  = "INSERT INTO " . Role::$dbTable . " VALUES (1,'admin','system admins'),
-																			(2,'manager','midlevels'),
-																			(3,'consumer','peons')
-																			";
-			$addTestRolesStmt = $this->DB->prepare($addTestRolesSql);
-			$addTestRolesStmt->execute();
-
 			# InstGroup: inst_group_id, name, flag_delete
-			$addTestInstGroupsSql  = "INSERT INTO " . InstGroup::$dbTable . " VALUES (1,'STAFF',0),
-																					(2,'STUDENTS',0),
-																					(3,'12F-PHYS-101',0),
-																					(4,'13S-ECON-305',1),
-																					(5,'JESUP-STC',0)
+			$addTestInstGroupsSql  = "INSERT INTO " . InstGroup::$dbTable . " VALUES	(1,'STAFF',0),
+																						(2,'STUDENTS',0),
+																						(3,'12F-PHYS-101',0),
+																						(4,'13S-ECON-305',1),
+																						(5,'JESUP-STC',0)
 																					";
 			$addTestInstGroupsStmt = $this->DB->prepare($addTestInstGroupsSql);
 			$addTestInstGroupsStmt->execute();
 
 			# EqGroup: eq_group_id, name, descr, start_minute, min_duration_minutes, max_duration_minutes, duration_chunk_minutes, flag_delete
-			$addTestEqGroupsSql  = "INSERT INTO " . EqGroup::$dbTable . " VALUES (1,'Nanomajigs','The investigation of really small stuff','0,15,30,45',15,60,15,0),
- 	                                                                    		(2,'3D Printers','3dp descr','0,30',30,300,30,0),
-		                                                                		(3,'Spectrometers','spectrothingies','0,15,30,45',15,60,15,0),
-		                                                                		(4,'Nucular Toyz','nuks','0,15,30,45',15,60,15,0),
-		                                                                		(5,'Biostuff','blobs','0,15,30,45',15,60,15,1),
-		                                                                		(6,'Outdoor Educ Equipment Rental','outdoor stuff avail to all students','0,15,30,45',15,1800,15,0)
+			$addTestEqGroupsSql  = "INSERT INTO " . EqGroup::$dbTable . " VALUES 	(1,'Nanomajigs','The investigation of really small stuff','0,15,30,45',15,60,15,0),
+ 	                                                        	            		(2,'3D Printers','3dp descr','0,30',30,300,30,0),
+		                                                	                		(3,'Spectrometers','spectrothingies','0,15,30,45',15,60,15,0),
+		                                            	                    		(4,'Nucular Toyz','nuks','0,15,30,45',15,60,15,0),
+		                                          	            	          		(5,'Biostuff','blobs','0,15,30,45',15,60,15,1),
+		                                                                			(6,'Outdoor Educ Equipment Rental','outdoor stuff avail to all students','0,15,30,45',15,1800,15,0)
 		                                                                		";
 			$addTestEqGroupsStmt = $this->DB->prepare($addTestEqGroupsSql);
 			$addTestEqGroupsStmt->execute();
 
 			// TODO: set up and check for indirect access via inst_group membership and permissions where entity_type == 'inst_group'
 			# Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
-			$addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES (1,1,'user',2,2,0),
+			$addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES	(1,1,'user',2,2,0),
 																						(2,1,'user',3,1,0),
 																						(3,1,'user',3,3,0),
 																						(4,1,'user',3,4,1),
@@ -57,22 +49,19 @@
 			$addTestPermissionStmt = $this->DB->prepare($addTestPermissionSql);
 			$addTestPermissionStmt->execute();
 
-			# link_users_inst_groups: user_id, inst_group_id, flag_delete
-			$insertTestLinkUsersInstGroupsSql = "INSERT INTO link_users_inst_groups VALUES (1,1,0),
-																							(1,3,0),
-																							(1,6,0),
-																							(2,4,0),
-																							(3,5,1)
+
+			# inst_memberships: inst_membership_id,user_id,inst_group_id,flag_delete
+			$insertTestInstMembershipSql = "INSERT INTO ". InstMembership::$dbTable ." VALUES	(1,1,1,0),
+																								(2,1,3,0),
+																								(3,1,6,0),
+																								(4,2,4,0),
+																								(5,3,5,1)
 																							";
-			$insertTestLinkUsersInstGroupsStmt = $this->DB->prepare($insertTestLinkUsersInstGroupsSql);
-			$insertTestLinkUsersInstGroupsStmt->execute();
+			$insertTestInstMembershipStmt = $this->DB->prepare($insertTestInstMembershipSql);
+			$insertTestInstMembershipStmt->execute();
 		}
 
 		function tearDown() {
-			$rmTestRolesSql = "DELETE FROM ".Role::$dbTable;
-			$rmTestRolesStmt = $this->DB->prepare($rmTestRolesSql);
-			$rmTestRolesStmt->execute();
-
 			$rmTestInstGroupsSql = "DELETE FROM ".InstGroup::$dbTable;
 			$rmTestInstGroupsStmt = $this->DB->prepare($rmTestInstGroupsSql);
 			$rmTestInstGroupsStmt->execute();
@@ -89,9 +78,9 @@
 			$rmTestPermissionStmt = $this->DB->prepare($rmTestPermissionSql);
 			$rmTestPermissionStmt->execute();
 
-			$rmTestLinkUsersInstGroupsSql = "DELETE FROM link_users_inst_groups";
-			$rmTestLinkUsersInstGroupsStmt = $this->DB->prepare($rmTestLinkUsersInstGroupsSql);
-			$rmTestLinkUsersInstGroupsStmt->execute();
+			$rmTestInstMembershipSql = "DELETE FROM ".InstMembership::$dbTable;
+			$rmTestInstMembershipStmt = $this->DB->prepare($rmTestInstMembershipSql);
+			$rmTestInstMembershipStmt->execute();
 		}
 
 		public function TestOfEqGroupCmpAlphabetical()
@@ -114,9 +103,6 @@
 			$ig = new InstGroup(['inst_group_id' => 1, 'DB' => $this->DB]);
 			$egs = EqGroup::getEqGroupsForInstGroup($ig);
 
-//			echo "getEqGroupsForInstGroup<br />";
-//			$this->dump($egs);
-
 			$this->assertNotNull($egs);
 			$this->assertTrue(is_array($egs));
 			$this->assertEqual(count($egs), 3);
@@ -132,17 +118,14 @@
 			$this->assertEqual($egs[1]->eq_group_id, 1);
 			$this->assertEqual($egs[2]->eq_group_id, 3);
 
-			$this->assertEqual($egs[0]->permission[0]->role_id, 1);
-			$this->assertEqual($egs[1]->permission[0]->role_id, 1);
-			$this->assertEqual($egs[2]->permission[0]->role_id, 1);
+			$this->assertEqual($egs[0]->permission->role->role_id, 1);
+			$this->assertEqual($egs[1]->permission->role->role_id, 1);
+			$this->assertEqual($egs[2]->permission->role->role_id, 1);
 		}
 
 		public function TestOfGetEqGroupsForUser() {
 			$user = new User(['user_id' => 1, 'DB' => $this->DB]);
 			$egs = EqGroup::getEqGroupsForUser($user);
-
-//			echo "getEqGroupsForUser<br />";
-//			$this->dump($egs);
 
 			$this->assertNotNull($egs);
 			$this->assertTrue(is_array($egs));
@@ -161,10 +144,10 @@
 			$this->assertEqual($egs[2]->eq_group_id, 4);
 			$this->assertEqual($egs[3]->eq_group_id, 3);
 
-			$this->assertEqual($egs[0]->permission[0]->role_id, 2);
-			$this->assertEqual($egs[1]->permission[0]->role_id, 3);
-			$this->assertEqual($egs[2]->permission[0]->role_id, 1);
-			$this->assertEqual($egs[3]->permission[0]->role_id, 3);
+			$this->assertEqual($egs[0]->permission->role->role_id, 2);
+			$this->assertEqual($egs[1]->permission->role->role_id, 3);
+			$this->assertEqual($egs[2]->permission->role->role_id, 1);
+			$this->assertEqual($egs[3]->permission->role->role_id, 3);
 		}
 
 		public function TestOfGetUnifiedEqGroupList() {
@@ -175,24 +158,15 @@
 
 			$results = array();
 			$results = EqGroup::getUnifiedEqGroupList($u_igs, $u_egs);
-
-//			echo "getUnifiedEqGroupList<br />";
-//			$this->dump($results);
-			# exit;
+			// This test is completed below. See also: TestOfGetAllEqGroupsForNonAdminUser
 		}
 
 		public function TestOfGetAllEqGroupsForNonAdminUser()
 		{
+
 			$user = new User(['user_id' => 1, 'DB' => $this->DB]);
 
-//			$u_igs = InstGroup::getInstGroupsForUser($user);
-//			$u_egs = EqGroup::getEqGroupsForUser($user);
-
 			$egs = EqGroup::getAllEqGroupsForNonAdminUser($user);
-
-//			$this->fail();
-//			echo "getAllEqGroupsForNonAdminUser<br />";
-//			$this->dump($egs);
 
 			$this->assertNotNull($egs);
 			$this->assertTrue(is_array($egs));
@@ -200,6 +174,9 @@
 			$this->assertEqual(get_class($egs[1]), 'EqGroup');
 
 			usort($egs, "EqGroup::cmpAlphabetical");
+
+//			echo "getAllEqGroupsForNonAdminUser<br />";
+//			$this->dump($egs);
 
 			$this->assertEqual($egs[0]->name, '3D Printers');
 			$this->assertEqual($egs[1]->name, 'Nanomajigs');
@@ -211,12 +188,17 @@
 			$this->assertEqual($egs[2]->eq_group_id, 4);
 			$this->assertEqual($egs[3]->eq_group_id, 3);
 
-			$this->assertEqual($egs[0]->permission[0]->role_id, 1);
-			$this->assertEqual($egs[1]->permission[0]->role_id, 1);
-			$this->assertEqual($egs[2]->permission[0]->role_id, 1);
-			$this->assertEqual($egs[3]->permission[0]->role_id, 1);
+			$this->assertEqual($egs[0]->permission->role->priority, 1);
+			$this->assertEqual($egs[1]->permission->role->priority, 1);
+			$this->assertEqual($egs[2]->permission->role->priority, 1);
+			$this->assertEqual($egs[3]->permission->role->priority, 1);
 
-			//exit;
+			$this->assertEqual($egs[0]->permission->role->role_id, 1);
+			$this->assertEqual($egs[1]->permission->role->role_id, 1);
+			$this->assertEqual($egs[2]->permission->role->role_id, 1);
+			$this->assertEqual($egs[3]->permission->role->role_id, 1);
+
+//			exit;
 		}
 
 	}

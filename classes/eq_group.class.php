@@ -13,8 +13,7 @@ class EqGroup extends Db_Linked
     public static $dbTable = 'eq_groups';
 
 	// instance attributes
-	public $permission = array();
-
+	public $permission = '';
 
 /*
  	public static function getAllEqGroups() {
@@ -33,17 +32,14 @@ class EqGroup extends Db_Linked
 		return ($a->name < $b->name) ? -1 : 1;
 	}
 
-	public static function getUnifiedEqGroupList($igs,$egs) {
-		$assoc_egs = [];
-		$egs_merged = [];
 
-		# work-around: to enable matching by keys, put the existing array $egs into a new associative array where the index is string value of eq_group_id
-		for($i=0, $size=count($egs); $i<$size; ++$i) {
-			$assoc_egs[$egs[$i]->eq_group_id] = $egs[$i];
+
+	public static function getUnifiedEqGroupList($igs,$equipmentGroupsOfUser) {
+		# to enable matching by keys: put the existing array of objects ($equipmentGroupsOfUser) into a new associative array where the index is set to the string value of eq_group_id
+		$equipmentGroupsOfUserById = array();
+		for($i=0, $size=count($equipmentGroupsOfUser); $i<$size; ++$i) {
+			$equipmentGroupsOfUserById[$equipmentGroupsOfUser[$i]->eq_group_id] = $equipmentGroupsOfUser[$i];
 		}
-
-		# final merged array begins with copy of all user eq_groups (avoids leaving them out if they are not included in an inst_group)
-		$egs_merged = $assoc_egs;
 
 		# loop through institutional groups
 		for($i=0, $size=count($igs); $i<$size; ++$i) {
@@ -52,45 +48,36 @@ class EqGroup extends Db_Linked
 			# loop through eq_groups associated with this institutional group
 			for($k=0, $size=count($inst_egs); $k<$size; ++$k) {
 
-				# this lookup works because PHP is loosely typed (an array key of type integer can be compared to an array key of type string)
-				if (array_key_exists($inst_egs[$k]->eq_group_id, $assoc_egs)) {
-					$groupToPushOn = $egs[$k];
+				 $eqGroupFromInst = $inst_egs[$k];
 
-					$cmpRoles = Role::cmpRolesByID($inst_egs[$k]->permission[0]->role_id, $assoc_egs[$inst_egs[$k]->eq_group_id]->permission[0]->role_id);
-					if ($cmpRoles == -1) {
-						 $groupToPushOn = $inst_egs[$k];
-					}
-
-					# make sure that the $groupToPushOn does not already exist within the final merged array
-					if (! array_key_exists($groupToPushOn->eq_group_id, $egs_merged)) {
-						$egs_merged[$groupToPushOn->eq_group_id] = $groupToPushOn;
-					} else {
-						# eq_group_id already exists in final merged array!!
-						# compare role_id of $groupToPushOn and match in final merged array
-						$cmpRoles = Role::cmpRolesByID($groupToPushOn->permission[0]->role_id, $egs_merged[$groupToPushOn->eq_group_id]->permission[0]->role_id);
-						if ($cmpRoles == -1) {
-							# update role_id of existing array object with "improved" role_id
-							$egs_merged[$groupToPushOn->eq_group_id]->permission[0]->role_id = $groupToPushOn->permission[0]->role_id;
-						}
-					}
+				# (this lookup works because PHP is loosely typed; an array key of type integer can be compared to an array key of type string)
+				if (! array_key_exists($eqGroupFromInst->eq_group_id, $equipmentGroupsOfUserById)) {
+					# add this eq_group: the eqGroupFromInst does not exist within equipmentGroupsOfUserById
+					$equipmentGroupsOfUserById[$eqGroupFromInst->eq_group_id] = $eqGroupFromInst;
 				} else {
-					# add inst_group eq_group (as it does not exist in user eq_groups)
-					$egs_merged[$inst_egs[$k]->eq_group_id] = $inst_egs[$k];
+					# it already exists, so see if we need to update the permission
+					$cmpRoles = Role::cmpRoles($eqGroupFromInst->permission->role, $equipmentGroupsOfUserById[$eqGroupFromInst->eq_group_id]->permission->role);
+
+					if ($cmpRoles == 1) {
+						# replace the existing permission object with the more relevant version
+						$equipmentGroupsOfUserById[$eqGroupFromInst->eq_group_id]->permission = $eqGroupFromInst->permission;
+					}
 				}
 			}
 		}
 
-		return $egs_merged;
+		return $equipmentGroupsOfUserById;
 	}
 
 
 	public static function getEqGroupsForInstGroup($ig) {
 		// get all eq_groups associated with this institutional group (going from: ig -> permission -> eq_group)
-		$permission = Permission::loadAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
+		$permissions = Permission::loadAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
 		$groups = [];
-		foreach ($permission as $p) {
+		foreach ($permissions as $p) {
 			$eq = EqGroup::loadOneFromDb(['eq_group_id'=>$p->eq_group_id],$ig->dbConnection);
-			$eq->permission = [$p];
+			$eq->permission = $p;
+			$eq->permission->loadRole();
 			array_push($groups,$eq);
 		}
 		return $groups;
@@ -98,11 +85,12 @@ class EqGroup extends Db_Linked
 
 	public static function getEqGroupsForUser($user) {
 		// get all eq_groups associated with this user (going from: $user -> permission -> eq_group)
-		$permission = Permission::loadAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
+		$permissions = Permission::loadAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
 		$groups = [];
-		foreach ($permission as $p) {
+		foreach ($permissions as $p) {
 			$eq = EqGroup::loadOneFromDb(['eq_group_id'=>$p->eq_group_id],$user->dbConnection);
-			$eq->permission = [$p];
+			$eq->permission = $p;
+			$eq->permission->loadRole();
 			array_push($groups,$eq);
 		}
 		return $groups;
@@ -112,8 +100,11 @@ class EqGroup extends Db_Linked
 	public static function getAllEqGroupsForNonAdminUser($user) {
 		$u_igs = InstGroup::getInstGroupsForUser($user);
 		$u_egs = EqGroup::getEqGroupsForUser($user);
-
 		$all_egs = EqGroup::getUnifiedEqGroupList($u_igs,$u_egs);
+
+//		echo "EqGroup::getUnifiedEqGroupList<br /><pre>";
+//		print_r($all_egs);
+//		echo "</pre>";
 
 		return $all_egs;
 	}

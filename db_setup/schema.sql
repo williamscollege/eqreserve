@@ -113,11 +113,13 @@ CREATE TABLE IF NOT EXISTS `comm_prefs` (
 
 CREATE TABLE IF NOT EXISTS `roles` (
     `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NULL,
+	`priority` INT NOT NULL,    
+	`name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the eqreserve system';
 /* name: admin, manager, consumer ("none" is implied by a lack of an entry in the permissions table) */
-
+/* priority: Highest admin role is priority = 1; lowest anonymous/guest priority is > 1 */
+ 
 
 CREATE TABLE IF NOT EXISTS `permissions` (
     `permission_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -163,4 +165,17 @@ CREATE TABLE IF NOT EXISTS `time_blocks` (
 /* FK: time_block_groups.time_block_group_id */
 
 
+
+#####################
+# The Absolute Minimalist Approach to Initial Data Population
+#####################
+
+# Default values for roles table
+INSERT INTO 
+	roles
+VALUES
+	(1,1,'System Admin',0),
+	(2,2,'Equipment Manager',0),
+	(3,3,'Equipment User',0),
+	(4,4,'Anonymous User',0)
 

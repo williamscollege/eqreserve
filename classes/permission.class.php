@@ -7,6 +7,11 @@ class Permission extends Db_Linked
     public static $primaryKeyField = 'permission_id';
     public static $dbTable = 'permissions';
 
+	// instance attributes
+	public $role='';
 
+	public function loadRole() {
+		$this->role = Role::loadOneFromDb(['role_id'=>$this->role_id],$this->dbConnection);
+	}
 }
 ?>

@@ -7,41 +7,37 @@
 	{
 
 		function setUp() {
-			# Role: role_id, name, descr
-			$addTestRolesSql  = "INSERT INTO " . Role::$dbTable . " VALUES (1,'admin','system admins'),
-																			(2,'manager','midlevels'),
-																			(3,'consumer','peons')
-																			";
-			$addTestRolesStmt = $this->DB->prepare($addTestRolesSql);
-			$addTestRolesStmt->execute();
 		}
 
 		function tearDown() {
-			$rmTestRolesSql = "DELETE FROM ".Role::$dbTable;
-			$rmTestRolesStmt = $this->DB->prepare($rmTestRolesSql);
-			$rmTestRolesStmt->execute();
 		}
 
-		public function TestOfCmpRolesByID(){
-			#$this->fail();
-			$r1 = new Role(['role_id'=>1, 'DB'=>$this->DB]);
-			$r2 = new Role(['role_id'=>2, 'DB'=>$this->DB]);
+		public function TestOfCmpRolesByPriority(){
+			$r1 = new Role(['priority'=>1, 'DB'=>$this->DB]);
+			$r2 = new Role(['priority'=>2, 'DB'=>$this->DB]);
 
-			$cmp = Role::cmpRolesByID($r1,$r2);
-
+			$cmp = Role::cmpRoles($r1,$r2);
 			$this->assertNotNull($cmp);
-
-			# this should result in -1
-			$this->assertEqual($cmp, -1);
-			$this->assertNotEqual($cmp, 0);
-			$this->assertNotEqual($cmp, 1);
-
-			$cmp = Role::cmpRolesByID($r2,$r1);
-
-			# this should result in 1
 			$this->assertEqual($cmp, 1);
-			$this->assertNotEqual($cmp, 0);
-			$this->assertNotEqual($cmp, -1);
+
+			$cmp = Role::cmpRoles($r2,$r1);
+			$this->assertEqual($cmp, -1);
+		}
+
+		public function TestOfRolePriority(){
+			$r1 = new Role(['role_id'=>1, 'priority'=> 1, 'DB'=>$this->DB]);
+			$r2 = new Role(['role_id'=>2, 'priority'=> 2, 'DB'=>$this->DB]);
+			$r3 = new Role(['role_id'=>3, 'priority'=> 3, 'DB'=>$this->DB]);
+			$r4 = new Role(['role_id'=>4, 'priority'=> 4, 'DB'=>$this->DB]);
+
+			$this->assertEqual($r1->role_id, 1);
+			$this->assertEqual($r1->priority, 1);
+			$this->assertEqual($r2->role_id, 2);
+			$this->assertEqual($r2->priority, 2);
+			$this->assertEqual($r3->role_id, 3);
+			$this->assertEqual($r3->priority, 3);
+			$this->assertEqual($r4->role_id, 4);
+			$this->assertEqual($r4->priority, 4);
 		}
 
 	}

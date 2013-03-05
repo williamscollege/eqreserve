@@ -5,8 +5,11 @@ PROJECT:
 SQL DESCR:
     This creates a table that is used by the testing suites to verify database connection functionality and to test the DB linking class
     
-NOTE:
+NOTES:
     This is for development only! You do not need this on the production server (though it shouldn't hurt anything to have it there)
+
+FOR TESTING ONLY:
+	DROP TABLE `dblinktest`;
 
 */
 
