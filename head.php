@@ -62,14 +62,14 @@
 			
 			// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
             $USER->refreshFromDb();
-print_r($USER);
-print_r($_SESSION['userdata']);
+//print_r($USER);
+//print_r($_SESSION['userdata']);
             $USER->updateDbFromAuth($_SESSION['userdata']);
             $USER->refreshFromDb();
+//print_r($USER);
             $USER->loadInstGroups();
             $USER->loadEqGroups();
-print_r($USER);
-
+//print_r($USER);
 	}
 ?>
 <html>

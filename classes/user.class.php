@@ -18,14 +18,18 @@ class User extends Db_Linked
 		// now do custom stuff
 		// e.g. automatically load all accesibility info associated with the user
 
+        $this->inst_groups = [];
+        $this->eq_groups = [];
+
         if ($this->user_id) {
             $this->loadInstGroups();
+            $this->loadEqGroups();
         }
     }
 
     public function loadInstGroups() {
         if (! $this->user_id) {
-            trigger_error('cannot load inst groups for a user with no user_id');
+            //trigger_error('cannot load inst groups for a user with no user_id');
             return;
         }
 
@@ -33,6 +37,10 @@ class User extends Db_Linked
     }
 
     public function loadEqGroups() {
+        if (! $this->user_id) {
+            //trigger_error('cannot load equipment groups for a user with no user_id');
+            return;
+        }
         $this->eq_groups = EqGroup::getAllEqGroupsForNonAdminUser($this);
     }
 
