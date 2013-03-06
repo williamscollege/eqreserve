@@ -15,7 +15,7 @@ class EqGroup extends Db_Linked
 
 	// instance attributes
     public $permission = '';
-    public $eq_subgroups = '';
+    public $eq_subgroups;
 
 /*
  	public static function getAllEqGroups() {
@@ -122,7 +122,9 @@ class EqGroup extends Db_Linked
 
     public function loadEqSubgroups() {
         $this->eq_subgroups = EqSubgroup::getAllFromDb(['eq_group_id'=>$this->eq_group_id],$this->dbConnection);
-
+        foreach ($this->eq_subgroups as $esg) {
+            $esg->eq_group = $this;
+        }
         return true;
     }
 

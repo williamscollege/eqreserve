@@ -89,9 +89,9 @@
 			$rmTestEqGroupsStmt = $this->DB->prepare($rmTestEqGroupsSql);
 			$rmTestEqGroupsStmt->execute();
 
-            $rmTestEqGroupsSql = "DELETE FROM ".EqSubgroup::$dbTable;
-            $rmTestEqGroupsStmt = $this->DB->prepare($rmTestEqGroupsSql);
-            $rmTestEqGroupsStmt->execute();
+            $rmTestEqSubgroupsSql = "DELETE FROM ".EqSubgroup::$dbTable;
+            $rmTestEqSubgroupsStmt = $this->DB->prepare($rmTestEqSubgroupsSql);
+            $rmTestEqSubgroupsStmt->execute();
 
 			$rmTestPermissionSql = "DELETE FROM ".Permission::$dbTable;
 			$rmTestPermissionStmt = $this->DB->prepare($rmTestPermissionSql);
@@ -235,7 +235,7 @@
         {
             $eg = EqGroup::getOneFromDb(['eq_group_id'=>1],$this->DB);
             $this->assertEqual($eg->name,'Nanomajigs');
-            $this->assertFalse($eg->eq_subgroups);
+            $this->assertNull($eg->eq_subgroups);
 
 
             // testing this
@@ -249,6 +249,12 @@
             $this->assertEqual($eg->eq_subgroups[1]->name,'micro');
             $this->assertEqual($eg->eq_subgroups[2]->name,'nano');
             $this->assertEqual($eg->eq_subgroups[3]->name,'femto');
+
+            $this->assertEqual($eg->eq_subgroups[0]->eq_group->eq_group_id,1);
+            $this->assertEqual($eg->eq_subgroups[1]->eq_group->eq_group_id,1);
+            $this->assertEqual($eg->eq_subgroups[2]->eq_group->eq_group_id,1);
+            $this->assertEqual($eg->eq_subgroups[3]->eq_group->eq_group_id,1);
+            
         }
 	}
 
