@@ -22,10 +22,9 @@
 				// array of institutional group names for this user
 				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array
 
-//                $USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
-
+				// $USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
                 // now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
-//                $USER->refreshFromDb();
+				// $USER->refreshFromDb();
 			} else {
 				$MESSAGE = 'Log in failed';
 			}
@@ -116,7 +115,7 @@
 				if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 					?>
                     <div id="loggedInControls">
-                        <form id="frmLogout" class="navbar-form pull-right" type="post" action="">
+                        <form id="frmLogout" class="navbar-form pull-right" method="post" action="">
                             <span class="muted">You are logged in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
                             <input type="submit" id="submit_logout" class="btn" name="submit_logout"  value="Sign out" />
                         </form>
@@ -124,14 +123,14 @@
 					<?php
 				} else {
 					?>
-                    <form id="frmLogin" class="navbar-form pull-right" type="post" action="">
+                    <form id="frmLogin" class="navbar-form pull-right" method="post" action="">
                         <input type="text" id="username" class="span2" name="username" placeholder="Williams Username" value="" />
                         <input type="password" id="password_login" class="span2" name="password" placeholder="Password" value="" />
                         <input type="submit" id="submit_login" class="btn" name="submit_login" value="Sign in" />
                     </form>
 					<?php
 					if ($MESSAGE) {
-						echo "<div id=\"message\" class=\"text-error\"><br />" . $MESSAGE . "</div>";
+						echo "<span class=\"text-warning pull-right\"><br />" . $MESSAGE . "&nbsp;</span>";
 					}
 				}
 				?>
@@ -142,5 +141,3 @@
 
 <?php /* This div is closed in foot.php */ ?>
 <div class="container">
-
-
