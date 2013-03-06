@@ -6,7 +6,7 @@ class AcctMgtTest extends WebTestCaseWMS {
         $this->get('http://localhost/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
-        $this->click('log In');
+        $this->click('Sign in');
         $this->clickLink(TESTINGUSER);
 	}
 

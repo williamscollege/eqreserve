@@ -6,8 +6,30 @@ require_once('/classes/eq_group.class.php');
 
 if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 
+?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // default conditions
 
-	echo "<h3>(User) Equipment Groups</h3>";
+        // ***************************
+        // Listeners
+        // ***************************
+        // Listener: Admin Button Clicks
+		$("#btnDisplayNewEqGroup").click(function(){
+            $("#btnDisplayNewEqGroup").addClass('displayNone');
+            $("#eqGroupFields").removeClass('displayNone');
+        });
+        $("#btnCancelNewEqGroup").click(function(){
+            $("#btnDisplayNewEqGroup").removeClass('displayNone');
+            $("#eqGroupFields").addClass('displayNone');
+        });
+    });
+</script>
+<?php
+
+
+	echo "<hr />";
+	echo "<h3>User: Equipment Groups</h3>";
 	# instantiate the equipment groups and roles for this user
 	$UserEqGroups = new EqGroup([$USER, 'DB'=>$DB]);
 	echo "<ul>";
@@ -22,7 +44,9 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	echo "</ul>";
 
 
-	echo "<h3>(Sys Admin) Equipment Groups</h3>";
+	# TODO: SYS ADMIN Section needs security added
+	echo "<hr />";
+	echo "<h3>System Administrator: Equipment Groups</h3>";
 	echo "<ul>";
 	# instantiate the equipment groups for the system administrator
 	$AdminEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],$DB); //EqGroup::getAllEqGroups($DB);
@@ -31,12 +55,30 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 			echo "<li><a href=\"equipment_group.php?eid=" . $AdminEqGroups[$i]->eq_group_id . "\" title=\"\">" . $AdminEqGroups[$i]->name . "</a> [description: " . $AdminEqGroups[$i]->descr . "]</li>";
 		}
 	} else {
-		echo "<li>There are currently no equipment groups.</li>";
+		echo "<li>No equipment groups exist.</li>";
 	}
+	?>
+		<div class="admin_user">
+			<form>
+				<input id="btnDisplayNewEqGroup" type="button" value="Create a new equipment group"/>
+				<div id="eqGroupFields" class="displayNone">
+					<fieldset title="">
+                        <legend>Create a new equipment group</legend>
+						Name of group: <input type="text" id="" class="" value=""/><br/>
+						Description of group: <textarea id="" class=""></textarea><br/>
+						<input type="button" id="btnSubmitNewEqGroup" class="" value="Add Group"/>
+						<input type="button" id="btnCancelNewEqGroup" class="" value="Cancel"/>
+						<br />NOTE: AJAX submit; then update list of EqGroups above to include this group
+						<br />NOTE: cancel will hide fields, and show the initial button
+                    </fieldset>
+				</div>
+			</form>
+		</div>
+	<?php
 	echo "</ul>";
 
-
 	# DEVINFO
+	echo "<hr />";
 	echo "<div class=\"DEVINFO\">";
 	echo "<h3>User Info:</h3>";
 	echo "username: " . $_SESSION['userdata']['username'] . "<br />";
