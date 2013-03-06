@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/db_linked.class.php';
 require_once dirname(__FILE__) . '/permission.class.php';
 require_once dirname(__FILE__) . '/role.class.php';
+require_once dirname(__FILE__) . '/eq_subgroup.class.php';
 
 
 class EqGroup extends Db_Linked
@@ -13,7 +14,8 @@ class EqGroup extends Db_Linked
     public static $dbTable = 'eq_groups';
 
 	// instance attributes
-	public $permission = '';
+    public $permission = '';
+    public $eq_subgroups = '';
 
 /*
  	public static function getAllEqGroups() {
@@ -24,6 +26,9 @@ class EqGroup extends Db_Linked
 		return($sysAdminAllEqGroups);
 	}
 */
+
+    //##################################################
+    // static functions
 
 	public static function cmpAlphabetical($a,$b) {
 		if ($a->name == $b->name) {
@@ -111,6 +116,15 @@ class EqGroup extends Db_Linked
 
 		return $all_egs;
 	}
+
+    //##################################################
+    // instance functions
+
+    public function loadEqSubgroups() {
+        $this->eq_subgroups = EqSubgroup::getAllFromDb(['eq_group_id'=>$this->eq_group_id],$this->dbConnection);
+
+        return true;
+    }
 
 }
 ?>
