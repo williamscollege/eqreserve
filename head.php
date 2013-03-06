@@ -1,14 +1,14 @@
 <?php
 	session_start();
 	require_once('institution.cfg.php');
+    require_once('/classes/user.class.php');
+    require_once('auth.cfg.php');
 
 	$MESSAGE = '';
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) {
 		// SECTION: not yet authenticated, wants to log in
-
-			require_once('auth.cfg.php');
 
 			if ($AUTH->authenticate($_REQUEST['username'], $_REQUEST['password'])) {
 				session_regenerate_id(TRUE);
@@ -19,8 +19,13 @@
 				$_SESSION['userdata']['firstname'] = $AUTH->fname;
 				$_SESSION['userdata']['lastname']  = $AUTH->lname;
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
-				// array of institutional groups for this user
+				// array of institutional group names for this user
 				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array
+
+//                $USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
+
+                // now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
+//                $USER->refreshFromDb();
 								
 			} else {
 				$MESSAGE = 'Log in failed';
@@ -53,15 +58,24 @@
 			$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
 			
 			// now create user object
-			require_once('/classes/user.class.php');
 			$USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
 			
 			// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
+            $USER->refreshFromDb();
+print_r($USER);
+print_r($_SESSION['userdata']);
+            $USER->updateDbFromAuth($_SESSION['userdata']);
+            $USER->refreshFromDb();
+            $USER->loadInstGroups();
+            $USER->loadEqGroups();
+print_r($USER);
+
 	}
 ?>
 <html>
 <head>
     <title><?php echo APP_NAME . ': ' . $pageTitle;?></title>
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
 </head>
 <body>
 <?php

@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/db_linked.class.php';
 require_once dirname(__FILE__) . '/inst_group.class.php';
+require_once dirname(__FILE__) . '/eq_group.class.php';
 
 class User extends Db_Linked
 {
@@ -9,6 +10,7 @@ class User extends Db_Linked
     public static $dbTable = 'users';
 
     public $inst_groups;
+    public $eq_groups;
 
     public function __construct($initsHash) {
 		parent::__construct($initsHash);
@@ -30,11 +32,21 @@ class User extends Db_Linked
         $this->inst_groups = InstGroup::getInstGroupsForUser($this);
     }
 
-    public function loadEgGroups() {
-        $this->eq_groups = EqGroup::getEqGroupsForUser($this);
+    public function loadEqGroups() {
+        $this->eq_groups = EqGroup::getAllEqGroupsForNonAdminUser($this);
     }
 
 	public function updateDbFromAuth($auth) {
+        // if we're passed in an array of auth data, convert it to an object
+        if (is_array($auth)) {
+            $a = new Auth_Base();
+            $a->username = $auth['username'];
+            $a->fname = $auth['firstname'];
+            $a->lname = $auth['lastname'];
+            $a->email = $auth['email'];
+            $a->inst_groups = array_slice($auth['inst_groups'],0);
+            $auth = $a;
+        }
 
 		// test for basic invalid data
 		if ($auth->fname == '') { return false;}
@@ -56,6 +68,9 @@ class User extends Db_Linked
         $extraUserInstGroupNames = array_diff($userInstGroupNames,$auth->inst_groups);
         $extraAuthInstGroupNames = array_diff($auth->inst_groups,$userInstGroupNames);
 
+//print_r($extraUserInstGroupNames);
+//print_r($extraAuthInstGroupNames);
+
         // if there are differences, handle them...
         if ((count($extraUserInstGroupNames) > 0) || (count($extraAuthInstGroupNames) > 0)) {
 
@@ -72,9 +87,10 @@ class User extends Db_Linked
 
                 // check if the group didn't exist in the DB
                 if (! $groupToAddToUser->matchesDb) {
-//                    echo "handling new group creation";
+                    echo "handling new group creation for $newGroupName\n";
                     $groupToAddToUser->name = $newGroupName;
                     $groupToAddToUser->flag_delete = false;
+//print_r($groupToAddToUser);
                     $groupToAddToUser->updateDb();
                 }
                 // else check if the group was prevriously deleted
@@ -84,6 +100,7 @@ class User extends Db_Linked
                     $groupToAddToUser->updateDb();
                 }
 
+      
                 $groupToAddToUser->linkUser($this);
             }
 

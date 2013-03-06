@@ -12,6 +12,8 @@
 require_once dirname(__FILE__) . '/web_tester.php';
 /**#@-*/
 
+require_once dirname(__FILE__).'/../../institution.cfg.php';
+
 /**
  *    Standard unit test class for day to day testing
  *    of PHP code XP style. Adds some useful standard
@@ -22,8 +24,11 @@ require_once dirname(__FILE__) . '/web_tester.php';
  */
 abstract class WebTestCaseWMS extends WebTestCase {
 
+    public $DB;
+
     function __construct($label = false) {
         parent::__construct($label);
+        $this->DB = new PDO("mysql:host=".TESTING_DB_SERVER.";dbname=".TESTING_DB_NAME.";port=3306",TESTING_DB_USER,TESTING_DB_PASS);    
     }
 
     function assertEltByIdHasAttrOfValue($eltId,$attrName,$attrValueExpected = true) {

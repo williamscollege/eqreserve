@@ -140,7 +140,7 @@ abstract class Db_Linked
     public function __set($name, $value)
     {
         if (array_key_exists($name, $this->fieldValues)) {
-            if ($this->fieldValues[$name] != $value) {
+            if ($this->fieldValues[$name] !== $value) {
 	            $this->fieldValues[$name] = $value;
     		    $this->matchesDb = false;
     		}
@@ -301,6 +301,8 @@ abstract class Db_Linked
 
             $insertStmt = $this->dbConnection->prepare($insertSql);
             $res = $insertStmt->execute($this->_getQueryValuesArray());
+            if ($debug) { print_r($insertStmt->errorInfo()); }
+            if ($debug) { print_r($this->_getQueryValuesArray()); }
             $this->fieldValues[static::$primaryKeyField] = $res;
             $this->matchesDb = true;
         } 
@@ -317,7 +319,7 @@ abstract class Db_Linked
 
             $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->_getQueryValuesArray());
-
+            if ($debug) { print_r($updateStmt->errorInfo()); }
             $this->matchesDb = true;
         }
 

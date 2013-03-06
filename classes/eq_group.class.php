@@ -41,12 +41,15 @@ class EqGroup extends Db_Linked
 			$equipmentGroupsOfUserById[$equipmentGroupsOfUser[$i]->eq_group_id] = $equipmentGroupsOfUser[$i];
 		}
 
+//print_r($igs);
+//echo "processing ig of count(igs)".count($igs)."<br/>\n";
 		# loop through institutional groups
-		for($i=0, $size=count($igs); $i<$size; ++$i) {
+		for($i=0, $ig_size=count($igs); $i<$ig_size; ++$i) {
+//echo "processing ig of $i<br/>\n";
 			$inst_egs = EqGroup::getEqGroupsForInstGroup($igs[$i]);
 
 			# loop through eq_groups associated with this institutional group
-			for($k=0, $size=count($inst_egs); $k<$size; ++$k) {
+			for($k=0, $ieg_size=count($inst_egs); $k<$ieg_size; ++$k) {
 
 				 $eqGroupFromInst = $inst_egs[$k];
 
