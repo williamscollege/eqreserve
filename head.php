@@ -47,6 +47,7 @@
 			// SECTION: wants to log out
 			unset($_SESSION['isAuthenticated']);
 			unset($_SESSION['userdata']);
+			header('Location: /eqreserve/index.php');
 		}
 	}
 
