@@ -15,14 +15,14 @@ class IndexPageAuthTest extends WebTestCaseWMS {
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         
-        $this->click('log In');
+        $this->click('Sign in');
 
         $this->assertFalse($this->setField('username','foo')); //$value
         $this->assertFalse($this->setField('password','bar')); //$value
         $this->assertPattern('/You are logged in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
-        $this->assertNoPattern('/log in failed/i');
+        $this->assertNoPattern('/Sign in failed/i');
 
-        $this->assertEltByIdHasAttrOfValue('logout_btn','value',new PatternExpectation('/log\s?out/i'));
+        $this->assertEltByIdHasAttrOfValue('submit_logout','value',new PatternExpectation('/log\s?out/i'));
     }
 
     function testIndexFailLoggingIn() {
@@ -31,20 +31,20 @@ class IndexPageAuthTest extends WebTestCaseWMS {
         $this->setField('username', TESTINGUSER.'foo');
         $this->setField('password', TESTINGPASSWORD.'foo');
         
-        $this->click('log In');
+        $this->click('Sign in');
 
-        $this->assertPattern('/log in failed/i');
+        $this->assertPattern('/Sign in failed/i');
     }
 
     function testIndexLoggingOut() {
         $this->get('http://localhost/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
-        $this->click('log In');
+        $this->click('Sign in');
         $this->assertPattern('/You are logged in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
-        $this->assertEltByIdHasAttrOfValue('logout_btn','value',new PatternExpectation('/log\s?out/i'));
+        $this->assertEltByIdHasAttrOfValue('submit_logout','value',new PatternExpectation('/log\s?out/i'));
 
-        $this->click('log out');
+        $this->click('Sign out');
 
         $this->assertField('username'); //$value
         $this->assertField('password'); //$value
@@ -55,7 +55,7 @@ class IndexPageAuthTest extends WebTestCaseWMS {
     	$this->get('http://localhost/eqreserve/');
     	$this->setField('username', TESTINGUSER);
     	$this->setField('password', TESTINGPASSWORD);
-    	$this->click('log In');
+    	$this->click('Sign in');
 		$this->assertPattern('/Equipment Groups:/');
 		$this->assertPattern('/<li>Science: Spectometers \[description:\]<\/li>/');
     }

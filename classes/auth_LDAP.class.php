@@ -198,7 +198,7 @@ class Auth_LDAP extends Auth_Base
 		$this->inst_groups = $inst_groups;
 		// print_r($inst_groups); // debugging info
 		
-		// try to log in
+		// try to Sign in
 		if (($link_id = ldap_bind($connect, $user_dn, $pass)) == false) {
 			$this->msg = "The username and password don't match."; //: $user_dn";
 			error_reporting($errorLevel);
