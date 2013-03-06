@@ -51,7 +51,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
     // DB interaction tests - static method tests
 
     function testGetUserInstGroups() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
 
         $groups = InstGroup::getInstGroupsForUser($u);
 
@@ -64,11 +64,11 @@ class TestOfInstGroup extends UnitTestCaseDB {
     // DB interaction tests - object instance tests
 
     function testLinkUserNew() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual(count($u->inst_groups),1);
 
-        $g = InstGroup::loadOneFromDb(['inst_group_id'=>4],$this->DB);
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>4],$this->DB);
         $this->assertNotEqual($u->inst_groups[0]->inst_group_id,$g->inst_gorup_id);
 
         $g->linkUser($u);
@@ -83,14 +83,14 @@ class TestOfInstGroup extends UnitTestCaseDB {
     } 
 
     function testLinkUserReactivate() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual(count($u->inst_groups),1);
 
-        $g = InstGroup::loadOneFromDb(['inst_group_id'=>2],$this->DB);
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>2],$this->DB);
         $this->assertNotEqual($u->inst_groups[0]->inst_group_id,$g->inst_gorup_id);
 
-        $m = InstMembership::loadOneFromDb(['inst_membership_id'=>2],$this->DB);
+        $m = InstMembership::getOneFromDb(['inst_membership_id'=>2],$this->DB);
         $this->assertTrue($m->flag_delete);
         $this->assertEqual($m->user_id,$u->user_id);
         $this->assertEqual($m->inst_group_id,$g->inst_group_id);
@@ -105,7 +105,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
         }
         $this->assertEqual($new_g->inst_group_id,2);
 
-        $m = InstMembership::loadOneFromDb(['inst_membership_id'=>2],$this->DB);
+        $m = InstMembership::getOneFromDb(['inst_membership_id'=>2],$this->DB);
         $this->assertFalse($m->flag_delete);
         $this->assertEqual($m->user_id,$u->user_id);
         $this->assertEqual($m->inst_group_id,$g->inst_group_id);
@@ -113,7 +113,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
 
     function testUnlinkUser() {
         // remove the connection between this group and a given user
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual(count($u->inst_groups),1);
 
@@ -124,7 +124,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
 
     function testGetUsers() {
         // get a list of all the user objects associated with this group
-        $g = InstGroup::loadOneFromDb(['inst_group_id'=>1],$this->DB);
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>1],$this->DB);
 
         $users = $g->getAllUsers();
 
@@ -133,7 +133,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
 
         ///////
 
-        $g = InstGroup::loadOneFromDb(['inst_group_id'=>2],$this->DB);
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>2],$this->DB);
 
         $users = $g->getAllUsers();
 
@@ -141,7 +141,7 @@ class TestOfInstGroup extends UnitTestCaseDB {
 
         ///////
 
-        $g = InstGroup::loadOneFromDb(['inst_group_id'=>4],$this->DB);
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>4],$this->DB);
 
         $users = $g->getAllUsers();
 

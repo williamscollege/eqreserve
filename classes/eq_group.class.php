@@ -20,7 +20,7 @@ class EqGroup extends Db_Linked
 
 		global $DB; //import this "global" variable
 
-		$sysAdminAllEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],'DB'=>$DB);
+		$sysAdminAllEqGroups = EqGroup::getAllFromDb(['flag_delete'=>0],'DB'=>$DB);
 		return($sysAdminAllEqGroups);
 	}
 */
@@ -75,10 +75,10 @@ class EqGroup extends Db_Linked
 
 	public static function getEqGroupsForInstGroup($ig) {
 		// get all eq_groups associated with this institutional group (going from: ig -> permission -> eq_group)
-		$permissions = Permission::loadAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
+		$permissions = Permission::getAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
 		$groups = [];
 		foreach ($permissions as $p) {
-			$eq = EqGroup::loadOneFromDb(['eq_group_id'=>$p->eq_group_id],$ig->dbConnection);
+			$eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id],$ig->dbConnection);
 			$eq->permission = $p;
 			$eq->permission->loadRole();
 			array_push($groups,$eq);
@@ -88,10 +88,10 @@ class EqGroup extends Db_Linked
 
 	public static function getEqGroupsForUser($user) {
 		// get all eq_groups associated with this user (going from: $user -> permission -> eq_group)
-		$permissions = Permission::loadAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
+		$permissions = Permission::getAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
 		$groups = [];
 		foreach ($permissions as $p) {
-			$eq = EqGroup::loadOneFromDb(['eq_group_id'=>$p->eq_group_id],$user->dbConnection);
+			$eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id],$user->dbConnection);
 			$eq->permission = $p;
 			$eq->permission->loadRole();
 			array_push($groups,$eq);

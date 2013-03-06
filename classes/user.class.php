@@ -91,7 +91,7 @@ class User extends Db_Linked
 
             // add new ones (i.e. auth list groups that the user doesn't have)
             foreach ($extraAuthInstGroupNames as $newGroupName) {
-                $groupToAddToUser = InstGroup::loadOneFromDb(['name'=>$newGroupName],$this->dbConnection);
+                $groupToAddToUser = InstGroup::getOneFromDb(['name'=>$newGroupName],$this->dbConnection);
 
                 // check if the group didn't exist in the DB
                 if (! $groupToAddToUser->matchesDb) {

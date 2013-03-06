@@ -25,7 +25,7 @@ if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 	echo "<h3>(Sys Admin) Equipment Groups</h3>";
 	echo "<ul>";
 	# instantiate the equipment groups for the system administrator
-	$AdminEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],$DB); //EqGroup::getAllEqGroups($DB);
+	$AdminEqGroups = EqGroup::getAllFromDb(['flag_delete'=>0],$DB); //EqGroup::getAllEqGroups($DB);
 	if (count($AdminEqGroups)>0) {
 		for ($i = 0, $size = count($AdminEqGroups); $i < $size; ++$i) {
 			echo "<li><a href=\"equipment_group.php?eid=" . $AdminEqGroups[$i]->eq_group_id . "\" title=\"\">" . $AdminEqGroups[$i]->name . "</a> [description: " . $AdminEqGroups[$i]->descr . "]</li>";

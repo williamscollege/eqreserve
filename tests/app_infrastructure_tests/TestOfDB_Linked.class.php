@@ -109,7 +109,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertNull($testObj->dblinktest_id);
         $this->assertFalse($testObj->matchesDb);
 
-        $testObj = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'1'],$this->DB);
+        $testObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'1'],$this->DB);
 
         $this->assertFalse($testObj->matchesDb);
         $this->assertNull($testObj->dblinktest_id);
@@ -137,7 +137,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertNull($testObj->dblinktest_id);
         $this->assertFalse($testObj->matchesDb);
 
-        $testObj = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
+        $testObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
 
         $this->assertTrue($testObj->matchesDb);
         $this->assertEqual($testObj->dblinktest_id,5);
@@ -171,7 +171,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertNull($testObj->dblinktest_id);
         $this->assertFalse($testObj->matchesDb);
 
-        $testObj = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
+        $testObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
         $this->assertTrue($testObj->matchesDb);
 
         $testObj->charfield = 'new char data';
@@ -251,7 +251,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
 		$this->_dbClear();
 		$this->_dbInsertTestRecord(['id'=>1]);
 
-		$matchingObject = Trial_Db_Linked::loadOneFromDb(['intfield'=>1],$this->DB);
+		$matchingObject = Trial_Db_Linked::getOneFromDb(['intfield'=>1],$this->DB);
 
 		$this->assertNotNull($matchingObject);
 		$this->assertTrue($matchingObject->matchesDb);
@@ -263,7 +263,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
     function testLoadNonexistingOneFromDb() {
         $this->_dbClear();
 
-        $matchingObject = Trial_Db_Linked::loadOneFromDb(['dblinktest_id'=>28],$this->DB);
+        $matchingObject = Trial_Db_Linked::getOneFromDb(['dblinktest_id'=>28],$this->DB);
 
         $this->assertFalse($matchingObject->matchesDb);
     }
@@ -275,7 +275,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->_dbInsertTestRecord(['id'=>3]);
         $this->_dbInsertTestRecord(['id'=>5,'int'=>2]);
 
-        $matchingObjects = Trial_Db_Linked::loadAllFromDb(['intfield'=>1],$this->DB);
+        $matchingObjects = Trial_Db_Linked::getAllFromDb(['intfield'=>1],$this->DB);
 
         $this->assertEqual(count($matchingObjects),3);
         $this->assertPattern('/[123]/',$matchingObjects[0]->dblinktest_id);
@@ -288,7 +288,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertTrue($matchingObjects[1]->matchesDb);
         $this->assertTrue($matchingObjects[2]->matchesDb);
 
-        $noMatchingObjects = Trial_Db_Linked::loadAllFromDb(['intfield'=>7],$this->DB);
+        $noMatchingObjects = Trial_Db_Linked::getAllFromDb(['intfield'=>7],$this->DB);
         $this->assertEqual(count($noMatchingObjects),0);
     }
 
@@ -298,7 +298,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->_dbInsertTestRecord(['id'=>2]);
         $this->_dbInsertTestRecord(['id'=>3]);
 
-        $matchingObjects = Trial_Db_Linked::loadAllFromDb(['dblinktest_id'=>[1,2]],$this->DB);
+        $matchingObjects = Trial_Db_Linked::getAllFromDb(['dblinktest_id'=>[1,2]],$this->DB);
 
         $this->assertEqual(count($matchingObjects),2);
         $this->assertPattern('/[12]/',$matchingObjects[0]->dblinktest_id);

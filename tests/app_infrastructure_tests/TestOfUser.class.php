@@ -100,7 +100,7 @@ class TestOfUser extends UnitTestCaseDB {
 	}	
 
     function testUserInstGroupsLoaded() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
 
         $u->loadInstGroups();
 
@@ -111,7 +111,7 @@ class TestOfUser extends UnitTestCaseDB {
     }   
 
     function testUserEqGroupsLoaded() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();        
 
 
@@ -135,7 +135,7 @@ class TestOfUser extends UnitTestCaseDB {
     /// auth-related tests
 
 	function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
-		$u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+		$u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual($u->username,Auth_Base::$TEST_USERNAME);
 		$this->assertTrue($u->matchesDb);
@@ -151,20 +151,20 @@ class TestOfUser extends UnitTestCaseDB {
 		$this->assertEqual($u->lname,$this->auth->lname);
 		$this->assertTrue($u->matchesDb);
 		
-		$u2 = User::loadOneFromDb(['user_id'=>1],$this->DB);
+		$u2 = User::getOneFromDb(['user_id'=>1],$this->DB);
         $this->assertEqual($u2->username,Auth_Base::$TEST_USERNAME);
 		$this->assertEqual($u2->lname,$this->auth->lname);
 	}	
 
     function ASIDEtestUserInstGroupsAddedDbWhenValidAuthDataIsDifferent() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[1]];
 
         $this->assertEqual(count($u->inst_groups),1);
         $this->assertEqual(count($this->auth->inst_groups),2);
-        $ag0 = InstGroup::loadOneFromDb(['name'=>$this->auth->inst_groups[0]],$this->DB);
-        $ag1 = InstGroup::loadOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
+        $ag0 = InstGroup::getOneFromDb(['name'=>$this->auth->inst_groups[0]],$this->DB);
+        $ag1 = InstGroup::getOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
         $this->assertTrue($ag0->matchesDb);
         $this->assertFalse($ag0->flag_delete);
         $this->assertTrue($ag1->matchesDb);
@@ -183,12 +183,12 @@ class TestOfUser extends UnitTestCaseDB {
     }   
 
     function testUserInstGroupsUndeletedDbWhenValidAuthDataIsDifferent() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
 
         $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[2]];
 
-        $deletedGroup = InstGroup::loadOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
+        $deletedGroup = InstGroup::getOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
 
         $this->assertTrue($deletedGroup->matchesDb);
         $this->assertTrue($deletedGroup->flag_delete);
@@ -208,7 +208,7 @@ class TestOfUser extends UnitTestCaseDB {
     }
 
     function testUserInstGroupsRemovedDbWhenValidAuthDataIsDifferent() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
         $this->auth->inst_groups = [];
 
@@ -223,7 +223,7 @@ class TestOfUser extends UnitTestCaseDB {
     }   
 
     function testUserDeletedMembershipReactivatedOnAuth() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $u->loadInstGroups();
 
         $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[1]];
@@ -246,7 +246,7 @@ class TestOfUser extends UnitTestCaseDB {
     
 
 	function testUserUpdatesBaseDbWhenAuthDataIsInvalid() {
-		$u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+		$u = User::getOneFromDb(['user_id'=>1],$this->DB);
 		$this->auth->fname = '';		
 
 		$status = $u->updateDbFromAuth($this->auth);
@@ -256,7 +256,7 @@ class TestOfUser extends UnitTestCaseDB {
 	}	
 
     function testNewUserBaseRecordCreatedWhenAuthDataIsForNewUser() {
-        $u = User::loadOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
         $this->auth->fname = '';        
 
         $status = $u->updateDbFromAuth($this->auth);
