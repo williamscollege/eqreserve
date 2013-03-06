@@ -1,6 +1,12 @@
 <?php
 	require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
-	require_once dirname(__FILE__) . '/../../classes/eq_group.class.php';
+    require_once dirname(__FILE__) . '/../../classes/eq_group.class.php';
+    require_once dirname(__FILE__) . '/../../classes/eq_subgroup.class.php';
+    require_once dirname(__FILE__) . '/../../classes/inst_group.class.php';
+    require_once dirname(__FILE__) . '/../../classes/inst_membership.class.php';
+    require_once dirname(__FILE__) . '/../../classes/permission.class.php';
+    require_once dirname(__FILE__) . '/../../classes/role.class.php';
+    require_once dirname(__FILE__) . '/../../classes/user.class.php';
 
 
 	class TestOfEqGroup extends UnitTestCaseDB
@@ -27,6 +33,19 @@
 		                                                                		";
 			$addTestEqGroupsStmt = $this->DB->prepare($addTestEqGroupsSql);
 			$addTestEqGroupsStmt->execute();
+
+
+            # EqSubgroup: eq_subgroup_id', 'eq_group_id', 'name','descr','ordering','flag_delete'
+            $addTestEqSubgroupsSql  = "INSERT INTO " . EqSubgroup::$dbTable . " VALUES 
+                                                                                    (1,1,'mini','mostly smallish',1,0),
+                                                                                    (2,1,'micro','more smallish',2,0),
+                                                                                    (3,1,'nano','really smallish',3,0),
+                                                                                    (4,1,'femto','not kidding, very very small',4,0)
+                                                                                ";
+            $addTestEqSubgroupsStmt = $this->DB->prepare($addTestEqSubgroupsSql);
+            $addTestEqSubgroupsStmt->execute();
+//print_r($addTestEqSubgroupsStmt->errorInfo());
+//exit;
 
 			// TODO: set up and check for indirect access via inst_group membership and permissions where entity_type == 'inst_group'
 			# Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
@@ -70,6 +89,10 @@
 			$rmTestEqGroupsStmt = $this->DB->prepare($rmTestEqGroupsSql);
 			$rmTestEqGroupsStmt->execute();
 
+            $rmTestEqGroupsSql = "DELETE FROM ".EqSubgroup::$dbTable;
+            $rmTestEqGroupsStmt = $this->DB->prepare($rmTestEqGroupsSql);
+            $rmTestEqGroupsStmt->execute();
+
 			$rmTestPermissionSql = "DELETE FROM ".Permission::$dbTable;
 			$rmTestPermissionStmt = $this->DB->prepare($rmTestPermissionSql);
 			$rmTestPermissionStmt->execute();
@@ -82,6 +105,9 @@
 			$rmTestInstMembershipStmt = $this->DB->prepare($rmTestInstMembershipSql);
 			$rmTestInstMembershipStmt->execute();
 		}
+
+        //############################################################################
+        // static method tests
 
 		public function TestOfEqGroupCmpAlphabetical()
 		{
@@ -201,6 +227,29 @@
 //			exit;
 		}
 
+
+        //############################################################################
+        // instance method tests
+
+        public function TestOfLoadSubgroups()
+        {
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>1],$this->DB);
+            $this->assertEqual($eg->name,'Nanomajigs');
+            $this->assertFalse($eg->eq_subgroups);
+
+
+            // testing this
+            $eg->loadEqSubgroups();
+
+            $this->assertTrue(is_array($eg->eq_subgroups));
+            $this->assertEqual(count($eg->eq_subgroups),4);
+
+            usort($eg->eq_subgroups,'EqSubgroup::cmp');
+            $this->assertEqual($eg->eq_subgroups[0]->name,'mini');
+            $this->assertEqual($eg->eq_subgroups[1]->name,'micro');
+            $this->assertEqual($eg->eq_subgroups[2]->name,'nano');
+            $this->assertEqual($eg->eq_subgroups[3]->name,'femto');
+        }
 	}
 
 

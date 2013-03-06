@@ -27,15 +27,15 @@ The class has a static function to load a single object from the database (e.g. 
 NOTE 1: in the event that multiple records match the search hash, the first (as arbitrarily given by the DB) is used
 NOTE 2: if the value in the search hash is scalar then equality is used; if the value is an array then the IN operation is used
 
-    $o1 = Trial_Db_Linked::loadOneFromDb( ['dblinktest_id'=>'1'],$DB);
+    $o1 = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'1'],$DB);
 
 There is also a corresponding static function to load a set of matching objects (e.g. load all where 'intfield' value = 5).
 
-    $objList = Trial_Db_Linked::loadAllFromDb( ['intfield'=>'5'],$DB);
+    $objList = Trial_Db_Linked::getAllFromDb( ['intfield'=>'5'],$DB);
 
 and an example using an array as a the value in the search hash
 
-    $objList = Trial_Db_Linked::loadAllFromDb( ['intfield'=>[2,3,5]],$DB);
+    $objList = Trial_Db_Linked::getAllFromDb( ['intfield'=>[2,3,5]],$DB);
 
 For a single object you can also use the refreshFromDb method of the object itself, which loads information based on the attributes currently set in the object. E.g.
 
@@ -140,7 +140,7 @@ abstract class Db_Linked
     public function __set($name, $value)
     {
         if (array_key_exists($name, $this->fieldValues)) {
-            if ($this->fieldValues[$name] != $value) {
+            if ($this->fieldValues[$name] !== $value) {
 	            $this->fieldValues[$name] = $value;
     		    $this->matchesDb = false;
     		}
@@ -170,7 +170,7 @@ abstract class Db_Linked
     }
 
 
-    public static function loadAllFromDb($searchHash,$usingDb) {
+    public static function getAllFromDb($searchHash,$usingDb) {
         $whichClass = get_called_class();
         $fetchStmt = self::_buildFetchStatement($searchHash,$usingDb);
         $fetchStmt->execute($searchHash);
@@ -185,7 +185,7 @@ abstract class Db_Linked
     // returns: an object of the appriate type with values loaded from the DB
     // NOTE: in the case of multiple rows found, only the first is used
     // NOTE: in the case of no rows found the recipient->matchesDB is false
-    public static function loadOneFromDb($searchHash,$usingDb) {
+    public static function getOneFromDb($searchHash,$usingDb) {
         $fetchStmt = self::_buildFetchStatement($searchHash,$usingDb);
         $fetchStmt->execute($searchHash);
 
@@ -301,6 +301,8 @@ abstract class Db_Linked
 
             $insertStmt = $this->dbConnection->prepare($insertSql);
             $res = $insertStmt->execute($this->_getQueryValuesArray());
+            if ($debug) { print_r($insertStmt->errorInfo()); }
+            if ($debug) { print_r($this->_getQueryValuesArray()); }
             $this->fieldValues[static::$primaryKeyField] = $res;
             $this->matchesDb = true;
         } 
@@ -317,7 +319,7 @@ abstract class Db_Linked
 
             $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->_getQueryValuesArray());
-
+            if ($debug) { print_r($updateStmt->errorInfo()); }
             $this->matchesDb = true;
         }
 

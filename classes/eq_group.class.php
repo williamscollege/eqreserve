@@ -2,6 +2,7 @@
 require_once dirname(__FILE__) . '/db_linked.class.php';
 require_once dirname(__FILE__) . '/permission.class.php';
 require_once dirname(__FILE__) . '/role.class.php';
+require_once dirname(__FILE__) . '/eq_subgroup.class.php';
 
 
 class EqGroup extends Db_Linked
@@ -13,17 +14,21 @@ class EqGroup extends Db_Linked
     public static $dbTable = 'eq_groups';
 
 	// instance attributes
-	public $permission = '';
+    public $permission = '';
+    public $eq_subgroups = '';
 
 /*
  	public static function getAllEqGroups() {
 
 		global $DB; //import this "global" variable
 
-		$sysAdminAllEqGroups = EqGroup::loadAllFromDb(['flag_delete'=>0],'DB'=>$DB);
+		$sysAdminAllEqGroups = EqGroup::getAllFromDb(['flag_delete'=>0],'DB'=>$DB);
 		return($sysAdminAllEqGroups);
 	}
 */
+
+    //##################################################
+    // static functions
 
 	public static function cmpAlphabetical($a,$b) {
 		if ($a->name == $b->name) {
@@ -41,12 +46,15 @@ class EqGroup extends Db_Linked
 			$equipmentGroupsOfUserById[$equipmentGroupsOfUser[$i]->eq_group_id] = $equipmentGroupsOfUser[$i];
 		}
 
+//print_r($igs);
+//echo "processing ig of count(igs)".count($igs)."<br/>\n";
 		# loop through institutional groups
-		for($i=0, $size=count($igs); $i<$size; ++$i) {
+		for($i=0, $ig_size=count($igs); $i<$ig_size; ++$i) {
+//echo "processing ig of $i<br/>\n";
 			$inst_egs = EqGroup::getEqGroupsForInstGroup($igs[$i]);
 
 			# loop through eq_groups associated with this institutional group
-			for($k=0, $size=count($inst_egs); $k<$size; ++$k) {
+			for($k=0, $ieg_size=count($inst_egs); $k<$ieg_size; ++$k) {
 
 				 $eqGroupFromInst = $inst_egs[$k];
 
@@ -72,10 +80,10 @@ class EqGroup extends Db_Linked
 
 	public static function getEqGroupsForInstGroup($ig) {
 		// get all eq_groups associated with this institutional group (going from: ig -> permission -> eq_group)
-		$permissions = Permission::loadAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
+		$permissions = Permission::getAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
 		$groups = [];
 		foreach ($permissions as $p) {
-			$eq = EqGroup::loadOneFromDb(['eq_group_id'=>$p->eq_group_id],$ig->dbConnection);
+			$eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id],$ig->dbConnection);
 			$eq->permission = $p;
 			$eq->permission->loadRole();
 			array_push($groups,$eq);
@@ -85,10 +93,10 @@ class EqGroup extends Db_Linked
 
 	public static function getEqGroupsForUser($user) {
 		// get all eq_groups associated with this user (going from: $user -> permission -> eq_group)
-		$permissions = Permission::loadAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
+		$permissions = Permission::getAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
 		$groups = [];
 		foreach ($permissions as $p) {
-			$eq = EqGroup::loadOneFromDb(['eq_group_id'=>$p->eq_group_id],$user->dbConnection);
+			$eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id],$user->dbConnection);
 			$eq->permission = $p;
 			$eq->permission->loadRole();
 			array_push($groups,$eq);
@@ -108,6 +116,15 @@ class EqGroup extends Db_Linked
 
 		return $all_egs;
 	}
+
+    //##################################################
+    // instance functions
+
+    public function loadEqSubgroups() {
+        $this->eq_subgroups = EqSubgroup::getAllFromDb(['eq_group_id'=>$this->eq_group_id],$this->dbConnection);
+
+        return true;
+    }
 
 }
 ?>
