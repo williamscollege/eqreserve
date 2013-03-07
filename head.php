@@ -42,8 +42,10 @@
 		} else {
 			// SECTION: must be logged in to view pages; otherwise, redirect to index splash page
 
-			if ($_SERVER['REQUEST_URI'] != "/eqreserve/index.php") {
-				header('Location: /eqreserve/index.php');
+			if (! strpos(APP_FOLDER ."/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
+//				echo APP_FOLDER ."/index.php <br />";
+//				echo $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] ."<br />";
+				header('Location: ' . APP_FOLDER);
 			}
 		}
 	} else {
@@ -53,7 +55,7 @@
 			// SECTION: wants to log out
 			unset($_SESSION['isAuthenticated']);
 			unset($_SESSION['userdata']);
-			header('Location: /eqreserve/index.php');
+			header('Location: ' . APP_FOLDER . '/index.php');
 		}
 	}
 
@@ -87,7 +89,7 @@
     <meta name="author" content="OIT Project Group">
     <!-- CSS: Framework -->
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="all">
-    <link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css" media="all">
+	<link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <!-- CSS: Plugins -->
     <!-- jQuery: Framework -->
@@ -105,19 +107,14 @@
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li class="active"><a href="/eqreserve/">Home</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li class="nav-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
+					<?php
+//					if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
+//						if(USER IS ADMIN) {
+							//SHOW "ADMIN LINK: Manage Groups/Users"
+//						}
+//					}
+?>
+					<li><a href="manage_groups_users.php">Manage Groups/Users</a></li>
                 </ul>
 				<?php
 				if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {

@@ -29,7 +29,7 @@
 
 
 		echo "<hr />";
-		echo "<h3>User: Equipment Groups</h3>";
+		echo "<h3>My Equipment Groups</h3>";
 		# instantiate the equipment groups and roles for this user
 		$UserEqGroups = new EqGroup([$USER, 'DB' => $DB]);
 		echo "<ul>";
@@ -46,7 +46,7 @@
 
 		# TODO: SYS ADMIN Section needs security added
 		echo "<hr />";
-		echo "<h3>System Administrator: Equipment Groups</h3>";
+		echo "<h3>Admin: All Equipment Groups</h3>";
 		echo "<ul>";
 		# instantiate the equipment groups for the system administrator
 		$AdminEqGroups = EqGroup::getAllFromDb(['flag_delete' => 0], $DB); //EqGroup::getAllEqGroups($DB);

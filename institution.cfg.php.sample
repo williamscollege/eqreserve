@@ -5,6 +5,7 @@
 
 define('INSTITUTION_NAME', 'Your Institution');
 define('APP_NAME',         'Equipment Reservations');
+define('APP_FOLDER',	   'http://localhost/eqreserve');
 
 define('DB_SERVER', 'yourdbserver'); // e.g. mysql.college.edu
 define('DB_NAME',   'eqreserve');
