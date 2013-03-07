@@ -1,8 +1,8 @@
 <?php
 	session_start();
 	require_once('institution.cfg.php');
-    require_once('/classes/user.class.php');
-    require_once('auth.cfg.php');
+	require_once('/classes/user.class.php');
+	require_once('auth.cfg.php');
 
 	$MESSAGE = '';
 
@@ -20,16 +20,16 @@
 				$_SESSION['userdata']['lastname']  = $AUTH->lname;
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
 				// array of institutional group names for this user
-				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups,0); // makes a copy of the array
+				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups, 0); // makes a copy of the array
 
 				// $USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
-                // now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
+				// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 				// $USER->refreshFromDb();
 			} else {
 				$MESSAGE = 'Log in failed';
 			}
 
-			//		# START: Debugging Info
+			//		# START: Auth Debugging Info
 			//			echo "<br /><h2>Development Messages</h2>";
 			//			# echo "isAuthenticated = ".$_SESSION['isAuthenticated']."<br />\n";
 			//			#if ($AUTH->msg != '' || $AUTH->debug != '') {
@@ -39,6 +39,12 @@
 			//			#}
 			//		# END: Debugging Info
 
+		} else {
+			// SECTION: must be logged in to view pages; otherwise, redirect to index splash page
+
+			if ($_SERVER['REQUEST_URI'] != "/eqreserve/index.php") {
+				header('Location: /eqreserve/index.php');
+			}
 		}
 	} else {
 		// SECTION: authenticated
@@ -52,24 +58,24 @@
 	}
 
 
-    if (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated'])) {
-			// SECTION: is logged in
-			
-			$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
-			
-			// now create user object
-			$USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
-			
-			// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
-            $USER->refreshFromDb();
-//print_r($USER);
-//print_r($_SESSION['userdata']);
-            $USER->updateDbFromAuth($_SESSION['userdata']);
-            $USER->refreshFromDb();
-//print_r($USER);
-            $USER->loadInstGroups();
-            $USER->loadEqGroups();
-//print_r($USER);
+	if (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated'])) {
+		// SECTION: is logged in
+
+		$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
+
+		// now create user object
+		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
+
+		// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
+		$USER->refreshFromDb();
+		//print_r($USER);
+		//print_r($_SESSION['userdata']);
+		$USER->updateDbFromAuth($_SESSION['userdata']);
+		$USER->refreshFromDb();
+		//print_r($USER);
+		$USER->loadInstGroups();
+		$USER->loadEqGroups();
+		//print_r($USER);
 	}
 ?>
 <!DOCTYPE html>
@@ -95,6 +101,7 @@
     <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="#"><?php echo APP_NAME; ?></a>
+
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li class="active"><a href="/eqreserve/">Home</a></li>
@@ -118,7 +125,7 @@
                     <div id="loggedInControls">
                         <form id="frmLogout" class="navbar-form pull-right" method="post" action="">
                             <span class="muted">You are logged in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
-                            <input type="submit" id="submit_logout" class="btn" name="submit_logout"  value="Sign out" />
+                            <input type="submit" id="submit_logout" class="btn" name="submit_logout" value="Sign out" />
                         </form>
                     </div>
 					<?php
@@ -140,5 +147,4 @@
     </div>
 </div>
 
-<?php /* This div is closed in foot.php */ ?>
-<div class="container">
+<div class="container"> <!--div closed in the footer-->
