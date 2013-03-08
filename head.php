@@ -89,6 +89,13 @@
     <meta name="author" content="OIT Project Group">
     <!-- CSS: Framework -->
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="all">
+    <!--Padding for bootstrap.css only, not for bootstrap-responsive.css-->
+	<style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
 	<link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <!-- CSS: Plugins -->
@@ -102,7 +109,12 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="#"><?php echo APP_NAME; ?></a>
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="<?php echo APP_FOLDER; ?>"><?php echo APP_NAME; ?></a>
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
@@ -145,3 +157,34 @@
 </div>
 
 <div class="container"> <!--div closed in the footer-->
+
+<?php
+if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
+?>
+    <!-- Main hero unit for a primary marketing message or call to action -->
+	<div class="hero-unit">
+        <h1>Welcome!</h1>
+        <p>Please sign in to use this system for scheduling equipment reservations.</p>
+        <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    </div>
+	<!-- Example row of columns -->
+    <div class="row">
+        <div class="span4">
+            <h2>Spectrometers</h2>
+            <p>description text here description text here description text here description text here description text here description text here description text here </p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+            <h2>Nuclear Toys</h2>
+            <p>description text here description text here description text here description text here description text here description text here description text here description text here description text here description text here description text here </p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+            <h2>3 D Printer Projects</h2>
+            <p>description text here description text here description text here description text here description text here description text here description text here description text here description text here </p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+    </div>
+<?php
+}
+?>

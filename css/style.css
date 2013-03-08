@@ -1,24 +1,26 @@
-#frmLogout {
-    display: inline;
+#frmLogout
+{
+	display: inline;
 }
-
-#account_info {
-    width: 95%;
+#account_info
+{
+	width: 95%;
 }
-
-#account_info .label {
-    clear: left;
-    float: left;
-    width: 15%;
-    text-align: right;
-    font-weight: bold;
+#account_info .label
+{
+	clear: left;
+	float: left;
+	width: 15%;
+	text-align: right;
+	font-weight: bold;
 }
-#account_info .value {
-    float: left;
-    width: 80%;
-    margin-left: 6px;
+#account_info .value
+{
+	float: left;
+	width: 80%;
+	margin-left: 6px;
 }
-
-.displayNone {
-    display: none;
+.displayNone
+{
+	display: none;
 }
