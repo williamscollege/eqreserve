@@ -126,6 +126,7 @@ abstract class Db_Linked
             $this->fieldValues[$fieldName] = $initVal;
         }
         $this->matchesDb = false;
+		$this->flag_delete = false;
         $this->dbConnection = $initsHash['DB'];
     }
 
@@ -153,7 +154,19 @@ abstract class Db_Linked
     private function _getQueryValuesArray() {
         $qpar = array();
         foreach ($this->fieldValues as $k=>$v) {
-            $qpar[':'.$k] = $v;
+#			$qpar[':'.$k] = $v;
+			// this somewhat complex structure is to handle some cases where the automatic typecasting doesn't quite do what we need
+			if (preg_match('/^flag\_/',$k)) {
+				if ($v) {
+					$qpar[':'.$k] = true;
+				}
+				else {
+					$qpar[':'.$k] = false;
+				}
+			}
+			else {
+				$qpar[':'.$k] = $this->fieldValues[$k];
+			}
         }
         return $qpar;
     }
@@ -206,7 +219,13 @@ abstract class Db_Linked
     // returns: a prepared select statement based on the data in the hash
     // SIDE EFFECT: if any of the values in the hash are arrays then the hash will be altered to create those values top-level keys and to remove the initial top-level key - this enables the hash to be used in the execute statement later
     private static function _buildFetchStatement(&$identHash,$usingDb) {
+//		print_r($identHash);
+
         $fetchSql = static::buildFetchSql($identHash);
+
+//		print_r($identHash);
+
+//		echo "$fetchSql\n";
 
         $fetchStmt = $usingDb->prepare($fetchSql);
 
@@ -217,6 +236,8 @@ abstract class Db_Linked
     // returns: a select statement based on the data in the hash
     // SIDE EFFECT: if any of the values in the hash are arrays then the hash will be altered to create those values top-level keys and to remove the initial top-level key - this enables the hash to be used in the execute statement later
     public static function buildFetchSql(&$identHash) {
+//echo "build sql start\n";
+//		print_r($identHash);
         $fetchSql = 'SELECT '.implode(',',static::$fields).' FROM '.static::$dbTable.' WHERE 1=1';
         $keys_to_remove = [];
         $key_vals_to_add = [];
@@ -247,36 +268,74 @@ abstract class Db_Linked
             $identHash[$k] = $v;
         }
 
+		$newIdent = [];
+		foreach ($identHash as $k=>$v) {
+			$newIdent[":$k"] = $v;
+		}
+		$identHash = $newIdent;
+
+//echo "build sql end\n";
+//		print_r($identHash);
         return $fetchSql;
     }
 
     /////////////////////////////////////////////////////
     
-    public function refreshFromDb() {
+    public function refreshFromDb($debug=0) {
         if ($this->matchesDb) {
+			if ($debug) { echo "record already matches\n"; }
             return;
         }
+		if ($debug) {
+			echo "<pre>pre-refresh object:\n";
+			print_r($this);
+		}
         $fetchAttr = array();
         foreach (static::$fields as $fieldName) {
             if (! is_null($this->fieldValues[$fieldName])) { 
                 $fetchAttr[$fieldName] = $this->fieldValues[$fieldName];
             }
         }
-        
-        $fetchStmt = self::_buildFetchStatement($fetchAttr, $this->dbConnection);
-        $fetchStmt->execute($fetchAttr);
-        if ($fetchStmt->rowCOunt() < 1) {
+
+		if ($debug) {
+			echo "fetch attributes:\n";
+			print_r($fetchAttr);
+		}
+		$fetchStmt = self::_buildFetchStatement($fetchAttr, $this->dbConnection);
+
+		//$fetchSql = "SELECT user_id,username,fname,lname,sortname,email,advisor,notes,flag_is_banned,flag_delete FROM users WHERE 1=1 AND username = 'mockUser' AND flag_is_banned = false AND flag_delete = false";
+		//$fetchStmt = $this->dbConnection->prepare($fetchSql);
+
+
+		//echo "$fetchSql\n";
+//		exit;
+
+		$fetchStmt->execute($fetchAttr);
+//		$fetchStmt->execute();
+		if ($debug) {
+			echo "fetch stmt err info:\n";
+			print_r($fetchStmt->errorInfo());
+			echo "row count is ".$fetchStmt->rowCount() ."\n";
+		}
+        if ($fetchStmt->rowCount() < 1) {
             $this->matchesDb = false;
             return;
         }
         $fetchStmt->setFetchMode(PDO::FETCH_INTO, $this);
         $fetchStmt->fetch();
+
+		if ($debug) {
+			echo "post-refresh object is:\n";
+			print_r($this);
+			echo "</pre>";
+		}
         $this->matchesDb = true;
     }
 
     public function updateDb($debug=0) {
         if ($debug) { echo "<pre>\n"; }
         if ($this->matchesDb) {
+			if ($debug) { echo "record already matches\n"; }
             return;
         }
         $doInsert = (! $this->fieldValues[static::$primaryKeyField]);
@@ -289,6 +348,7 @@ abstract class Db_Linked
         }
 
         if ($debug) { echo "doInsert is $doInsert\n"; }
+
         if ($doInsert) {
             $insertSql = 'INSERT INTO '.static::$dbTable.' VALUES(:'.static::$primaryKeyField;
             foreach (static::$fields as $k) {
@@ -298,14 +358,25 @@ abstract class Db_Linked
             }
             $insertSql .= ')';
             if ($debug) { echo "insertSql is $insertSql\n"; }
+			if ($debug) { echo "insert qva is :\n"; print_r($this->_getQueryValuesArray()); }
 
             $insertStmt = $this->dbConnection->prepare($insertSql);
-            $res = $insertStmt->execute($this->_getQueryValuesArray());
-            if ($debug) { print_r($insertStmt->errorInfo()); }
-            if ($debug) { print_r($this->_getQueryValuesArray()); }
-            $this->fieldValues[static::$primaryKeyField] = $res;
-            $this->matchesDb = true;
-        } 
+			$qva = $this->_getQueryValuesArray();
+
+//			foreach ($qva as $k=>$v) {
+//				echo "processing key $k<br/>\n";
+//				if (($k == ':flag_delete') || ($k == ':flag_is_banned')) {
+//					echo 'setting flag value';
+//					$qva[$k] = false;
+//				}
+//			}
+
+			if ($debug) { print_r($qva); }
+            $res = $insertStmt->execute($qva); // returns a boolean value
+            if ($debug) { echo "insert stm err result:\n"; print_r($insertStmt->errorInfo()); }
+            # $this->fieldValues[static::$primaryKeyField] = $res;
+            $this->refreshFromDb();
+        }
         else {
             $updateSql = 'UPDATE '.static::$dbTable.' SET '.static::$primaryKeyField.'='.$this->fieldValues[static::$primaryKeyField];
             foreach (static::$fields as $k) {
@@ -315,11 +386,12 @@ abstract class Db_Linked
             }
             $updateSql .= ' WHERE '.static::$primaryKeyField.'= :'.static::$primaryKeyField;
 
-            if ($debug) { echo "updateSql is $updateSql\n"; }
+			if ($debug) { echo "updateSql is $updateSql\n"; }
+			if ($debug) { echo "update qva is :\n"; print_r($this->_getQueryValuesArray()); }
 
             $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->_getQueryValuesArray());
-            if ($debug) { print_r($updateStmt->errorInfo()); }
+            if ($debug) { echo "update stm err result:\n"; print_r($updateStmt->errorInfo()); }
             $this->matchesDb = true;
         }
 

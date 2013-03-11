@@ -30,7 +30,7 @@ FOR TESTING ONLY:
 # ----------------------------
 # IMPORTANT: Select which database you wish to run this script against
 # ----------------------------
-# USE eqreserve;
+-- USE eqreserve;
 USE eqreservetest;
 
 

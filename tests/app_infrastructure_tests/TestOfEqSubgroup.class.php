@@ -45,7 +45,23 @@
 
 		}
 
-        //#########################################################
+		//###################################
+		// basic db interaction
+
+		function testEqSubgroupDBInsert(){
+			$esg = new EqSubgroup(['eq_subgroup_id'=>50,'eq_group_id'=>1,'DB'=>$this->DB]);
+
+
+			$esg->updateDb();
+
+
+			$esg2 = EqSubgroup::getOneFromDb(['eq_subgroup_id'=>50], $this->DB);
+
+			$this->assertTrue($esg2->matchesDb);
+		}
+
+
+		//#########################################################
         // static method tests
 
 		public function TestOfCmp(){

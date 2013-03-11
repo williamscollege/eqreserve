@@ -91,6 +91,19 @@ class TestOfUser extends UnitTestCaseDB {
 
     // DB interaction tests
 
+	function testUserDBInsert(){
+		$u = new User(['user_id'=>50,'fname'=>'fred','DB'=>$this->DB]);
+
+
+		$u->updateDb();
+
+
+		$u2 = User::getOneFromDb(['user_id'=>50], $this->DB);
+
+		$this->assertTrue($u2->matchesDb);
+		$this->assertEqual($u2->fname, 'fred');
+	}
+
 	function testUserRetrievedFromDb() {
 		$u = new User(['user_id'=>1,'DB'=>$this->DB]);
 		$this->assertNull($u->username);

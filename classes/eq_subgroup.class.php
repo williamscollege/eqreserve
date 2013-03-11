@@ -11,12 +11,24 @@ class EqSubgroup extends Db_Linked
 
     public $eq_group;
 
+	public function __construct($initsHash) {
+		parent::__construct($initsHash);
+
+		// now do custom stuff
+		// e.g. automatically load all accesibility info associated with the user
+
+		if(! array_key_exists('ordering',$initsHash)){
+			$this->ordering = 1;
+		}
+
+	}
+
     //##################################################
     // instance functions
 
     public static function cmp($a,$b) {
         if ($a->ordering == $b->ordering) {
-            return 0;
+            return self::cmpAlphabetical($a,$b);
         }
         return ($a->ordering < $b->ordering) ? -1 : 1;
     }

@@ -25,11 +25,19 @@ class User extends Db_Linked
             $this->loadInstGroups();
             $this->loadEqGroups();
         }
+
+		$this->flag_is_banned = false;
     }
 
     public function loadInstGroups() {
-        if (! $this->user_id) {
-            //trigger_error('cannot load inst groups for a user with no user_id');
+//		echo "myuser_id=".$this->user_id;
+//		if ($this->user_id == 1) {trigger_error('cannot load inst groups for a user where user_id=1');}
+
+		if (! $this->user_id) {
+//			echo "myuser_id=".$this->user_id;
+//			if ($this->user_id == 1) {trigger_error('NO VALUE: cannot load inst groups for a user where user_id=nothing');}
+
+            trigger_error('cannot load inst groups for a user with no user_id');
             return;
         }
 
@@ -38,13 +46,16 @@ class User extends Db_Linked
 
     public function loadEqGroups() {
         if (! $this->user_id) {
-            //trigger_error('cannot load equipment groups for a user with no user_id');
+            trigger_error('cannot load equipment groups for a user with no user_id');
             return;
         }
         $this->eq_groups = EqGroup::getAllEqGroupsForNonAdminUser($this);
     }
 
 	public function updateDbFromAuth($auth) {
+//echo "doing db update<br/>\n";
+//$this->refreshFromDb();
+
         // if we're passed in an array of auth data, convert it to an object
         if (is_array($auth)) {
             $a = new Auth_Base();
@@ -56,6 +67,8 @@ class User extends Db_Linked
             $auth = $a;
         }
 
+//		print_r($auth);
+
 		// test for basic invalid data
 		if ($auth->fname == '') { return false;}
 		if ($auth->lname == '') { return false;}
@@ -66,8 +79,11 @@ class User extends Db_Linked
 		if ($this->lname != $auth->lname) { $this->lname = $auth->lname; }		
 		if ($this->email != $auth->email) { $this->email = $auth->email; }
 
+//User::getOneFromDb(['username'=>$this->username],$this->dbConnection)
 		$this->updateDb();
-		
+//echo "TESTUSERIDUPDATED=" . $this->user_id . "<br>";
+
+		#$this->user_id =
         // get the user's current inst groups and the corresponding array of inst group names
         $initialInstGroups = InstGroup::getInstGroupsForUser($this);
         $userInstGroupNames = array_map(function($e){return $e->name;},$initialInstGroups);
@@ -95,7 +111,7 @@ class User extends Db_Linked
 
                 // check if the group didn't exist in the DB
                 if (! $groupToAddToUser->matchesDb) {
-                    echo "handling new group creation for $newGroupName\n";
+//                    echo "handling new group creation for $newGroupName\n";
                     $groupToAddToUser->name = $newGroupName;
                     $groupToAddToUser->flag_delete = false;
 //print_r($groupToAddToUser);
@@ -108,8 +124,9 @@ class User extends Db_Linked
                     $groupToAddToUser->updateDb();
                 }
 
-      
+//      echo "handle linking user: \n";
                 $groupToAddToUser->linkUser($this);
+
             }
 
             $this->loadInstGroups();

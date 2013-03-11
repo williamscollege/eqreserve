@@ -12,6 +12,7 @@
 		function tearDown() {
 		}
 
+
 		public function TestOfCmpRolesByPriority(){
 			$r1 = new Role(['priority'=>1, 'DB'=>$this->DB]);
 			$r2 = new Role(['priority'=>2, 'DB'=>$this->DB]);

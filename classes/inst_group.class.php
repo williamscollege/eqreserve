@@ -11,19 +11,30 @@ class InstGroup extends Db_Linked
 
     /////////////////////
 
+
     // links the given user to this group; makes the given user a member of this group
     public function linkUser($u) {
+//		print_r($u);
+//		print_r($this);
+//		echo "a\n";
         $m = InstMembership::getOneFromDb(['user_id'=>$u->user_id,'inst_group_id'=>$this->inst_group_id],$this->dbConnection);
-
+//print_r($m);
+//		echo "b\n";
         if (! $m->matchesDb) {
+//			echo "c\n";
             $m = new InstMembership(['user_id'=>$u->user_id,'inst_group_id'=>$this->inst_group_id,'flag_delete'=>false,'DB'=>$this->dbConnection]);
             $m->updateDb();
-        } 
+//			echo "d\n";
+        }
         elseif ($m->flag_delete) {
+//			echo "e\n";
             $m->flag_delete = false;
             $m->updateDb();
+//			echo "f\n";
         }
+//		echo "g\n";
         $u->loadInstGroups();
+//		echo "h\n";
     }
 
     // unlinks the given user from this group; makes the given user a NOT member of this group

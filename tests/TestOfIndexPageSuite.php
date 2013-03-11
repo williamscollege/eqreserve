@@ -10,6 +10,7 @@ class TestOfIndexSuite extends TestSuite {
         $this->TestSuite('Index page tests');
         $this->addFile('index_page_tests/IndexPageLoadTest.php');
         $this->addFile('index_page_tests/IndexPageAuthTest.php');
+        $this->addFile('index_page_tests/IndexPageDBTest.php');
      }
 }
 ?>

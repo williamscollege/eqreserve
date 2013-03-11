@@ -28,8 +28,8 @@ abstract class WebTestCaseWMS extends WebTestCase {
 
     function __construct($label = false) {
         parent::__construct($label);
-        $this->DB = new PDO("mysql:host=".TESTING_DB_SERVER.";dbname=".TESTING_DB_NAME.";port=3306",TESTING_DB_USER,TESTING_DB_PASS);    
-    }
+		$this->DB = new PDO("mysql:host=".TESTING_DB_SERVER.";dbname=".TESTING_DB_NAME.";port=3306",TESTING_DB_USER,TESTING_DB_PASS);
+	}
 
     function assertEltByIdHasAttrOfValue($eltId,$attrName,$attrValueExpected = true) {
         $matches = array();

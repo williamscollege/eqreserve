@@ -106,6 +106,22 @@
 			$rmTestInstMembershipStmt->execute();
 		}
 
+		//###################################
+		// basic db interaction
+
+		function testEqGroupDBInsert(){
+			$eg = new EqGroup(['eq_group_id'=>50,'DB'=>$this->DB]);
+
+
+			$eg->updateDb();
+
+
+			$eg2 = EqGroup::getOneFromDb(['eq_group_id'=>50], $this->DB);
+
+			$this->assertTrue($eg2->matchesDb);
+		}
+
+
         //############################################################################
         // static method tests
 

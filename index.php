@@ -82,17 +82,16 @@
 		echo "<hr />";
 		echo "<div class=\"DEVINFO\">";
 		echo "<h3>User Info:</h3>";
-		echo "username: " . $_SESSION['userdata']['username'] . "<br />";
-		echo "email: " . $_SESSION['userdata']['email'] . "<br />";
-		echo "firstname: " . $_SESSION['userdata']['firstname'] . "<br />";
-		echo "lastname: " . $_SESSION['userdata']['lastname'] . "<br />";
-		echo "sortname: " . $_SESSION['userdata']['sortname'] . "<br />";
+		echo "username: " . $USER->username . "<br />";
+		echo "email: " . $USER->email . "<br />";
+		echo "firstname: " . $USER->fname . "<br />";
+		echo "lastname: " . $USER->lname . "<br />";
 		echo "institutional groups:<br />";
-		echo "<ul>";
-		for ($i = 0, $size = count($_SESSION['userdata']['inst_groups']); $i < $size; ++$i) {
-			echo "<li>" . $_SESSION['userdata']['inst_groups'][$i] . "</li>";
+		echo "<ul>\n";
+		foreach ($USER->inst_groups AS $ig) {
+			echo "<li>$ig->name</li>\n";
 		}
-		echo "</ul>";
+		echo "</ul>\n";
 		echo "<br />";
 		echo "</div>";
 	}

@@ -124,6 +124,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual($testObj->dblinktest_id,1);
 
         $testObj->refreshFromDb();
+
         $this->assertFalse($testObj->matchesDb);
         $this->assertEqual($testObj->dblinktest_id,1);
     }

@@ -47,6 +47,17 @@ class TestOfInstGroup extends UnitTestCaseDB {
         $this->assertTrue(in_array('flag_delete',InstGroup::$fields));      
 	}
 
+	function testInstGroupDBInsert(){
+		$test = new InstGroup(['inst_group_id'=>50,'DB'=>$this->DB]);
+
+
+		$test->updateDb();
+
+
+		$test2 = InstGroup::getOneFromDb(['inst_group_id'=>50], $this->DB);
+
+		$this->assertTrue($test2->matchesDb);
+	}
 
     // DB interaction tests - static method tests
 

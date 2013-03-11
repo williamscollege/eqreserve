@@ -17,6 +17,27 @@ class EqGroup extends Db_Linked
     public $permission = '';
     public $eq_subgroups;
 
+	public function __construct($initsHash) {
+		parent::__construct($initsHash);
+
+		// now do custom stuff
+		// e.g. automatically load all accesibility info associated with the user
+
+		if(! array_key_exists('start_minute',$initsHash)){
+			$this->start_minute = '0';
+		}
+		if(! array_key_exists('min_duration_minutes',$initsHash)){
+			$this->min_duration_minutes = '60';
+		}
+		if(! array_key_exists('max_duration_minutes',$initsHash)){
+			$this->max_duration_minutes = '60';
+		}
+		if(! array_key_exists('duration_chunk_minutes',$initsHash)){
+			$this->duration_chunk_minutes = '60';
+		}
+
+	}
+
 /*
  	public static function getAllEqGroups() {
 

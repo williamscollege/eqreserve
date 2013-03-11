@@ -26,7 +26,7 @@
 				// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 				// $USER->refreshFromDb();
 			} else {
-				$MESSAGE = 'Log in failed';
+				$MESSAGE = 'Sign in failed';
 			}
 
 			//		# START: Auth Debugging Info
@@ -40,7 +40,7 @@
 			//		# END: Debugging Info
 
 		} else {
-			// SECTION: must be logged in to view pages; otherwise, redirect to index splash page
+			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
 
 			if (! strpos(APP_FOLDER ."/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
 //				echo APP_FOLDER ."/index.php <br />";
@@ -51,7 +51,7 @@
 	} else {
 		// SECTION: authenticated
 
-		if (isset($_REQUEST['submit_logout'])) {
+		if (isset($_REQUEST['submit_signout'])) {
 			// SECTION: wants to log out
 			unset($_SESSION['isAuthenticated']);
 			unset($_SESSION['userdata']);
@@ -61,23 +61,30 @@
 
 
 	if (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated'])) {
-		// SECTION: is logged in
+		// SECTION: is signed in
 
 		$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
+//print_r($_SERVER);
+		if ($_SERVER['SERVER_NAME'] == 'localhost') {
+			$DB = new PDO("mysql:host=" . TESTING_DB_SERVER . ";dbname=" . TESTING_DB_NAME . ";port=3306", TESTING_DB_USER, TESTING_DB_PASS);
+		}
 
 		// now create user object
 		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
+//		print_r($USER);
 
 		// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 		$USER->refreshFromDb();
-		//print_r($USER);
+//		echo "SHOULD HAVE APPROPRIATE PK ID HERE IF USERNAME ALREADY EXISTS:";
+//		print_r($USER);
 		//print_r($_SESSION['userdata']);
 		$USER->updateDbFromAuth($_SESSION['userdata']);
-		$USER->refreshFromDb();
+		//$USER->refreshFromDb();
 		//print_r($USER);
 		$USER->loadInstGroups();
 		$USER->loadEqGroups();
-		//print_r($USER);
+
+//		print_r($USER);
 	}
 ?>
 <!DOCTYPE html>
@@ -89,7 +96,7 @@
     <meta name="author" content="OIT Project Group">
     <!-- CSS: Framework -->
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="all">
-    <!--Padding for bootstrap.css only, not for bootstrap-responsive.css-->
+    <!--padding for bootstrap.css only, not for bootstrap-responsive.css-->
 	<style type="text/css">
         body {
             padding-top: 60px;
@@ -131,19 +138,19 @@
 				<?php
 				if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 					?>
-                    <div id="loggedInControls">
-                        <form id="frmLogout" class="navbar-form pull-right" method="post" action="">
-                            <span class="muted">You are logged in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
-                            <input type="submit" id="submit_logout" class="btn" name="submit_logout" value="Sign out" />
+                    <div id="signedInControls">
+                        <form id="frmSignout" class="navbar-form pull-right" method="post" action="">
+                            <span class="muted">You are signed in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
+                            <input type="submit" id="submit_signout" class="btn" name="submit_signout" value="Sign out" />
                         </form>
                     </div>
 					<?php
 				} else {
 					?>
-                    <form id="frmLogin" class="navbar-form pull-right" method="post" action="">
+                    <form id="frmSignin" class="navbar-form pull-right" method="post" action="">
                         <input type="text" id="username" class="span2" name="username" placeholder="Williams Username" value="" />
                         <input type="password" id="password_login" class="span2" name="password" placeholder="Password" value="" />
-                        <input type="submit" id="submit_login" class="btn" name="submit_login" value="Sign in" />
+                        <input type="submit" id="submit_signin" class="btn" name="submit_signin" value="Sign in" />
                     </form>
 					<?php
 					if ($MESSAGE) {
