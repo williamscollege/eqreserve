@@ -27,7 +27,7 @@ class Auth_LDAP extends Auth_Base
             return $group_names;
         }
 
-        echo "TODO: implement fetching of group names<br/>\n";
+//        echo "TODO: implement fetching of group names<br/>\n";
 	}
 
 	public function checkLDAP($user = "", $pass = "", $ldap_server = AUTH_SERVER) {
@@ -179,7 +179,7 @@ class Auth_LDAP extends Auth_Base
         // Get the groupmemberships from the record
         $inst_groups = array();
 		$gmembers = ldap_get_values($connect, $entry_id, "groupmembership");
-print_r($gmembers);
+//print_r($gmembers);
 		# $group_finder_pattern = '/cn=([^\,]*)\,.*/';	// match all groups
 		$group_finder_pattern = '/cn=((Everyone|Jesup|[A-Z]{4}-[0-9]{3}|\d\dstudents)[^\,]*)/'; // match only desired groups, exclude all others
 		for ($i = 0; $i < $gmembers['count']; ++$i) {
@@ -196,8 +196,8 @@ print_r($gmembers);
         }
 
 		array_push($inst_groups,$position);
-echo "<hr>";
-print_r($inst_groups);
+//echo "<hr>";
+//print_r($inst_groups);
 		$this->inst_groups = $inst_groups;
 		// print_r($inst_groups); // debugging info
 		
