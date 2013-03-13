@@ -10,7 +10,7 @@ class TestOfUser extends UnitTestCaseDB {
 	public $auth;
 	
 	function setUp() {
-        $addTestUserSql = "INSERT INTO ".User::$dbTable." VALUES (1,'".Auth_Base::$TEST_USERNAME."','".Auth_Base::$TEST_FNAME."','".Auth_Base::$TEST_LNAME."','".Auth_Base::$TEST_SORTNAME."','".Auth_Base::$TEST_EMAIL."','David Keiser-Clark','some important notes',0,0)";
+        $addTestUserSql = "INSERT INTO ".User::$dbTable." VALUES (1,'".Auth_Base::$TEST_USERNAME."','".Auth_Base::$TEST_FNAME."','".Auth_Base::$TEST_LNAME."','".Auth_Base::$TEST_SORTNAME."','".Auth_Base::$TEST_EMAIL."','David Keiser-Clark','some important notes',0,0,0)";
 		$addTestUserStmt = $this->DB->prepare($addTestUserSql);
 		$addTestUserStmt->execute();
 
@@ -76,7 +76,7 @@ class TestOfUser extends UnitTestCaseDB {
 	}
 
 	function testUserAtributesExist() {
-		$this->assertEqual(count(User::$fields),10);
+		$this->assertEqual(count(User::$fields),11);
 		$this->assertTrue(in_array('user_id',User::$fields));
 		$this->assertTrue(in_array('username',User::$fields));
 		$this->assertTrue(in_array('fname',User::$fields));
@@ -85,8 +85,9 @@ class TestOfUser extends UnitTestCaseDB {
 		$this->assertTrue(in_array('email',User::$fields));
 		$this->assertTrue(in_array('advisor',User::$fields));
 		$this->assertTrue(in_array('notes',User::$fields));
+		$this->assertTrue(in_array('flag_is_system_admin',User::$fields));
 		$this->assertTrue(in_array('flag_is_banned',User::$fields));
-		$this->assertTrue(in_array('flag_delete',User::$fields));		
+		$this->assertTrue(in_array('flag_delete',User::$fields));
 	}
 
     // DB interaction tests

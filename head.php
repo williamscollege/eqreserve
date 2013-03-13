@@ -42,9 +42,9 @@
 		} else {
 			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
 
-			if (! strpos(APP_FOLDER ."/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
-//				echo APP_FOLDER ."/index.php <br />";
-//				echo $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] ."<br />";
+			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
+				//				echo APP_FOLDER ."/index.php <br />";
+				//				echo $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] ."<br />";
 				header('Location: ' . APP_FOLDER);
 			}
 		}
@@ -64,27 +64,27 @@
 		// SECTION: is signed in
 
 		$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
-//print_r($_SERVER);
+		//print_r($_SERVER);
 		if ($_SERVER['SERVER_NAME'] == 'localhost') {
 			$DB = new PDO("mysql:host=" . TESTING_DB_SERVER . ";dbname=" . TESTING_DB_NAME . ";port=3306", TESTING_DB_USER, TESTING_DB_PASS);
 		}
 
 		// now create user object
 		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
-//		print_r($USER);
+		//		print_r($USER);
 
 		// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 		$USER->refreshFromDb();
-//		echo "SHOULD HAVE APPROPRIATE PK ID HERE IF USERNAME ALREADY EXISTS:";
-//		print_r($USER);
+		//		echo "SHOULD HAVE APPROPRIATE PK ID HERE IF USERNAME ALREADY EXISTS:";
+		//		print_r($USER);
 		//print_r($_SESSION['userdata']);
 		$USER->updateDbFromAuth($_SESSION['userdata']);
 		//$USER->refreshFromDb();
-		//print_r($USER);
+		//echo "<pre>"; print_r($USER); echo "</pre>";
 		$USER->loadInstGroups();
 		$USER->loadEqGroups();
 
-//		print_r($USER);
+		//		print_r($USER);
 	}
 ?>
 <!DOCTYPE html>
@@ -97,17 +97,18 @@
     <!-- CSS: Framework -->
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="all">
     <!--padding for bootstrap.css only, not for bootstrap-responsive.css-->
-	<style type="text/css">
+    <style type="text/css">
         body {
             padding-top: 60px;
             padding-bottom: 40px;
         }
     </style>
-	<link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <!-- CSS: Plugins -->
     <!-- jQuery: Framework -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>-->
     <!-- jQuery: Plugins -->
     <script src="js/bootstrap.min.js"></script>
 </head>
@@ -127,13 +128,33 @@
                 <ul class="nav">
                     <li class="active"><a href="/eqreserve/">Home</a></li>
 					<?php
-//					if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
-//						if(USER IS ADMIN) {
-							//SHOW "ADMIN LINK: Manage Groups/Users"
-//						}
-//					}
-?>
-					<li><a href="manage_groups_users.php">Manage Groups/Users</a></li>
+					if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
+						// Loop through eq_groups and check for admin level access for 1 or more groups. if yes, display link
+						$tmp_flag_eq_group_admin = 0;
+						foreach ($USER->eq_groups as $eg) {
+							if ($eg->name->permission) {
+								$tmp_flag_eq_group_admin = 1;
+							}
+						}
+						if ($tmp_flag_eq_group_admin == 1) {
+							echo "<li><a href=\"manage_groups_users.php\">Manage Groups/Users</a></li>";
+						}
+						// TODO: Create db field and user class property: flag_is_system_admin
+						if ($USER->flag_is_system_admin == true) {
+							?>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin Only <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="admin_manage_users.php">Manage Users</a></li>
+                                    <li><a href="admin_manage_groups_courses.php">Manage LDAP Groups/Courses</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="admin_reports.php">Reports</a></li>
+                                </ul>
+                            </li>
+							<?php
+						}
+					}
+					?>
                 </ul>
 				<?php
 				if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
@@ -165,33 +186,3 @@
 
 <div class="container"> <!--div closed in the footer-->
 
-<?php
-if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
-?>
-    <!-- Main hero unit for a primary marketing message or call to action -->
-	<div class="hero-unit">
-        <h1>Welcome!</h1>
-        <p>Please sign in to use this system for scheduling equipment reservations.</p>
-        <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-    </div>
-	<!-- Example row of columns -->
-    <div class="row">
-        <div class="span4">
-            <h2>Spectrometers</h2>
-            <p>description text here description text here description text here description text here description text here description text here description text here </p>
-            <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-            <h2>Nuclear Toys</h2>
-            <p>description text here description text here description text here description text here description text here description text here description text here description text here description text here description text here description text here </p>
-            <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-            <h2>3 D Printer Projects</h2>
-            <p>description text here description text here description text here description text here description text here description text here description text here description text here description text here </p>
-            <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-    </div>
-<?php
-}
-?>

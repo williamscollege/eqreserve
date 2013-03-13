@@ -303,7 +303,7 @@ abstract class Db_Linked
 		}
 		$fetchStmt = self::_buildFetchStatement($fetchAttr, $this->dbConnection);
 
-		//$fetchSql = "SELECT user_id,username,fname,lname,sortname,email,advisor,notes,flag_is_banned,flag_delete FROM users WHERE 1=1 AND username = 'mockUser' AND flag_is_banned = false AND flag_delete = false";
+		//$fetchSql = "SELECT user_id,username,fname,lname,sortname,email,advisor,notes,flag_is_system_admin,flag_is_banned,flag_delete FROM users WHERE 1=1 AND username = 'mockUser' AND flag_is_system_admin = false AND flag_is_banned = false AND flag_delete = false";
 		//$fetchStmt = $this->dbConnection->prepare($fetchSql);
 
 
@@ -365,7 +365,7 @@ abstract class Db_Linked
 
 //			foreach ($qva as $k=>$v) {
 //				echo "processing key $k<br/>\n";
-//				if (($k == ':flag_delete') || ($k == ':flag_is_banned')) {
+//				if (($k == ':flag_is_system_admin') || ($k == ':flag_delete') || ($k == ':flag_is_banned')) {
 //					echo 'setting flag value';
 //					$qva[$k] = false;
 //				}

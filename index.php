@@ -5,6 +5,7 @@
 
 
 	if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
+		// SECTION: authenticated
 
 		?>
     <script type="text/javascript">
@@ -25,15 +26,14 @@
             });
         });
     </script>
+
 	<?php
-
-
 		echo "<hr />";
-		echo "<h3>My Equipment Groups</h3>";
 		# instantiate the equipment groups and roles for this user
 		$UserEqGroups = new EqGroup([$USER, 'DB' => $DB]);
-		echo "<ul>";
 		$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
+		echo "<h3>Equipment Groups</h3>";
+		echo "<ul>";
 		if (count($UserEqGroups) > 0) {
 			for ($i = 0, $size = count($UserEqGroups); $i < $size; ++$i) {
 				echo "<li><a href=\"equipment_group.php?eid=" . $UserEqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $UserEqGroups[$i]['name'] . "</a> [description: " . $UserEqGroups[$i]['descr'] . "]</li>";
@@ -41,59 +41,44 @@
 		} else {
 			echo "<li>You do not belong to any equipment groups.</li>";
 		}
-		echo "</ul>";
-
-
-		# TODO: SYS ADMIN Section needs security added
-		echo "<hr />";
-		echo "<h3>Admin: All Equipment Groups</h3>";
-		echo "<ul>";
-		# instantiate the equipment groups for the system administrator
-		$AdminEqGroups = EqGroup::getAllFromDb(['flag_delete' => 0], $DB); //EqGroup::getAllEqGroups($DB);
-		if (count($AdminEqGroups) > 0) {
-			for ($i = 0, $size = count($AdminEqGroups); $i < $size; ++$i) {
-				echo "<li><a href=\"equipment_group.php?eid=" . $AdminEqGroups[$i]->eq_group_id . "\" title=\"\">" . $AdminEqGroups[$i]->name . "</a> [description: " . $AdminEqGroups[$i]->descr . "]</li>";
-			}
-		} else {
-			echo "<li>No equipment groups exist.</li>";
-		}
-		?>
-    <div class="admin_user">
-        <form>
-            <input id="btnDisplayNewEqGroup" type="button" value="Create a new equipment group" />
+		if ($USER->flag_is_system_admin == TRUE) {
+			// system admin may add new eq_groups
+			?>
+		<form>
+            <button type="button" id="btnDisplayNewEqGroup" class="btn btn-primary">Create a new equipment group
+            </button>
 
             <div id="eqGroupFields" class="displayNone">
                 <fieldset title="">
                     <legend>Create a new equipment group</legend>
-                    Name of group: <input type="text" id="" class="" value="" /><br />
-                    Description of group: <textarea id="" class=""></textarea><br />
-                    <input type="button" id="btnSubmitNewEqGroup" class="" value="Add Group" />
-                    <input type="button" id="btnCancelNewEqGroup" class="" value="Cancel" />
-                    <br />NOTE: AJAX submit; then update list of EqGroups above to include this group
-                    <br />NOTE: cancel will hide fields, and show the initial button
+                    <label>Name</label>
+					<input type="text" id="eqGroupName" class="" value="" placeholder="Name of group" /><br />
+                    <label>Description</label>
+					<textarea id="eqGroupDescription" class="" placeholder="Description of group"></textarea><br />
+                    <button type="button" id="btnSubmitNewEqGroup" class="btn btn-success">Save Group</button>
+                    <button type="button" id="btnCancelNewEqGroup" class="btn">Cancel</button>
+                    <br />TODO: AJAX submit; then update list of EqGroups above to include this group
                 </fieldset>
             </div>
         </form>
-    </div>
-	<?php
+		<?php
+		}
 		echo "</ul>";
 
-		# DEVINFO
-		echo "<hr />";
-		echo "<div class=\"DEVINFO\">";
-		echo "<h3>User Info:</h3>";
-		echo "username: " . $USER->username . "<br />";
-		echo "email: " . $USER->email . "<br />";
-		echo "firstname: " . $USER->fname . "<br />";
-		echo "lastname: " . $USER->lname . "<br />";
-		echo "institutional groups:<br />";
-		echo "<ul>\n";
-		foreach ($USER->inst_groups AS $ig) {
-			echo "<li>$ig->name</li>\n";
-		}
-		echo "</ul>\n";
-		echo "<br />";
-		echo "</div>";
+	} else {
+		// SECTION: not yet authenticated, wants to log in
+		?>
+    <div class="hero-unit">
+        <h1>Equipment Reservations:</h1>
+
+        <br />
+
+        <p>This is our system for scheduling equipment reservations.</p>
+
+        <p>To sign in, please use your Williams username and password.</p>
+
+    </div>
+	<?php
 	}
 
 	require_once('foot.php');

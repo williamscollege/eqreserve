@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     `email` VARCHAR(255) NULL,
     `advisor` VARCHAR(255) NULL,
     `notes` TEXT NULL,
-    `flag_is_banned` BIT(1) NOT NULL DEFAULT 0,
+	`flag_is_system_admin` BIT(1) NOT NULL DEFAULT 0,
+	`flag_is_banned` BIT(1) NOT NULL DEFAULT 0,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='linked to and derived from remote auth source info';
 

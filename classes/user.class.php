@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . '/eq_group.class.php';
 
 class User extends Db_Linked
 {
-    public static $fields = array('user_id','username','fname','lname','sortname','email','advisor','notes','flag_is_banned','flag_delete');
+    public static $fields = array('user_id','username','fname','lname','sortname','email','advisor','notes','flag_is_system_admin','flag_is_banned','flag_delete');
     public static $primaryKeyField = 'user_id';    
     public static $dbTable = 'users';
 
