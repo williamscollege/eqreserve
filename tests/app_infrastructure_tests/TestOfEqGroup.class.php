@@ -49,21 +49,21 @@
 
 			// TODO: set up and check for indirect access via inst_group membership and permissions where entity_type == 'inst_group'
 			# Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
-			$addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES	(1,1,'user',2,2,0),
-																						(2,1,'user',3,1,0),
-																						(3,1,'user',3,3,0),
-																						(4,1,'user',3,4,1),
+			$addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES	(1,1,'user',1,2,0),
+																						(2,1,'user',2,1,0),
+																						(3,1,'user',2,3,0),
+																						(4,1,'user',2,4,1),
 																						(5,1,'user',1,4,0),
-																						(6,2,'user',3,5,0),
-																						(7,2,'user',3,5,0),
+																						(6,2,'user',2,5,0),
+																						(7,2,'user',2,5,0),
 																						(8,1,'inst_group',1,1,0),
 																						(9,1,'inst_group',1,2,0),
 																						(10,1,'inst_group',1,3,0),
 																						(11,2,'inst_group',1,4,0),
 																						(12,2,'inst_group',1,5,0),
-																						(13,2,'inst_group',3,6,0),
-																						(14,3,'inst_group',3,3,0),
-																						(15,3,'inst_group',3,1,0)
+																						(13,2,'inst_group',2,6,0),
+																						(14,3,'inst_group',2,3,0),
+																						(15,3,'inst_group',2,1,0)
 																						";
 			$addTestPermissionStmt = $this->DB->prepare($addTestPermissionSql);
 			$addTestPermissionStmt->execute();
@@ -186,10 +186,10 @@
 			$this->assertEqual($egs[2]->eq_group_id, 4);
 			$this->assertEqual($egs[3]->eq_group_id, 3);
 
-			$this->assertEqual($egs[0]->permission->role->role_id, 2);
-			$this->assertEqual($egs[1]->permission->role->role_id, 3);
+			$this->assertEqual($egs[0]->permission->role->role_id, 1);
+			$this->assertEqual($egs[1]->permission->role->role_id, 2);
 			$this->assertEqual($egs[2]->permission->role->role_id, 1);
-			$this->assertEqual($egs[3]->permission->role->role_id, 3);
+			$this->assertEqual($egs[3]->permission->role->role_id, 2);
 		}
 
 		public function TestOfGetUnifiedEqGroupList() {

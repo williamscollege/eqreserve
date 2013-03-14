@@ -19,7 +19,7 @@ class IndexPageAuthTest extends WebTestCaseWMS {
 
         $this->assertFalse($this->setField('username','foo')); //$value
         $this->assertFalse($this->setField('password','bar')); //$value
-        $this->assertPattern('/You are signed in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
         $this->assertNoPattern('/Sign in failed/i');
 
         $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
@@ -41,7 +41,7 @@ class IndexPageAuthTest extends WebTestCaseWMS {
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         $this->click('Sign in');
-        $this->assertPattern('/You are signed in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
         $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
 
         $this->click('Sign out');

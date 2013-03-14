@@ -4,6 +4,7 @@ require_once('simpletest/web_tester_WMS.php');
 SimpleTest::prefer(new TextReporter());
 
 require_once('../institution.cfg.php');
+require_once('../lang.cfg.php');
 
 class TestOfIndexSuite extends TestSuite {
     function TestOfIndexSuite() {

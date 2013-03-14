@@ -1,0 +1,9 @@
+<?php
+
+	# copy this file to lang.cfg.php and replace the example values
+	# below with the ones appropriate for your institution
+
+	define('LANG_INSTITUTION_NAME', 'Williams College');
+	define('LANG_APP_NAME', 'Equipment Reservations');
+
+?>
