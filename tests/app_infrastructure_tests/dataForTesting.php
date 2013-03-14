@@ -61,11 +61,11 @@ function createTestData_EqItems($dbConn) {
 function createTestData_InstGroups($dbConn) {
     # InstGroup: inst_group_id, name, flag_delete
     $addTestInstGroupsSql  = "INSERT INTO " . InstGroup::$dbTable . " VALUES
-        (501,'testInstGroup1',0),
-        (502,'testInstGroup2',0),
-        (503,'testInstGroup3',0),
-        (504,'testInstGroup4',1),
-        (505,'testInstGroup5',0)
+        (501,'testInstGroup1',0), # user 1 a member of this, user 3 (deleted) a member of this
+        (502,'testInstGroup2',0), # user 2 a member of this
+        (503,'testInstGroup3',0), # no one a member of this
+        (504,'testInstGroup4',1), # user 1 a member of this
+        (505,'testInstGroup5',0)  # user 1 has a deleted membership for this
     ";
     $addTestInstGroupsStmt = $dbConn->prepare($addTestInstGroupsSql);
     $addTestInstGroupsStmt->execute();
