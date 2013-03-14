@@ -133,6 +133,15 @@ function createTestData_TimeBlockGroups($dbConn) {
 
 function createTestData_Users($dbConn) {
     // 1100 series ids
+    # user: user_id, username, fname, lname, sortname, email, advisor, notes, flag_is_system_admin, flag_is_banned, flag_delete
+    $addTestUserSql = "INSERT INTO ".User::$dbTable." VALUES
+        (1101,'".Auth_Base::$TEST_USERNAME."','".Auth_Base::$TEST_FNAME."','".Auth_Base::$TEST_LNAME."','".Auth_Base::$TEST_SORTNAME."','".Auth_Base::$TEST_EMAIL."','David Keiser-Clark','some important notes',0,0,0),
+        (1102,'testUser2','tu2F','tu2L','tu2L, tu2F','tu2@inst.edu','tuAdvisor','tu2 notes',0,0,0),
+        (1103,'testUser3deleted','tu3F','tu3L','tu3L, tu3F','tu3@inst.edu','tuAdvisor','tu3 notes',0,0,1),
+        (1104,'testUser4banned','tu4F','tu4L','tu4L, tu4F','tu4@inst.edu','tuAdvisor','tu4 notes',0,1,0)
+    ";
+    $addTestUserStmt = $dbConn->prepare($addTestUserSql);
+    $addTestUserStmt->execute();
 }
 
 //------------

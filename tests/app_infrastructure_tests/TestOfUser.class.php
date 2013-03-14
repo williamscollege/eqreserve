@@ -10,37 +10,11 @@ class TestOfUser extends UnitTestCaseDB {
 	public $auth;
 	
 	function setUp() {
-        $addTestUserSql = "INSERT INTO ".User::$dbTable." VALUES (1,'".Auth_Base::$TEST_USERNAME."','".Auth_Base::$TEST_FNAME."','".Auth_Base::$TEST_LNAME."','".Auth_Base::$TEST_SORTNAME."','".Auth_Base::$TEST_EMAIL."','David Keiser-Clark','some important notes',0,0,0)";
-		$addTestUserStmt = $this->DB->prepare($addTestUserSql);
-		$addTestUserStmt->execute();
-
-        $addTestInstGroupSql = "INSERT INTO ".InstGroup::$dbTable." VALUES (1,'".Auth_Base::$TEST_INST_GROUPS[0]."',0),(2,'".Auth_Base::$TEST_INST_GROUPS[1]."',0),(3,'".Auth_Base::$TEST_INST_GROUPS[2]."',1),(4,'".Auth_Base::$TEST_INST_GROUPS[3]."',0)";
-        // normal, normal, deleted, normal
-        $addTestInstGroupStmt = $this->DB->prepare($addTestInstGroupSql);
-        $addTestInstGroupStmt->execute();
-
-        $linkUserToInstGroupSql = "INSERT INTO ".InstMembership::$dbTable."  VALUES (1,1,1,0),(2,1,2,1),(3,1,3,0)"; // normal, link deleted, group deleted
-        $linkUserToInstGroupStmt = $this->DB->prepare($linkUserToInstGroupSql);
-        $linkUserToInstGroupStmt->execute();
-
-        # EqGroup: eq_group_id, name, descr, start_minute, min_duration_minutes, max_duration_minutes, duration_chunk_minutes, flag_delete
-        $addTestEqGroupsSql  = "INSERT INTO " . EqGroup::$dbTable . " VALUES    (1,'Nanomajigs','The investigation of really small stuff','0,15,30,45',15,60,15,0),
-                                                                                (2,'3D Printers','3dp descr','0,30',30,300,30,0),
-                                                                                (3,'Spectrometers','spectrothingies','0,15,30,45',15,60,15,0)
-                                                                            ";
-        $addTestEqGroupsStmt = $this->DB->prepare($addTestEqGroupsSql);
-        $addTestEqGroupsStmt->execute();
-
-        // TODO: set up and check for indirect access via inst_group membership and permissions where entity_type == 'inst_group'
-        # Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
-        $addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES   
-                                                                                    (1,1,'user',       3,1,0),
-                                                                                    (2,1,'inst_group', 1,2,0),
-                                                                                    (3,1,'inst_group', 2,3,0),
-                                                                                    (4,1,'user',       3,3,0)
-                                                                                    ";
-        $addTestPermissionStmt = $this->DB->prepare($addTestPermissionSql);
-        $addTestPermissionStmt->execute();
+        createTestData_Users($this->DB);
+        createTestData_EqGroups($this->DB);
+        createTestData_InstGroups($this->DB);
+        createTestData_InstMemberships($this->DB);
+        createTestData_Permissions($this->DB);
 
 		$this->auth = new MockAuth_Base();
         $this->auth->username       = Auth_Base::$TEST_USERNAME;
@@ -54,25 +28,11 @@ class TestOfUser extends UnitTestCaseDB {
 	}
 	
 	function tearDown() {
-        $rmTestUserSql = "DELETE FROM ".User::$dbTable;
-        $rmTestUserStmt = $this->DB->prepare($rmTestUserSql);
-        $rmTestUserStmt->execute();
-
-        $rmTestInstGroupSql = "DELETE FROM ".InstGroup::$dbTable;
-        $rmTestInstGroupStmt = $this->DB->prepare($rmTestInstGroupSql);
-        $rmTestInstGroupStmt->execute();
-
-        $rmLinkUserInstGroupSql = "DELETE FROM ".InstMembership::$dbTable;
-        $rmLinkUserInstGroupStmt = $this->DB->prepare($rmLinkUserInstGroupSql);
-        $rmLinkUserInstGroupStmt->execute();
-
-        $rmTestEqGroupsSql = "DELETE FROM ".EqGroup::$dbTable;
-        $rmTestEqGroupsStmt = $this->DB->prepare($rmTestEqGroupsSql);
-        $rmTestEqGroupsStmt->execute();
-
-        $rmTestPermissionSql = "DELETE FROM ".Permission::$dbTable;
-        $rmTestPermissionStmt = $this->DB->prepare($rmTestPermissionSql);
-        $rmTestPermissionStmt->execute();
+        removeTestData_Users($this->DB);
+        removeTestData_EqGroups($this->DB);
+        removeTestData_InstGroups($this->DB);
+        removeTestData_InstMemberships($this->DB);
+        removeTestData_Permissions($this->DB);
 	}
 
 	function testUserAtributesExist() {
@@ -106,7 +66,7 @@ class TestOfUser extends UnitTestCaseDB {
 	}
 
 	function testUserRetrievedFromDb() {
-		$u = new User(['user_id'=>1,'DB'=>$this->DB]);
+		$u = new User(['user_id'=>1101,'DB'=>$this->DB]);
 		$this->assertNull($u->username);
 		
 		$u->refreshFromDb();
@@ -114,18 +74,18 @@ class TestOfUser extends UnitTestCaseDB {
 	}	
 
     function testUserInstGroupsLoaded() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 
         $u->loadInstGroups();
 
         $this->assertTrue(is_array($u->inst_groups));
         $this->assertEqual(count($u->inst_groups),1);        
         $this->assertEqual(get_class($u->inst_groups[0]),'InstGroup');
-        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+        $this->assertEqual($u->inst_groups[0]->name,'testInstGroup1');
     }   
 
     function testUserEqGroupsLoaded() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $u->loadInstGroups();        
 
 
@@ -136,20 +96,30 @@ class TestOfUser extends UnitTestCaseDB {
         usort($u->eq_groups,'EqGroup::cmpAlphabetical');
 
         $this->assertTrue(is_array($u->eq_groups));
-        $this->assertEqual(count($u->eq_groups),3);
-        $this->assertEqual($u->eq_groups[0]->name,'3D Printers');
-        $this->assertEqual($u->eq_groups[1]->name,'Nanomajigs');
-        $this->assertEqual($u->eq_groups[2]->name,'Spectrometers');
+        $this->assertEqual(count($u->eq_groups),5);
+        $this->assertEqual($u->eq_groups[0]->name,'testEqGroup1');
+        $this->assertEqual($u->eq_groups[1]->name,'testEqGroup2');
+        $this->assertEqual($u->eq_groups[2]->name,'testEqGroup3');
+        $this->assertEqual($u->eq_groups[3]->name,'testEqGroup6');
+        $this->assertEqual($u->eq_groups[4]->name,'testEqGroup7');
 
         $this->assertEqual($u->eq_groups[0]->permission->entity_type,'inst_group');
-        $this->assertEqual($u->eq_groups[1]->permission->entity_type,'user');
+        # $this->assertEqual($u->eq_groups[1]->permission->entity_type,'user'); // since this is dual, don't care where it came from
+        $this->assertEqual($u->eq_groups[2]->permission->entity_type,'user');
+        $this->assertEqual($u->eq_groups[3]->permission->entity_type,'inst_group');
+        $this->assertEqual($u->eq_groups[4]->permission->entity_type,'user');
         
+        $this->assertEqual($u->eq_groups[0]->permission->role_id, 1);
+        $this->assertEqual($u->eq_groups[1]->permission->role_id, 2);
+        $this->assertEqual($u->eq_groups[2]->permission->role_id, 1);
+        $this->assertEqual($u->eq_groups[3]->permission->role_id, 2);
+        $this->assertEqual($u->eq_groups[4]->permission->role_id, 2);
     }   
 
     /// auth-related tests
 
 	function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
-		$u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $u->loadInstGroups();
         $this->assertEqual($u->username,Auth_Base::$TEST_USERNAME);
 		$this->assertTrue($u->matchesDb);
@@ -165,13 +135,13 @@ class TestOfUser extends UnitTestCaseDB {
 		$this->assertEqual($u->lname,$this->auth->lname);
 		$this->assertTrue($u->matchesDb);
 		
-		$u2 = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u2 = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $this->assertEqual($u2->username,Auth_Base::$TEST_USERNAME);
 		$this->assertEqual($u2->lname,$this->auth->lname);
 	}	
 
     function ASIDEtestUserInstGroupsAddedDbWhenValidAuthDataIsDifferent() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $u->loadInstGroups();
         $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[1]];
 
@@ -197,10 +167,14 @@ class TestOfUser extends UnitTestCaseDB {
     }   
 
     function testUserInstGroupsUndeletedDbWhenValidAuthDataIsDifferent() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $u->loadInstGroups();
+    
+        # these names come from dataForTesting.php
+        $normalGroup = 'testInstGroup1';
+        $initiallyDeletedGroup = 'testInstGroup4';
 
-        $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[2]];
+        $this->auth->inst_groups = [$normalGroup,$initiallyDeletedGroup];
 
         $deletedGroup = InstGroup::getOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
 
@@ -213,16 +187,17 @@ class TestOfUser extends UnitTestCaseDB {
 
         $u->updateDbFromAuth($this->auth);
 
+
         $this->assertEqual(count($u->inst_groups),2);
-        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+        $this->assertEqual($u->inst_groups[0]->name,$normalGroup);
         $this->assertTrue($u->inst_groups[0]->matchesDb);
-        $this->assertEqual($u->inst_groups[1]->name,Auth_Base::$TEST_INST_GROUPS[2]);
+        $this->assertEqual($u->inst_groups[1]->name,$initiallyDeletedGroup);
         $this->assertTrue($u->inst_groups[1]->matchesDb);
         $this->assertFalse($u->inst_groups[1]->flag_delete);
     }
 
     function testUserInstGroupsRemovedDbWhenValidAuthDataIsDifferent() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $u->loadInstGroups();
         $this->auth->inst_groups = [];
 
@@ -237,10 +212,14 @@ class TestOfUser extends UnitTestCaseDB {
     }   
 
     function testUserDeletedMembershipReactivatedOnAuth() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $u->loadInstGroups();
 
-        $this->auth->inst_groups = [Auth_Base::$TEST_INST_GROUPS[0],Auth_Base::$TEST_INST_GROUPS[1]];
+        # these names come from dataForTesting.php
+        $normalGroup = 'testInstGroup1';
+        $initiallyDeletedMembershipGroup = 'testInstGroup5';
+
+        $this->auth->inst_groups = [$normalGroup,$initiallyDeletedMembershipGroup];
 
         $this->assertEqual(count($u->inst_groups),1);
         $this->assertEqual(count($this->auth->inst_groups),2);
@@ -251,16 +230,16 @@ class TestOfUser extends UnitTestCaseDB {
 
 
         $this->assertEqual(count($u->inst_groups),2);
-        $this->assertEqual($u->inst_groups[0]->name,Auth_Base::$TEST_INST_GROUPS[0]);
+        $this->assertEqual($u->inst_groups[0]->name,$normalGroup);
         $this->assertTrue($u->inst_groups[0]->matchesDb);
-        $this->assertEqual($u->inst_groups[1]->name,Auth_Base::$TEST_INST_GROUPS[1]);
+        $this->assertEqual($u->inst_groups[1]->name,$initiallyDeletedMembershipGroup);
         $this->assertTrue($u->inst_groups[1]->matchesDb);
         $this->assertFalse($u->inst_groups[1]->flag_delete);
     }   
     
 
 	function testUserUpdatesBaseDbWhenAuthDataIsInvalid() {
-		$u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 		$this->auth->fname = '';		
 
 		$status = $u->updateDbFromAuth($this->auth);
@@ -270,7 +249,7 @@ class TestOfUser extends UnitTestCaseDB {
 	}	
 
     function testNewUserBaseRecordCreatedWhenAuthDataIsForNewUser() {
-        $u = User::getOneFromDb(['user_id'=>1],$this->DB);
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $this->auth->fname = '';        
 
         $status = $u->updateDbFromAuth($this->auth);
