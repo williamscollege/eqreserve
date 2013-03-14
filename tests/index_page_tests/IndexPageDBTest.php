@@ -39,7 +39,7 @@ class IndexPageDBTest extends WebTestCaseWMS {
 
 //		$this->dump($this->getBrowser()->getContent());
 
-		$this->assertPattern('/You are signed in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+		$this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
 
 		$u = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 		$this->assertTrue($u->matchesDb);

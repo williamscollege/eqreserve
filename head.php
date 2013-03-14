@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	require_once('institution.cfg.php');
+	require_once('lang.cfg.php');
 	require_once('/classes/user.class.php');
 	require_once('auth.cfg.php');
 
@@ -90,9 +91,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?php echo APP_NAME . ': ' . $pageTitle;?></title>
+    <title><?php echo LANG_APP_NAME . ': ' . $pageTitle;?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo APP_NAME; ?>">
+    <meta name="description" content="<?php echo LANG_APP_NAME; ?>">
     <meta name="author" content="OIT Project Group">
     <!-- CSS: Framework -->
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="all">
@@ -107,8 +108,8 @@
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <!-- CSS: Plugins -->
     <!-- jQuery: Framework -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <!--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>-->
+    <script src="<?php echo URL_JQUERY_CDN; ?>"></script>
+    <!--<script src="<?php echo URL_JQUERYUI_CDN; ?>"></script>-->
     <!-- jQuery: Plugins -->
     <script src="js/bootstrap.min.js"></script>
 </head>
@@ -122,11 +123,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="<?php echo APP_FOLDER; ?>"><?php echo APP_NAME; ?></a>
+            <a class="brand" href="<?php echo APP_FOLDER; ?>"><?php echo LANG_APP_NAME; ?></a>
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="active"><a href="/eqreserve/">Home</a></li>
+                    <li class="active"><a href="/eqreserve/"><i class="icon-home icon-white"></i> Home</a></li>
 					<?php
 					if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
 						// Loop through eq_groups and check for admin level access for 1 or more groups. if yes, display link
@@ -143,10 +144,10 @@
 						if ($USER->flag_is_system_admin == true) {
 							?>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin Only <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench icon-white"></i> Admin Only <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="admin_manage_users.php">Manage Users</a></li>
-                                    <li><a href="admin_manage_groups_courses.php">Manage LDAP Groups/Courses</a></li>
+                                    <li><a href="admin_manage_users.php"><i class="icon-pencil"></i> Manage Users</a></li>
+                                    <li><a href="admin_manage_groups_courses.php"><i class="icon-pencil"></i> Manage LDAP Groups/Courses</a></li>
                                     <li class="divider"></li>
                                     <li><a href="admin_reports.php">Reports</a></li>
                                 </ul>
@@ -161,7 +162,7 @@
 					?>
                     <div id="signedInControls">
                         <form id="frmSignout" class="navbar-form pull-right" method="post" action="">
-                            <span class="muted">You are signed in as <a href="account_management.php"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
+                            <span class="muted">Signed in: <a href="account_management.php" title="My Account"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
                             <input type="submit" id="submit_signout" class="btn" name="submit_signout" value="Sign out" />
                         </form>
                     </div>

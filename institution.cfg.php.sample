@@ -1,26 +1,29 @@
 <?php
 
-# copy this file to institution.cfg.php and replace the example values
-# below with the ones appropriate for you institution
+	# copy this file to institution.cfg.php and replace the example values
+	# below with the ones appropriate for your institution
 
-define('INSTITUTION_NAME', 'Your Institution');
-define('APP_NAME',         'Equipment Reservations');
-define('APP_FOLDER',	   'http://localhost/eqreserve');
+	# application folder path
+	define('APP_FOLDER',	   'http://localhost/eqreserve');
 
-define('DB_SERVER', 'yourdbserver'); // e.g. mysql.college.edu
-define('DB_NAME',   'eqreserve');
-define('DB_USER',   'eqreserveweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
-define('DB_PASS',   'yourfancypassword');
+	# database connection
+	define('DB_SERVER', 'yourdbserver'); // e.g. mysql.college.edu
+	define('DB_NAME',   'eqreserve');
+	define('DB_USER',   'eqreserveweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
+	define('DB_PASS',   'yourfancypassword');
 
+	# external URLs
+	define('URL_JQUERY_CDN', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+	define('URL_JQUERYUI_CDN', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
 
-# these are used in the automated tests.
-define('TESTING_DB_SERVER','localhost');
-define('TESTING_DB_NAME','eqreservetest');
-define('TESTING_DB_USER', 'eqreserveweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
-define('TESTING_DB_PASS', 'yourfancypassword');
+	# these are used in the automated tests.
+	define('TESTING_DB_SERVER','localhost'); // e.g. localhost
+	define('TESTING_DB_NAME','eqreservetest');
+	define('TESTING_DB_USER', 'eqreserveweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
+	define('TESTING_DB_PASS', 'yourfancypassword');
 
-# NOTE: it's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
-define('TESTINGUSER','testinguser');
-define('TESTINGPASSWORD','testinguserpassword');
+	# NOTE: it's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
+	define('TESTINGUSER','testinguser');
+	define('TESTINGPASSWORD','testinguserpassword');
 
 ?>

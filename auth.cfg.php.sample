@@ -1,7 +1,7 @@
 <?php
 
 # copy this file to auth.cfg.php and replace the example values
-# below with the appropriate authentication mode and specific values for you institution
+# below with the appropriate authentication mode and specific values for your institution
 
 # the default setup uses the Auth_Base class to authenticate the already defined test user (see instituion.cfg.php)
 # it is VERY IMPORTANT that you extend the Auth_Base class with your institution's preferred authentication flavor (ldap, kerberos, etc.)

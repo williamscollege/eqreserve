@@ -77,7 +77,7 @@ class AcctMgtTest extends WebTestCaseWMS {
     function testAccessAcctMgt() {
         $this->getToAcctMgtPage();
         $this->assertResponse(200);
-        $this->assertPattern('/You are signed in as \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
 
         $this->assertText(Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME);
         $this->assertText(Auth_Base::$TEST_EMAIL);

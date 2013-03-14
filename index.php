@@ -69,7 +69,8 @@
 		// SECTION: not yet authenticated, wants to log in
 		?>
     <div class="hero-unit">
-        <h1>Equipment Reservations:</h1>
+        <h2><?php echo LANG_INSTITUTION_NAME; ?></h2>
+        <h1><?php echo LANG_APP_NAME; ?></h1>
 
         <br />
 

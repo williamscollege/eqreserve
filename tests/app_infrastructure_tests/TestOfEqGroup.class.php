@@ -14,84 +14,10 @@
 	{
 
 		function setUp() {
-/*
-			# InstGroup: inst_group_id, name, flag_delete
-			$addTestInstGroupsSql  = "INSERT INTO " . InstGroup::$dbTable . " VALUES	(1,'STAFF',0),
-																						(2,'STUDENTS',0),
-																						(3,'12F-PHYS-101',0),
-																						(4,'13S-ECON-305',1),
-																						(5,'JESUP-STC',0)
-																					";
-			$addTestInstGroupsStmt = $this->DB->prepare($addTestInstGroupsSql);
-			$addTestInstGroupsStmt->execute();
-*/
             createTestData_InstGroups($this->DB);
-
-/*
-			# EqGroup: eq_group_id, name, descr, start_minute, min_duration_minutes, max_duration_minutes, duration_chunk_minutes, flag_delete
-			$addTestEqGroupsSql  = "INSERT INTO " . EqGroup::$dbTable . " VALUES 	(1,'Nanomajigs','The investigation of really small stuff','0,15,30,45',15,60,15,0),
- 	                                                        	            		(2,'3D Printers','3dp descr','0,30',30,300,30,0),
-		                                                	                		(3,'Spectrometers','spectrothingies','0,15,30,45',15,60,15,0),
-		                                            	                    		(4,'Nucular Toyz','nuks','0,15,30,45',15,60,15,0),
-		                                          	            	          		(5,'Biostuff','blobs','0,15,30,45',15,60,15,1),
-		                                                                			(6,'Outdoor Educ Equipment Rental','outdoor stuff avail to all students','0,15,30,45',15,1800,15,0)
-		                                                                		";
-			$addTestEqGroupsStmt = $this->DB->prepare($addTestEqGroupsSql);
-			$addTestEqGroupsStmt->execute();
-*/
             createTestData_EqGroups($this->DB);
-
-/*
-            # EqSubgroup: eq_subgroup_id', 'eq_group_id', 'name','descr','ordering','flag_delete'
-            $addTestEqSubgroupsSql  = "INSERT INTO " . EqSubgroup::$dbTable . " VALUES 
-                                                                                    (1,1,'mini','mostly smallish',1,0),
-                                                                                    (2,1,'micro','more smallish',2,0),
-                                                                                    (3,1,'nano','really smallish',3,0),
-                                                                                    (4,1,'femto','not kidding, very very small',4,0)
-                                                                                ";
-            $addTestEqSubgroupsStmt = $this->DB->prepare($addTestEqSubgroupsSql);
-            $addTestEqSubgroupsStmt->execute();
-//print_r($addTestEqSubgroupsStmt->errorInfo());
-//exit;
-*/
             createTestData_EqSubgroups($this->DB);
-
-
-			// TODO: set up and check for indirect access via inst_group membership and permissions where entity_type == 'inst_group'
-			# Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
-/*
-			$addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES	(1,1,'user',2,2,0),
-																						(2,1,'user',3,1,0),
-																						(3,1,'user',3,3,0),
-																						(4,1,'user',3,4,1),
-																						(5,1,'user',1,4,0),
-																						(6,2,'user',3,5,0),
-																						(7,2,'user',3,5,0),
-																						(8,1,'inst_group',1,1,0),
-																						(9,1,'inst_group',1,2,0),
-																						(10,1,'inst_group',1,3,0),
-																						(11,2,'inst_group',1,4,0),
-																						(12,2,'inst_group',1,5,0),
-																						(13,2,'inst_group',3,6,0),
-																						(14,3,'inst_group',3,3,0),
-																						(15,3,'inst_group',3,1,0)
-																						";
-			$addTestPermissionStmt = $this->DB->prepare($addTestPermissionSql);
-			$addTestPermissionStmt->execute();
-*/
             createTestData_Permissions($this->DB);
-
-/*
-			# inst_memberships: inst_membership_id,user_id,inst_group_id,flag_delete
-			$insertTestInstMembershipSql = "INSERT INTO ". InstMembership::$dbTable ." VALUES	(1,1,1,0),
-																								(2,1,3,0),
-																								(3,1,6,0),
-																								(4,2,4,0),
-																								(5,3,5,1)
-																							";
-			$insertTestInstMembershipStmt = $this->DB->prepare($insertTestInstMembershipSql);
-			$insertTestInstMembershipStmt->execute();
-*/
             createTestData_InstMemberships($this->DB);
 
 		}
@@ -102,31 +28,6 @@
             removeTestData_EqSubgroups($this->DB);
             removeTestData_Permissions($this->DB);
             removeTestData_InstMemberships($this->DB);
-/*
-			$rmTestInstGroupsSql = "DELETE FROM ".InstGroup::$dbTable;
-			$rmTestInstGroupsStmt = $this->DB->prepare($rmTestInstGroupsSql);
-			$rmTestInstGroupsStmt->execute();
-
-			$rmTestEqGroupsSql = "DELETE FROM ".EqGroup::$dbTable;
-			$rmTestEqGroupsStmt = $this->DB->prepare($rmTestEqGroupsSql);
-			$rmTestEqGroupsStmt->execute();
-
-            $rmTestEqSubgroupsSql = "DELETE FROM ".EqSubgroup::$dbTable;
-            $rmTestEqSubgroupsStmt = $this->DB->prepare($rmTestEqSubgroupsSql);
-            $rmTestEqSubgroupsStmt->execute();
-
-			$rmTestPermissionSql = "DELETE FROM ".Permission::$dbTable;
-			$rmTestPermissionStmt = $this->DB->prepare($rmTestPermissionSql);
-			$rmTestPermissionStmt->execute();
-
-			$rmTestPermissionSql = "DELETE FROM ".Permission::$dbTable;
-			$rmTestPermissionStmt = $this->DB->prepare($rmTestPermissionSql);
-			$rmTestPermissionStmt->execute();
-
-			$rmTestInstMembershipSql = "DELETE FROM ".InstMembership::$dbTable;
-			$rmTestInstMembershipStmt = $this->DB->prepare($rmTestInstMembershipSql);
-			$rmTestInstMembershipStmt->execute();
-*/
 		}
 
 		//###################################
