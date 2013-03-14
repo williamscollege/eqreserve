@@ -95,32 +95,36 @@ class EqGroup extends Db_Linked
 			}
 		}
 
-		return $equipmentGroupsOfUserById;
+		return array_slice($equipmentGroupsOfUserById,0); // convert the array by id to simple array
 	}
 
 
 	public static function getEqGroupsForInstGroup($ig) {
 		// get all eq_groups associated with this institutional group (going from: ig -> permission -> eq_group)
-		$permissions = Permission::getAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>0],$ig->dbConnection);
+		$permissions = Permission::getAllFromDb(['entity_id'=>$ig->inst_group_id,'entity_type'=>'inst_group','flag_delete'=>false],$ig->dbConnection);
 		$groups = [];
 		foreach ($permissions as $p) {
-			$eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id],$ig->dbConnection);
-			$eq->permission = $p;
-			$eq->permission->loadRole();
-			array_push($groups,$eq);
+            $eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id,'flag_delete'=>false],$ig->dbConnection);
+            if ($eq->matchesDb) {
+                $eq->permission = $p;
+                $eq->permission->loadRole();
+                array_push($groups,$eq);
+            }
 		}
 		return $groups;
 	}
 
 	public static function getEqGroupsForUser($user) {
 		// get all eq_groups associated with this user (going from: $user -> permission -> eq_group)
-		$permissions = Permission::getAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>0],$user->dbConnection);
+		$permissions = Permission::getAllFromDb(['entity_id'=>$user->user_id,'entity_type'=>'user','flag_delete'=>false],$user->dbConnection);
 		$groups = [];
 		foreach ($permissions as $p) {
-			$eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id],$user->dbConnection);
-			$eq->permission = $p;
-			$eq->permission->loadRole();
-			array_push($groups,$eq);
+            $eq = EqGroup::getOneFromDb(['eq_group_id'=>$p->eq_group_id,'flag_delete'=>false],$user->dbConnection);
+            if ($eq->matchesDb) {
+                $eq->permission = $p;
+                $eq->permission->loadRole();
+                array_push($groups,$eq);
+            }
 		}
 		return $groups;
 	}
@@ -142,7 +146,7 @@ class EqGroup extends Db_Linked
     // instance functions
 
     public function loadEqSubgroups() {
-        $this->eq_subgroups = EqSubgroup::getAllFromDb(['eq_group_id'=>$this->eq_group_id],$this->dbConnection);
+        $this->eq_subgroups = EqSubgroup::getAllFromDb(['eq_group_id'=>$this->eq_group_id,'flag_delete'=>false],$this->dbConnection);
         foreach ($this->eq_subgroups as $esg) {
             $esg->eq_group = $this;
         }
