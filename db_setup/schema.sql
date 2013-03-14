@@ -175,8 +175,6 @@ CREATE TABLE IF NOT EXISTS `time_blocks` (
 INSERT INTO 
 	roles
 VALUES
-	(1,1,'System Admin',0),
-	(2,2,'Equipment Manager',0),
-	(3,3,'Equipment User',0),
-	(4,4,'Anonymous User',0)
+	(1,1,'Manager',0),
+	(2,2,'User',0)
 
