@@ -1,4 +1,6 @@
 <?php
+require_once dirname(__FILE__) . '/db_linked.class.php';
+
 class CommPref extends Db_Linked
 {
     public static $fields = array('comm_pref_id','user_id','eq_group_id',

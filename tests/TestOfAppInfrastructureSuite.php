@@ -7,6 +7,7 @@ require_once('../institution.cfg.php');
 class TestOfAppInfrastructureSuite extends TestSuite {
     function TestOfAppInfrastructureSuite() {
         $this->TestSuite('App Infrastructure tests');
+
         $this->addFile('app_infrastructure_tests/TestOfDB_Linked.class.php');
         $this->addFile('app_infrastructure_tests/TestOfAuth_Base.class.php');
         $this->addFile('app_infrastructure_tests/TestOfAuth_LDAP.class.php');
@@ -16,6 +17,9 @@ class TestOfAppInfrastructureSuite extends TestSuite {
         $this->addFile('app_infrastructure_tests/TestOfRole.class.php');
         $this->addFile('app_infrastructure_tests/TestOfEqGroup.class.php');
         $this->addFile('app_infrastructure_tests/TestOfEqSubgroup.class.php');
+
+        $this->addFile('app_infrastructure_tests/TestOfEqItem.class.php');
+
         $this->addFile('app_infrastructure_tests/TestOfPermission.class.php');
      }
 }

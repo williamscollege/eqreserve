@@ -17,6 +17,7 @@
             createTestData_InstGroups($this->DB);
             createTestData_EqGroups($this->DB);
             createTestData_EqSubgroups($this->DB);
+            createTestData_EqItems($this->DB);
             createTestData_Permissions($this->DB);
             createTestData_InstMemberships($this->DB);
 
@@ -26,6 +27,7 @@
             removeTestData_InstGroups($this->DB);
             removeTestData_EqGroups($this->DB);
             removeTestData_EqSubgroups($this->DB);
+            removeTestData_EqItems($this->DB);
             removeTestData_Permissions($this->DB);
             removeTestData_InstMemberships($this->DB);
 		}
@@ -190,6 +192,48 @@
             $this->assertEqual($eg->eq_subgroups[3]->eq_group->eq_group_id,201);
             
         }
+
+        public function TestOfLoadItems()
+        {
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+            $this->assertEqual($eg->name,'testEqGroup1');
+            $this->assertNull($eg->eq_subgroups);
+            $this->assertNull($eg->eq_items);
+
+
+            // testing this
+            $eg->loadEqItems();
+
+
+            $this->assertTrue(is_array($eg->eq_subgroups));
+            $this->assertEqual(count($eg->eq_subgroups),4);
+
+            $this->assertTrue(is_array($eg->eq_items));
+            $this->assertEqual(count($eg->eq_items),5);
+
+            usort($eg->eq_items,'EqItem::cmp');
+
+//$this->dump($eg->eq_items);
+
+            $this->assertEqual($eg->eq_items[0]->eq_item_id,401);
+            $this->assertEqual($eg->eq_items[1]->eq_item_id,402);
+            $this->assertEqual($eg->eq_items[2]->eq_item_id,403);
+            $this->assertEqual($eg->eq_items[3]->eq_item_id,404);
+            $this->assertEqual($eg->eq_items[4]->eq_item_id,406);
+
+            $this->assertEqual($eg->eq_items[0]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[1]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[2]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[3]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[4]->eq_subgroup->eq_subgroup_id,302);            
+
+            $this->assertEqual($eg->eq_items[0]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[1]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[2]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[3]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[4]->eq_group->eq_group_id,201);            
+        }
+
 	}
 
 
