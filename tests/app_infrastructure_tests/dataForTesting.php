@@ -55,6 +55,18 @@ function createTestData_EqSubgroups($dbConn) {
 
 function createTestData_EqItems($dbConn) {
     // 400 series ids
+    $addTestEqItemsSql  = "INSERT INTO " . EqItem::$dbTable . " VALUES 
+        (401,301,'testItem1','normal',1,0),
+        (402,301,'testItem2','normal',2,0),
+        (403,301,'testItem3','same priority as prev',2,0),
+        (404,301,'testItem4','normal',3,0),
+        (405,301,'testItem5','deleted',4,1),
+        (406,302,'testItem1','same name, different subgroup',1,0),
+        (407,305,'testItem6','subgroup is deleted',1,0),
+        (408,307,'testItem7','group is deleted',1,0)
+    ";
+    $addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
+    $addTestEqItemsStmt->execute();
 }
 
 
