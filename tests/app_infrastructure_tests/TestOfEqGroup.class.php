@@ -193,7 +193,7 @@
             
         }
 
-        public function ASIDE_TestOfLoadItems()
+        public function TestOfLoadItems()
         {
             $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
             $this->assertEqual($eg->name,'testEqGroup1');
@@ -204,19 +204,34 @@
             // testing this
             $eg->loadEqItems();
 
-//exit;
 
             $this->assertTrue(is_array($eg->eq_subgroups));
             $this->assertEqual(count($eg->eq_subgroups),4);
 
             $this->assertTrue(is_array($eg->eq_items));
-            $this->assertEqual(count($eg->eq_items),4);
+            $this->assertEqual(count($eg->eq_items),5);
 
             usort($eg->eq_items,'EqItem::cmp');
 
-            $this->assertEqual($eg->eq_items[0]->name,'testItem1');
+//$this->dump($eg->eq_items);
+
+            $this->assertEqual($eg->eq_items[0]->eq_item_id,401);
+            $this->assertEqual($eg->eq_items[1]->eq_item_id,402);
+            $this->assertEqual($eg->eq_items[2]->eq_item_id,403);
+            $this->assertEqual($eg->eq_items[3]->eq_item_id,404);
+            $this->assertEqual($eg->eq_items[4]->eq_item_id,406);
+
+            $this->assertEqual($eg->eq_items[0]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[1]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[2]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[3]->eq_subgroup->eq_subgroup_id,301);            
+            $this->assertEqual($eg->eq_items[4]->eq_subgroup->eq_subgroup_id,302);            
 
             $this->assertEqual($eg->eq_items[0]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[1]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[2]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[3]->eq_group->eq_group_id,201);            
+            $this->assertEqual($eg->eq_items[4]->eq_group->eq_group_id,201);            
         }
 
 	}

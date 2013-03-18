@@ -16,6 +16,7 @@ class EqGroup extends Db_Linked
 	// instance attributes
     public $permission = '';
     public $eq_subgroups;
+    public $eq_items;
 
 	public function __construct($initsHash) {
 		parent::__construct($initsHash);
@@ -50,6 +51,10 @@ class EqGroup extends Db_Linked
 
     //##################################################
     // static functions
+
+    public static function cmp($a,$b) {
+        return self::cmpAlphabetical($a,$b);
+    }
 
 	public static function cmpAlphabetical($a,$b) {
 		if ($a->name == $b->name) {
@@ -150,6 +155,19 @@ class EqGroup extends Db_Linked
         foreach ($this->eq_subgroups as $esg) {
             $esg->eq_group = $this;
         }
+        return true;
+    }
+
+    public function loadEqItems() {
+        $this->loadEqSubgroups();
+        $this->eq_items = array();
+        foreach ($this->eq_subgroups as $esg) {
+            $esg->loadEqItems();
+            foreach ($esg->eq_items as $itm) { // could maybe use array_merge here instead; not sure which is faster...
+                array_push($this->eq_items,$itm);
+            }
+        }
+
         return true;
     }
 

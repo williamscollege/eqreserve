@@ -54,7 +54,7 @@ function createTestData_EqSubgroups($dbConn) {
 }
 
 function createTestData_EqItems($dbConn) {
-    // 400 series ids
+    # EqItem: 'eq_item_id', 'eq_subgroup_id', 'name','descr','ordering','flag_delete'
     $addTestEqItemsSql  = "INSERT INTO " . EqItem::$dbTable . " VALUES 
         (401,301,'testItem1','normal',1,0),
         (402,301,'testItem2','normal',2,0),
