@@ -2,7 +2,7 @@
 
 <footer>
     <!-- Link to trigger modal -->
-    <p class="pull-right"><a href="#modalHelp" data-toggle="modal"><i class="icon-question-sign"></i> Need Help?</a>. Williams College, <?php echo date('Y'); ?></p>
+    <p class="pull-right"><a href="#modalHelp" data-toggle="modal"><i class="icon-question-sign"></i> Need Help</a>? Williams College, <?php echo date('Y'); ?></p>
 
     <!-- Modal -->
     <div id="modalHelp" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHelpLabel" aria-hidden="true">

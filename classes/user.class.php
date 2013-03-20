@@ -26,7 +26,8 @@ class User extends Db_Linked
             $this->loadEqGroups();
         }
 
-		$this->flag_is_banned = false;
+//		$this->flag_is_system_admin = false;
+//		$this->flag_is_banned = false;
     }
 
     public function loadInstGroups() {

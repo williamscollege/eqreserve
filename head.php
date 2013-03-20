@@ -76,8 +76,8 @@
 
 		// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
 		$USER->refreshFromDb();
-		//		echo "SHOULD HAVE APPROPRIATE PK ID HERE IF USERNAME ALREADY EXISTS:";
-		//		print_r($USER);
+//				echo "SHOULD HAVE APPROPRIATE PK ID HERE IF USERNAME ALREADY EXISTS:";
+//				print_r($USER);
 		//print_r($_SESSION['userdata']);
 		$USER->updateDbFromAuth($_SESSION['userdata']);
 		//$USER->refreshFromDb();

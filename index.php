@@ -16,14 +16,57 @@
             // Listeners
             // ***************************
             // Listener: Admin Button Clicks
-            $("#btnDisplayNewEqGroup").click(function () {
-                $("#btnDisplayNewEqGroup").addClass('displayNone');
+            $("#btnDisplayAddEqGroup").click(function () {
+                $("#btnDisplayAddEqGroup").addClass('displayNone');
                 $("#eqGroupFields").removeClass('displayNone');
             });
-            $("#btnCancelNewEqGroup").click(function () {
-                $("#btnDisplayNewEqGroup").removeClass('displayNone');
+			$("#btnSubmitAddEqGroup").click(function(){
+				var cachedForm = $(this).parents('form');	// store local reference to DOM of Form that sent request
+                var url = cachedForm.attr('action');		// get url from the form element
+                var formName = cachedForm.attr('name');		// get name from the form element
+                var data1 = $('#' + formName + ' #eqGroupName').val();
+                var data2 = $('#' + formName + ' #eqGroupDescription').val();
+
+                alert('cachedForm=' + cachedForm);
+                alert('url=' + url);
+                alert('formName=' + formName);
+                alert('data1=' + data1);
+                alert('data2=' + data2);
+
+				$.ajax({
+                    type:'POST',
+                    url:url,
+                    data:{
+                        ajaxVal_GroupName:data1,
+                        ajaxVal_GroupDescription:data1
+                        //ajaxDestination:destination    // optional param value is used when the select statement to be generated could be one of many
+                    },
+                    dataType:'html',
+                    success:function (data) {
+                        // alert if update failed
+                        if (data) {
+                            // update the element with new data from the ajax call
+                            // alert(data); // debugging
+                            //$('#' + destination).html(data);
+							// refreshDB() Here?
+
+                            // show message
+//                            $('SPAN.notice').css('display', 'none'); // first, hide any and all pre-existing notices
+//                            $('#' + dest).parent().children('A').addClass('displayNone'); // temporarily, hide the anchor element
+//                            $('#' + dest).parent().children('SPAN.notice').addClass('miniSuccess').text('Updated').fadeIn('slow');
+                        } else {
+//                            $('SPAN.notice').css('display', 'none'); // first, hide any and all pre-existing notices
+//                            $('#' + dest).parent().children('SPAN.notice').addClass('miniError').text('Requested action failed.').fadeIn('slow');
+                        }
+                        //$.fancybox.close(); // Hide the FancyBox
+                    }
+                });
+			});
+            $("#btnCancelAddEqGroup").click(function () {
+                $("#btnDisplayAddEqGroup").removeClass('displayNone');
                 $("#eqGroupFields").addClass('displayNone');
             });
+
         });
     </script>
 
@@ -44,19 +87,19 @@
 		if ($USER->flag_is_system_admin == TRUE) {
 			// system admin may add new eq_groups
 			?>
-		<form>
-            <button type="button" id="btnDisplayNewEqGroup" class="btn btn-primary">Create a new equipment group
+		<form action="ajax_add_eq_group.php" id="formAddEqGroup" class="" name="formAddEqGroup" method="post">
+            <button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
             </button>
 
             <div id="eqGroupFields" class="displayNone">
                 <fieldset title="">
-                    <legend>Create a new equipment group</legend>
+                    <legend>Add a new equipment group</legend>
                     <label>Name</label>
-					<input type="text" id="eqGroupName" class="" value="" placeholder="Name of group" /><br />
+					<input type="text" id="eqGroupName" class="" name="eqGroupName" value="" placeholder="Name of group" /><br />
                     <label>Description</label>
-					<textarea id="eqGroupDescription" class="" placeholder="Description of group"></textarea><br />
-                    <button type="button" id="btnSubmitNewEqGroup" class="btn btn-success">Save Group</button>
-                    <button type="button" id="btnCancelNewEqGroup" class="btn">Cancel</button>
+					<textarea id="eqGroupDescription" class="" name="eqGroupDescription" placeholder="Description of group"></textarea><br />
+                    <button type="button" id="btnSubmitAddEqGroup" class="btn btn-success">Add Group</button>
+                    <button type="button" id="btnCancelAddEqGroup" class="btn">Cancel</button>
                     <br />TODO: AJAX submit; then update list of EqGroups above to include this group
                 </fieldset>
             </div>

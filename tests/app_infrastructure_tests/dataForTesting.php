@@ -150,7 +150,8 @@ function createTestData_Users($dbConn) {
         (1101,'".Auth_Base::$TEST_USERNAME."','".Auth_Base::$TEST_FNAME."','".Auth_Base::$TEST_LNAME."','".Auth_Base::$TEST_SORTNAME."','".Auth_Base::$TEST_EMAIL."','David Keiser-Clark','some important notes',0,0,0),
         (1102,'testUser2','tu2F','tu2L','tu2L, tu2F','tu2@inst.edu','tuAdvisor','tu2 notes',0,0,0),
         (1103,'testUser3deleted','tu3F','tu3L','tu3L, tu3F','tu3@inst.edu','tuAdvisor','tu3 notes',0,0,1),
-        (1104,'testUser4banned','tu4F','tu4L','tu4L, tu4F','tu4@inst.edu','tuAdvisor','tu4 notes',0,1,0)
+        (1104,'testUser4banned','tu4F','tu4L','tu4L, tu4F','tu4@inst.edu','tuAdvisor','tu4 notes',0,1,0),
+        (1105,'testUser5SystemAdmin','tu5F','tu5L','tu5L, tu5F','tu5@inst.edu','tuAdvisor','tu5 notes',1,0,0)
     ";
     $addTestUserStmt = $dbConn->prepare($addTestUserSql);
     $addTestUserStmt->execute();
@@ -160,7 +161,8 @@ function createTestData_Users($dbConn) {
 
 function _removeTestDataFromTable($dbConn,$tableName) {
     $sql = "DELETE FROM $tableName";
-    $stmt = $dbConn->prepare($sql);
+    echo "<pre>" . $sql . "\n</pre>";
+	$stmt = $dbConn->prepare($sql);
     $stmt->execute();
 }
 

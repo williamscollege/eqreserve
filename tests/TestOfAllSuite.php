@@ -8,8 +8,7 @@ class TestOfAllSuite extends TestSuite {
     function TestOfAllSuite() {
         $this->TestSuite('Full application test');
         $this->addFile('TestOfAppInfrastructureSuite.php');
-        $this->addFile('TestOfAccountManagementPageSuite.php');
-        $this->addFile('TestOfIndexPageSuite.php');
+        $this->addFile('TestOfWebPageSuite.php');
      }
 }
 ?>
