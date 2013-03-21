@@ -73,13 +73,18 @@
 	<?php
 		echo "<hr />";
 		# instantiate the equipment groups and roles for this user
-		$UserEqGroups = new EqGroup([$USER, 'DB' => $DB]);
 		$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
+
 		echo "<h3>Equipment Groups</h3>";
 		echo "<ul>";
 		if (count($UserEqGroups) > 0) {
-			for ($i = 0, $size = count($UserEqGroups); $i < $size; ++$i) {
-				echo "<li><a href=\"equipment_group.php?eid=" . $UserEqGroups[$i]['eq_group_id'] . "\" title=\"\">" . $UserEqGroups[$i]['name'] . "</a> [description: " . $UserEqGroups[$i]['descr'] . "]</li>";
+//			echo "<pre>LOOKATEG:"; print_r($UserEqGroups); echo "</pre><hr>";
+			foreach($UserEqGroups as $ueg){
+				echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a>: " . $ueg->descr ;
+				if ($ueg->permission->role->priority == 1){
+					echo " (You manage this group)";
+				}
+				echo "</li>";
 			}
 		} else {
 			echo "<li>You do not belong to any equipment groups.</li>";

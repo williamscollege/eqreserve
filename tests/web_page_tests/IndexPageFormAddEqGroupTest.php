@@ -34,27 +34,21 @@
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
 			$this->click('Sign in');
-//echo $this->getBrowser()->getContent();
-//			exit;
-//			# WHY IS THIS CREATING A NEW USER RECORD??
-//
+
 			$this->assertResponse(200);
 
 			$this->assertLink('Admin Only');
 			$this->assertText('Equipment Groups');
-			$this->assertText('You do not belong to any equipment groups.');
+			$this->assertText('testEqGroup1');
+			$this->assertText('testEqGroup2');
+			$this->assertText('testEqGroup3');
 			$this->assertFieldById('btnDisplayAddEqGroup');
-//
-//			$this->click('Add a new equipment group');
-//			$this->assertField('eqGroupName');
-//			$this->assertField('eqGroupDescription');
-//			$this->setFieldById('eqGroupName', 'ACME');
-//			$this->setFieldById('eqGroupDescription', 'ACME does it best');
-//
-//			$this->assertFieldById('btnSubmitNewEqGroup');
-//			$this->click('Add Group');
-//
-//			exit;
+
+			$this->click('Add a new equipment group');
+			$this->assertField('eqGroupName');
+			$this->assertField('eqGroupDescription');
+			$this->setFieldById('eqGroupName', 'ACME');
+			$this->setFieldById('eqGroupDescription', 'ACME does it best');
 		}
 
 	}

@@ -130,17 +130,17 @@
                     <li class="active"><a href="/eqreserve/"><i class="icon-home icon-white"></i> Home</a></li>
 					<?php
 					if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
-						// Loop through eq_groups and check for admin level access for 1 or more groups. if yes, display link
-						$tmp_flag_eq_group_admin = 0;
+						# is manager of any group?
+						$eg_manager = 0;
 						foreach ($USER->eq_groups as $eg) {
-							if ($eg->name->permission) {
-								$tmp_flag_eq_group_admin = 1;
+							if ($eg->permission->role->priority == 1) {
+								$eg_manager = 1;
 							}
 						}
-						if ($tmp_flag_eq_group_admin == 1) {
+						if ($eg_manager == 1) {
 							echo "<li><a href=\"manage_groups_users.php\">Manage Groups/Users</a></li>";
 						}
-						// TODO: Create db field and user class property: flag_is_system_admin
+						# is system admin?
 						if ($USER->flag_is_system_admin == true) {
 							?>
                             <li class="dropdown">
