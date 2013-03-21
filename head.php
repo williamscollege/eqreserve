@@ -1,19 +1,23 @@
 <?php
 	session_start();
+
 	require_once('institution.cfg.php');
 	require_once('lang.cfg.php');
 	require_once('/classes/user.class.php');
-	require_once('auth.cfg.php');
+    require_once('auth.cfg.php');
+    require_once('util.php');
+
+    $FINGERPRINT = util_generateRequestFingerprint(); // used to prevent/complicate session hijacking ands XSS attacks
 
 	$MESSAGE = '';
 
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
-		if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) {
-			// SECTION: not yet authenticated, wants to log in
+        if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) { // SECTION: not yet authenticated, wants to log in
 
 			if ($AUTH->authenticate($_REQUEST['username'], $_REQUEST['password'])) {
 				session_regenerate_id(TRUE);
-				$_SESSION['isAuthenticated']       = TRUE;
+                $_SESSION['isAuthenticated']       = TRUE;
+                $_SESSION['fingerprint']           = $FINGERPRINT;
 				$_SESSION['userdata']              = array();
 				$_SESSION['userdata']['username']  = $AUTH->username;
 				$_SESSION['userdata']['email']     = $AUTH->email;
@@ -22,53 +26,34 @@
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
 				// array of institutional group names for this user
 				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups, 0); // makes a copy of the array
-
-				// $USER = new User(['username'=>$_SESSION['userdata']['username'],'DB'=>$DB]);
-				// now check if user data differs from session data, and if so, update the users db record (this might be a part of the User construct method)
-				// $USER->refreshFromDb();
 			} else {
 				$MESSAGE = 'Sign in failed';
 			}
 
-			//		# START: Auth Debugging Info
-			//			echo "<br /><h2>Development Messages</h2>";
-			//			# echo "isAuthenticated = ".$_SESSION['isAuthenticated']."<br />\n";
-			//			#if ($AUTH->msg != '' || $AUTH->debug != '') {
-			//				// echo the attribute of the $AUTH object
-			//				echo "<b>Message found:</b><br />" . $AUTH->msg . "<br />";
-			//				echo "<b>Debug Info:</b><br />" . $AUTH->debug . "<br />";
-			//			#}
-			//		# END: Debugging Info
-
 		} else {
 			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
-
 			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
-				//				echo APP_FOLDER ."/index.php <br />";
-				//				echo $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] ."<br />";
-				header('Location: ' . APP_FOLDER);
+                // TODO: log and/or message?
+                util_redirectToAppHome();
 			}
 		}
-	} else {
-		// SECTION: authenticated
-
+	} 
+    else { // SECTION: authenticated
+        if ($_SESSION['fingerprint'] != $FINGERPRINT) {
+            // TODO: log and/or message?
+            util_redirectToAppHomeWithPrejudice();
+        }
 		if (isset($_REQUEST['submit_signout'])) {
 			// SECTION: wants to log out
-			unset($_SESSION['isAuthenticated']);
-			unset($_SESSION['userdata']);
-			header('Location: ' . APP_FOLDER . '/index.php');
+            util_wipeSession();
+            util_redirectToAppHome();
+            // NOTE: the above is the same as util_redirectToAppHomeWithPrejudice, but this code is easier to follow/read when the two parts are shown here
 		}
 	}
 
-
-	if (isset($_SESSION['isAuthenticated']) && ($_SESSION['isAuthenticated'])) {
-		// SECTION: is signed in
-
-		$DB = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";port=3306", DB_USER, DB_PASS);
-		//print_r($_SERVER);
-		if ($_SERVER['SERVER_NAME'] == 'localhost') {
-			$DB = new PDO("mysql:host=" . TESTING_DB_SERVER . ";dbname=" . TESTING_DB_NAME . ";port=3306", TESTING_DB_USER, TESTING_DB_PASS);
-		}
+    $IS_AUTHENTICATED = util_checkAuthentication();
+    if ($IS_AUTHENTICATED) { // SECTION: is signed in
+        $DB = util_createDbConnection();
 
 		// now create user object
 		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);
@@ -80,7 +65,6 @@
 		//		print_r($USER);
 		//print_r($_SESSION['userdata']);
 		$USER->updateDbFromAuth($_SESSION['userdata']);
-		//$USER->refreshFromDb();
 		//echo "<pre>"; print_r($USER); echo "</pre>";
 		$USER->loadInstGroups();
 		$USER->loadEqGroups();
@@ -129,9 +113,10 @@
                 <ul class="nav">
                     <li class="active"><a href="/eqreserve/"><i class="icon-home icon-white"></i> Home</a></li>
 					<?php
-					if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
+                    if ($IS_AUTHENTICATED) {
 						// Loop through eq_groups and check for admin level access for 1 or more groups. if yes, display link
-						$tmp_flag_eq_group_admin = 0;
+/* CSW - seems like this is no longer necessary since we use flag_is_system_admin instead....?
+                        $tmp_flag_eq_group_admin = 0;
 						foreach ($USER->eq_groups as $eg) {
 							if ($eg->name->permission) {
 								$tmp_flag_eq_group_admin = 1;
@@ -140,8 +125,9 @@
 						if ($tmp_flag_eq_group_admin == 1) {
 							echo "<li><a href=\"manage_groups_users.php\">Manage Groups/Users</a></li>";
 						}
+*/
 						// TODO: Create db field and user class property: flag_is_system_admin
-						if ($USER->flag_is_system_admin == true) {
+						if ($USER->flag_is_system_admin === true) {
 							?>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench icon-white"></i> Admin Only <b class="caret"></b></a>
@@ -158,7 +144,7 @@
 					?>
                 </ul>
 				<?php
-				if ((isset($_SESSION['isAuthenticated'])) && ($_SESSION['isAuthenticated'])) {
+                if ($IS_AUTHENTICATED) {
 					?>
                     <div id="signedInControls">
                         <form id="frmSignout" class="navbar-form pull-right" method="post" action="">
@@ -175,6 +161,7 @@
                         <input type="submit" id="submit_signin" class="btn" name="submit_signin" value="Sign in" />
                     </form>
 					<?php
+                    // TODO: move the message to a more generic location - message is intended to be a generic status/reporting mechanism
 					if ($MESSAGE) {
 						echo "<span class=\"text-warning pull-right\"><br />" . $MESSAGE . "&nbsp;</span>";
 					}
