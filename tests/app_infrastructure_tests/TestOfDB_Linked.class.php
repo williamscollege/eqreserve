@@ -245,10 +245,18 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual($selectResult['flagfield'],false);
     }
 
-
     # BELOW: TESTS FOR STATIC METHODS
 
-	function testLoadExistingOneFromDb() {
+        function testCheckStatementError() {
+            $badSql = "INSERT INTO dblinktest VALUES ('a')";
+            $badStmt = $this->DB->prepare($badSql);
+            $badStmt->execute();
+
+            $this->expectError(Db_Linked::$ERR_MSG_SQL_STMT_ERROR);
+            Trial_Db_Linked::checkStmtError($badStmt);
+        }
+
+        function testLoadExistingOneFromDb() {
 		$this->_dbClear();
 		$this->_dbInsertTestRecord(['id'=>1]);
 
