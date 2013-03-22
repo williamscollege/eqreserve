@@ -1,8 +1,7 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
-    require_once dirname(__FILE__) . '/dataForTesting.php';
+	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
 
-	class TestOfEqItem extends UnitTestCaseDB
+	class TestOfEqItem extends WMSUnitTestCaseDB
 	{
 
 		function setUp() {

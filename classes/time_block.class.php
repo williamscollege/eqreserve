@@ -5,6 +5,6 @@ class TimeBlock extends Db_Linked
     public static $primaryKeyField = 'time_block_id';    
     public static $dbTable = 'time_blocks';
 
-
+    
 } 
 ?>

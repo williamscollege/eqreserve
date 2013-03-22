@@ -1,6 +1,6 @@
 <?php
 require_once('simpletest/autorun.php');
-require_once('simpletest/web_tester_WMS.php');
+require_once('simpletest/WMS_web_tester.php');
 SimpleTest::prefer(new TextReporter());
 
 require_once('../institution.cfg.php');

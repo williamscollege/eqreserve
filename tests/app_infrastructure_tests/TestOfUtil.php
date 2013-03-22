@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/../../util.php';
 
 
 class TestOfUtil extends UnitTestCase {
-		
+
 	function setUp() {
 	}
 	

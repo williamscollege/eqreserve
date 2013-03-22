@@ -1,9 +1,9 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
+	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
 	require_once dirname(__FILE__) . '/../../classes/permission.class.php';
 
 
-	class TestOfPermission extends UnitTestCaseDB
+	class TestOfPermission extends WMSUnitTestCaseDB
 	{
 
 		function setUp() {

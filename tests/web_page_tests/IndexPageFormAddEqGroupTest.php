@@ -1,9 +1,7 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
-	require_once dirname(__FILE__) . '/../app_infrastructure_tests/dataForTesting.php';
-	require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
+require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-	class IndexPageFormAddEqGroupTest extends WebTestCaseWMS {
+    class IndexPageFormAddEqGroupTest extends WMSWebTestCase {
 
 		function setUp() {
 			createTestData_Users($this->DB);
