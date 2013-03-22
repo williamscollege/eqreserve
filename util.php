@@ -88,10 +88,5 @@
 		if (get_magic_quotes_gpc()) {
 			$value = stripslashes($value);
 		}
-		// Quote if not integer
-		if (!is_numeric($value) || $value[0] == '0') {
-			$value = "'" . trim($value) . "'";
-
-		}
 		return $value;
 	}

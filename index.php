@@ -27,7 +27,7 @@
                 var data1 = $('#' + formName + ' #eqGroupName').val();
                 var data2 = $('#' + formName + ' #eqGroupDescription').val();
 
-                alert('cachedForm=' + cachedForm + '\n' + 'url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
+                // alert('cachedForm=' + cachedForm + '\n' + 'url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
 
                 $.ajax({
                     type:'POST',
@@ -40,25 +40,16 @@
                     dataType:'html',
                     success:function (data) {
                         if (data) {
-                            // remove the ajax form
-                            $("#btnDisplayAddEqGroup").removeClass('displayNone');
+                            // clear the ajax form, hide form, show button to activate form
+                        	$("#"+formName).trigger( "reset" );
                             $("#eqGroupFields").addClass('displayNone');
+                            $("#btnDisplayAddEqGroup").removeClass('displayNone');
 
                             // update the element with new data from the ajax call
-                            $("UL#displayEqGroups").append(data);
-
-                            //$('#displayEqGroups UL').append(data);
-                            // refreshDB() Here?
-                            // show message
-//                            $('SPAN.notice').css('display', 'none'); // first, hide any and all pre-existing notices
-//                            $('#' + dest).parent().children('A').addClass('displayNone'); // temporarily, hide the anchor element
-//                            $('#' + dest).parent().children('SPAN.notice').addClass('miniSuccess').text('Updated').fadeIn('slow');
+                            $("UL#displayEqGroups").append('output',data);
                         } else {
-                            // alert('error: '+data); // debugging
-                            //  $('SPAN.notice').css('display', 'none'); // first, hide any and all pre-existing notices
-//                            $('#' + dest).parent().children('SPAN.notice').addClass('miniError').text('Requested action failed.').fadeIn('slow');
+                            $("UL#displayEqGroups").append('output','<li><span class="label label-important">Important</span> An error occurred!</li>');
                         }
-                        //$.fancybox.close(); // Hide the FancyBox
                     }
                 });
             });
