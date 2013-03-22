@@ -195,7 +195,7 @@ abstract class Db_Linked
     }
     
     // takes: an identity hash - i.e. a hash of col names to values, a database connection
-    // returns: an object of the appriate type with values loaded from the DB
+    // returns: an object of the appropriate type with values loaded from the DB
     // NOTE: in the case of multiple rows found, only the first is used
     // NOTE: in the case of no rows found the recipient->matchesDB is false
     public static function getOneFromDb($searchHash,$usingDb) {
@@ -211,7 +211,11 @@ abstract class Db_Linked
         }
         $fetchStmt->setFetchMode(PDO::FETCH_INTO|PDO::FETCH_PROPS_LATE, $recipient);
         $fetchStmt->fetch();
-        $recipient->matchesDb = true;
+
+		$recipient->matchesDb = false;
+		if ($fetchStmt->rowCount() >= 1) {
+			$recipient->matchesDb = true;
+		}
         return $recipient;
     } 
 
