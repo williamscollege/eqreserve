@@ -49,6 +49,7 @@
 			$this->assertField('eqGroupDescription');
 			$this->setFieldById('eqGroupName', 'ACME');
 			$this->setFieldById('eqGroupDescription', 'ACME does it best');
+			exit;
 		}
 
 	}

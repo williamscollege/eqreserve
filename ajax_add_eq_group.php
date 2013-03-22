@@ -1,72 +1,42 @@
 <?php
-	echo 'about to process ajax php page...';
-
-
-
-	exit;
-	#------------------------------------------------#
-	# Security: Require authentication and authorization
-	include_once "../include/protected.php";
-	#------------------------------------------------#
-
-	# Connection String
-	include_once "../include/connDB.php";
-	# Public Functions
-	include_once "../include/sanitation.php";
-
+	require_once('/classes/eq_group.class.php');
+	require_once('/head_ajax.php');
 
 	#------------------------------------------------#
 	# Forms Collections: AJAX posts and requests
 	#------------------------------------------------#
-	$strAddItem = (isset($_POST["ajaxVal"])) ? quote_smart($_POST["ajaxVal"]) : 0;
-
-
-	if ($strAddItem !== 0 && $strAddItem != "" && $strAddItem != "''") {
-		#------------------------------------------------#
-		# SQL: INSERT Item
-		# jQuery Plugin: FancyBox
-		# AJAX: Add Item (BirthLocation)
-		# Follow up: SELECT list from SQL; new addition is "selected"
-		# Form name: frmAjaxAddBirthLocation
-		# Input name: AjaxAddBirthLocation
-		# Input type: string
-		#------------------------------------------------#
-		$queryAddBirthLocation = "
-			INSERT INTO
-				BirthLocation
-			(
-				Location
-			)
-			VALUES (
-				$strAddItem
-			);
-		";
-
-		$resultsAddBirthLocation = mysqli_query($connString, $queryAddBirthLocation) or
-			die(mysqli_error($connString));
-
-		// Get the ID generated in the last query
-		$intRowID = mysqli_insert_id($connString);
-	}
-
-	# Explicitly declare this in event it is not declared in above conditional statement
-	if (!isset($intRowID)) {
-		$intRowID = 0;
-	}
+	$strName = (isset($_POST["ajaxVal_GroupName"])) ? quote_smart($_POST["ajaxVal_GroupName"]) : 0;
+	$strDescription = (isset($_POST["ajaxVal_GroupDescription"])) ? quote_smart($_POST["ajaxVal_GroupDescription"]) : 0;
 
 	#------------------------------------------------#
-	# SQL: Fetch BirthLocation options
+	# SQL: INSERT Item
 	#------------------------------------------------#
-	$queryBirthLocation = "
-			SELECT
-				BirthLocationID
-				,Location
-			FROM
-				BirthLocation
-			ORDER BY Location ASC;
-		";
-	$resultsBirthLocation = mysqli_query($connString, $queryBirthLocation) or
-		die(mysqli_error($connString));
+	//	$eg = new EqGroup(['name'=>$strName,'descr'=>$strDescription,'DB'=>$this->DB]);
+	$eg = EqGroup::getOneFromDb(['name'=>$strName,'descr'=>$strDescription], $DB);
+//	echo "<pre>";
+//	print_r($eg);
+//	echo "</pre>";
+
+	if ($eg->matchesDb) {
+		// handle here case where group already exists
+		exit;
+	}
+	$eg->name = $strName;
+	$eg->descr = $strDescription;
+	$eg->updateDb();
+//	echo "<pre>";
+//	print_r($eg);
+//	echo "</pre>";
+
+
+	$output = EqGroup::getOneFromDb(['name'=>$strName], $DB);
+//	echo "<pre>";
+//	print_r($test);
+//	echo "</pre>";
+
+	# output html
+	echo "<li><a href=\"equipment_group.php?eid=" . $output->eq_group_id . "\" title=\"\">" . $output->name . "</a>: " . $output->descr . "</li>";
+
 
 
 	/*
@@ -77,17 +47,3 @@
 		exit();
 	 */
 ?>
-
-<select id="BirthLocationID" name="BirthLocationID" class="">
-	<option value="0">--Select--</option>
-	<?php
-	while ($rowBG = mysqli_fetch_array($resultsBirthLocation)) {
-		if ($intRowID == $rowBG['BirthLocationID']) {
-			$strSelected = "selected='selected'";
-		} else {
-			$strSelected = "";
-		}
-		echo "<option value='$rowBG[BirthLocationID]' $strSelected>$rowBG[Location]</option>";
-	}
-	?>
-</select>
