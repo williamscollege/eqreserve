@@ -88,7 +88,7 @@ abstract class Db_Linked
 	public static $ERR_MSG_NO_DB = "no db connection provided to db_linked sub-class constructor";
     public static $ERR_MSG_BAD_DB = "empty db connection provided to db_linked sub-class constructor";
     public static $ERR_MSG_BAD_SEARCH_PARAM = "an invalid value was given in the search hash";
-
+    public static $ERR_MSG_SQL_STMT_ERROR = "SQL statment error - see log for details";
 	/////////////////////////////////////////////////////
 
 	// NOTE: the initsHash passed to the constructor MUST have at least one entry of DB => a pdo db connection object
@@ -183,17 +183,36 @@ abstract class Db_Linked
     }
 
 
+    public static function checkStmtError($stmt) {
+        if ($stmt->errorInfo()[0] != '0000') {
+            $traceAr = debug_backtrace();
+//            echo "<pre>\n";
+//            print_r($traceAr);
+//            exit;
+            $msg = "PDO statement error:\n\t".$stmt->errorInfo()[0]."\n\t".$stmt->errorInfo()[1]."\n\t".$stmt->errorInfo()[2]."\n";
+            for ($i=1,$lmt=count($traceAr);$i<$lmt;++$i) {
+                $msg .= $traceAr[$i]['function'];
+                if (isset($traceAr[$i]['line'])) {
+                    $msg .= ' (line '.$traceAr[$i]['line'].' of '.$traceAr[$i]['file'].")";
+                }
+                $msg .= "\n";
+            }
+            error_log($msg);
+            trigger_error(self::$ERR_MSG_SQL_STMT_ERROR,E_USER_ERROR);
+        }
+    }
     public static function getAllFromDb($searchHash,$usingDb) {
         $whichClass = get_called_class();
         $fetchStmt = self::_buildFetchStatement($searchHash,$usingDb);
         $fetchStmt->execute($searchHash);
         $res = $fetchStmt->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $whichClass,[['DB'=>$usingDb]]);
+        self::checkStmtError($fetchStmt);
         for ($i=count($res)-1;$i>=0;$i--) {
             $res[$i]->matchesDb = true;
         }
         return $res;
     }
-    
+
     // takes: an identity hash - i.e. a hash of col names to values, a database connection
     // returns: an object of the appropriate type with values loaded from the DB
     // NOTE: in the case of multiple rows found, only the first is used
@@ -211,8 +230,8 @@ abstract class Db_Linked
         }
         $fetchStmt->setFetchMode(PDO::FETCH_INTO|PDO::FETCH_PROPS_LATE, $recipient);
         $fetchStmt->fetch();
-
-		$recipient->matchesDb = false;
+        self::checkStmtError($fetchStmt);
+        $recipient->matchesDb = false;
 		if ($fetchStmt->rowCount() >= 1) {
 			$recipient->matchesDb = true;
 		}
@@ -315,8 +334,8 @@ abstract class Db_Linked
 //		exit;
 
 		$fetchStmt->execute($fetchAttr);
-//		$fetchStmt->execute();
-		if ($debug) {
+        self::checkStmtError($fetchStmt);
+        if ($debug) {
 			echo "fetch stmt err info:\n";
 			print_r($fetchStmt->errorInfo());
 			echo "row count is ".$fetchStmt->rowCount() ."\n";
@@ -377,6 +396,8 @@ abstract class Db_Linked
 
 			if ($debug) { print_r($qva); }
             $res = $insertStmt->execute($qva); // returns a boolean value
+            self::checkStmtError($insertStmt);
+
             if ($debug) { echo "insert stm err result:\n"; print_r($insertStmt->errorInfo()); }
             # $this->fieldValues[static::$primaryKeyField] = $res;
             $this->refreshFromDb();
@@ -395,6 +416,7 @@ abstract class Db_Linked
 
             $updateStmt = $this->dbConnection->prepare($updateSql);
             $updateStmt->execute($this->_getQueryValuesArray());
+            self::checkStmtError($updateStmt);
             if ($debug) { echo "update stm err result:\n"; print_r($updateStmt->errorInfo()); }
             $this->matchesDb = true;
         }
