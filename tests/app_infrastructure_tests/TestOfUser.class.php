@@ -1,11 +1,10 @@
 <?php
-require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
-require_once dirname(__FILE__) . '/dataForTesting.php';
+require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
 require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
 
 Mock::generate('Auth_Base');
 
-class TestOfUser extends UnitTestCaseDB {
+class TestOfUser extends WMSUnitTestCaseDB {
 	
 	public $auth;
 	

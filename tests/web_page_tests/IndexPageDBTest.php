@@ -1,10 +1,7 @@
 <?php
-	require_once dirname(__FILE__) . '/../../classes/user.class.php';
-	require_once dirname(__FILE__) . '/../../classes/permission.class.php';
-	require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
+require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-
-class IndexPageDBTest extends WebTestCaseWMS {
+class IndexPageDBTest extends WMSWebTestCase {
 
 	function setUp() {
 		removeTestData_Users($this->DB);

@@ -1,16 +1,8 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/unit_tester_DB.php';
-    require_once dirname(__FILE__) . '/dataForTesting.php';
-    require_once dirname(__FILE__) . '/../../classes/eq_group.class.php';
-    require_once dirname(__FILE__) . '/../../classes/eq_subgroup.class.php';
-    require_once dirname(__FILE__) . '/../../classes/inst_group.class.php';
-    require_once dirname(__FILE__) . '/../../classes/inst_membership.class.php';
-    require_once dirname(__FILE__) . '/../../classes/permission.class.php';
-    require_once dirname(__FILE__) . '/../../classes/role.class.php';
-    require_once dirname(__FILE__) . '/../../classes/user.class.php';
+	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
 
 
-	class TestOfEqGroup extends UnitTestCaseDB
+	class TestOfEqGroup extends WMSUnitTestCaseDB
 	{
 
 		function setUp() {

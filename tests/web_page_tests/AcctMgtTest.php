@@ -1,12 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/../../classes/user.class.php';
-require_once dirname(__FILE__) . '/../../classes/inst_group.class.php';
-require_once dirname(__FILE__) . '/../../classes/inst_membership.class.php';
-require_once dirname(__FILE__) . '/../../classes/permission.class.php';
-require_once dirname(__FILE__) . '/../../classes/eq_group.class.php';
-require_once dirname(__FILE__) . '/../../classes/auth_base.class.php';
+require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-class AcctMgtTest extends WebTestCaseWMS {
+class AcctMgtTest extends WMSWebTestCase {
 
     function setUp() {
         $addTestUserSql = "INSERT INTO ".User::$dbTable." VALUES (1,'".Auth_Base::$TEST_USERNAME."','".Auth_Base::$TEST_FNAME."','".Auth_Base::$TEST_LNAME."','".Auth_Base::$TEST_SORTNAME."','".Auth_Base::$TEST_EMAIL."','David Keiser-Clark','some important notes',0,0,0)";

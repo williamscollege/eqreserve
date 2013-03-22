@@ -1,6 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-class IndexPageAuthTest extends WebTestCaseWMS {
+class IndexPageAuthTest extends WMSWebTestCase {
 
 	function tearDown() {
 		removeTestData_Users($this->DB);

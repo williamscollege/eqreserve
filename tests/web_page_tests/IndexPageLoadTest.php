@@ -1,6 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-class IndexPageLoadTest extends WebTestCase {
+class IndexPageLoadTest extends WMSWebTestCase {
     function testIndexPageLoad() {
         $this->get('http://localhost/eqreserve/');
         $this->assertResponse(200);
