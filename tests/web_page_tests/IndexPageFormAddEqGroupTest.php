@@ -47,7 +47,7 @@ require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 			$this->assertField('eqGroupDescription');
 			$this->setFieldById('eqGroupName', 'ACME');
 			$this->setFieldById('eqGroupDescription', 'ACME does it best');
-			//exit;
+//			exit;
 		}
 
 	}
