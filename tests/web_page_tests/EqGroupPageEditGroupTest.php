@@ -1,7 +1,16 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
+	#require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-	class IndexPageFormAddEqGroupTest extends WMSWebTestCase {
+	#Remove these later... included only for quicker testing
+	require_once('../simpletest/autorun.php');
+	require_once('../simpletest/WMS_web_tester.php');
+
+	SimpleTest::prefer(new TextReporter());
+
+	require_once('../../institution.cfg.php');
+	require_once('../../lang.cfg.php');
+
+	class EqGroupPageEditGroupTest extends WMSWebTestCase {
 
 		function setUp() {
 			createTestData_Users($this->DB);
@@ -21,7 +30,7 @@
 
 		//############################################################
 
-		function TestFormAddEqGroup() {
+		public function loginAdmin() {
 			# update test user to have system admin role
 			$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $this->DB);
 			$u1->flag_is_system_admin = TRUE;
@@ -38,15 +47,15 @@
 			$this->assertText('Equipment Groups');
 			$this->assertText('testEqGroup1');
 			$this->assertText('testEqGroup2');
-			$this->assertText('testEqGroup3');
-			$this->assertFieldById('btnDisplayAddEqGroup');
-
-			$this->click('Add a new equipment group');
-			$this->assertField('eqGroupName');
-			$this->assertField('eqGroupDescription');
-			$this->setFieldById('eqGroupName', 'ACME');
-			$this->setFieldById('eqGroupDescription', 'ACME does it best');
 			//			exit;
+		}
+
+		function TestBasicPageElements() {
+			self::loginAdmin();
+			$this->assertText("Reservation Rules");
+			$this->assertText("View Reservations as List");
+			$this->assertText("Delete this Equipment Group");
+
 		}
 
 	}

@@ -1,5 +1,5 @@
 <?php
-	$pageTitle = 'Home';
+	$pageTitle = 'Edit Equipment Group';
 	require_once('head.php');
 	require_once('/classes/eq_group.class.php');
 
