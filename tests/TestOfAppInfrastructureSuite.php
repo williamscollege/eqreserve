@@ -24,6 +24,9 @@ class TestOfAppInfrastructureSuite extends TestSuite {
         $this->addFile('app_infrastructure_tests/TestOfEqItem.class.php');
 
         $this->addFile('app_infrastructure_tests/TestOfPermission.class.php');
+        $this->addFile('app_infrastructure_tests/TestOfReservation.class.php');
+
+        $this->addFile('app_infrastructure_tests/TestOfTimeBlock.class.php');
      }
 }
 ?>

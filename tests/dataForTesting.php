@@ -19,11 +19,24 @@ require_once dirname(__FILE__) . '/../classes/user.class.php';
 This file contains a series of methods for creating known test data in a target database
 */
 
-
 function createTestData_CommPrefs($dbConn) {
     // 100 series ids
-    echo 'TODO: create comm prefs test data';
-    exit;
+    // comm_prefs: comm_pref_id, user_id, eq_group_id,
+    //             flag_alert_on_upcoming_reservation, flag_contact_on_reserve_create, flag_contact_on_reserve_cancel
+    $addTestCommPrefsSql  = "INSERT INTO " . CommPref::$dbTable . " VALUES
+        (101,1101,201,0,0,0),
+        (102,1101,202,1,0,0),
+        (103,1101,203,0,1,0),
+        (104,1101,207,0,0,1)
+     ";
+    $addTestCommPrefsStmt = $dbConn->prepare($addTestCommPrefsSql);
+    $addTestCommPrefsStmt->execute();
+    if ($addTestCommPrefsStmt->errorInfo()[0] != '0000') {
+        echo "<pre>error adding test CommPrefs data to the DB\n";
+        print_r($addTestCommPrefsStmt->errorInfo());
+        debug_print_backtrace();
+        exit;
+    }
 }
 
 function createTestData_EqGroups($dbConn) {
@@ -176,22 +189,22 @@ function createTestData_Permissions($dbConn) {
 function createTestData_Reservations($dbConn) {
     // 800 series ids
     // reservation: reservation_id, eq_item_id, time_block_group_id, flag_delete
-    $addTestReservationSql = "INSERT INTO ".TimeBlock::$dbTable." VALUES
+    $addTestReservationSql = "INSERT INTO ".Reservation::$dbTable." VALUES
         (801,401,1001,0), # single time block in the group, 1 item
         (802,402,1002,0), # three time blocks in the group, 1 item
         (803,403,1003,0), # single deleted time block in the group
         (804,404,1004,0), # group is deleted
         (805,406,1005,1), # reservations is deleted
-        (801,401,1006,0), # user 1 manager reservation, 1 item
-        (802,410,1007,0), # other user consumer 1 item
-        (803,409,1008,0), # other user manager 1 item
-        (807,401,1009,0), # single time block in the group, 2 items reserved
-        (808,402,1009,0)  # 
+        (806,401,1006,0), # user 1 manager reservation, 1 item
+        (807,410,1007,0), # other user consumer 1 item
+        (808,409,1008,0), # other user manager 1 item
+        (809,401,1009,0), # single time block in the group, 2 items reserved
+        (810,402,1009,0)  #
     ";
     $addTestReservationStmt = $dbConn->prepare($addTestReservationSql);
     $addTestReservationStmt->execute();
     if ($addTestReservationStmt->errorInfo()[0] != '0000') {
-        echo "<pre>error adding test Reservations data to the DB\n";
+        echo "<pre>$addTestReservationSql\nerror adding test Reservations data to the DB\n";
         print_r($addTestReservationStmt->errorInfo());
         debug_print_backtrace();
         exit;
@@ -231,7 +244,7 @@ function createTestData_TimeBlocks($dbConn) {
 function createTestData_TimeBlockGroups($dbConn) {
     // 1000 series ids
     // time block group: time_block_group_id, type, user_id, notes, flag_delete
-    $addTestTimeBlockGroupSql = "INSERT INTO ".TimeBlock::$dbTable." VALUES
+    $addTestTimeBlockGroupSql = "INSERT INTO ".TimeBlockGroup::$dbTable." VALUES
         (1001,'consumer',1101,'notes1 with 1 block',0),         # single time block in the group, 1 item
         (1002,'consumer',1101,'notes2 normal with 3 blocks',0), # three time blocks in the group, 1 item
         (1003,'consumer',1101,'notes3',0),                      # single deleted time block in the group
@@ -272,6 +285,19 @@ function createTestData_Users($dbConn) {
     }
 }
 
+function createAllTestData($dbConn) {
+    createTestData_CommPrefs($dbConn);
+    createTestData_EqGroups($dbConn);
+    createTestData_EqSubgroups($dbConn);
+    createTestData_EqItems($dbConn);
+    createTestData_InstGroups($dbConn);
+    createTestData_InstMemberships($dbConn);
+    createTestData_Permissions($dbConn);
+    createTestData_Reservations($dbConn);
+    createTestData_TimeBlocks($dbConn);
+    createTestData_TimeBlockGroups($dbConn);
+    createTestData_Users($dbConn);
+}
 //------------
 
 function _removeTestDataFromTable($dbConn,$tableName) {

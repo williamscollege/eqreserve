@@ -8,26 +8,49 @@ class Reservation extends Db_Linked
     public static $dbTable = 'reservations';
 
 	// instance attributes
-    public $item='';
+    public $eq_item='';
     public $time_block_group='';
     public $user='';
     public $time_blocks='';
 
-    public function loadItem() {
-        echo "TODO: implement Reservation->loadItem()";
-        exit;
+    public static function cmp($a,$b) {
+        if (! $a->eq_item) {
+            $a->loadEqItem();
+        }
+        if (! $b->eq_item) {
+            $b->loadEqItem();
+        }
+        return EqItem::cmp($a->eq_item,$b->eq_item);
     }
+
+    public function loadEqItem() {
+        $this->eq_item = EqItem::getOneFromDb(['eq_item_id'=>$this->eq_item_id],$this->dbConnection);
+    }
+
     public function loadTimeBlockGroup() {
-        echo "TODO: implement Reservation->loadTimeBlockGroup()";
-        exit;
+        $this->time_block_group = TimeBlockGroup::getOneFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
     }
+
+    /*
+     * NOTE: potentially serious inefficiencies here as we're doing an 'extra' db call to load the time block group
+     * so that we can get the user and list of time blocks. We gout get aroudn this by overriding the getOne and getAll
+     * static functions to do more complex fetching and object building. However, that's a messy and error-prone enough
+     * process that we're just living with this inefficiency untiland unless it becomes clear that it's a problem on
+     * the useability end (as opposed to just an aesthetics of design / coding issue).
+     */
+
     public function loadUser() {
-        echo "TODO: implement Reservation->loadUser()";
-        exit;
+        if (! $this->time_block_group) {
+            $this->loadTimeBlockGroup();
+        }
+        $this->user = User::getOneFromDb(['user_id'=>$this->time_block_group->user_id],$this->dbConnection);
     }
     public function loadTimeBlocks() {
-        echo "TODO: implement Reservation->loadTimeBlocks()";
-        exit;
+        if (! $this->time_block_group) {
+            $this->loadTimeBlockGroup();
+        }
+        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
+        usort($this->time_blocks,"TimeBlock::cmp");
     }
 }
 ?>
