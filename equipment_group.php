@@ -7,182 +7,74 @@
 	if ($IS_AUTHENTICATED) {
 		// SECTION: authenticated
 
-		?>
-		<script type="text/javascript">
-			$(document).ready(function () {
-				// default conditions
+		// fetch querystring
+		$eid = $_REQUEST["eid"];
 
-				// ***************************
-				// Listeners
-				// ***************************
+		// declare variables
+		$Requested_EqGroup = [];
+		$is_group_access  = FALSE;
+		$is_group_manager = FALSE;
 
-				// Show ajax form
-				$("#btnDisplayAddEqGroup").click(function () {
-					$("#btnDisplayAddEqGroup").addClass('displayNone');
-					$("#eqGroupFields").removeClass('displayNone');
-				});
+		// does user have permission to access this group?
+		$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
+		foreach ($UserEqGroups as $ueg) {
+			if ($ueg->permission->eq_group_id == $eid) {
+				// set flag: is this allowed to access this group?
+				$is_group_access = TRUE;
 
-				$("#btnCancelAddEqGroup").click(function () {
-					// custom form cleanup
-					cleanUpForm("formAddEqGroup")
-				});
+				// create group object for easier manipulation
+				$Requested_EqGroup = $ueg;
 
-				// Remove later: debugging jquery validator plugin
-				$("a.check").click(function () {
-					alert("Valid: " + $("#formAddEqGroup").valid());
-					return false;
-				});
-
-
-				// ***************************
-				// Form validation
-				// ***************************
-
-				var validator = $('#formAddEqGroup').validate({
-					rules: {
-						eqGroupName: {
-							minlength: 2,
-							required: true
-						},
-						eqGroupDescription: {
-							minlength: 2,
-							required: true
-						}
-					},
-					highlight: function (element) {
-						$(element).closest('.control-group').removeClass('success').addClass('error');
-					},
-					success: function (element) {
-						element
-							.text('OK!').addClass('valid')
-							.closest('.control-group').removeClass('error').addClass('success');
-					},
-					submitHandler: function (form) {
-						var url = $("#formAddEqGroup").attr('action');			// get url from the form element
-						var formName = $("#formAddEqGroup").attr('name');		// get name from the form element
-						var data1 = $('#' + formName + ' #eqGroupName').val();
-						var data2 = $('#' + formName + ' #eqGroupDescription').val();
-						// alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
-
-						$.ajax({
-							type: 'POST',
-							url: url,
-							data: {
-								ajaxVal_GroupName: data1,
-								ajaxVal_GroupDescription: data2
-							},
-							dataType: 'html',
-							success: function (data) {
-								// custom form cleanup
-								cleanUpForm("formAddEqGroup")
-
-								if (data) {
-									// update the element with new data from the ajax call
-									$("UL#displayEqGroups").append(data);
-								}
-								else {
-									// show error
-									$("UL#displayEqGroups").append('<li><span class="label label-important">Important</span> An error occurred!</li>');
-								}
-							}
-						});
-
-					}
-				})
-
-
-				// ***************************
-				// Custom functions
-				// ***************************
-
-				function cleanUpForm(formName) {
-					// reset form
-					$("#" + formName).trigger("reset");
-					validator.resetForm();
-					// hide form, show button to activate form
-					$("#eqGroupFields").addClass('displayNone');
-					$("#btnDisplayAddEqGroup").removeClass('displayNone');
-					// manually remove input highlights
-					$(".control-group").removeClass('success').removeClass('error');
-				}
-
-			});
-		</script>
-
-		Remove this later: <a href="#" class="check">is form valid?</a><br>
-
-		<?php
-		echo "<hr />";
-		echo "<h3>Equipment Groups</h3>";
-		echo "<ul id=\"displayEqGroups\">";
-
-		# is system admin?
-		if ($USER->flag_is_system_admin == 1) {
-			# get groups for this ordinary user
-			$UserEqGroups = EqGroup::getAllEqGroupsForAdminUser($USER);
-			if (count($UserEqGroups) > 0) {
-				foreach ($UserEqGroups as $ueg) {
-					echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a>: " . $ueg->descr . "</li>";
+				// set flag: is group manager?
+				if ($Requested_EqGroup->permission->role_id == 1) {
+					$is_group_manager = TRUE;
 				}
 			}
-			else {
-				echo "<li>You do not belong to any equipment groups.</li>";
-			}
-			echo "</ul>";
-			# system admin may add new eq_groups
+		}
+
+		// security: redirect if does not belong here
+		if (!$is_group_access) {
+			util_redirectToAppHome(50);
+		}
+
+		# admin or manager: is allowed to edit fields
+		if ($USER->flag_is_system_admin || $is_group_manager) {
 			?>
-			<form action="ajax_add_eq_group.php" id="formAddEqGroup" class="form-horizontal" name="formAddEqGroup" method="post">
-				<button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
-				</button>
+			<form action="ajax_add_eq_group.php" id="formAddEqGroup" class="form-inline" name="formAddEqGroup" method="post">
+				<div id="eqGroupFields">
+					<legend><?php echo $Requested_EqGroup->name; ?></legend>
+					<div class="control-group">
+						<label class="control-label" for="eqGroupName">Name</label>
 
-				<div id="eqGroupFields" class="displayNone">
-					<fieldset title="">
-						<legend>Add a new equipment group</legend>
-						<div class="control-group">
-							<label class="control-label" for="eqGroupName">Name</label>
-
-							<div class="controls">
-								<input type="text" id="eqGroupName" class="input-large" name="eqGroupName" value="" placeholder="Name of group" maxlength="200" />
-							</div>
+						<div class="controls">
+							<input type="text" id="eqGroupName" class="input-large" name="eqGroupName" value="<?php echo $Requested_EqGroup->name; ?>" placeholder="Name of group" maxlength="200" />
+							<button type="submit" id="btnSubmitEditEqGroupName" class="btn btn-success">Edit</button>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="eqGroupDescription">Description</label>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="eqGroupDescription">Description</label>
 
-							<div class="controls">
-								<input type="text" id="eqGroupDescription" class="input-xlarge" name="eqGroupDescription" value="" placeholder="Description of group" maxlength="200" />
-							</div>
+						<div class="controls">
+							<textarea rows="3" id="eqGroupDescription" class="input-large" name="eqGroupDescription" placeholder="Description of group"><?php echo $Requested_EqGroup->descr; ?></textarea>
+							<button type="submit" id="btnSubmitEditEqGroupDescription" class="btn btn-success">Edit</button>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="btnSubmitAddEqGroup"></label>
-
-							<div class="controls">
-								<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success">Add Group</button>
-								<button type="reset" id="btnCancelAddEqGroup" class="btn">Cancel</button>
-							</div>
-						</div>
-
-					</fieldset>
+					</div>
 				</div>
 			</form>
 		<?php
 		}
 		else {
-			# get groups for this ordinary user
-			$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
-			if (count($UserEqGroups) > 0) {
-				foreach ($UserEqGroups as $ueg) {
-					echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a>: " . $ueg->descr;
-					if ($ueg->permission->role->priority == 1) {
-						echo " (You manage this group)";
-					}
-					echo "</li>";
-				}
-			}
-			else {
-				echo "<li>You do not belong to any equipment groups.</li>";
-			}
-			echo "</ul>";
+			echo "<h2>" . $Requested_EqGroup->name . "</h2>";
+			echo "<p>" . $Requested_EqGroup->descr . "</p>";
 		}
+
+//		echo "<pre>TESTING:";
+//		print_r($Requested_EqGroup);
+//		echo "</pre>";
+//
+//		echo "<pre>";
+//		print_r($USER);
+//		echo "</pre>";
 	}
 	else {
 		// SECTION: not yet authenticated, wants to log in

@@ -15,6 +15,9 @@ class TestOfWebSuite extends TestSuite {
         $this->addFile('web_page_tests/IndexPageDBTest.php');
         $this->addFile('web_page_tests/IndexPageFormAddEqGroupTest.php');
 
+		# Tests: Equipment Group
+//        $this->addFile('web_page_tests/EqGroupPageEditGroupTest.php');
+
         # Tests: Account management
 		$this->addFile('web_page_tests/AcctMgtTest.php');
      }

@@ -117,7 +117,7 @@
 		echo "<ul id=\"displayEqGroups\">";
 
 		# is system admin?
-		if ($USER->flag_is_system_admin == 1) {
+		if ($USER->flag_is_system_admin) {
 			# get groups for this ordinary user
 			$UserEqGroups = EqGroup::getAllEqGroupsForAdminUser($USER);
 			if (count($UserEqGroups) > 0) {
@@ -136,32 +136,29 @@
 				</button>
 
 				<div id="eqGroupFields" class="displayNone">
-					<fieldset title="">
-						<legend>Add a new equipment group</legend>
-						<div class="control-group">
-							<label class="control-label" for="eqGroupName">Name</label>
+					<legend>Add a new equipment group</legend>
+					<div class="control-group">
+						<label class="control-label" for="eqGroupName">Name</label>
 
-							<div class="controls">
-								<input type="text" id="eqGroupName" class="input-large" name="eqGroupName" value="" placeholder="Name of group" maxlength="200" />
-							</div>
+						<div class="controls">
+							<input type="text" id="eqGroupName" class="input-large" name="eqGroupName" value="" placeholder="Name of group" maxlength="200" />
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="eqGroupDescription">Description</label>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="eqGroupDescription">Description</label>
 
-							<div class="controls">
-								<input type="text" id="eqGroupDescription" class="input-xlarge" name="eqGroupDescription" value="" placeholder="Description of group" maxlength="200" />
-							</div>
+						<div class="controls">
+							<input type="text" id="eqGroupDescription" class="input-xlarge" name="eqGroupDescription" value="" placeholder="Description of group" maxlength="200" />
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="btnSubmitAddEqGroup"></label>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="btnSubmitAddEqGroup"></label>
 
-							<div class="controls">
-								<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success">Add Group</button>
-								<button type="reset" id="btnCancelAddEqGroup" class="btn">Cancel</button>
-							</div>
+						<div class="controls">
+							<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success">Add Group</button>
+							<button type="reset" id="btnCancelAddEqGroup" class="btn">Cancel</button>
 						</div>
-
-					</fieldset>
+					</div>
 				</div>
 			</form>
 		<?php
