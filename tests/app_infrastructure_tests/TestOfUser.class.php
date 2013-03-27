@@ -49,6 +49,22 @@ class TestOfUser extends WMSUnitTestCaseDB {
 		$this->assertTrue(in_array('flag_delete',User::$fields));
 	}
 
+    // static methods
+
+    function testCmp(){
+        $u1 = new User(['user_id'=>50,'fname'=>'fred','lname'=>'jones', 'DB'=>$this->DB]);
+        $u2 = new User(['user_id'=>51,'fname'=>'fred','lname'=>'albertson', 'DB'=>$this->DB]);
+        $u3 = new User(['user_id'=>52,'fname'=>'al','lname'=>'ji', 'DB'=>$this->DB]);
+        $u4 = new User(['user_id'=>53,'fname'=>'bab','lname'=>'ji', 'DB'=>$this->DB]);
+
+        $this->assertEqual(User::cmp($u1,$u2),1);
+        $this->assertEqual(User::cmp($u1,$u1),0);
+        $this->assertEqual(User::cmp($u2,$u1),-1);
+
+        $this->assertEqual(User::cmp($u3,$u4),-1);
+    }
+
+
     // DB interaction tests
 
 	function testUserDBInsert(){

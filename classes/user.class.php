@@ -30,6 +30,22 @@ class User extends Db_Linked
 //		$this->flag_is_banned = false;
     }
 
+    public static function cmp($a,$b) {
+        if ($a->sortname == $b->sortname) {
+            if ($a->lname == $b->lname) {
+                if ($a->fname == $b->fname) {
+                    if ($a->email == $b->email) {
+                        return 0;
+                    }
+                    return ($a->email < $b->email) ? -1 : 1;
+                }
+                return ($a->fname < $b->fname) ? -1 : 1;
+            }
+            return ($a->lname < $b->lname) ? -1 : 1;
+        }
+        return ($a->sortname < $b->sortname) ? -1 : 1;
+    }
+
     public function loadInstGroups() {
 //		echo "myuser_id=".$this->user_id;
 //		if ($this->user_id == 1) {trigger_error('cannot load inst groups for a user where user_id=1');}
@@ -64,6 +80,7 @@ class User extends Db_Linked
             $a->fname = $auth['firstname'];
             $a->lname = $auth['lastname'];
             $a->email = $auth['email'];
+            $a->sortname = $auth['sortname'];
             $a->inst_groups = array_slice($auth['inst_groups'],0);
             $auth = $a;
         }
@@ -77,8 +94,9 @@ class User extends Db_Linked
 		
 		// update info if changed
 		if ($this->fname != $auth->fname) { $this->fname = $auth->fname; }		// $this->__set('fname',$auth->fname)
-		if ($this->lname != $auth->lname) { $this->lname = $auth->lname; }		
-		if ($this->email != $auth->email) { $this->email = $auth->email; }
+		if ($this->lname != $auth->lname) { $this->lname = $auth->lname; }
+        if ($this->email != $auth->email) { $this->email = $auth->email; }
+        if ($this->sortname != $auth->sortname) { $this->sortname = $auth->sortname; }
 
 //User::getOneFromDb(['username'=>$this->username],$this->dbConnection)
 		$this->updateDb();

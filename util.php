@@ -55,7 +55,10 @@
 	function util_generateRequestFingerprint()
 	{
 		util_doEqReserveIdSecurityCheck();
-		return md5(FINGERPRINT_SALT . $_SESSION["eqreserve_id"] . substr($_SERVER['HTTP_USER_AGENT'], 18));
+
+		return md5(FINGERPRINT_SALT . $_SESSION["eqreserve_id"] .
+                   (isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragent')
+                   );
 	}
 
 
