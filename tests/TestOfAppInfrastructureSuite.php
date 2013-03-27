@@ -27,6 +27,7 @@ class TestOfAppInfrastructureSuite extends TestSuite {
         $this->addFile('app_infrastructure_tests/TestOfReservation.class.php');
 
         $this->addFile('app_infrastructure_tests/TestOfTimeBlock.class.php');
+        $this->addFile('app_infrastructure_tests/TestOfTimeBlockGroup.class.php');
      }
 }
 ?>

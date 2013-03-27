@@ -64,7 +64,7 @@
 		util_doEqReserveIdSecurityCheck();
 
 		return md5(FINGERPRINT_SALT . $_SESSION["eqreserve_id"] .
-				(isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragentstring')
+				(isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragent')
 		);
 	}
 
@@ -86,7 +86,7 @@
 	function util_displayScreenMessage($n = 0) {
 		$screen_messages = [
 			10   => "Please sign in."
-			,11   => "Sign in failed."
+			, 11 => "Sign in failed."
 			, 50 => "You do not have access to that group."
 			#, 100 => "User or LDAP something or other message"
 		];
