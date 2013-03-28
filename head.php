@@ -91,7 +91,7 @@ if ($IS_AUTHENTICATED) { // SECTION: is signed in
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css">
 	<link rel="stylesheet" href="css/style.css" type="text/css" media="all">
 	<!-- CSS: Plugins -->
-	<link rel="stylesheet" href="css/bootstrap-jquery-validate-PATCH.css" type="text/css" media="all">
+	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
 	<script src="<?php echo URL_JQUERY_CDN; ?>"></script>
 	<!--<script src="<?php echo URL_JQUERYUI_CDN; ?>"></script>-->
