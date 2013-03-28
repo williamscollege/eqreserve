@@ -23,9 +23,7 @@
 
 		public function _loginAdmin() {
 			# update test user to have system admin role
-			$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $this->DB);
-			$u1->flag_is_system_admin = TRUE;
-			$u1->updateDb();
+            makeAuthedTestUserAdmin($this->DB);
 
 			$this->get('http://localhost/eqreserve/');
 

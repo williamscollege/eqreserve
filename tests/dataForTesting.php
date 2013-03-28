@@ -157,6 +157,8 @@ function createTestData_Permissions($dbConn) {
         # NOTE: user2 is a member of inst group 2
         # NOTE: user3 is deleted
         # NOTE: instgroup4 is deleted
+        # NOTE: over all-
+        #    user 1101 has access to 201(m), 202, 203(m), 206, 207
     $addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES
         (701,1101,'user',     2,202,0), # user1 user access eqg2
         (702,1101,'user',     2,201,0), # user1 user access eqg1 (flipped to test ordering functions)
@@ -164,7 +166,7 @@ function createTestData_Permissions($dbConn) {
         (704,1101,'user',     2,204,1), # user1 deleted access eqg4
         (705,1101,'user',     2,205,0), # user1 user access deleted eqg5
         (706,1101,'user',     2,207,0), # user1 user access to eqg 7
-        (707,501,'inst_group',1,201,0), # ig1 has manager access to eqg1 (overrides user1 eqg6 user access)
+        (707,501,'inst_group',1,201,0), # ig1 has manager access to eqg1 (overrides user1 eqg1 user access)
         (708,501,'inst_group',2,202,0), # ig1 has user access to eqg2 (dual user access on user1 eqg2)
         (709,501,'inst_group',2,203,0), # ig1 has user access to eqg3 (overridden by user1 eqg2 manager access)
         (710,501,'inst_group',2,206,0), # ig1 has user access to eqg6 (gives user1 indirect user access)
@@ -284,6 +286,11 @@ function createTestData_Users($dbConn) {
         exit;
     }
 }
+
+function makeAuthedTestUserAdmin($dbConn) {
+    $u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
+    $u1->flag_is_system_admin = TRUE;
+    $u1->updateDb();}
 
 function createAllTestData($dbConn) {
     createTestData_CommPrefs($dbConn);
