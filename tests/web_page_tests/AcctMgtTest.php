@@ -26,13 +26,15 @@ class AcctMgtTest extends WMSWebTestCase {
         $this->assertResponse(200);
         $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
 
-        $this->assertText(Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME);
-        $this->assertText(Auth_Base::$TEST_EMAIL);
+        $this->assertFieldValue("accountName",Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME, "Violet Bovine", "missing name" );
+        $this->assertFieldValue("accountUsername",Auth_Base::$TEST_USERNAME, "mockUser", "missing username" );
+        $this->assertFieldValue("accountEmail",Auth_Base::$TEST_EMAIL, "vbovine@institution.edu", "missing email" );
 
         $this->assertText(Auth_Base::$TEST_INST_GROUPS[0]);
         $this->assertText(Auth_Base::$TEST_INST_GROUPS[1]);
         $this->assertText(Auth_Base::$TEST_INST_GROUPS[2]);
         $this->assertText(Auth_Base::$TEST_INST_GROUPS[3]);
+        $this->assertText(Auth_Base::$TEST_INST_GROUPS[4]);
 
         $this->assertText('testEqGroup1');
         $this->assertText('testEqGroup2');
