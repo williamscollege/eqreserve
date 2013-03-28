@@ -49,7 +49,7 @@ function createTestData_EqGroups($dbConn) {
         (205,'testEqGroup5','deleted eq group','0,15,30,45',15,60,15,1),
         (206,'testEqGroup6','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0),
         (207,'testEqGroup7','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0),
-        (208,'testEqGroup8','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0)
+        (208,'testEqGroup8','no one has access; on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0)
     ";
     $addTestEqGroupsStmt = $dbConn->prepare($addTestEqGroupsSql);
     $addTestEqGroupsStmt->execute();
