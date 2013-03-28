@@ -41,7 +41,7 @@
 
 		// security: redirect if does not belong here
 		if (!$is_group_access) {
-			util_redirectToAppHome(50);
+			util_redirectToAppHome('failure',50);
 		}
 
 		# admin or manager: is allowed to edit fields

@@ -27,21 +27,21 @@ if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 			util_redirectToAppHome();
 		}
 		else {
-			util_redirectToAppHome(11);
+			util_redirectToAppHome('failure',11);
 		}
 
 	}
 	else {
 		// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
 		if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
-			// TODO: log?
-			util_redirectToAppHome(10);
+			// TODO: add logging?
+			util_redirectToAppHome('info',10);
 		}
 	}
 }
 else { // SECTION: authenticated
 	if ($_SESSION['fingerprint'] != $FINGERPRINT) {
-		// TODO: log?
+		// TODO: add logging?
 		util_redirectToAppHomeWithPrejudice();
 	}
 	if (isset($_REQUEST['submit_signout'])) {
@@ -174,8 +174,16 @@ if ($IS_AUTHENTICATED) { // SECTION: is signed in
 <div class="container"> <!--div closed in the footer-->
 	<?php
 	// display screen message?
-	if (isset($_REQUEST["msg"]) && (is_numeric($_REQUEST["msg"]))) {
-		if (util_displayScreenMessage($_REQUEST["msg"])) {
+	if (isset($_REQUEST["success"]) && (is_numeric($_REQUEST["success"]))) {
+		if (util_displaySuccessMessage($_REQUEST["success"])) {
+			;
+		}
+	} elseif(isset($_REQUEST["failure"]) && (is_numeric($_REQUEST["failure"]))) {
+		if (util_displayFailureMessage($_REQUEST["failure"])) {
+			;
+		}
+	}elseif(isset($_REQUEST["info"]) && (is_numeric($_REQUEST["info"]))) {
+		if (util_displayInfoMessage($_REQUEST["info"])) {
 			;
 		}
 	}
