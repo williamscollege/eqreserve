@@ -24,11 +24,11 @@ class Reservation extends Db_Linked
     }
 
     public function loadEqItem() {
-        $this->eq_item = EqItem::getOneFromDb(['eq_item_id'=>$this->eq_item_id],$this->dbConnection);
+        $this->eq_item = EqItem::getOneFromDb(['eq_item_id'=>$this->eq_item_id,'flag_delete'=>false],$this->dbConnection);
     }
 
     public function loadTimeBlockGroup() {
-        $this->time_block_group = TimeBlockGroup::getOneFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
+        $this->time_block_group = TimeBlockGroup::getOneFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
     }
 
     /*
@@ -43,13 +43,13 @@ class Reservation extends Db_Linked
         if (! $this->time_block_group) {
             $this->loadTimeBlockGroup();
         }
-        $this->user = User::getOneFromDb(['user_id'=>$this->time_block_group->user_id],$this->dbConnection);
+        $this->user = User::getOneFromDb(['user_id'=>$this->time_block_group->user_id,'flag_delete'=>false],$this->dbConnection);
     }
     public function loadTimeBlocks() {
         if (! $this->time_block_group) {
             $this->loadTimeBlockGroup();
         }
-        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
+        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->time_blocks,"TimeBlock::cmp");
     }
 }

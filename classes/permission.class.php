@@ -11,7 +11,7 @@ class Permission extends Db_Linked
 	public $role='';
 
 	public function loadRole() {
-		$this->role = Role::getOneFromDb(['role_id'=>$this->role_id],$this->dbConnection);
+		$this->role = Role::getOneFromDb(['role_id'=>$this->role_id,'flag_delete'=>false],$this->dbConnection);
 	}
 }
 ?>

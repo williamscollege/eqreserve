@@ -11,6 +11,8 @@ class User extends Db_Linked
 
     public $inst_groups;
     public $eq_groups;
+    public $time_block_groups;
+    public $reservations;
 
     public function __construct($initsHash) {
 		parent::__construct($initsHash);
@@ -67,6 +69,41 @@ class User extends Db_Linked
             return;
         }
         $this->eq_groups = EqGroup::getAllEqGroupsForNonAdminUser($this);
+    }
+
+    public function loadReservations() {
+        if (! $this->user_id) {
+            trigger_error('cannot load reservations for a user with no user_id');
+            return;
+        }
+        if (! $this->time_block_groups) {
+            $this->loadTimeBlockGroups();
+        }
+        $this->reservations =[];
+        foreach ($this->time_block_groups as $tbg) {
+            $this->reservations = array_merge($this->reservations,$tbg->reservations);
+        }
+        usort($this->reservations,"Reservation::cmp");
+    }
+
+    public function loadTimeBlockGroups() {
+        if (! $this->user_id) {
+            trigger_error('cannot load time block groups for a user with no user_id');
+            return;
+        }
+        $this->time_block_groups = [];
+        $initial_tbgs = TimeBlockGroup::getAllFromDb(['user_id'=>$this->user_id,'flag_delete'=>false],$this->dbConnection);
+        foreach ($initial_tbgs as $tbg) {
+            $tbg->loadTimeBlocks();
+            if (count($tbg->time_blocks) > 0) {
+                $tbg->loadReservations();
+                if (count($tbg->reservations) > 0) {
+                    $tbg->user = $this;
+                    array_push($this->time_block_groups,$tbg);
+                }
+            }
+        }
+        usort($this->time_block_groups,"TimeBlockGroup::cmp");
     }
 
 	public function updateDbFromAuth($auth) {
@@ -126,7 +163,7 @@ class User extends Db_Linked
 
             // add new ones (i.e. auth list groups that the user doesn't have)
             foreach ($extraAuthInstGroupNames as $newGroupName) {
-                $groupToAddToUser = InstGroup::getOneFromDb(['name'=>$newGroupName],$this->dbConnection);
+                $groupToAddToUser = InstGroup::getOneFromDb(['name'=>$newGroupName,'flag_delete'=>false],$this->dbConnection);
 
                 // check if the group didn't exist in the DB
                 if (! $groupToAddToUser->matchesDb) {

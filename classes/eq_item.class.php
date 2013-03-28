@@ -43,7 +43,7 @@ class EqItem extends Db_Linked
 
     public function loadEqSubgroup() {
         if (is_numeric($this->eq_subgroup_id)) {
-            $this->eq_subgroup = EqSubgroup::getOneFromDb(['eq_subgroup_id'=>$this->eq_subgroup_id],$this->dbConnection);
+            $this->eq_subgroup = EqSubgroup::getOneFromDb(['eq_subgroup_id'=>$this->eq_subgroup_id,'flag_delete'=>false],$this->dbConnection);
             return $this->eq_subgroup->matchesDb;
         }
         return false;

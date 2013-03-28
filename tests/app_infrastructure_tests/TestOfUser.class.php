@@ -9,11 +9,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
 	public $auth;
 	
 	function setUp() {
-        createTestData_Users($this->DB);
-        createTestData_EqGroups($this->DB);
-        createTestData_InstGroups($this->DB);
-        createTestData_InstMemberships($this->DB);
-        createTestData_Permissions($this->DB);
+        createAllTestData($this->DB);
 
 		$this->auth = new MockAuth_Base();
         $this->auth->username       = Auth_Base::$TEST_USERNAME;
@@ -27,11 +23,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
 	}
 	
 	function tearDown() {
-        removeTestData_Users($this->DB);
-        removeTestData_EqGroups($this->DB);
-        removeTestData_InstGroups($this->DB);
-        removeTestData_InstMemberships($this->DB);
-        removeTestData_Permissions($this->DB);
+        removeAllTestData($this->DB);
 	}
 
 	function testUserAtributesExist() {
@@ -88,6 +80,8 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual($u->username,Auth_Base::$TEST_USERNAME);
 	}	
 
+    // instance methods
+
     function testUserInstGroupsLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 
@@ -130,6 +124,24 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual($u->eq_groups[3]->permission->role_id, 2);
         $this->assertEqual($u->eq_groups[4]->permission->role_id, 2);
     }   
+
+    function testUserReservationsLoaded() {
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
+
+        $u->loadReservations();
+
+        $this->assertTrue(is_array($u->reservations));
+        $this->assertEqual(count($u->reservations),3);
+    }
+
+    function testUserTimeBlockGroupsLoaded() {
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
+
+        $u->loadTimeBlockGroups();
+
+        $this->assertTrue(is_array($u->time_block_groups));
+        $this->assertEqual(count($u->time_block_groups),3);
+    }
 
     /// auth-related tests
 

@@ -37,16 +37,16 @@ class TimeBlockGroup extends Db_Linked
     // instance methods
 
     public function loadUser() {
-        $this->user = User::getOneFromDb(['user_id'=>$this->user_id],$this->dbConnection);
+        $this->user = User::getOneFromDb(['user_id'=>$this->user_id,'flag_delete'=>false],$this->dbConnection);
     }
 
     public function loadTimeBlocks() {
-        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
+        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->time_blocks,"TimeBlock::cmp");
     }
 
     public function loadReservations() {
-        $this->reservations = Reservation::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
+        $this->reservations = Reservation::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->reservations,"Reservation::cmp");
     }
 }

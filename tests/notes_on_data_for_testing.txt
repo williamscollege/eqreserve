@@ -1,0 +1,59 @@
+user 1101:
+    can authenticate
+    
+    matches the values set in Auth_Base
+
+    is NOT a system admin
+        this can be set for testing via the function makeAuthedTestUserAdmin
+
+    is initially a member of the institutional group testInstGroup1 (membership: 601, inst group: 501)
+        is a member of the deleted inst group 504
+        has a deleted membership 603
+        after log in, has membership in 5 inst group
+            group 501, plus 4 new ones created from the test data in Auth_Base
+
+    has 3 time block groups: 1001, 1002, and 1006
+        is time block group 1006 is a mananger time block group
+        also has 3 non-valid time block groups
+            1003- has no time blocks (actually has time block 905, but it's deleted)
+            1004- is deleted
+            1005- has no reservations (actually has reservation 805, but it's deleted)
+
+    has 3 reservations: 801, 802, 806 (manager reservation - i.e. tied to a manager time block group)
+        also has 3 non-valid reservations
+            803- the associated time block group has no time blocks
+            804- the associated time block group is deleted
+            805- this reservation is deleted
+
+    has access to 5 equipment groups: 201(manager access), 202, 203(manager access), 206, 207
+        has direct access to 4 groups: 201, 202, 203 (manager access), 207
+        has indirect access (via inst group 501) to 4 groups: 201(manager access), 202, 203, 206
+        has non-valid access to 2 other equipment groups
+            204- permission is deleted
+            205- equipment group 205 is deleted
+
+    has access to 6 eq sub groups: 301, 302, 303, 304, 306, 308
+        eq group 201 has 4 sub-groups: 301, 302, 303, 304
+            NOTE: this is manager access, indirect via inst group 501
+            and 1 non-valid subgroup
+                305- deleted
+        eq group 202 has 1 sub group: 306
+        eq group 207 has 1 sub group: 308
+
+    has access to 7 items: 401, 402, 403, 404, 406, 409, 410
+        and 1 non-valid item
+            405- deleted
+        eq group 201 has
+            eq sub group 301 which has 4 eq items: 401, 402, 403, 404
+            eq sub group 302 which has 1 eq item: 406
+            eq sub group 303 which has no eq items
+            eq sub group 304 which has no eq items
+        eq group 202 has
+            eq sub group 306 which has 1 eq item: 409
+        eq group 207 has 
+            eq sub group 308 which has 1 eq item: 410
+
+
+
+        
+        

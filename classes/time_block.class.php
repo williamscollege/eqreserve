@@ -17,21 +17,21 @@ class TimeBlock extends Db_Linked
     }
 
     public function loadTimeBlockGroup() {
-        $this->time_block_group = TimeBlockGroup::getOneFromDb(['time_block_group_id'=>$this->time_block_group_id],$this->dbConnection);
+        $this->time_block_group = TimeBlockGroup::getOneFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
     }
 
     public function loadUser() {
         if (! $this->time_block_group) {
             $this->loadTimeBlockGroup();
         }
-        $this->user = User::getOneFromDb(['user_id'=>$this->time_block_group->user_id],$this->dbConnection);
+        $this->user = User::getOneFromDb(['user_id'=>$this->time_block_group->user_id,'flag_delete'=>false],$this->dbConnection);
     }
 
     public function loadReservations() {
         if (! $this->time_block_group) {
             $this->loadTimeBlockGroup();
         }
-        $this->reservations = Reservation::getAllFromDb(['time_block_group_id'=>$this->time_block_group->time_block_group_id],$this->dbConnection);
+        $this->reservations = Reservation::getAllFromDb(['time_block_group_id'=>$this->time_block_group->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->reservations,"Reservation::cmp");
     }
 }
