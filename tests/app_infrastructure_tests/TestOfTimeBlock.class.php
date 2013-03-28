@@ -29,14 +29,14 @@
         //----------------
         // instance method tests
 
-        function testTimeBlockLoadTimeBlockGroup() {
+        function testTimeBlockLoadSchedule() {
             $t = TimeBlock::getOneFromDb(['time_block_id'=>901],$this->DB);
             $this->assertTrue($t->matchesDb);
-            $this->assertFalse($t->time_block_group);
+            $this->assertFalse($t->schedule);
 
-            $t->loadTimeBlockGroup();
+            $t->loadSchedule();
 
-            $this->assertEqual($t->time_block_group->time_block_group_id,1001);
+            $this->assertEqual($t->schedule->schedule_id,1001);
         }
 
         function testTimeBlockLoadUser() {

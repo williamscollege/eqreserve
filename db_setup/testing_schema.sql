@@ -26,5 +26,3 @@ CREATE TABLE IF NOT EXISTS `dblinktest` (
     `intfield` INT NOT NULL,
     `flagfield` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='used for testing based DB-link class';
-
-

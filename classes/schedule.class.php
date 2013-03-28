@@ -1,9 +1,9 @@
 <?php
-class TimeBlockGroup extends Db_Linked
+class Schedule extends Db_Linked
 {
-    public static $fields = array('time_block_group_id','type','user_id','notes','flag_delete');
-    public static $primaryKeyField = 'time_block_group_id';    
-    public static $dbTable = 'time_block_groups';
+    public static $fields = array('schedule_id','type','user_id','notes','flag_delete');
+    public static $primaryKeyField = 'schedule_id';    
+    public static $dbTable = 'schedules';
 
     public $user;
     public $time_blocks;
@@ -41,12 +41,12 @@ class TimeBlockGroup extends Db_Linked
     }
 
     public function loadTimeBlocks() {
-        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
+        $this->time_blocks = TimeBlock::getAllFromDb(['schedule_id'=>$this->schedule_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->time_blocks,"TimeBlock::cmp");
     }
 
     public function loadReservations() {
-        $this->reservations = Reservation::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
+        $this->reservations = Reservation::getAllFromDb(['schedule_id'=>$this->schedule_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->reservations,"Reservation::cmp");
     }
 }

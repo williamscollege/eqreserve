@@ -6,7 +6,7 @@ PROJECT:
 	Equipment Reserve (eqreserve)
 
 TODO:
-	time_block_groups
+	schedules
 	all TODO items
 
 NOTES:
@@ -18,12 +18,12 @@ FOR TESTING ONLY:
 	DROP TABLE `eq_items`;
 	DROP TABLE `users`;
 	DROP TABLE `inst_groups`;
-    DROP TABLE `inst_memberships`;
+  DROP TABLE `inst_memberships`;
 	DROP TABLE `comm_prefs`;
 	DROP TABLE `roles`;
 	DROP TABLE `permissions`;
-    DROP TABLE `reservations`;
-	DROP TABLE `time_block_groups`;
+  DROP TABLE `reservations`;
+	DROP TABLE `schedules`;
 	DROP TABLE `time_blocks`;
 */
 
@@ -140,14 +140,14 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 CREATE TABLE IF NOT EXISTS `reservations` (
     `reservation_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `eq_item_id` INT NOT NULL,
-    `time_block_group_id` INT NOT NULL,
+    `schedule_id` INT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='links an eq_item to blocks of time (i.e. a time block group)';
 /* FK: eq_items.eq_item_id */
 
 
-CREATE TABLE IF NOT EXISTS `time_block_groups` (
-    `time_block_group_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS `schedules` (
+    `schedule_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `type` VARCHAR(255) NULL,
     `user_id` INT NOT NULL,
     `notes` TEXT NULL,
@@ -158,12 +158,12 @@ CREATE TABLE IF NOT EXISTS `time_block_groups` (
 
 CREATE TABLE IF NOT EXISTS `time_blocks` (
     `time_block_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `time_block_group_id` INT NOT NULL,
+    `schedule_id` INT NOT NULL,
     `start_time` DATETIME NULL,
     `end_time` DATETIME NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
-/* FK: time_block_groups.time_block_group_id */
+/* FK: schedules.schedule_id */
 
 
 
@@ -177,4 +177,3 @@ INSERT INTO
 VALUES
 	(1,1,'Manager',0),
 	(2,2,'User',0)
-

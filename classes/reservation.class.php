@@ -3,13 +3,13 @@ require_once dirname(__FILE__) . '/db_linked.class.php';
 
 class Reservation extends Db_Linked
 {
-    public static $fields = array('reservation_id','eq_item_id','time_block_group_id','flag_delete');
+    public static $fields = array('reservation_id','eq_item_id','schedule_id','flag_delete');
     public static $primaryKeyField = 'reservation_id';
     public static $dbTable = 'reservations';
 
 	// instance attributes
     public $eq_item='';
-    public $time_block_group='';
+    public $schedule='';
     public $user='';
     public $time_blocks='';
 
@@ -27,8 +27,8 @@ class Reservation extends Db_Linked
         $this->eq_item = EqItem::getOneFromDb(['eq_item_id'=>$this->eq_item_id,'flag_delete'=>false],$this->dbConnection);
     }
 
-    public function loadTimeBlockGroup() {
-        $this->time_block_group = TimeBlockGroup::getOneFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
+    public function loadSchedule() {
+        $this->schedule = Schedule::getOneFromDb(['schedule_id'=>$this->schedule_id,'flag_delete'=>false],$this->dbConnection);
     }
 
     /*
@@ -40,16 +40,16 @@ class Reservation extends Db_Linked
      */
 
     public function loadUser() {
-        if (! $this->time_block_group) {
-            $this->loadTimeBlockGroup();
+        if (! $this->schedule) {
+            $this->loadSchedule();
         }
-        $this->user = User::getOneFromDb(['user_id'=>$this->time_block_group->user_id,'flag_delete'=>false],$this->dbConnection);
+        $this->user = User::getOneFromDb(['user_id'=>$this->schedule->user_id,'flag_delete'=>false],$this->dbConnection);
     }
     public function loadTimeBlocks() {
-        if (! $this->time_block_group) {
-            $this->loadTimeBlockGroup();
+        if (! $this->schedule) {
+            $this->loadSchedule();
         }
-        $this->time_blocks = TimeBlock::getAllFromDb(['time_block_group_id'=>$this->time_block_group_id,'flag_delete'=>false],$this->dbConnection);
+        $this->time_blocks = TimeBlock::getAllFromDb(['schedule_id'=>$this->schedule_id,'flag_delete'=>false],$this->dbConnection);
         usort($this->time_blocks,"TimeBlock::cmp");
     }
 }

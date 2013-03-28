@@ -11,7 +11,7 @@ class User extends Db_Linked
 
     public $inst_groups;
     public $eq_groups;
-    public $time_block_groups;
+    public $schedules;
     public $reservations;
 
     public function __construct($initsHash) {
@@ -76,34 +76,34 @@ class User extends Db_Linked
             trigger_error('cannot load reservations for a user with no user_id');
             return;
         }
-        if (! $this->time_block_groups) {
-            $this->loadTimeBlockGroups();
+        if (! $this->schedules) {
+            $this->loadSchedules();
         }
         $this->reservations =[];
-        foreach ($this->time_block_groups as $tbg) {
+        foreach ($this->schedules as $tbg) {
             $this->reservations = array_merge($this->reservations,$tbg->reservations);
         }
         usort($this->reservations,"Reservation::cmp");
     }
 
-    public function loadTimeBlockGroups() {
+    public function loadSchedules() {
         if (! $this->user_id) {
             trigger_error('cannot load time block groups for a user with no user_id');
             return;
         }
-        $this->time_block_groups = [];
-        $initial_tbgs = TimeBlockGroup::getAllFromDb(['user_id'=>$this->user_id,'flag_delete'=>false],$this->dbConnection);
+        $this->schedules = [];
+        $initial_tbgs = Schedule::getAllFromDb(['user_id'=>$this->user_id,'flag_delete'=>false],$this->dbConnection);
         foreach ($initial_tbgs as $tbg) {
             $tbg->loadTimeBlocks();
             if (count($tbg->time_blocks) > 0) {
                 $tbg->loadReservations();
                 if (count($tbg->reservations) > 0) {
                     $tbg->user = $this;
-                    array_push($this->time_block_groups,$tbg);
+                    array_push($this->schedules,$tbg);
                 }
             }
         }
-        usort($this->time_block_groups,"TimeBlockGroup::cmp");
+        usort($this->schedules,"Schedule::cmp");
     }
 
 	public function updateDbFromAuth($auth) {

@@ -40,14 +40,14 @@
             $this->assertEqual($r->eq_item->eq_item_id,401);
         }
 
-        function testReservationLoadTimeBlockGroup() {
+        function testReservationLoadSchedule() {
             $r = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
             $this->assertTrue($r->matchesDb);
-            $this->assertFalse($r->time_block_group);
+            $this->assertFalse($r->schedule);
 
-            $r->loadTimeBlockGroup();
+            $r->loadSchedule();
 
-            $this->assertEqual($r->time_block_group->time_block_group_id,1001);
+            $this->assertEqual($r->schedule->schedule_id,1001);
         }
 
         function testReservationLoadUser() {

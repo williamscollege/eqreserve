@@ -567,5 +567,3 @@ X            track user action
 [            create, alter, or delete time blocks
 [        LOG?:
 [            track user action
-
-

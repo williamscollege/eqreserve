@@ -52,4 +52,3 @@ do stuff
 
 include footer - handles any clean up necessary, as well as basic end-of-page HTML
 ?>
-

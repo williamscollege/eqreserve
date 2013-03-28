@@ -26,9 +26,13 @@ class AcctMgtTest extends WMSWebTestCase {
         $this->assertResponse(200);
         $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
 
-        $this->assertFieldValue("accountName",Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME, "Violet Bovine", "missing name" );
-        $this->assertFieldValue("accountUsername",Auth_Base::$TEST_USERNAME, "mockUser", "missing username" );
-        $this->assertFieldValue("accountEmail",Auth_Base::$TEST_EMAIL, "vbovine@institution.edu", "missing email" );
+//        $this->assertFieldValue("accountName",Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME, "Violet Bovine", "missing name" );
+//        $this->assertFieldValue("accountUsername",Auth_Base::$TEST_USERNAME, "mockUser", "missing username" );
+//        $this->assertFieldValue("accountEmail",Auth_Base::$TEST_EMAIL, "vbovine@institution.edu", "missing email" );
+
+        $this->assertEltByIdHasAttrOfValue('accountName','value',Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME);
+        $this->assertEltByIdHasAttrOfValue('accountUsername','value',Auth_Base::$TEST_USERNAME);
+        $this->assertEltByIdHasAttrOfValue('accountEmail','value',Auth_Base::$TEST_EMAIL);
 
         $this->assertText(Auth_Base::$TEST_INST_GROUPS[0]);
         $this->assertText(Auth_Base::$TEST_INST_GROUPS[1]);

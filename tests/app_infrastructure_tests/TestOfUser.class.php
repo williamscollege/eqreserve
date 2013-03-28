@@ -134,13 +134,13 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual(count($u->reservations),3);
     }
 
-    function testUserTimeBlockGroupsLoaded() {
+    function testUserSchedulesLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 
-        $u->loadTimeBlockGroups();
+        $u->loadSchedules();
 
-        $this->assertTrue(is_array($u->time_block_groups));
-        $this->assertEqual(count($u->time_block_groups),3);
+        $this->assertTrue(is_array($u->schedules));
+        $this->assertEqual(count($u->schedules),3);
     }
 
     /// auth-related tests
