@@ -23,9 +23,7 @@
 
 		public function _loginAdmin() {
 			# update test user to have system admin role
-			$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $this->DB);
-			$u1->flag_is_system_admin = TRUE;
-			$u1->updateDb();
+            makeAuthedTestUserAdmin($this->DB);
 
 			$this->get('http://localhost/eqreserve/');
 
@@ -54,4 +52,27 @@
 //			exit;
 		}
 
-	}
+        function TestAdminAccessToGroup() {
+            $this->_loginAdmin();
+            $this->assertResponse(200);
+            $this->assertText("testEqGroup8");
+
+            $this->click('testEqGroup8');
+
+            $this->assertText("testEqGroup8");
+            $this->assertEltByIdHasAttrOfValue('eqGroupName','value','testEqGroup8');
+        }
+
+        function TestNonAdminNoAccessToGroup() {
+            $this->get('http://localhost/eqreserve/');
+            $this->setField('username', TESTINGUSER);
+            $this->setField('password', TESTINGPASSWORD);
+            $this->click('Sign in');
+            $this->assertResponse(200);
+
+            $this->get('http://localhost/eqreserve/equipment_group.php?eid=208');
+
+            $this->assertPattern("/FAILED/i");
+        }
+
+    }

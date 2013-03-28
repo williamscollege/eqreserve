@@ -144,14 +144,23 @@ class EqGroup extends Db_Linked
 //		print_r($all_egs);
 //		echo "</pre>";
 
+        usort($all_egs,"EqGroup::cmp");
 		return $all_egs;
 	}
 
 	public static function getAllEqGroupsForAdminUser($user) {
 		// get all eq_groups for this system administrator
 		$groups = EqGroup::getAllFromDb(['flag_delete'=>false],$user->dbConnection);
-		return $groups;
+        usort($groups,"EqGroup::cmp");
+        return $groups;
 	}
+
+    public static function getAllEqGroupsForUser($user) {
+        if ($user->flag_is_system_admin) {
+            return self::getAllEqGroupsForAdminUser($user);
+        }
+        return self::getAllEqGroupsForNonAdminUser($user);
+    }
 
     //##################################################
     // instance functions
