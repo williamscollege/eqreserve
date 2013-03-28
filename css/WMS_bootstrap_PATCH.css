@@ -26,3 +26,11 @@ label.error {
 .displayNone {
 	display: none;
 }
+
+/* Scrap Test: override bootstrap alert to make a layer, instead of an inline element; Unfortunately, this creates other UI issues -- DKC
+.alert
+{
+	position: absolute;
+	width: 500px;
+}
+*/
