@@ -15,22 +15,29 @@
 		$is_group_access  = FALSE;
 		$is_group_manager = FALSE;
 
-		// does user have permission to access this group?
-		$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
-		foreach ($UserEqGroups as $ueg) {
-			if ($ueg->permission->eq_group_id == $eid) {
-				// set flag: is this allowed to access this group?
-				$is_group_access = TRUE;
+        if ($USER->flag_is_system_admin) {
+            $is_group_access = TRUE;
+            $is_group_manager = TRUE;
+            $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id'=>$eid],$DB);
+        }
+        else {
+            // does user have permission to access this group?
+            $UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
+            foreach ($UserEqGroups as $ueg) {
+                if ($ueg->permission->eq_group_id == $eid) {
+                    // set flag: is this allowed to access this group?
+                    $is_group_access = TRUE;
 
-				// create group object for easier manipulation
-				$Requested_EqGroup = $ueg;
+                    // create group object for easier manipulation
+                    $Requested_EqGroup = $ueg;
 
-				// set flag: is group manager?
-				if ($Requested_EqGroup->permission->role_id == 1) {
-					$is_group_manager = TRUE;
-				}
-			}
-		}
+                    // set flag: is group manager?
+                    if ($Requested_EqGroup->permission->role_id == 1) {
+                        $is_group_manager = TRUE;
+                    }
+                }
+            }
+        }
 
 		// security: redirect if does not belong here
 		if (!$is_group_access) {
