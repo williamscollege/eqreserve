@@ -50,6 +50,8 @@
 			10   => "Please sign in."
 			, 11 => "Sign in failed."
 			, 50 => "You do not have access to that group."
+			, 51 => "Record does not exist in database"
+			, 52 => "Record already exists in database"
 			#, 100 => "User or LDAP something or other message"
 		];
 		if (array_key_exists($num, $screen_messages)) {

@@ -81,7 +81,7 @@
 <!---->
 <!--			<div class="controls">-->
 <!--				<button type="submit" id="btnSubmitEditAccount" class="btn btn-success">Edit Account</button>-->
-<!--				<button type="reset" id="btnCancelEditAccount" class="btn">Cancel</button>-->
+<!--				<button type="reset" id="btnCancelEditAccount" class="btn btn-link btn-cancel">Cancel</button>-->
 <!--			</div>-->
 <!--		</div>-->
 	</form>

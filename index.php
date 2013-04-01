@@ -18,12 +18,12 @@
 
 				// Show ajax form
 				$("#btnDisplayAddEqGroup").click(function () {
-					$("#btnDisplayAddEqGroup").addClass('displayNone');
-					$("#eqGroupFields").removeClass('displayNone');
+					$("#btnDisplayAddEqGroup").addClass('hide');
+					$("#eqGroupFields").removeClass('hide');
 				});
 
+				// custom form cleanup
 				$("#btnCancelAddEqGroup").click(function () {
-					// custom form cleanup
 					cleanUpForm("formAddEqGroup")
 				});
 
@@ -40,11 +40,11 @@
 
 				var validator = $('#formAddEqGroup').validate({
 					rules: {
-						eqGroupName: {
+						groupName: {
 							minlength: 2,
 							required: true
 						},
-						eqGroupDescription: {
+						groupDescription: {
 							minlength: 2,
 							required: true
 						}
@@ -60,8 +60,8 @@
 					submitHandler: function (form) {
 						var url = $("#formAddEqGroup").attr('action');			// get url from the form element
 						var formName = $("#formAddEqGroup").attr('name');		// get name from the form element
-						var data1 = $('#' + formName + ' #eqGroupName').val();
-						var data2 = $('#' + formName + ' #eqGroupDescription').val();
+						var data1 = $('#' + formName + ' #groupName').val();
+						var data2 = $('#' + formName + ' #groupDescription').val();
 						// alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
 
 						$.ajax({
@@ -73,7 +73,7 @@
 							},
 							dataType: 'html',
 							success: function (data) {
-								// custom form cleanup
+								// reset form
 								cleanUpForm("formAddEqGroup")
 
 								if (data) {
@@ -100,8 +100,8 @@
 					$("#" + formName).trigger("reset");
 					validator.resetForm();
 					// hide form, show button to activate form
-					$("#eqGroupFields").addClass('displayNone');
-					$("#btnDisplayAddEqGroup").removeClass('displayNone');
+					$("#eqGroupFields").addClass('hide');
+					$("#btnDisplayAddEqGroup").removeClass('hide');
 					// manually remove input highlights
 					$(".control-group").removeClass('success').removeClass('error');
 				}
@@ -135,20 +135,20 @@
 				<button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
 				</button>
 
-				<div id="eqGroupFields" class="displayNone">
+				<div id="eqGroupFields" class="hide">
 					<legend>Add a new equipment group</legend>
 					<div class="control-group">
-						<label class="control-label" for="eqGroupName">Name</label>
+						<label class="control-label" for="groupName">Name</label>
 
 						<div class="controls">
-							<input type="text" id="eqGroupName" class="input-large" name="eqGroupName" value="" placeholder="Name of group" maxlength="200" />
+							<input type="text" id="groupName" class="input-large" name="groupName" value="" placeholder="Name of group" maxlength="200" />
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="eqGroupDescription">Description</label>
+						<label class="control-label" for="groupDescription">Description</label>
 
 						<div class="controls">
-							<input type="text" id="eqGroupDescription" class="input-xlarge" name="eqGroupDescription" value="" placeholder="Description of group" maxlength="200" />
+							<input type="text" id="groupDescription" class="input-xlarge" name="groupDescription" value="" placeholder="Description of group" maxlength="200" />
 						</div>
 					</div>
 					<div class="control-group">
@@ -156,7 +156,7 @@
 
 						<div class="controls">
 							<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success">Add Group</button>
-							<button type="reset" id="btnCancelAddEqGroup" class="btn">Cancel</button>
+							<button type="reset" id="btnCancelAddEqGroup" class="btn btn-link btn-cancel">Cancel</button>
 						</div>
 					</div>
 				</div>

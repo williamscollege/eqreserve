@@ -11,7 +11,6 @@
 	#------------------------------------------------#
 	# SQL: INSERT Item
 	#------------------------------------------------#
-	//	$eg = new EqGroup(['name'=>$strName,'descr'=>$strDescription,'DB'=>$this->DB]);
 	$eg = EqGroup::getOneFromDb(['name'=>$strName,'descr'=>$strDescription], $DB);
 //	echo "<pre>";
 //	print_r($eg);
@@ -19,14 +18,14 @@
 
 	if ($eg->matchesDb) {
 		// handle here case where group already exists
-		exit;
+		util_redirectToAppHome('failure',52);
 	}
 	$eg->name = $strName;
 	$eg->descr = $strDescription;
 	$eg->updateDb();
 //	echo "<pre>";
 //	print_r($eg);
-//	echo "</pre>";
+//	echo "</pre><hr/>";
 
 
 	$output = EqGroup::getOneFromDb(['name'=>$strName], $DB);

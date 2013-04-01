@@ -23,10 +23,9 @@ label.error {
 	Purpose: Williams custom tweaks to bootstrap.css
 ========================================== */
 
-.displayNone {
-	display: none;
+.btn.btn-link.btn-cancel, .btn-link.btn-cancel {
+	color: #D15545 !important; /* red-orange */
 }
-
 /* Scrap Test: override bootstrap alert to make a layer, instead of an inline element; Unfortunately, this creates other UI issues -- DKC
 .alert
 {

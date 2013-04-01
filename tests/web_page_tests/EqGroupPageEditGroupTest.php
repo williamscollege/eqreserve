@@ -41,9 +41,9 @@
 //			$this->dump($this->getBrowser()->getContent());
 
 			$this->assertText("Equipment Group");
-			$this->assertText("Managed by:");
+			$this->assertText("Managed by");
 			$this->assertText("Reservation Rules");
-			$this->assertText("Reserve Some Equipment");
+			$this->assertText("Reserve Equipment");
 			$this->assertText("Add an Item");
 			$this->assertText("Add a Subgroup");
 			$this->assertText("View Reservations as List");
@@ -60,7 +60,7 @@
             $this->click('testEqGroup8');
 
             $this->assertText("testEqGroup8");
-            $this->assertEltByIdHasAttrOfValue('eqGroupName','value','testEqGroup8');
+            $this->assertEltByIdHasAttrOfValue('groupName','value','testEqGroup8');
         }
 
         function TestNonAdminNoAccessToGroup() {

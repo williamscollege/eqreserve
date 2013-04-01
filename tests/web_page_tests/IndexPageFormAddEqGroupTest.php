@@ -42,10 +42,10 @@
 			$this->assertFieldById('btnDisplayAddEqGroup');
 
 			$this->click('Add a new equipment group');
-			$this->assertField('eqGroupName');
-			$this->assertField('eqGroupDescription');
-			$this->setFieldById('eqGroupName', 'ACME');
-			$this->setFieldById('eqGroupDescription', 'ACME does it best');
+			$this->assertField('groupName');
+			$this->assertField('groupDescription');
+			$this->setFieldById('groupName', 'ACME');
+			$this->setFieldById('groupDescription', 'ACME does it best');
 			//			exit;
 		}
 
