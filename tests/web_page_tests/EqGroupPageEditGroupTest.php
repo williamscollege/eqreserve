@@ -69,11 +69,11 @@
 			$this->assertText("1 hours");
 			$this->assertText("15 minutes");
 
-			$this->assertText("Reserve Equipment");
-			$this->assertText("Add an Item");
-			$this->assertText("Add a Subgroup");
-			$this->assertText("View Reservations as List");
-			$this->assertText("Delete this Equipment Group");
+//			$this->assertText("Reserve Equipment");
+//			$this->assertText("Add an Item");
+//			$this->assertText("Add a Subgroup");
+//			$this->assertText("View Reservations as List");
+//			$this->assertText("Delete this Equipment Group");
 
 //			exit;
 		}
@@ -95,11 +95,11 @@
 			$this->assertText("1 hours");
 			$this->assertText("15 minutes");
 
-			$this->assertText("Reserve Equipment");
-			$this->assertText("Add an Item");
-			$this->assertText("Add a Subgroup");
-			$this->assertText("View Reservations as List");
-			$this->assertText("Delete this Equipment Group");
+//			$this->assertText("Reserve Equipment");
+//			$this->assertText("Add an Item");
+//			$this->assertText("Add a Subgroup");
+//			$this->assertText("View Reservations as List");
+//			$this->assertText("Delete this Equipment Group");
 		}
 
 		function TestAdminAccessToGroup() {
