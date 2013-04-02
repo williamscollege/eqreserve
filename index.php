@@ -58,6 +58,9 @@
 							.closest('.control-group').removeClass('error').addClass('success');
 					},
 					submitHandler: function (form) {
+						// show loading text (button)
+						$("#btnSubmitAddEqGroup").button('loading');
+
 						var url = $("#formAddEqGroup").attr('action');			// get url from the form element
 						var formName = $("#formAddEqGroup").attr('name');		// get name from the form element
 						var data1 = $('#' + formName + ' #groupName').val();
@@ -104,6 +107,8 @@
 					$("#btnDisplayAddEqGroup").removeClass('hide');
 					// manually remove input highlights
 					$(".control-group").removeClass('success').removeClass('error');
+					// reset button
+					$("#btnSubmitAddEqGroup").button('reset');
 				}
 
 			});
@@ -155,7 +160,7 @@
 						<label class="control-label" for="btnSubmitAddEqGroup"></label>
 
 						<div class="controls">
-							<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success">Add Group</button>
+							<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success" data-loading-text="Saving...">Add Group</button>
 							<button type="reset" id="btnCancelAddEqGroup" class="btn btn-link btn-cancel">Cancel</button>
 						</div>
 					</div>

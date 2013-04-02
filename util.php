@@ -21,17 +21,17 @@
 
 	function util_redirectToAppHome($status = "", $num = 0, $log = 0) {
 		// ensure value conforms to expectations
-		if ($status != "success" && $status != "failure" && $status != "info" ){
-			$status="";
+		if ($status != "success" && $status != "failure" && $status != "info") {
+			$status = "";
 		}
 		if ($num > 0 && $log > 0) {
 			# redirect: log record, display message
 			# TODO: Add database log capability
-			header('Location: ' . APP_FOLDER . '/index.php?' .$status . '=' . $num);
+			header('Location: ' . APP_FOLDER . '/index.php?' . $status . '=' . $num);
 		}
 		elseif ($num > 0 && $log == 0) {
 			# redirect: display message
-			header('Location: ' . APP_FOLDER . '/index.php?' .$status . '=' . $num);
+			header('Location: ' . APP_FOLDER . '/index.php?' . $status . '=' . $num);
 		}
 		else {
 			# redirect:
@@ -61,7 +61,7 @@
 
 	function util_displaySuccessMessage($num = 0) {
 		$message = library_ScreenMessages($num);
-		if ($message){
+		if ($message) {
 			// success message
 			echo "<div class=\"alert alert-success\">";
 			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
@@ -73,7 +73,7 @@
 
 	function util_displayFailureMessage($num = 0) {
 		$message = library_ScreenMessages($num);
-		if ($message){
+		if ($message) {
 			// failure message
 			echo "<div class=\"alert alert-error\">";
 			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
@@ -85,7 +85,7 @@
 
 	function util_displayInfoMessage($num = 0) {
 		$message = library_ScreenMessages($num);
-		if ($message){
+		if ($message) {
 			// info message
 			echo "<div class=\"alert alert-info\">";
 			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";

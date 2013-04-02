@@ -27,7 +27,7 @@ if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 			util_redirectToAppHome();
 		}
 		else {
-			util_redirectToAppHome('failure',11);
+			util_redirectToAppHome('failure', 11);
 		}
 
 	}
@@ -35,7 +35,7 @@ if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
 		if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
 			// TODO: add logging?
-			util_redirectToAppHome('info',10);
+			util_redirectToAppHome('info', 10);
 		}
 	}
 }
@@ -89,7 +89,6 @@ if ($IS_AUTHENTICATED) { // SECTION: is signed in
 		}
 	</style>
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css">
-	<link rel="stylesheet" href="css/style.css" type="text/css" media="all">
 	<!-- CSS: Plugins -->
 	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
@@ -178,11 +177,13 @@ if ($IS_AUTHENTICATED) { // SECTION: is signed in
 		if (util_displaySuccessMessage($_REQUEST["success"])) {
 			;
 		}
-	} elseif(isset($_REQUEST["failure"]) && (is_numeric($_REQUEST["failure"]))) {
+	}
+	elseif (isset($_REQUEST["failure"]) && (is_numeric($_REQUEST["failure"]))) {
 		if (util_displayFailureMessage($_REQUEST["failure"])) {
 			;
 		}
-	}elseif(isset($_REQUEST["info"]) && (is_numeric($_REQUEST["info"]))) {
+	}
+	elseif (isset($_REQUEST["info"]) && (is_numeric($_REQUEST["info"]))) {
 		if (util_displayInfoMessage($_REQUEST["info"])) {
 			;
 		}
