@@ -15,6 +15,9 @@
 		unset($_SESSION['isAuthenticated']);
 		unset($_SESSION['fingerprint']);
 		unset($_SESSION['userdata']);
+		unset($_SESSION['eqreserve_id']);
+		$_COOKIE['eqreserve_id'] = "";
+		setcookie("eqreserve_id", "", time()-3600);
 
 		return;
 	}
@@ -22,6 +25,7 @@
 	function util_redirectToAppHome($status = "", $num = 0, $log = 0) {
 		// ensure value conforms to expectations
 		if ($status != "success" && $status != "failure" && $status != "info") {
+			# security: ensure status = ""
 			$status = "";
 		}
 		if ($num > 0 && $log > 0) {
@@ -116,19 +120,6 @@
 
 	function util_generateRequestFingerprint() {
 		util_doEqReserveIdSecurityCheck();
-
-		# MESSAGE FOR CSW FROM DKC
-		# FireFox v 19.02 and v. 20.0 reports infinite loop
-		# See possible solution in REM statement, below
-//		$test = util_doEqReserveIdSecurityCheck();
-//		if ($test) {
-//			return md5(FINGERPRINT_SALT . $_SESSION["eqreserve_id"] .
-//					(isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragent')
-//			);
-//		}
-//		else {
-//			util_wipeSession();
-//		}
 
 		return md5(FINGERPRINT_SALT . $_SESSION["eqreserve_id"] .
 				(isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragent')
