@@ -29,7 +29,6 @@ if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		else {
 			util_redirectToAppHome('failure', 11);
 		}
-
 	}
 	else {
 		// SECTION: must be signed in to view pages; otherwise, redirect to index splash page

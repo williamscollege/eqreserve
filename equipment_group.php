@@ -238,7 +238,7 @@ if ($IS_AUTHENTICATED) {
 	# admin or manager: is allowed to edit fields
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>
-		<a href="#" id="toggleManagerOptions" class="btn btn-mini btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Form</a>
+		<a href="#" id="toggleManagerOptions" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Form</a>
 		<div id="managerEdit" class="hide">
 			<form action="ajax_edit_eq_group.php" id="formEditEqGroup" class="form-horizontal" name="formEditEqGroup" method="post">
 				<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
