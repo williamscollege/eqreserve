@@ -49,35 +49,35 @@ if ($IS_AUTHENTICATED) {
 	}
 
 	# get list of all managers for this group
-	$perms = Permission::getAllFromDb(['eq_group_id' => 201, 'role_id' => 2], $DB);
-	//	echo "<pre>Permissions matching manager status:"; print_r($perms); echo "</pre>";
+	$Requested_EqGroup->loadPermissions();
+
 	$managers = [];
-	foreach ($perms as $key => $val) {
-		//		echo $perms[$key]->entity_type;
-		if ($perms[$key]->entity_type == 'user') {
-			$one            = User::getOneFromDb(['user_id' => $perms[$key]->entity_id], $DB);
-			//$managers[$key] = $one->fname . ' ' . $one->lname;
-			$managers[$key] = array('name'=>$one->fname . ' ' . $one->lname, 'email'=>$one->email);
-		}
-		elseif ($perms[$key]->entity_type == 'inst_group') {
-			$one            = InstGroup::getOneFromDb(['inst_group_id' => $perms[$key]->entity_id], $DB);
-//			$managers[$key] = $one->name;
-			$managers[$key] = array('name'=>$one->name);
+	foreach ($Requested_EqGroup->permissions as $perm) {
+		if ($perm->role_id == 1) {
+			if ($perm->entity_type == 'user') {
+				$one = User::getOneFromDb(['user_id' => $perm->entity_id], $DB);
+				array_push($managers, array('name' => $one->fname . ' ' . $one->lname, 'email' => $one->email));
+			}
+			elseif ($perm->entity_type == 'inst_group') {
+				$one = InstGroup::getOneFromDb(['inst_group_id' => $perm->entity_id], $DB);
+				array_push($managers, array('name' => $one->name));
+			}
 		}
 	}
 
-//	echo "<pre>Names of User managers:"; print_r($managers); echo "</pre>";
+	//	echo "<pre>Names of User managers:"; print_r($managers); echo "</pre>";
 	$managersList = "";
 	for ($i = 0, $size = count($managers); $i < $size; ++$i) {
 		if ($i > 0) {
 			$managersList .= ', ';
 		}
-		if(isset($managers[$i]['email'])){
+		if (isset($managers[$i]['email'])) {
 			# users have an email address; include it as HTML output
 			$managersList .= "[<a href=\"mailto:" . $managers[$i]['email'] . "\" title=\"contact: " . $managers[$i]['email'] . "\"><i class=\"icon-envelope\"></i> " . $managers[$i]['name'] . "</a>]";
-		} else{
+		}
+		else {
 			# inst_groups have no email address
-					$managersList .= "[" . $managers[$i]['name'] . "]";
+			$managersList .= "[" . $managers[$i]['name'] . "]";
 		}
 
 	}
@@ -223,7 +223,6 @@ if ($IS_AUTHENTICATED) {
 			// ***************************
 			function cleanUpForm(formName) {
 				// reset form
-				$("#" + formName).trigger("reset");
 				validator.resetForm();
 				// manually remove input highlights
 				$(".control-group").removeClass('success').removeClass('error');

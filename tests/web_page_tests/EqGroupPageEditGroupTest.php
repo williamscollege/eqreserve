@@ -75,7 +75,6 @@
 //			$this->assertText("View Reservations as List");
 //			$this->assertText("Delete this Equipment Group");
 
-//			exit;
 		}
 
 		function TestBasicPageElementsUser() {

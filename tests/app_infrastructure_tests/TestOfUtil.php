@@ -24,7 +24,9 @@ class TestOfUtil extends UnitTestCase {
         $_SESSION['isAuthenticated'] = 'foo';
         $_SESSION['fingerprint'] = 'bar';
         $_SESSION['userdata'] = array('baz');
-        
+
+		$this->expectError("Cannot modify header information - headers already sent");
+
         util_wipeSession();
 
         $this->assertFalse(isset($_SESSION['isAuthenticated']));

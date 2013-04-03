@@ -226,6 +226,18 @@
             $this->assertEqual($eg->eq_items[4]->eq_group->eq_group_id,201);            
         }
 
+		public function TestOfLoadPermissions(){
+			$eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+			$this->assertEqual($eg->name,'testEqGroup1');
+			$this->assertNull($eg->permissions);
+
+			$eg->loadPermissions();
+
+			$this->assertTrue(is_array($eg->permissions));
+			$this->assertEqual(count($eg->permissions), 4);
+
+		}
+
 	}
 
 
