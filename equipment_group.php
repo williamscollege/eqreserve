@@ -82,7 +82,7 @@ if ($IS_AUTHENTICATED) {
 	}
 
 	?>
-	<script type="text/javascript" xmlns="http://www.w3.org/1999/html">
+	<script type="text/javascript">
 		$(document).ready(function () {
 			// default conditions
 
@@ -376,31 +376,6 @@ if ($IS_AUTHENTICATED) {
 	//		echo "<pre>Requested_EqGroup:"; print_r($Requested_EqGroup); echo "</pre>";
 	//		echo "<pre>USER:"; print_r($USER); echo "</pre>";
 
-	# convert minute to pretty words using: days, hours, minutes
-	function minutesToWords($minutes) {
-		$ret = "";
-
-		/*** get the days ***/
-		$days = intval(intval($minutes) / (60 * 24));
-		if ($days > 0) {
-			$ret .= "$days days ";
-		}
-
-		/*** get the hours ***/
-		$hours = (intval($minutes) / 60) % 24;
-		if ($hours > 0) {
-			$ret .= "$hours hours ";
-		}
-
-		/*** get the minutes ***/
-		$minutes = intval($minutes) % 60;
-		if ($minutes > 0) {
-			$ret .= "$minutes minutes ";
-		}
-
-		return $ret;
-	}
-
 	# Show this to all authenticated users
 	echo "<div id=\"managerView\">\n";
 	echo "<h3>Equipment Group: " . $Requested_EqGroup->name . "</h3>\n";
@@ -408,9 +383,9 @@ if ($IS_AUTHENTICATED) {
 	echo "<p>Managed by: " . $managersList . "</p>\n";
 	echo "<h3>Reservation Rules</h3>\n";
 	echo "Start time <span class=\"label label-inverse\">" . $Requested_EqGroup->start_minute . " minutes</span>: Reservations must start and end on one of these minutes of the hour.<br />\n";
-	echo "Min duration <span class=\"label label-inverse\">" . minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span>: The minimum length of time that can be reserved.<br />\n";
-	echo "Max duration <span class=\"label label-inverse\">" . minutesToWords($Requested_EqGroup->max_duration_minutes) . " </span>: The maximum length of time that can be reserved.<br />\n";
-	echo "Duration unit <span class=\"label label-inverse\">" . minutesToWords($Requested_EqGroup->duration_chunk_minutes) . " </span>: The interval unit duration of time that can be reserved.<br />\n";
+	echo "Min duration <span class=\"label label-inverse\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span>: The minimum length of time that can be reserved.<br />\n";
+	echo "Max duration <span class=\"label label-inverse\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . " </span>: The maximum length of time that can be reserved.<br />\n";
+	echo "Duration unit <span class=\"label label-inverse\">" . util_minutesToWords($Requested_EqGroup->duration_chunk_minutes) . " </span>: The interval unit duration of time that can be reserved.<br />\n";
 	echo "</div>";
 	?>
 
@@ -425,9 +400,68 @@ if ($IS_AUTHENTICATED) {
 				<label class="control-label" for=""></label>
 
 				<div class="controls">
-
+					TODO: Initial Time Reservation Fields will go here.
 				</div>
 			</div>
+
+			<?php
+			# Load EQSubgroups
+			$Requested_EqGroup->loadEqSubgroups();
+			//			util_prePrintR($Requested_EqGroup);
+
+			$jsPopovers = "";
+			foreach ($Requested_EqGroup->eq_subgroups as $key) {
+				# Subgroups
+				echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a></h4>";
+
+				# Create javascript string for: subgroups
+				$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'top', trigger: 'hover'});";
+
+				# Items
+				$key->loadEqItems();
+				if(count($key->eq_items) == 0){
+					echo "<p>No items are associated with this subgroup.</p>";
+				} else {
+				foreach ($key->eq_items as $item) {
+					?>
+					<div class="control-group">
+						<label class="control-label" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" />
+							<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
+
+						<div class="controls">
+							<div class="progress span8">
+								<div class="bar bar-info" style="width: 35%;"></div>
+								<div class="bar bar-warning" style="width: 20%;"></div>
+								<div class="bar bar-success" style="width: 35%;"></div>
+								<div class="bar bar-danger" style="width: 10%;"></div>
+							</div>
+						</div>
+					</div>
+					<?php
+					# Create javascript string for: items
+					$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'top', trigger: 'hover'});";
+				}
+				}
+				# Button: Add an Item
+				if ($USER->flag_is_system_admin || $is_group_manager) {
+					echo "<button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button><br />";
+				}
+
+			}
+			?>
+
+			<script type="text/javascript">
+				$(document).ready(function () {
+					// ***************************
+					// Popover Listeners
+					// ***************************
+					$('#subGroup301').popover({placement: 'top', trigger: 'hover'});
+					$('#item403').popover({placement: 'top', trigger: 'hover'});
+					<?php
+						echo $jsPopovers;
+					?>
+				});
+			</script>
 
 		</div>
 	</form>

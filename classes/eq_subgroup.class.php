@@ -1,6 +1,7 @@
 <?php
 	require_once dirname(__FILE__) . '/db_linked.class.php';
 	require_once dirname(__FILE__) . '/eq_group.class.php';
+	require_once dirname(__FILE__) . '/eq_item.class.php';
 
 	class EqSubgroup extends Db_Linked {
 		public static $fields = array('eq_subgroup_id', 'eq_group_id', 'name', 'descr', 'ordering', 'flag_delete');

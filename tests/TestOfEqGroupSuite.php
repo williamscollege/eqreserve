@@ -15,6 +15,7 @@
 
 			# Tests: Equipment Group
 			$this->addFile('web_page_tests/EqGroupPageEditGroupTest.php');
+			$this->addFile('web_page_tests/EqGroupPageReservationsTest.php');
 
 		}
 	}
