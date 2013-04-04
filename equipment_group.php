@@ -65,7 +65,6 @@ if ($IS_AUTHENTICATED) {
 		}
 	}
 
-	//	echo "<pre>Names of User managers:"; print_r($managers); echo "</pre>";
 	$managersList = "";
 	for ($i = 0, $size = count($managers); $i < $size; ++$i) {
 		if ($i > 0) {
@@ -91,15 +90,17 @@ if ($IS_AUTHENTICATED) {
 			// Listeners
 			// ***************************
 
-//				// Show ajax form
-//				$("#btnDisplayEditEqGroup").click(function () {
-//					$("#btnDisplayEditEqGroup").addClass('hide');
-//					$("#eqGroupFields").removeClass('hide');
-//				});
-
 			// Toggle Manager View (text or editable form)
 			$("#toggleManagerOptions").click(function () {
+				// toggle form or plain-text
 				$("#managerView, #managerEdit").toggleClass("hide");
+				// toggle button label
+				if ($("#managerView").hasClass('hide')) {
+					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Show Plain Text');
+				}
+				else {
+					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Form');
+				}
 			});
 
 			// Update form values
@@ -205,7 +206,6 @@ if ($IS_AUTHENTICATED) {
 								// document.write(data);
 								// create visual indicator to show success
 								$("#btnSubmitEditEqGroup").text('Saved!');
-								// TODO: FIX weird caching issue: visible data reverts to original after successful updateDB()
 							}
 							else {
 								// show error
