@@ -420,12 +420,12 @@ if ($IS_AUTHENTICATED) {
 				# Items
 				$key->loadEqItems();
 				if(count($key->eq_items) == 0){
-					echo "<p>No items are associated with this subgroup.</p>";
+					echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
 				} else {
 				foreach ($key->eq_items as $item) {
 					?>
 					<div class="control-group">
-						<label class="control-label" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" />
+						<label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" />
 							<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
 
 						<div class="controls">
@@ -444,7 +444,7 @@ if ($IS_AUTHENTICATED) {
 				}
 				# Button: Add an Item
 				if ($USER->flag_is_system_admin || $is_group_manager) {
-					echo "<button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button><br />";
+					echo "<div class=\"offset1\"><button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button></div><br />";
 				}
 
 			}
