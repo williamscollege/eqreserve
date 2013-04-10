@@ -185,3 +185,91 @@
 		echo "</pre>";
 		return TRUE;
 	}
+
+    /**
+     * takes: a time string of the form YYYY-MM-DD HH:MI:SS (i.e. as it comes from MySQL)
+     * returns: a hash with the following keys-
+     * YYYY - the year
+     * Y - the year
+     * MM - the month with 2 characters (leading 0)
+     * M - the month with 1 character if < 10
+     * DD - the day with 2 characters
+     * D - the day with 1 character if < 10
+     * hh - the 24-clock hour with 2 characters
+     * h - the 24-clock hour with 1 character if < 10
+     * hhap - the 12-clock with 2 characters
+     * hap - the 12-clock with 1 character if < 10
+     * ap - AM or PM
+     * mm - the minutes with 2 characters
+     * m - the minutes with 1 character if < 10
+     * ss - the seconds with 2 characters
+     * s - the seconds with 1 character if < 10
+     */
+    function util_processTimeString($ts) {
+        $parts = preg_split('/[-: ]/',$ts);
+
+        $res = [
+            'YYYY' => $parts[0],
+            'Y' => $parts[0],
+            'MM' => $parts[1],
+            'M' => $parts[1],
+            'DD' => $parts[2],
+            'D' => $parts[2],
+            'hh' => $parts[3],
+            'h' => $parts[3],
+            'hhap' => $parts[3],
+            'hap' => $parts[3],
+            'ap' => ($parts[3] < 12)?'AM':'PM',
+            'mi' => $parts[4],
+            'm' => $parts[4],
+            'ss' => $parts[5],
+            's' => $parts[5]
+        ];
+
+        if ($res['hhap'] > 12) { $res['hhap'] -= 12; }
+        if ($res['hhap'] < 1) { $res['hhap'] = '12'; }
+        if ($res['hap'] > 12) { $res['hap'] -= 12; }
+        if ($res['hap'] < 1) { $res['hap'] = '12'; }
+
+        $res['M'] = preg_replace('/^0+/','',$res['M']);
+
+        $res['D'] = preg_replace('/^0+/','',$res['D']);
+
+        $res['h'] = preg_replace('/^0+/','',$res['h']);
+        if (! $res['h']) { $res['h'] = '0'; }
+
+        $res['hap'] = preg_replace('/^0+/','',$res['hap']);
+        if (! $res['hap']) { $res['hap'] = '0'; }
+
+        $res['m'] = preg_replace('/^0+/','',$res['m']);
+        if (! $res['m']) { $res['m'] = '0'; }
+
+        $res['s'] = preg_replace('/^0+/','',$res['s']);
+        if (! $res['s']) { $res['s'] = '0'; }
+
+        $res['date'] = $res['Y'].'/'.$res['M'].'/'.$res['D'];
+
+        return $res;
+    }
+
+    function util_timeRangeString($tstart,$tstop) {
+        if (! is_array($tstart)) { $tstart = util_processTimeString($tstart); }
+        if (! is_array($tstop)) { $tstop = util_processTimeString($tstop); }
+
+        $first_part = $tstart['date'].' '.$tstart['hap'].':'.$tstart['mi'];
+        $second_part = '';
+
+        if ($tstart['date'] != $tstop['date']) {
+            $first_part .= ' '.$tstart['ap'];
+            $second_part = $tstop['date'].' '.$tstop['hap'].':'.$tstop['mi'].' '.$tstop['ap'];
+        }
+        elseif ($tstart['ap'] != $tstop['ap']) {
+            $first_part .= ' '.$tstart['ap'];
+            $second_part = $tstop['hap'].':'.$tstop['mi'].' '.$tstop['ap'];
+        }
+        else {
+            $second_part = $tstop['hap'].':'.$tstop['mi'].' '.$tstop['ap'];
+        }
+
+        return "$first_part-$second_part";
+    }

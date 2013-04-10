@@ -338,6 +338,14 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual($pkHash[11]->dblinktest_id,11);
     }
 
+    function testStartListItem() {
+        $this->assertEqual('<li>',Trial_Db_Linked::listItemTag());
+        $this->assertEqual('<li id="idfoo">',Trial_Db_Linked::listItemTag('idfoo'));
+        $this->assertEqual('<li class="class1foo class2foo">',Trial_Db_Linked::listItemTag('',['class1foo','class2foo']));
+        $this->assertEqual('<li id="idfoo" class="class1foo class2foo">',Trial_Db_Linked::listItemTag('idfoo',['class1foo','class2foo']));
+        $this->assertEqual('<li foostatus="statusfoo" typebar="bartype">',Trial_Db_Linked::listItemTag('',[],['foostatus'=>'statusfoo','typebar'=>'bartype']));
+        $this->assertEqual('<li id="idfoo" class="class1foo class2foo" foostatus="statusfoo" typebar="bartype">',Trial_Db_Linked::listItemTag('idfoo',['class1foo','class2foo'],['foostatus'=>'statusfoo','typebar'=>'bartype']));
+    }
 }
 
 

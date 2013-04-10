@@ -53,14 +53,14 @@
 			usort($this->time_blocks, "TimeBlock::cmp");
 		}
 
-//        public function toListItem($id='',$class_ar=[],$other_attr_hash=[]) {
-//            $li = "<li id=\"$id\" class=\"".implode(' ',$class_ar) .'"';
-//            foreach ($other_attr_hash as $k=>$v) {
-//                $li .= " $k=\"$v\"";
-//            }
-//            $li .= '>';
-//            $li .= '</li>';
-//        }
+        public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
+            if (! $this->schedule) { $this->loadSchedule(); }
+            if (! $this->eq_item) { $this->loadEqItem(); }
+            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
+            $li .= '<a href="reservation.php?reservation='.$this->reservation_id.'">'.$this->eq_item->name.'</a> '.$this->schedule->toString();
+            $li .= '</li>';
+            return $li;
+        }
 	}
 
 ?>

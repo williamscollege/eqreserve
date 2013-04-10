@@ -74,6 +74,19 @@
             $this->assertEqual($tg->reservations[1]->reservation_id,810);
         }
 
+        function testScheduleToString() {
+            $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
+            $this->assertTrue($s->matchesDb);
+
+            $this->assertEqual($s->toString(),
+                               '2013/3/22 3:00-3:45 PM');
+
+            $s = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB);
+            $this->assertTrue($s->matchesDb);
+            $this->assertEqual($s->toString(),
+                               '[2013/3/26 10:30-11:30 AM], [2013/4/2 10:30-11:30 AM], [2013/4/9 10:30-11:30 AM]');
+
+        }
     }
 
 ?>

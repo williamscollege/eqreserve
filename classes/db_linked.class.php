@@ -453,6 +453,20 @@
 			}
 		}
 
+        public static function listItemTag($id='',$class_ar=[],$other_attr_hash=[]) {
+            $li = '<li';
+            if ($id) {
+                $li .= " id=\"$id\"";
+            }
+            if ($class_ar) {
+                $li .= " class=\"".implode(' ',$class_ar) .'"';
+            }
+            foreach ($other_attr_hash as $k=>$v) {
+                $li .= " $k=\"$v\"";
+            }
+            $li .= '>';
+            return $li;
+        }
 	}
 
 ?>

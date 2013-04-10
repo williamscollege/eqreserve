@@ -74,6 +74,16 @@
             $this->assertEqual($r->time_blocks[2]->time_block_id,904);
         }
 
+        function testReservationToListItemLinked() {
+            $r = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
+            $r->loadEqItem();
+            $r->loadSchedule();
+
+            $r2 = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
+
+            $this->assertEqual($r2->toListItemLinked(),
+                               '<li><a href="reservation.php?reservation='.$r->reservation_id.'">'.$r->eq_item->name.'</a> '.$r->schedule->toString().'</li>');
+        }
     }
 
 ?>

@@ -33,6 +33,10 @@
 			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
 			usort($this->reservations, "Reservation::cmp");
 		}
+
+        public function toString() {
+            return util_timeRangeString($this->start_time,$this->end_time);
+        }
 	}
 
 ?>

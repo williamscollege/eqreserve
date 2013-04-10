@@ -51,6 +51,22 @@ require_once dirname(__FILE__) . '/reservation.class.php';
 			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
 			usort($this->reservations, "Reservation::cmp");
 		}
+
+        public function toString() {
+            if (! $this->time_blocks) { $this->loadTimeBlocks(); }
+            if (count($this->time_blocks) == 0) {
+                return 'no time blocks';
+            }
+            if (count($this->time_blocks) == 1) {
+                return $this->time_blocks[0]->toString();
+            }
+            $ret = '';
+            foreach ($this->time_blocks as $tb) {
+                if ($ret != '') { $ret .= ', '; }
+                $ret .= '['.$tb->toString().']';
+            }
+            return $ret;
+        }
 	}
 
 ?>
