@@ -2,6 +2,7 @@
 	require_once dirname(__FILE__) . '/db_linked.class.php';
 	require_once dirname(__FILE__) . '/inst_group.class.php';
 	require_once dirname(__FILE__) . '/eq_group.class.php';
+	require_once dirname(__FILE__) . '/schedule.class.php';
 
 	class User extends Db_Linked {
 		public static $fields = array('user_id', 'username', 'fname', 'lname', 'sortname', 'email', 'advisor', 'notes', 'flag_is_system_admin', 'flag_is_banned', 'flag_delete');

@@ -42,7 +42,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="institutionInfo">Institution Info</label>
+			<label class="control-label" for="institutionInfo">Institution Membership</label>
 
 			<div class="controls">
 				<ul class="unstyled" id="institutionInfo">
@@ -61,10 +61,18 @@
 			<div class="controls">
 				<ul class="unstyled" id="equipmentGroups">
 					<?php
-					foreach ($USER->eq_groups as $eg) {
-						// echo "<input type=\"text\" disabled=\"disabled\" value=\"" . $eg->name . "\" /><br/>\n";
-						echo "<li>" . $eg->name . "</li>\n";
-					}
+                    if (count($USER->eq_groups) > 0) {
+                        foreach ($USER->eq_groups as $ueg) {
+                            echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"" . $ueg->name . "\">" . $ueg->name . "</a>: " . $ueg->descr;
+                            if ($ueg->permission->role->priority == 1) {
+                                echo " (You manage this group)";
+                            }
+                            echo "</li>";
+                        }
+                    }
+                    else {
+                        echo "<li>You do not have access to any equipment groups.</li>";
+                    }
 					?>
 				</ul>
 			</div>
@@ -73,7 +81,21 @@
 			<label class="control-label" for="reservations">Reservations</label>
 
 			<div class="controls">
-
+                <ul class="unstyled" id="equipmentGroups">
+                    <?php
+                    $USER->loadReservations();
+                    if (count($USER->reservations) > 0) {
+                        foreach ($USER->reservations as $resv) {
+                            $resv->loadEqItem();
+                            echo "<li><a href=\"reservation.php?eid=" . $resv->reservation_id . "\" title=\"" . $resv->eq_item->name . "\">" . $resv->eq_item->name . "</a>: " . 'reservation details placeholder';
+                            echo "</li>";
+                        }
+                    }
+                    else {
+                        echo "<li>You do not have any reservations.</li>";
+                    }
+                    ?>
+                </ul>
 			</div>
 		</div>
 		<div class="control-group">

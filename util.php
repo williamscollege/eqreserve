@@ -53,6 +53,7 @@
 		$screen_messages = [
 			10   => "Please sign in."
 			, 11 => "Sign in failed."
+            , 20 => "Missing required parameter: equipment group id (eid)"
 			, 50 => "You do not have access to that group."
 			, 51 => "Record does not exist in database"
 			, 52 => "Record already exists in database"

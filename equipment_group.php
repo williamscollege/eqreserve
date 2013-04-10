@@ -8,6 +8,9 @@ if ($IS_AUTHENTICATED) {
 	// SECTION: authenticated
 
 	// fetch querystring
+    if (! array_key_exists('eid',$_REQUEST)) {
+        util_redirectToAppHome('failure', 20);
+    }
 	$eid = intval($_REQUEST["eid"]);
 
 	// declare variables

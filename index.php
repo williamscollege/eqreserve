@@ -181,7 +181,7 @@
 				}
 			}
 			else {
-				echo "<li>You do not belong to any equipment groups.</li>";
+				echo "<li>You do not have access to any equipment groups.</li>";
 			}
 			echo "</ul>";
 		}
@@ -198,7 +198,7 @@
 
 			<p>This is our system for scheduling equipment reservations.</p>
 
-			<p>To sign in, please use your Williams username and password.</p>
+			<p>To sign in, please use your <?php echo LANG_INSTITUTION_NAME; ?> username and password.</p>
 
 		</div>
 	<?php

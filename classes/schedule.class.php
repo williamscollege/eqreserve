@@ -1,4 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '/time_block.class.php';
+require_once dirname(__FILE__) . '/reservation.class.php';
+
 	class Schedule extends Db_Linked {
 		public static $fields = array('schedule_id', 'type', 'user_id', 'notes', 'flag_delete');
 		public static $primaryKeyField = 'schedule_id';

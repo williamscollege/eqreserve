@@ -32,10 +32,10 @@
 
 		/*
 		 * NOTE: potentially serious inefficiencies here as we're doing an 'extra' db call to load the time block group
-		 * so that we can get the user and list of time blocks. We gout get aroudn this by overriding the getOne and getAll
+		 * so that we can get the user and list of time blocks. We could get around this by overriding the getOne and getAll
 		 * static functions to do more complex fetching and object building. However, that's a messy and error-prone enough
-		 * process that we're just living with this inefficiency untiland unless it becomes clear that it's a problem on
-		 * the useability end (as opposed to just an aesthetics of design / coding issue).
+		 * process that we're just living with this inefficiency until-and-unless it becomes clear that it's a problem on
+		 * the usability end (as opposed to just an aesthetics of design / coding issue).
 		 */
 
 		public function loadUser() {
@@ -52,6 +52,15 @@
 			$this->time_blocks = TimeBlock::getAllFromDb(['schedule_id' => $this->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
 			usort($this->time_blocks, "TimeBlock::cmp");
 		}
+
+//        public function toListItem($id='',$class_ar=[],$other_attr_hash=[]) {
+//            $li = "<li id=\"$id\" class=\"".implode(' ',$class_ar) .'"';
+//            foreach ($other_attr_hash as $k=>$v) {
+//                $li .= " $k=\"$v\"";
+//            }
+//            $li .= '>';
+//            $li .= '</li>';
+//        }
 	}
 
 ?>

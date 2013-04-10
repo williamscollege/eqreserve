@@ -148,7 +148,7 @@ if ($IS_AUTHENTICATED) { // SECTION: is signed in
 				<?php
 				if ($IS_AUTHENTICATED) {
 					?>
-					<form id="frmSignout" class="navbar-form pull-right" method="post" action="">
+					<form id="frmSignout" class="navbar-form pull-right" method="post" action="index.php">
 						<span class="muted">Signed in: <a href="account_management.php" title="My Account"><?php echo $_SESSION['userdata']['username']; ?></a></span>.
 						<input type="submit" id="submit_signout" class="btn" name="submit_signout" value="Sign out" />
 					</form>
