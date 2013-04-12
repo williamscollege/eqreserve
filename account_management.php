@@ -63,11 +63,7 @@
 					<?php
                     if (count($USER->eq_groups) > 0) {
                         foreach ($USER->eq_groups as $ueg) {
-                            echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"" . $ueg->name . "\">" . $ueg->name . "</a>: " . $ueg->descr;
-                            if ($ueg->permission->role->priority == 1) {
-                                echo " (You manage this group)";
-                            }
-                            echo "</li>";
+                            echo $ueg->toListItemLinked();
                         }
                     }
                     else {
@@ -86,9 +82,7 @@
                     $USER->loadReservations();
                     if (count($USER->reservations) > 0) {
                         foreach ($USER->reservations as $resv) {
-                            $resv->loadEqItem();
-                            echo "<li><a href=\"reservation.php?eid=" . $resv->reservation_id . "\" title=\"" . $resv->eq_item->name . "\">" . $resv->eq_item->name . "</a>: " . 'reservation details placeholder';
-                            echo "</li>";
+                            echo $resv->toListItemLinked();
                         }
                     }
                     else {
