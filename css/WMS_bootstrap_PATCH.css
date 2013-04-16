@@ -42,3 +42,7 @@ label.error {
 .user-select {
     width: 300px;
 }
+
+.cursorPointer {
+	cursor: pointer;
+}
