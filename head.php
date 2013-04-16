@@ -89,12 +89,15 @@ if ($IS_AUTHENTICATED) { // SECTION: is signed in
 	</style>
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css">
 	<!-- CSS: Plugins -->
+	<link rel="stylesheet" href="<?php echo URL_JQUERYUI_CSS_CDN; ?>" />
+	<link rel="stylesheet" href="js/jquery/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" type="text/css" media="all">
 	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
 	<script src="<?php echo URL_JQUERY_CDN; ?>"></script>
-	<!--<script src="<?php echo URL_JQUERYUI_CDN; ?>"></script>-->
+	<script src="<?php echo URL_JQUERYUI_CDN; ?>"></script>
 	<!-- jQuery: Plugins -->
 	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
 	<script src="<?php echo URL_JQUERY_VALIDATE_CDN; ?>"></script>
 </head>
 <body>

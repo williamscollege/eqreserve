@@ -18,6 +18,7 @@
 	# external URLs
 	define('URL_JQUERY_CDN', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
 	define('URL_JQUERYUI_CDN', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
+	define('URL_JQUERYUI_CSS_CDN', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dot-luv/jquery-ui.min.css');
 	define('URL_JQUERY_VALIDATE_CDN', '//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js');
 
 	# these are used in the automated tests.

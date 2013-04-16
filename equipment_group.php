@@ -8,9 +8,9 @@ if ($IS_AUTHENTICATED) {
 	// SECTION: authenticated
 
 	// fetch querystring
-    if (! array_key_exists('eid',$_REQUEST)) {
-        util_redirectToAppHome('failure', 20);
-    }
+	if (!array_key_exists('eid', $_REQUEST)) {
+		util_redirectToAppHome('failure', 20);
+	}
 	$eid = intval($_REQUEST["eid"]);
 
 	// declare variables
@@ -103,6 +103,19 @@ if ($IS_AUTHENTICATED) {
 				}
 				else {
 					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Form');
+				}
+			});
+
+			// Toggle Reserve Equipment View (show/hide form)
+			$("#toggleReserveEquipment").click(function () {
+				// toggle form or plain-text
+				$("#reservationShow, #reservationHide").toggleClass("hide");
+				// toggle button label
+				if ($("#reservationShow").hasClass('hide')) {
+					$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+				}
+				else {
+					$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
 				}
 			});
 
@@ -394,80 +407,137 @@ if ($IS_AUTHENTICATED) {
 
 <br />
 	<h3>Reserve Equipment</h3>
-	<form action="reservation.php" id="formReservation" class="form-horizontal" name="formReservation" method="post">
-		<input type="hidden" id="resGroupID" value="" />
+	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-left"><i class="icon-white icon-folder-open"></i> Reserve Equipment: Show
+		Form</a><p><br /><br /></p>
+	<div id="reservationShow" class="hide">
+		<form action="reservation.php" id="formReservation" class="form-horizontal" name="formReservation" method="post">
+			<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
-		<div id="resGroupFields">
-			<legend>Some Instruction Header:</legend>
-			<div class="control-group">
-				<label class="control-label" for=""></label>
+			<div id="reservationGroupFields">
+				<div class="control-group">
+					<label class="control-label" for="reservationStartDate">Start Date</label>
 
-				<div class="controls">
-					TODO: Initial Time Reservation Fields will go here.
-				</div>
-			</div>
-
-			<?php
-			# Load EQSubgroups
-			$Requested_EqGroup->loadEqSubgroups();
-			//			util_prePrintR($Requested_EqGroup);
-
-			$jsPopovers = "";
-			foreach ($Requested_EqGroup->eq_subgroups as $key) {
-				# Subgroups
-				echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a></h4>";
-
-				# Create javascript string for: subgroups
-				$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'top', trigger: 'hover'});";
-
-				# Items
-				$key->loadEqItems();
-				if(count($key->eq_items) == 0){
-					echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
-				} else {
-				foreach ($key->eq_items as $item) {
-					?>
-					<div class="control-group">
-						<label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" />
-							<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
-
-						<div class="controls">
-							<div class="progress span8">
-								<div class="bar bar-info" style="width: 35%;"></div>
-								<div class="bar bar-warning" style="width: 20%;"></div>
-								<div class="bar bar-success" style="width: 35%;"></div>
-								<div class="bar bar-danger" style="width: 10%;"></div>
-							</div>
+					<div class="controls">
+						<div class="input-append">
+							<input type="text" id="reservationStartDate" class="input-small" maxlength="10" />
+							<span id="iconHackForceStartDate" class="add-on"><i class="icon-calendar"></i></span>
+						</div>
+						&nbsp;&nbsp;Time
+						<!-- REMOVE LATER: http://jdewit.github.io/bootstrap-timepicker/ -->
+						<div class="input-append bootstrap-timepicker">
+							<input id="reservationStartTime" type="text" class="input-small" value="<?php #echo $Requested_EqGroup->start_time; ?>" maxlength="8" />
+							<span class="add-on"><i class="icon-time"></i></span>
 						</div>
 					</div>
-					<?php
-					# Create javascript string for: items
-					$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'top', trigger: 'hover'});";
-				}
-				}
-				# Button: Add an Item
-				if ($USER->flag_is_system_admin || $is_group_manager) {
-					echo "<div class=\"offset1\"><button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button></div><br />";
-				}
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="reservationEndDate">End Date</label>
 
-			}
-			?>
+					<div class="controls">
+						<div class="input-append">
+							<input type="text" id="reservationEndDate" class="input-small" maxlength="10" />
+							<span id="iconHackForceEndDate" class="add-on"><i class="icon-calendar"></i></span>
+						</div>
+						&nbsp;&nbsp;Time
+						<div class="input-append bootstrap-timepicker">
+							<input id="reservationEndTime" type="text" class="input-small" value="<?php #echo $Requested_EqGroup->end_time; ?>" maxlength="8" />
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</div>
+				</div>
 
-			<script type="text/javascript">
-				$(document).ready(function () {
-					// ***************************
-					// Popover Listeners
-					// ***************************
-					$('#subGroup301').popover({placement: 'top', trigger: 'hover'});
-					$('#item403').popover({placement: 'top', trigger: 'hover'});
-					<?php
-						echo $jsPopovers;
-					?>
-				});
-			</script>
+				<script>
+					$(function () {
+						// calendar
+						$("#reservationStartDate").datepicker();
+						$("#reservationEndDate").datepicker();
 
-		</div>
-	</form>
+						// calendar: hack to make icon trigger
+						$("#iconHackForceStartDate").click(function () {
+							$("#reservationStartDate").datepicker('show');
+						});
+						$("#iconHackForceEndDate").click(function () {
+							$("#reservationEndDate").datepicker('show');
+						});
+
+						// timepicker
+						$("#reservationStartTime").timepicker({
+							minuteStep: 15,
+							defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
+							showMeridian: true  /* true is 12hr mode, false is 12hr mode */
+						});
+						$("#reservationEndTime").timepicker({
+							minuteStep: 15,
+							defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
+							showMeridian: true  /* true is 12hr mode, false is 12hr mode */
+						});
+					});
+				</script>
+
+
+				<?php
+				# Load EQSubgroups
+				$Requested_EqGroup->loadEqSubgroups();
+				//			util_prePrintR($Requested_EqGroup);
+
+				$jsPopovers = "";
+				foreach ($Requested_EqGroup->eq_subgroups as $key) {
+					# Subgroups
+					echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a></h4>";
+
+					# Create javascript string for: subgroups
+					$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'top', trigger: 'hover'});";
+
+					# Items
+					$key->loadEqItems();
+					if (count($key->eq_items) == 0) {
+						echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
+					}
+					else {
+						foreach ($key->eq_items as $item) {
+							?>
+							<div class="control-group">
+								<label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" />
+									<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
+
+								<div class="controls">
+									<div class="progress span8">
+										<div class="bar bar-info" style="width: 35%;"></div>
+										<div class="bar bar-warning" style="width: 20%;"></div>
+										<div class="bar bar-success" style="width: 35%;"></div>
+										<div class="bar bar-danger" style="width: 10%;"></div>
+									</div>
+								</div>
+							</div>
+							<?php
+							# Create javascript string for: items
+							$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'top', trigger: 'hover'});";
+						}
+					}
+					# Button: Add an Item
+					if ($USER->flag_is_system_admin || $is_group_manager) {
+						echo "<div class=\"offset1\"><button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button></div><br />";
+					}
+
+				}
+				?>
+
+				<script type="text/javascript">
+					$(document).ready(function () {
+						// ***************************
+						// Popover Listeners
+						// ***************************
+						$('#subGroup301').popover({placement: 'top', trigger: 'hover'});
+						$('#item403').popover({placement: 'top', trigger: 'hover'});
+						<?php
+							echo $jsPopovers;
+						?>
+					});
+				</script>
+
+			</div>
+		</form>
+	</div>
 	<?php
 	require_once('foot.php');
 }
