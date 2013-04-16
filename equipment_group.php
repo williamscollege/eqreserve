@@ -75,22 +75,6 @@ if ($IS_AUTHENTICATED) {
         }
 	}
 
-//	$managersList = "";
-//	for ($i = 0, $size = count($managers); $i < $size; ++$i) {
-//		if ($i > 0) {
-//			$managersList .= ', ';
-//		}
-//		if (isset($managers[$i]['email'])) {
-//			# users have an email address; include it as HTML output
-//			$managersList .= "[<a href=\"mailto:" . $managers[$i]['email'] . "\" title=\"contact: " . $managers[$i]['email'] . "\"><i class=\"icon-envelope\"></i> " . $managers[$i]['name'] . "</a>]";
-//		}
-//		else {
-//			# inst_groups have no email address
-//			$managersList .= "[" . $managers[$i]['name'] . "]";
-//		}
-//
-//	}
-
 	?>
 	<script type="text/javascript">
 		$(document).ready(function () {
@@ -103,13 +87,13 @@ if ($IS_AUTHENTICATED) {
 			// Toggle Manager View (text or editable form)
 			$("#toggleManagerOptions").click(function () {
 				// toggle form or plain-text
-				$("#managerView, #managerEdit").toggleClass("hide");
+				$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
 				// toggle button label
 				if ($("#managerView").hasClass('hide')) {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Show Plain Text');
+					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
 				}
 				else {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Form');
+					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Mode');
 				}
 			});
 
@@ -131,7 +115,7 @@ if ($IS_AUTHENTICATED) {
 			$("#btnCancelEditEqGroup").click(function () {
 				cleanUpForm("formEditEqGroup")
 				// hide form
-				$("#managerView, #managerEdit").toggleClass("hide");
+				$("#managerView, #managerEdit .editing-control").toggleClass("hide");
 			});
 
 			// Remove later: debugging jquery validator plugin
@@ -247,7 +231,7 @@ if ($IS_AUTHENTICATED) {
 	# admin or manager: is allowed to edit fields
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>
-		<a href="#" id="toggleManagerOptions" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Form</a>
+		<a href="#" id="toggleManagerOptions" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Mode</a>
 		<div id="managerEdit" class="hide">
 			<form action="ajax_edit_eq_group.php" id="formEditEqGroup" class="form-horizontal" name="formEditEqGroup" method="post">
 				<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
@@ -489,7 +473,7 @@ if ($IS_AUTHENTICATED) {
 				# Subgroups
 				echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a>";
                 if ($USER->flag_is_system_admin || $is_group_manager) {
-                    echo " <button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
+                    echo " <button type=\"button\" class=\"btn btn-primary editing-control hide\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
                 }
                 echo "</h4>\n";
 				# Create javascript string for: subgroups
@@ -528,7 +512,7 @@ if ($IS_AUTHENTICATED) {
 			}
 
             if ($USER->flag_is_system_admin || $is_group_manager) {
-                echo " <button type=\"button\" class=\"btn btn-primary\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
+                echo " <button type=\"button\" class=\"btn btn-primary editing-control hide\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
             }
 
             ?>

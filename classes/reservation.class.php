@@ -61,6 +61,11 @@
             $li .= '</li>';
             return $li;
         }
+
+        public function toString() {
+            if (! $this->eq_item) { $this->loadEqItem(); }
+            return $this->eq_item->name;
+        }
 	}
 
 ?>

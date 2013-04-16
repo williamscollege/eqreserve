@@ -67,6 +67,20 @@ require_once dirname(__FILE__) . '/reservation.class.php';
             }
             return $ret;
         }
+
+        function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
+            if (! $this->reservations) { $this->loadReservations(); }
+
+            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
+            $li .= '<a href="schedule.php?schedule='.$this->schedule_id.'">'.$this->toString().'</a>';
+            $li .= '<ul>';
+            foreach ($this->reservations as $r) {
+                $li .= '<li>'.$r->toString().'</li>';
+            }
+            $li .= '</ul></li>';
+
+            return $li;
+        }
 	}
 
 ?>

@@ -173,11 +173,7 @@
 			$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
 			if (count($UserEqGroups) > 0) {
 				foreach ($UserEqGroups as $ueg) {
-					echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a>: " . $ueg->descr;
-					if ($ueg->permission->role->priority == 1) {
-						echo " (You manage this group)";
-					}
-					echo "</li>";
+                    echo $ueg->toListItemLinked();
 				}
 			}
 			else {

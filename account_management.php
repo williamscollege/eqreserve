@@ -79,14 +79,14 @@
 			<div class="controls">
                 <ul class="unstyled" id="equipmentGroups">
                     <?php
-                    $USER->loadReservations();
-                    if (count($USER->reservations) > 0) {
-                        foreach ($USER->reservations as $resv) {
-                            echo $resv->toListItemLinked();
+                    $USER->loadSchedules();
+                    if (count($USER->schedules) > 0) {
+                        foreach ($USER->schedules as $sched) {
+                            echo $sched->toListItemLinked();
                         }
                     }
                     else {
-                        echo "<li>You do not have any reservations.</li>";
+                        echo "<li>You do not have anything reserved.</li>";
                     }
                     ?>
                 </ul>

@@ -84,6 +84,14 @@
             $this->assertEqual($r2->toListItemLinked(),
                                '<li><a href="reservation.php?reservation='.$r->reservation_id.'">'.$r->eq_item->name.'</a> '.$r->schedule->toString().'</li>');
         }
+
+        function testReservationToString() {
+            $r = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
+            $r->loadEqItem();
+            $r2 = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
+
+            $this->assertEqual($r2->toString(),$r->eq_item->name);
+        }
     }
 
 ?>

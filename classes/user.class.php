@@ -88,7 +88,7 @@
 
 		public function loadSchedules() {
 			if (!$this->user_id) {
-				trigger_error('cannot load time block groups for a user with no user_id');
+				trigger_error('cannot load schedules for a user with no user_id');
 				return;
 			}
 			$this->schedules = [];

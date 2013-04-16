@@ -87,6 +87,19 @@
                                '[2013/3/26 10:30-11:30 AM], [2013/4/2 10:30-11:30 AM], [2013/4/9 10:30-11:30 AM]');
 
         }
+
+        function testScheduleToListItemLinked() {
+            $s = Schedule::getOneFromDb(['schedule_id'=>1009],$this->DB);
+            $this->assertTrue($s->matchesDb);
+
+
+            $lil = $s->toListItemLinked();
+
+
+            $this->assertPattern("/2013\/3\/26 6:00-7:00 PM/",$lil);
+            $this->assertPattern("/testItem1/",$lil);
+            $this->assertPattern("/testItem2/",$lil);
+        }
     }
 
 ?>
