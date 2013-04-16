@@ -496,7 +496,7 @@ if ($IS_AUTHENTICATED) {
 					<div class="controls">
 						<div class="input-append">
 							<input type="text" id="reservationStartDate" class="input-small" maxlength="10" />
-							<span id="iconHackForceStartDate" class="add-on"><i class="icon-calendar"></i></span>
+							<span id="iconHackForceStartDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 						</div>
 						&nbsp;&nbsp;Time
 						<!-- REMOVE LATER: http://jdewit.github.io/bootstrap-timepicker/ -->
@@ -512,7 +512,7 @@ if ($IS_AUTHENTICATED) {
 					<div class="controls">
 						<div class="input-append">
 							<input type="text" id="reservationEndDate" class="input-small" maxlength="10" />
-							<span id="iconHackForceEndDate" class="add-on"><i class="icon-calendar"></i></span>
+							<span id="iconHackForceEndDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 						</div>
 						&nbsp;&nbsp;Time
 						<div class="input-append bootstrap-timepicker">
