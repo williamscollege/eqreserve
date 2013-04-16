@@ -18,7 +18,7 @@
 
 	if ($eg->matchesDb) {
 		// handle here case where group already exists
-		util_redirectToAppHome('failure', 52);
+		util_redirectToAppHome('failure', 61);
 	}
 	$eg->name  = $strName;
 	$eg->descr = $strDescription;

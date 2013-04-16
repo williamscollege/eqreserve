@@ -54,35 +54,42 @@ if ($IS_AUTHENTICATED) {
 	# get list of all managers for this group
 	$Requested_EqGroup->loadPermissions();
 
-	$managers = [];
+	$managers  = [];
+	$consumers = [];
 	foreach ($Requested_EqGroup->permissions as $perm) {
 		if ($perm->role_id == 1) {
 			if ($perm->entity_type == 'user') {
-				$one = User::getOneFromDb(['user_id' => $perm->entity_id], $DB);
-				array_push($managers, array('name' => $one->fname . ' ' . $one->lname, 'email' => $one->email));
+				array_push($managers, User::getOneFromDb(['user_id' => $perm->entity_id], $DB));
 			}
 			elseif ($perm->entity_type == 'inst_group') {
-				$one = InstGroup::getOneFromDb(['inst_group_id' => $perm->entity_id], $DB);
-				array_push($managers, array('name' => $one->name));
+				array_push($managers, InstGroup::getOneFromDb(['inst_group_id' => $perm->entity_id], $DB));
+			}
+		}
+		else {
+			if ($perm->entity_type == 'user') {
+				array_push($consumers, User::getOneFromDb(['user_id' => $perm->entity_id], $DB));
+			}
+			elseif ($perm->entity_type == 'inst_group') {
+				array_push($consumers, InstGroup::getOneFromDb(['inst_group_id' => $perm->entity_id], $DB));
 			}
 		}
 	}
 
-	$managersList = "";
-	for ($i = 0, $size = count($managers); $i < $size; ++$i) {
-		if ($i > 0) {
-			$managersList .= ', ';
-		}
-		if (isset($managers[$i]['email'])) {
-			# users have an email address; include it as HTML output
-			$managersList .= "[<a href=\"mailto:" . $managers[$i]['email'] . "\" title=\"contact: " . $managers[$i]['email'] . "\"><i class=\"icon-envelope\"></i> " . $managers[$i]['name'] . "</a>]";
-		}
-		else {
-			# inst_groups have no email address
-			$managersList .= "[" . $managers[$i]['name'] . "]";
-		}
-
-	}
+	//	$managersList = "";
+	//	for ($i = 0, $size = count($managers); $i < $size; ++$i) {
+	//		if ($i > 0) {
+	//			$managersList .= ', ';
+	//		}
+	//		if (isset($managers[$i]['email'])) {
+	//			# users have an email address; include it as HTML output
+	//			$managersList .= "[<a href=\"mailto:" . $managers[$i]['email'] . "\" title=\"contact: " . $managers[$i]['email'] . "\"><i class=\"icon-envelope\"></i> " . $managers[$i]['name'] . "</a>]";
+	//		}
+	//		else {
+	//			# inst_groups have no email address
+	//			$managersList .= "[" . $managers[$i]['name'] . "]";
+	//		}
+	//
+	//	}
 
 	?>
 	<script type="text/javascript">
@@ -278,8 +285,65 @@ if ($IS_AUTHENTICATED) {
 						<label class="control-label" for="groupManagers">Managed by</label>
 
 						<div class="controls">
-							<?php echo $managersList; ?>
+
+							<?php
+							echo join(" ",
+								array_map(function ($m) {
+									$txt      = '';
+									$id       = 0;
+									$for_type = get_class($m);
+									if (get_class($m) == 'User') {
+										$id  = $m->user_id;
+										$txt = "$m->fname $m->lname ($m->email)";
+									}
+									else {
+										$id  = $m->inst_group_id;
+										$txt = "[$m->name]";
+									}
+									return "<button type=\"button\" class=\"btn btn-inverse\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
+								}, $managers)
+							);
+							?>
+
+							<button type="button" class="btn btn-success" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager
+								<i class="icon-plus-sign icon-white"></i></button>
+
+							<?php
+							//                            echo $managersList;
+							?>
 							<!--<input type="text" id="groupManagers" class="input-large" disabled="disabled" name="groupManagers" value="<?php /*echo $managersList; */?>" placeholder="Managed by" maxlength="200" />-->
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="groupManagers">Reservable by</label>
+
+						<div class="controls">
+							<i>use CTRL and/or SHIFT to select more than one</i></i><br />
+							<select name="consumers-select" id="consumers-select" class="user-select" size="12" multiple="multiple">
+								<?php
+								echo join(" ",
+									array_map(function ($c) {
+										$txt      = '';
+										$id       = 0;
+										$for_type = get_class($c);
+										if (get_class($c) == 'User') {
+											$id  = $c->user_id;
+											$txt = "$c->fname $c->lname ($c->email)";
+										}
+										else {
+											$id  = $c->inst_group_id;
+											$txt = "[$c->name]";
+										}
+										return "<option title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt</option>";
+									}, $consumers)
+								);
+								?>
+							</select><br /><br />
+							<button type="button" class="btn btn-danger" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove Selected
+								<i class="icon-minus-sign icon-white"></i></button>
+							<button type="button" class="btn btn-success" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
+								<i class="icon-plus-sign icon-white"></i></button>
 						</div>
 					</div>
 
@@ -291,7 +355,7 @@ if ($IS_AUTHENTICATED) {
 						<div class="controls">
 							<?php
 							$defaultStartMinute = [
-								""           => "Select to Edit",
+								""           => "Select or Edit",
 								"00"         => "hourly (00)",
 								"0,30"       => "half hours (00,30)",
 								"0,15,30,45" => "quarter hours (00,15,30,45)"
@@ -311,7 +375,7 @@ if ($IS_AUTHENTICATED) {
 					</div>
 					<?php
 					$defaultDuration = [
-						""    => "Select to Edit",
+						""    => "Select or Edit",
 						15    => "15 minutes",
 						30    => "30 minutes",
 						45    => "45 minutes",
@@ -396,16 +460,28 @@ if ($IS_AUTHENTICATED) {
 	echo "<div id=\"managerView\">\n";
 	echo "<h3>Equipment Group: " . $Requested_EqGroup->name . "</h3>\n";
 	echo "<p>Description: " . $Requested_EqGroup->descr . "</p>\n";
-	echo "<p>Managed by: " . $managersList . "</p>\n";
-	echo "<h3>Reservation Rules</h3>\n";
-	echo "Start time <span class=\"label label-inverse\">" . $Requested_EqGroup->start_minute . " minutes</span>: Reservations must start and end on one of these minutes of the hour.<br />\n";
-	echo "Min duration <span class=\"label label-inverse\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span>: The minimum length of time that can be reserved.<br />\n";
-	echo "Max duration <span class=\"label label-inverse\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . " </span>: The maximum length of time that can be reserved.<br />\n";
-	echo "Duration unit <span class=\"label label-inverse\">" . util_minutesToWords($Requested_EqGroup->duration_chunk_minutes) . " </span>: The interval unit duration of time that can be reserved.<br />\n";
+	//	echo "<p>Managed by: " . $managersList . "</p>\n";
+	echo "<p>Managed by: ";
+	echo join(', ',
+		array_map(function ($m) {
+				if (get_class($m) == 'User') {
+					return "$m->fname $m->lname";
+				}
+				return "[$m->name]";
+			},
+			$managers)
+	);
+	echo "</p>\n";
+	echo "<h5>Reservation Rules</h5>\n";
+	echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"> " . $Requested_EqGroup->start_minute . " minutes</span><br />\n";
+	echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span><br />\n";
+	echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . " </span><br />\n";
+	echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\">" . util_minutesToWords($Requested_EqGroup->duration_chunk_minutes) . " </span><br />\n";
 	echo "</div>";
 	?>
 
 <br />
+
 	<h3>Reserve Equipment</h3>
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-left"><i class="icon-white icon-folder-open"></i> Reserve Equipment: Show
 		Form</a><p><br /><br /></p>
@@ -483,8 +559,11 @@ if ($IS_AUTHENTICATED) {
 				$jsPopovers = "";
 				foreach ($Requested_EqGroup->eq_subgroups as $key) {
 					# Subgroups
-					echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a></h4>";
-
+					echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a>";
+					if ($USER->flag_is_system_admin || $is_group_manager) {
+						echo " <button type=\"button\" class=\"btn btn-primary btn-mini\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
+					}
+					echo "</h4>\n";
 					# Create javascript string for: subgroups
 					$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'top', trigger: 'hover'});";
 
@@ -514,12 +593,12 @@ if ($IS_AUTHENTICATED) {
 							$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'top', trigger: 'hover'});";
 						}
 					}
-					# Button: Add an Item
-					if ($USER->flag_is_system_admin || $is_group_manager) {
-						echo "<div class=\"offset1\"><button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button></div><br />";
-					}
-
 				}
+
+				if ($USER->flag_is_system_admin || $is_group_manager) {
+					echo "<br /><button type=\"button\" class=\"btn btn-primary\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
+				}
+
 				?>
 
 				<script type="text/javascript">

@@ -6,15 +6,11 @@ class TestOfInstGroup extends WMSUnitTestCaseDB {
 	
 	
 	function setUp() {
-        createTestData_InstGroups($this->DB);
-        createTestData_Users($this->DB);
-        createTestData_InstMemberships($this->DB);
+        createAllTestData($this->DB);
 	}
 	
 	function tearDown() {
-        removeTestData_InstGroups($this->DB);
-        removeTestData_Users($this->DB);
-        removeTestData_InstMemberships($this->DB);
+        removeAllTestData($this->DB);
 	}
 
     /////////////////////////////////////////////////////
@@ -148,7 +144,32 @@ class TestOfInstGroup extends WMSUnitTestCaseDB {
 
         $this->assertEqual(count($users),0);
 
-    } 
+    }
+
+    function testInstGroupEqGroupsLoaded() {
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>501],$this->DB);
+
+
+        // testing this
+        $g->loadEqGroups();
+
+
+        usort($g->eq_groups,'EqGroup::cmpAlphabetical');
+
+        $this->assertTrue(is_array($g->eq_groups));
+        $this->assertEqual(count($g->eq_groups),4);
+        $this->assertEqual($g->eq_groups[0]->name,'testEqGroup1');
+        $this->assertEqual($g->eq_groups[1]->name,'testEqGroup2');
+        $this->assertEqual($g->eq_groups[2]->name,'testEqGroup3');
+        $this->assertEqual($g->eq_groups[3]->name,'testEqGroup6');
+    }
+
+    function testToListItemLinked() {
+        $g = InstGroup::getOneFromDb(['inst_group_id'=>501],$this->DB);
+
+        $this->assertEqual($g->toListItemLinked(),
+                           '<li><a href="inst_group.php?inst_group=501" title="testInstGroup1">testInstGroup1</a></li>');
+    }
 
 }
 ?>

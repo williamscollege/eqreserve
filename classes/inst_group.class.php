@@ -8,7 +8,11 @@
 		public static $primaryKeyField = 'inst_group_id';
 		public static $dbTable = 'inst_groups';
 
-		/////////////////////
+        /////////////////////
+
+        public $eq_groups;
+
+        /////////////////////
 
 
 		// links the given user to this group; makes the given user a member of this group
@@ -46,6 +50,14 @@
 			$u->loadInstGroups();
 		}
 
+        public function loadEqGroups() {
+            if (!$this->inst_group_id) {
+                trigger_error('cannot load equipment groups for an inst_group with no inst_group_id');
+                return;
+            }
+            $this->eq_groups = EqGroup::getEqGroupsForInstGroup($this);
+        }
+
 		// returns an array of all users that are members of this group
 		public function getAllUsers() {
 			$memberships = InstMembership::getAllFromDb(['inst_group_id' => $this->inst_group_id, 'flag_delete' => FALSE], $this->dbConnection);
@@ -58,7 +70,13 @@
 			return User::getAllFromDb(['user_id' => $userIds, 'flag_delete' => FALSE], $this->dbConnection);
 		}
 
-		/////////////////////
+        public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
+            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
+            $li .= '<a href="inst_group.php?inst_group='.$this->inst_group_id.'" title="'.$this->name.'">'.$this->name.'</a></li>';
+            return $li;
+        }
+
+        /////////////////////
 
 		public static function getInstGroupsForUser($user) {
 			$memberships = InstMembership::getAllFromDb(['user_id' => $user->user_id, 'flag_delete' => FALSE], $user->dbConnection);

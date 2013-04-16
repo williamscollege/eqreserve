@@ -13,10 +13,10 @@
 		public static $dbTable = 'eq_groups';
 
 		// instance attributes
-		public $permission = '';
+		public $permission = ''; // the way the current user may access this eq group
 		public $eq_subgroups;
 		public $eq_items;
-		public $permissions;
+		public $permissions; // all permission object associated with this eq group
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -193,6 +193,18 @@
 
 		}
 
+        public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
+            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
+            $li .= '<a href="equipment_group.php?eid='.$this->eq_group_id.'" title="'.$this->name.'">'.$this->name.'</a>: '.$this->descr;
+            if ($this->permission &&
+                $this->permission->role &&
+                $this->permission->role->priority == 1)
+            {
+                $li .= " <b>(manager)</b>";
+            }
+            $li .= '</li>';
+            return $li;
+        }
 	}
 
 ?>

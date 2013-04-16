@@ -49,7 +49,7 @@
 					<?php
 					foreach ($USER->inst_groups as $ig) {
 						//echo "<input type=\"text\" disabled=\"disabled\" value=\"" . $ig->name . "\" /><br/>\n";
-						echo "<li>" . $ig->name . "</li>\n";
+						echo $ig->toListItemLinked()."\n";
 					}
 					?>
 				</ul>
@@ -63,11 +63,7 @@
 					<?php
                     if (count($USER->eq_groups) > 0) {
                         foreach ($USER->eq_groups as $ueg) {
-                            echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"" . $ueg->name . "\">" . $ueg->name . "</a>: " . $ueg->descr;
-                            if ($ueg->permission->role->priority == 1) {
-                                echo " (You manage this group)";
-                            }
-                            echo "</li>";
+                            echo $ueg->toListItemLinked();
                         }
                     }
                     else {
@@ -86,9 +82,7 @@
                     $USER->loadReservations();
                     if (count($USER->reservations) > 0) {
                         foreach ($USER->reservations as $resv) {
-                            $resv->loadEqItem();
-                            echo "<li><a href=\"reservation.php?eid=" . $resv->reservation_id . "\" title=\"" . $resv->eq_item->name . "\">" . $resv->eq_item->name . "</a>: " . 'reservation details placeholder';
-                            echo "</li>";
+                            echo $resv->toListItemLinked();
                         }
                     }
                     else {
