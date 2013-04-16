@@ -49,7 +49,7 @@
 					<?php
 					foreach ($USER->inst_groups as $ig) {
 						//echo "<input type=\"text\" disabled=\"disabled\" value=\"" . $ig->name . "\" /><br/>\n";
-						echo "<li>" . $ig->name . "</li>\n";
+						echo $ig->toListItemLinked()."\n";
 					}
 					?>
 				</ul>

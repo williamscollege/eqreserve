@@ -200,7 +200,7 @@
                 $this->permission->role &&
                 $this->permission->role->priority == 1)
             {
-                $li .= " (You manage this group)";
+                $li .= " <b>(manager)</b>";
             }
             $li .= '</li>';
             return $li;

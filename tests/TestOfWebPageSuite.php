@@ -20,6 +20,9 @@ class TestOfWebSuite extends TestSuite {
 
         # Tests: Account management
 		$this->addFile('web_page_tests/AcctMgtTest.php');
+
+        # Tests: Institutional Group
+		$this->addFile('web_page_tests/InstGroupTest.php');
      }
 }
 ?>
