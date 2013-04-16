@@ -33,3 +33,12 @@ label.error {
 	width: 500px;
 }
 */
+
+/* =======================================
+    Williams Custom CSS
+    Purpose: CSS that's not an extension / modification of the bootstrap framework
+========================================== */
+
+.user-select {
+    width: 300px;
+}

@@ -285,14 +285,14 @@ if ($IS_AUTHENTICATED) {
                                         }
                                         else {
                                             $id = $m->inst_group_id;
-                                            $txt = $m->name;
+                                            $txt = "[$m->name]";
                                         }
                                         return "<button type=\"button\" class=\"btn btn-inverse\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
                                     },$managers)
                                 );
                             ?>
 
-                            <button type="button" class="btn btn-primary" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager <i class="icon-plus-sign icon-white"></i></button>
+                            <button type="button" class="btn btn-success" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager <i class="icon-plus-sign icon-white"></i></button>
 
 							<?php
 //                            echo $managersList;
@@ -305,8 +305,29 @@ if ($IS_AUTHENTICATED) {
                         <label class="control-label" for="groupManagers">Reservable by</label>
 
                         <div class="controls">
-                            TODO: set consumer controls<br/>
-                            TODO: list consumers
+                            <i>use CTRL and/or SHIFT to select more than one</i></i><br/>
+                            <select name="consumers-select" id="consumers-select" class="user-select" size="12" multiple="multiple">
+                            <?php
+                            echo join(" ",
+                                array_map(function($c) {
+                                    $txt = '';
+                                    $id = 0;
+                                    $for_type = get_class($c);
+                                    if (get_class($c) == 'User') {
+                                        $id = $c->user_id;
+                                        $txt = "$c->fname $c->lname ($c->email)";
+                                    }
+                                    else {
+                                        $id = $c->inst_group_id;
+                                        $txt = "[$c->name]";
+                                    }
+                                    return "<option title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt</option>";
+                                },$consumers)
+                            );
+                            ?>
+                            </select><br/><br/>
+                            <button type="button" class="btn btn-danger" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove Selected <i class="icon-minus-sign icon-white"></i></button>
+                            <button type="button" class="btn btn-success" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User <i class="icon-plus-sign icon-white"></i></button>
                         </div>
                     </div>
 
