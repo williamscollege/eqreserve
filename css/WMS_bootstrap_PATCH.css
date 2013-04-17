@@ -46,3 +46,4 @@ label.error {
 .cursorPointer {
 	cursor: pointer;
 }
+/*.label {white-space:nowrap !important;}*/

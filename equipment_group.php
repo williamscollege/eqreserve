@@ -77,165 +77,207 @@ if ($IS_AUTHENTICATED) {
 
 	?>
 	<script type="text/javascript">
-		$(document).ready(function () {
-			// default conditions
+	$(document).ready(function () {
+		// default conditions
 
-			// ***************************
-			// Listeners
-			// ***************************
+		// ***************************
+		// Listeners
+		// ***************************
 
-			// Toggle Manager View (text or editable form)
-			$("#toggleManagerOptions").click(function () {
-				// toggle form or plain-text
-				$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
-				// toggle button label
-				if ($("#managerView").hasClass('hide')) {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
-				}
-				else {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Mode');
-				}
-			});
+		// Toggle Manager View (text or editable form)
+		$("#toggleManagerOptions").click(function () {
+			// toggle form or plain-text
+			$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
+			// toggle button label
+			if ($("#managerView").hasClass('hide')) {
+				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
+			}
+			else {
+				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Mode');
+			}
+		});
 
-			// Toggle Reserve Equipment View (show/hide form)
-			$("#toggleReserveEquipment").click(function () {
-				// toggle form or plain-text
-				$("#reservationShow, #reservationHide").toggleClass("hide");
-				// toggle button label
-				if ($("#reservationShow").hasClass('hide')) {
-					$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
-				}
-				else {
-					$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
-				}
-			});
+		// Toggle Reserve Equipment View (show/hide form)
+		$("#toggleReserveEquipment").click(function () {
+			// toggle form or plain-text
+			$(".reservationForm").toggleClass("hide");
+			// toggle button label
+			if ($(".reservationForm").hasClass('hide')) {
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+			}
+			else {
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
+			}
+		});
 
-			// Update form values
-			$("#goStartMinute").change(function () {
-				$("#startMinute").val($("#goStartMinute").val());
-			});
-			$("#goMinDurationMinutes").change(function () {
-				$("#minDurationMinutes").val($("#goMinDurationMinutes").val());
-			});
-			$("#goMaxDurationMinutes").change(function () {
-				$("#maxDurationMinutes").val($("#goMaxDurationMinutes").val());
-			});
-			$("#goDurationIntervalMinutes").change(function () {
-				$("#durationIntervalMinutes").val($("#goDurationIntervalMinutes").val());
-			});
+		// Update form values
+		$("#goStartMinute").change(function () {
+			$("#startMinute").val($("#goStartMinute").val());
+		});
+		$("#goMinDurationMinutes").change(function () {
+			$("#minDurationMinutes").val($("#goMinDurationMinutes").val());
+		});
+		$("#goMaxDurationMinutes").change(function () {
+			$("#maxDurationMinutes").val($("#goMaxDurationMinutes").val());
+		});
+		$("#goDurationIntervalMinutes").change(function () {
+			$("#durationIntervalMinutes").val($("#goDurationIntervalMinutes").val());
+		});
 
-			// custom form cleanup
-			$("#btnCancelEditEqGroup").click(function () {
-				cleanUpForm("formEditEqGroup")
-				// hide form
-				$("#managerView, #managerEdit .editing-control").toggleClass("hide");
-			});
+		// Reserve Equipment: calendar
+		$("#reservationStartDate, #reservationEndDate").datepicker({
+			dateFormat: 'M dd, yy'
+		});
+		// Reserve Equipment: calendar: hack to make icon trigger
+		$("#iconHackForceStartDate").click(function () {
+			$("#reservationStartDate").datepicker('show');
+		});
+		$("#iconHackForceEndDate").click(function () {
+			$("#reservationEndDate").datepicker('show');
+		});
+		// Reserve Equipment: timepicker
+		$("#reservationStartTime").timepicker({
+			minuteStep: 15,
+			defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
+			showMeridian: true  /* true is 12hr mode, false is 12hr mode */
+		});
+		$("#reservationEndTime").timepicker({
+			minuteStep: 15,
+			defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
+			showMeridian: true  /* true is 12hr mode, false is 12hr mode */
+		});
 
-			// Remove later: debugging jquery validator plugin
-			$("a.check").click(function () {
-				alert("Valid: " + $("#formEditEqGroup").valid());
-				return false;
-			});
+		// custom form cleanup
+		$("#btnCancelEditEqGroup").click(function () {
+			cleanUpForm("formEditEqGroup")
+			// toggle form or plain-text
+			$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
+			// toggle button label
+			if ($("#managerView").hasClass('hide')) {
+				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
+			}
+			else {
+				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Mode');
+			}
+		});
+		// custom form cleanup
+		$("#btnCancelReservation").click(function () {
+			cleanUpForm("formReservation")
+			// toggle form or plain-text
+			$(".reservationForm").toggleClass("hide");
+			// toggle button label
+			if ($(".reservationForm").hasClass('hide')) {
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+			}
+			else {
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
+			}
+		});
+
+		// Remove later: debugging jquery validator plugin
+		$("a.check").click(function () {
+			alert("is 'formEditEqGroup' Valid?: " + $("#formEditEqGroup").valid() + "\n" + "is 'formReservation' Valid?: " + $("#formReservation").valid());
+			return false;
+		});
 
 //			// if the form is altered, make sure the submit button is reset (and not in a disabled state)
-			$("#formEditEqGroup INPUT, TEXTAREA, SELECT").change(function () {
-				$("#btnSubmitEditEqGroup").button('reset');
-			})
+		$("#formEditEqGroup INPUT, TEXTAREA, SELECT").change(function () {
+			$("#btnSubmitEditEqGroup").button('reset');
+		})
 
 
-			// ***************************
-			// Form validation
-			// ***************************
-			var validator = $('#formEditEqGroup').validate({
-				rules: {
-					groupName: {
-						minlength: 2,
-						required: true
-					},
-					groupDescription: {
-						minlength: 2,
-						required: true
-					},
-					startMinute: {
-						/* TODO: CSV List: strip spaces, ensure only integers and commas */
-						required: true
-					},
-					minDurationMinutes: {
-						digits: true,
-						min: 1,
-						required: true
-					},
-					maxDurationMinutes: {
-						digits: true,
-						min: 1,
-						required: true
-					},
-					durationIntervalMinutes: {
-						digits: true,
-						min: 1,
-						required: true
-					}
+		// ***************************
+		// Form validation
+		// ***************************
+		var validator = $('#formEditEqGroup').validate({
+			rules: {
+				groupName: {
+					minlength: 2,
+					required: true
 				},
-				highlight: function (element) {
-					$(element).closest('.control-group').removeClass('success').addClass('error');
+				groupDescription: {
+					minlength: 2,
+					required: true
 				},
+				startMinute: {
+					/* TODO: CSV List: strip spaces, ensure only integers and commas */
+					required: true
+				},
+				minDurationMinutes: {
+					digits: true,
+					min: 1,
+					required: true
+				},
+				maxDurationMinutes: {
+					digits: true,
+					min: 1,
+					required: true
+				},
+				durationIntervalMinutes: {
+					digits: true,
+					min: 1,
+					required: true
+				}
+			},
+			highlight: function (element) {
+				$(element).closest('.control-group').removeClass('success').addClass('error');
+			},
 //					success: function (element) {
 //						element
 //							.text('OK!').addClass('valid')
 //							.closest('.control-group').removeClass('error').addClass('success');
 //					},
-				submitHandler: function (form) {
-					// show loading text (button)
-					$("#btnSubmitEditEqGroup").button('loading');
+			submitHandler: function (form) {
+				// show loading text (button)
+				$("#btnSubmitEditEqGroup").button('loading');
 
-					var url = $("#formEditEqGroup").attr('action');
-					var formName = "formEditEqGroup";
+				var url = $("#formEditEqGroup").attr('action');
+				var formName = "formEditEqGroup";
 //							alert('url=' + url + '\n' + 'formName=' + formName + '\n');
 
-					$.ajax({
-						type: 'POST',
-						url: url,
-						data: {
-							ajaxVal_GroupID: $('#eqGroupID').val(),
-							ajaxVal_GroupName: $('#groupName').val(),
-							ajaxVal_GroupDescription: $('#groupDescription').val(),
-							ajaxVal_StartMinute: $('#startMinute').val(),
-							ajaxVal_MinDurationMinute: $('#minDurationMinutes').val(),
-							ajaxVal_MaxDurationMinute: $('#maxDurationMinutes').val(),
-							ajaxVal_DurationIntervalMinutes: $('#durationIntervalMinutes').val()
-						},
-						dataType: 'html',
-						success: function (data) {
-							// reset form
-							cleanUpForm("formEditEqGroup")
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: {
+						ajaxVal_GroupID: $('#eqGroupID').val(),
+						ajaxVal_GroupName: $('#groupName').val(),
+						ajaxVal_GroupDescription: $('#groupDescription').val(),
+						ajaxVal_StartMinute: $('#startMinute').val(),
+						ajaxVal_MinDurationMinute: $('#minDurationMinutes').val(),
+						ajaxVal_MaxDurationMinute: $('#maxDurationMinutes').val(),
+						ajaxVal_DurationIntervalMinutes: $('#durationIntervalMinutes').val()
+					},
+					dataType: 'html',
+					success: function (data) {
+						// reset form
+						cleanUpForm("formEditEqGroup")
 
-							if (data) {
-								// document.write(data);
-								// create visual indicator to show success
-								$("#btnSubmitEditEqGroup").text('Saved!');
-							}
-							else {
-								// show error
-								$("#btnSubmitEditEqGroup").append('<p><span class="label label-important">Important</span> An error occurred!</p>');
-							}
+						if (data) {
+							// document.write(data);
+							// create visual indicator to show success
+							$("#btnSubmitEditEqGroup").text('Saved!');
 						}
-					});
+						else {
+							// show error
+							$("#btnSubmitEditEqGroup").append('<p><span class="label label-important">Important</span> An error occurred!</p>');
+						}
+					}
+				});
 
-				}
-			})
-
-
-			// ***************************
-			// Custom functions
-			// ***************************
-			function cleanUpForm(formName) {
-				// reset form
-				validator.resetForm();
-				// manually remove input highlights
-				$(".control-group").removeClass('success').removeClass('error');
 			}
+		})
 
-		});
+		// ***************************
+		// Custom functions
+		// ***************************
+		function cleanUpForm(formName) {
+			// reset form
+			validator.resetForm(this);
+			// manually remove input highlights
+			$(".control-group").removeClass('success').removeClass('error');
+		}
+
+	});
 	</script>
 
 	Remove this later: <a href="#" class="check">is form valid?</a><br>
@@ -246,13 +288,14 @@ if ($IS_AUTHENTICATED) {
 		?>
 		<a href="#" id="toggleManagerOptions" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Mode</a>
 		<div id="managerEdit" class="hide">
-			<form action="ajax_edit_eq_group.php" id="formEditEqGroup" class="form-horizontal" name="formEditEqGroup" method="post">
+			<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditEqGroup" name="formEditEqGroup" method="post">
 				<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
+				<h3>Equipment Group</h3>
+
 				<div id="eqGroupFields">
-					<legend>Equipment Group: <?php echo $Requested_EqGroup->name; ?></legend>
 					<div class="control-group">
-						<label class="control-label" for="groupName">Name</label>
+						<label class="control-label" for="groupName">Group</label>
 
 						<div class="controls">
 							<input type="text" id="groupName" class="input-large" name="groupName" value="<?php echo $Requested_EqGroup->name; ?>" placeholder="Name of group" maxlength="200" />
@@ -293,9 +336,7 @@ if ($IS_AUTHENTICATED) {
 								<i class="icon-plus-sign icon-white"></i></button>
 
 							<?php
-							//                            echo $managersList;
 							?>
-							<!--<input type="text" id="groupManagers" class="input-large" disabled="disabled" name="groupManagers" value="<?php /*echo $managersList; */?>" placeholder="Managed by" maxlength="200" />-->
 						</div>
 					</div>
 
@@ -331,7 +372,7 @@ if ($IS_AUTHENTICATED) {
 						</div>
 					</div>
 
-					<legend>Reservation Rules</legend>
+					<h3>Reservation Rules</h3>
 
 					<div class="control-group">
 						<label class="control-label" for="goStartMinute">Start time (minutes)</label>
@@ -442,9 +483,9 @@ if ($IS_AUTHENTICATED) {
 
 	# Show this to all authenticated users
 	echo "<div id=\"managerView\">\n";
-	echo "<h3>Equipment Group: " . $Requested_EqGroup->name . "</h3>\n";
+	echo "<h3>Equipment Group</h3>\n";
+	echo "<p>Group: " . $Requested_EqGroup->name . "</p>\n";
 	echo "<p>Description: " . $Requested_EqGroup->descr . "</p>\n";
-	//	echo "<p>Managed by: " . $managersList . "</p>\n";
 	echo "<p>Managed by: ";
 	echo join(', ',
 		array_map(function ($m) {
@@ -456,7 +497,7 @@ if ($IS_AUTHENTICATED) {
 			$managers)
 	);
 	echo "</p>\n";
-	echo "<h5>Reservation Rules</h5>\n";
+	echo "<h3>Reservation Rules</h3>\n";
 	echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"> " . $Requested_EqGroup->start_minute . " minutes</span><br />\n";
 	echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span><br />\n";
 	echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . " </span><br />\n";
@@ -466,142 +507,119 @@ if ($IS_AUTHENTICATED) {
 
 <br />
 
-	<h3>Reserve Equipment</h3>
-	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-left"><i class="icon-white icon-folder-open"></i> Reserve Equipment: Show
-		Form</a><p><br /><br /></p>
-	<div id="reservationShow" class="hide">
-		<form action="reservation.php" id="formReservation" class="form-horizontal" name="formReservation" method="post">
-			<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-folder-open"></i> Reserve Equipment: Show
+		Form</a>
 
-			<div id="reservationGroupFields">
-				<div class="control-group">
-					<label class="control-label" for="reservationStartDate">Start Date</label>
+	<form action="reservation.php" class="form-horizontal" id="formReservation" name="formReservation" method="post">
+		<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
-					<div class="controls">
-						<div class="input-append">
-							<input type="text" id="reservationStartDate" class="input-small" maxlength="10" />
-							<span id="iconHackForceStartDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
-						</div>
-						&nbsp;&nbsp;Time
-						<!-- REMOVE LATER: http://jdewit.github.io/bootstrap-timepicker/ -->
-						<div class="input-append bootstrap-timepicker">
-							<input id="reservationStartTime" type="text" class="input-small" value="<?php #echo $Requested_EqGroup->start_time; ?>" maxlength="8" />
-							<span class="add-on"><i class="icon-time"></i></span>
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="reservationEndDate">End Date</label>
+		<h3>Reserve Equipment</h3>
 
-					<div class="controls">
-						<div class="input-append">
-							<input type="text" id="reservationEndDate" class="input-small" maxlength="10" />
-							<span id="iconHackForceEndDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
-						</div>
-						&nbsp;&nbsp;Time
-						<div class="input-append bootstrap-timepicker">
-							<input id="reservationEndTime" type="text" class="input-small" value="<?php #echo $Requested_EqGroup->end_time; ?>" maxlength="8" />
-							<span class="add-on"><i class="icon-time"></i></span>
-						</div>
-					</div>
-				</div>
+		<div id="reservationGroupFields">
 
-                <script>
-                    $(function () {
-                        // calendar
-                        $("#reservationStartDate").datepicker();
-                        $("#reservationEndDate").datepicker();
+			<?php
+			# Load EQSubgroups
+			$Requested_EqGroup->loadEqSubgroups();
+			//			util_prePrintR($Requested_EqGroup);
 
-                        // calendar: hack to make icon trigger
-                        $("#iconHackForceStartDate").click(function () {
-                            $("#reservationStartDate").datepicker('show');
-                        });
-                        $("#iconHackForceEndDate").click(function () {
-                            $("#reservationEndDate").datepicker('show');
-                        });
+			$jsPopovers = "";
+			foreach ($Requested_EqGroup->eq_subgroups as $key) {
+				# Subgroups
+				echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a>";
+				# Button: Add an Item
+				if ($USER->flag_is_system_admin || $is_group_manager) {
+					echo " <button type=\"button\" class=\"btn btn-primary editing-control hide\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
+				}
+				echo "</h4>\n";
+				# Create javascript string for: subgroups
+				$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'right', trigger: 'hover'});";
 
-                        // timepicker
-                        $("#reservationStartTime").timepicker({
-                            minuteStep: 15,
-                            defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
-                            showMeridian: true  /* true is 12hr mode, false is 12hr mode */
-                        });
-                        $("#reservationEndTime").timepicker({
-                            minuteStep: 15,
-                            defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
-                            showMeridian: true  /* true is 12hr mode, false is 12hr mode */
-                        });
-                    });
-                </script>
-
-                <?php
-                # Load EQSubgroups
-                $Requested_EqGroup->loadEqSubgroups();
-                //			util_prePrintR($Requested_EqGroup);
-
-                $jsPopovers = "";
-                foreach ($Requested_EqGroup->eq_subgroups as $key) {
-                    # Subgroups
-                    echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a>";
-                    if ($USER->flag_is_system_admin || $is_group_manager) {
-                        echo " <button type=\"button\" class=\"btn btn-primary editing-control hide\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
-                    }
-                    echo "</h4>\n";
-                    # Create javascript string for: subgroups
-                    $jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'top', trigger: 'hover'});";
-
-                    # Items
-                    $key->loadEqItems();
-                    if(count($key->eq_items) == 0){
-                        echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
-                    } else {
-                        foreach ($key->eq_items as $item) {
-                            ?>
-                            <div class="control-group">
-                                <label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" />
-                                    <a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
-
-                                <div class="controls">
-                                    <div class="progress span8">
-                                        <div class="bar bar-info" style="width: 35%;"></div>
-                                        <div class="bar bar-warning" style="width: 20%;"></div>
-                                        <div class="bar bar-success" style="width: 35%;"></div>
-                                        <div class="bar bar-danger" style="width: 10%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                            # Create javascript string for: items
-                            $jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'top', trigger: 'hover'});";
-                        }
-                    }
-    //				# Button: Add an Item
-    //				if ($USER->flag_is_system_admin || $is_group_manager) {
-    //					echo "<div class=\"offset1\"><button type=\"button\" class=\"btn btn-primary\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button></div><br />";
-    //				}
-                }
-
-                if ($USER->flag_is_system_admin || $is_group_manager) {
-                    echo "<br /><button type=\"button\" class=\"btn btn-primary\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
-                }
-
-                ?>
-
-				<script type="text/javascript">
-					$(document).ready(function () {
-						// ***************************
-						// Popover Listeners
-						// ***************************
-						$('#subGroup301').popover({placement: 'top', trigger: 'hover'});
-						$('#item403').popover({placement: 'top', trigger: 'hover'});
-						<?php
-							echo $jsPopovers;
+				# Items
+				$key->loadEqItems();
+				if (count($key->eq_items) == 0) {
+					echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
+				}
+				else {
+					foreach ($key->eq_items as $item) {
 						?>
-					});
-				</script>
+						<div class="control-group">
+							<label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" class="reservationForm hide" />
+								<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
 
+							<div class="controls">
+								<div class="progress span8">
+									<div class="bar bar-info" style="width: 35%;"></div>
+									<div class="bar bar-warning" style="width: 20%;"></div>
+									<div class="bar bar-success" style="width: 35%;"></div>
+									<div class="bar bar-danger" style="width: 10%;"></div>
+								</div>
+							</div>
+						</div>
+						<?php
+						# Create javascript string for: items
+						$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'right', trigger: 'hover'});";
+					}
+				}
+			}
+
+			if ($USER->flag_is_system_admin || $is_group_manager) {
+				echo "<br /><button type=\"button\" class=\"btn btn-primary\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
+			}
+			?>
+
+			<div class="control-group reservationForm hide">
+				<h4>Schedule Reservation</h4>
+				<label class="control-label" for="reservationStartDate">Start Date</label>
+
+				<div class="controls">
+					<div class="input-append">
+						<input type="text" id="reservationStartDate" class="input-small" maxlength="12" />
+						<span id="iconHackForceStartDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
+					</div>
+					&nbsp;&nbsp;Time
+					<!-- REMOVE LATER: http://jdewit.github.io/bootstrap-timepicker/ -->
+					<div class="input-append bootstrap-timepicker">
+						<input id="reservationStartTime" type="text" class="input-small" value="" maxlength="8" />
+						<span class="add-on"><i class="icon-time"></i></span>
+					</div>
+				</div>
 			</div>
-		</form>
+			<div class="control-group reservationForm hide">
+				<label class="control-label" for="reservationEndDate">End Date</label>
+
+				<div class="controls">
+					<div class="input-append">
+						<input type="text" id="reservationEndDate" class="input-small" maxlength="12" />
+						<span id="iconHackForceEndDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
+					</div>
+					&nbsp;&nbsp;Time
+					<div class="input-append bootstrap-timepicker">
+						<input id="reservationEndTime" type="text" class="input-small" value="" maxlength="8" />
+						<span class="add-on"><i class="icon-time"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="control-group reservationForm hide">
+				<label class="control-label" for="btnSubmitReservation"></label>
+
+				<div class="controls">
+					<button type="submit" id="btnSubmitReservation" class="btn btn-success" data-loading-text="Saving...">Save</button>
+					<button type="reset" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
+				</div>
+			</div>
+
+			<script type="text/javascript">
+				$(document).ready(function () {
+					// ***************************
+					// Create Popover Listeners
+					// ***************************
+					<?php
+						echo $jsPopovers;
+					?>
+				});
+			</script>
+
+	</form>
 	</div>
 	<?php
 	require_once('foot.php');
