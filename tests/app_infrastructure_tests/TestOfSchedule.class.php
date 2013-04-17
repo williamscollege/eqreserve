@@ -74,6 +74,18 @@
             $this->assertEqual($tg->reservations[1]->reservation_id,810);
         }
 
+        function testScheduleLoadReservationsDeeply() {
+            $tg = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
+            $this->assertTrue($tg->matchesDb);
+
+            $tg->loadReservationsDeeply();
+
+            $this->assertEqual($tg->reservations[0]->reservation_id,801);
+            $this->assertEqual($tg->reservations[0]->eq_item->eq_item_id,401);
+            $this->assertEqual($tg->reservations[0]->eq_item->eq_subgroup->eq_subgroup_id,301);
+            $this->assertEqual($tg->reservations[0]->eq_item->eq_subgroup->eq_group->eq_group_id,201);
+        }
+
         function testScheduleToString() {
             $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
             $this->assertTrue($s->matchesDb);

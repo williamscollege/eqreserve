@@ -23,6 +23,9 @@ class TestOfWebSuite extends TestSuite {
 
         # Tests: Institutional Group
 		$this->addFile('web_page_tests/InstGroupTest.php');
+
+        # Tests: Schedules / Reservations
+        $this->addFile('web_page_tests/ScheduleTest.php');
      }
 }
 ?>

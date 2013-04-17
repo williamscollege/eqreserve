@@ -52,6 +52,15 @@ require_once dirname(__FILE__) . '/reservation.class.php';
 			usort($this->reservations, "Reservation::cmp");
 		}
 
+        public function loadReservationsDeeply() {
+            $this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
+            usort($this->reservations, "Reservation::cmp");
+            foreach ($this->reservations as $r) {
+                $r->loadEqItem();
+                $r->eq_item->loadEqGroup(); // NOTE: also loads the subgroup
+            }
+        }
+
         public function toString() {
             if (! $this->time_blocks) { $this->loadTimeBlocks(); }
             if (count($this->time_blocks) == 0) {

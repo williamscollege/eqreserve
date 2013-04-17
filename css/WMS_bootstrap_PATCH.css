@@ -18,6 +18,9 @@ label.error {
 	margin-top: 2px;
 }
 
+.text-warning {
+    color: #e17823
+}
 /* =======================================
 	Patch For: bootstrap.css
 	Purpose: Williams custom tweaks to bootstrap.css
