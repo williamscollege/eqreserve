@@ -245,7 +245,7 @@ function createTestData_TimeBlocks($dbConn) {
 
 function createTestData_Schedules($dbConn) {
     // 1000 series ids
-    // time block group: schedule_id, type, user_id, notes, flag_delete
+    // schedule: schedule_id, type, user_id, notes, flag_delete
     $addTestScheduleSql = "INSERT INTO ".Schedule::$dbTable." VALUES
         (1001,'consumer',1101,'notes1 with 1 block',0),         # single time block in the group, 1 item
         (1002,'consumer',1101,'notes2 normal with 3 blocks',0), # three time blocks in the group, 1 item

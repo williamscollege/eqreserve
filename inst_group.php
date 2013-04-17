@@ -3,7 +3,7 @@
 	require_once('head.php');
 
     $ig_ids = array_map(function($ig){return $ig->inst_group_id;},$USER->inst_groups);
-    if (! in_array($_REQUEST['inst_group'],$ig_ids)) {
+    if ((! $USER->flag_is_system_admin) && (! in_array($_REQUEST['inst_group'],$ig_ids))) {
         util_redirectToAppHome('failure', 51);
     }
 
