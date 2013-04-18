@@ -49,3 +49,8 @@ label.error {
 .cursorPointer {
 	cursor: pointer;
 }
+
+.notes-editing-region {
+    height: 60px;
+    width: 480px;
+}

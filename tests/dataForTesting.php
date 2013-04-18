@@ -201,7 +201,8 @@ function createTestData_Reservations($dbConn) {
         (807,410,1007,0), # other user consumer 1 item
         (808,409,1008,0), # other user manager 1 item
         (809,401,1009,0), # single time block in the group, 2 items reserved
-        (810,402,1009,0)  #
+        (810,402,1009,0), #
+        (811,409,1010,0)  # primary user manager 1 item, non-managed group
     ";
     $addTestReservationStmt = $dbConn->prepare($addTestReservationSql);
     $addTestReservationStmt->execute();
@@ -230,7 +231,8 @@ function createTestData_TimeBlocks($dbConn) {
         (908,1006,'2013-03-25 18:00:00','2013-03-25 19:00:00',0), # manager reservation, 1 item
         (909,1007,'2013-03-25 18:00:00','2013-03-25 19:00:00',0), # other user single time block in the group
         (910,1008,'2013-03-25 18:00:00','2013-03-25 19:00:00',0), # other user single time block in the group
-        (911,1009,'2013-03-26 18:00:00','2013-03-26 19:00:00',0)  # single time block in the group, 2 items reserved
+        (911,1009,'2013-03-26 18:00:00','2013-03-26 19:00:00',0),  # single time block in the group, 2 items reserved
+        (912,1010,'2013-04-18 13:00:00','2013-04-18 17:00:00',0)   # single time block in the not-managed group, 1 item reserved
 
     ";
     $addTestTimeBlockStmt = $dbConn->prepare($addTestTimeBlockSql);
@@ -247,15 +249,16 @@ function createTestData_Schedules($dbConn) {
     // 1000 series ids
     // schedule: schedule_id, type, user_id, notes, flag_delete
     $addTestScheduleSql = "INSERT INTO ".Schedule::$dbTable." VALUES
-        (1001,'consumer',1101,'notes1 with 1 block',0),         # single time block in the group, 1 item
-        (1002,'consumer',1101,'notes2 normal with 3 blocks',0), # three time blocks in the group, 1 item
-        (1003,'consumer',1101,'notes3',0),                      # single deleted time block in the group
-        (1004,'consumer',1101,'notes4 deleted',1),              # group is deleted
+        (1001,'consumer',1101,'notes1 with 1 block',0),         # single time block in the schedule, 1 item
+        (1002,'consumer',1101,'notes2 normal with 3 blocks',0), # three time blocks in the schedule, 1 item
+        (1003,'consumer',1101,'notes3',0),                      # single deleted time block in the schedule
+        (1004,'consumer',1101,'notes4 deleted',1),              # schedule is deleted
         (1005,'consumer',1101,'notes5 reservation deleted',0),  # reservations is deleted
         (1006,'manager', 1101,'notes6 manager',0),              # manager reservation, 1 item
-        (1007,'consumer',1102,'notes7 other user',0),           # other user single time block in the group
-        (1008,'manager', 1102,'notes8 other user manager',0),   # other user single time block in the group
-        (1009,'consumer',1103,'notes9 2 items',0)               # single time block in the group, 2 items reserved
+        (1007,'consumer',1102,'notes7 other user',0),           # other user single time block in the schedule
+        (1008,'manager', 1102,'notes8 other user manager',0),   # other user single time block in the schedule
+        (1009,'consumer',1103,'notes9 2 items',0),               # single time block in the schedule, 2 items reserved
+        (1010,'consumer',1101,'notes10 1 item not managed eq group',0)  # single time block in the schedule, 1 items reserved, eq group not managed
     ";
     $addTestScheduleStmt = $dbConn->prepare($addTestScheduleSql);
     $addTestScheduleStmt->execute();

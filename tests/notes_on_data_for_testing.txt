@@ -12,18 +12,21 @@ user 1101:
         after log in, has membership in 5 inst group
             group 501, plus 4 new ones created from the test data in Auth_Base
 
-    has 3 time block groups: 1001, 1002, and 1006
-        is time block group 1006 is a mananger time block group
-        also has 3 non-valid time block groups
+    has 4 schedules: 1001, 1002, 1006, 1010
+        all are for items in eq group 1
+        schedule 1006 is a mananger schedule
+        schedule 1010 is for an item in a group which the user does not manage
+        also has 3 non-valid schedules
             1003- has no time blocks (actually has time block 905, but it's deleted)
             1004- is deleted
             1005- has no reservations (actually has reservation 805, but it's deleted)
 
-    has 3 reservations: 801, 802, 806 (manager reservation - i.e. tied to a manager time block group)
+    has 5 reservations: 801, 802, 806 (manager reservation - i.e. tied to a manager time block group), 811 (for a not-managed eq group)
         also has 3 non-valid reservations
             803- the associated time block group has no time blocks
             804- the associated time block group is deleted
             805- this reservation is deleted
+
 
     has access to 5 equipment groups: 201(manager access), 202, 203(manager access), 206, 207
         has direct access to 4 groups: 201, 202, 203 (manager access), 207
