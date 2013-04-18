@@ -17,7 +17,9 @@
 			$this->addFile('web_page_tests/EqGroupPageEditGroupTest.php');
 			$this->addFile('web_page_tests/EqGroupPageReservationsTest.php');
 
+
+			# Sound Effect
+			$this->addFile('soundForTesting.php');
 		}
 	}
-
 ?>

@@ -26,6 +26,10 @@ class TestOfWebSuite extends TestSuite {
 
         # Tests: Schedules / Reservations
         $this->addFile('web_page_tests/ScheduleTest.php');
+
+
+		# Sound Effect
+		$this->addFile('soundForTesting.php');
      }
 }
 ?>

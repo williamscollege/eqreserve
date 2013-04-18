@@ -28,6 +28,10 @@ class TestOfAppInfrastructureSuite extends TestSuite {
 
         $this->addFile('app_infrastructure_tests/TestOfTimeBlock.class.php');
         $this->addFile('app_infrastructure_tests/TestOfSchedule.class.php');
+
+
+		# Sound Effect
+		$this->addFile('soundForTesting.php');
      }
 }
 ?>

@@ -9,6 +9,10 @@ class TestOfAllSuite extends TestSuite {
         $this->TestSuite('Full application test');
         $this->addFile('TestOfAppInfrastructureSuite.php');
         $this->addFile('TestOfWebPageSuite.php');
+
+
+		# Sound Effect
+		$this->addFile('soundForTesting.php');
      }
 }
 ?>
