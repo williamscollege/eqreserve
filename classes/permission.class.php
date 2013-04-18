@@ -9,6 +9,7 @@
 		// instance attributes
 		public $role = '';
 
+        // NOTE: roles are basically fixed; role_id of 1 corresponds to manager, 2 to consumer
 		public function loadRole() {
 			$this->role = Role::getOneFromDb(['role_id' => $this->role_id, 'flag_delete' => FALSE], $this->dbConnection);
 		}

@@ -41,7 +41,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
 		$this->assertTrue(in_array('flag_delete',User::$fields));
 	}
 
-    // static methods
+    //// static methods
 
     function testCmp(){
         $u1 = new User(['user_id'=>50,'fname'=>'fred','lname'=>'jones', 'DB'=>$this->DB]);
@@ -57,7 +57,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
     }
 
 
-    // DB interaction tests
+    //// DB interaction tests
 
 	function testUserDBInsert(){
 		$u = new User(['user_id'=>50,'fname'=>'fred','DB'=>$this->DB]);
@@ -80,7 +80,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual($u->username,Auth_Base::$TEST_USERNAME);
 	}	
 
-    // instance methods
+    //// instance methods
 
     function testUserInstGroupsLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
@@ -143,7 +143,24 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual(count($u->schedules),3);
     }
 
-    /// auth-related tests
+    function testUserManagesEqGroup() {
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
+
+        $managed_indirect = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $managed_direct = EqGroup::getOneFromDb(['eq_group_id'=>203],$this->DB);
+        $not_managed = EqGroup::getOneFromDb(['eq_group_id'=>202],$this->DB);
+
+
+        $this->assertTrue($u->managesEqGroup($managed_indirect));
+        $this->assertTrue($u->managesEqGroup($managed_direct));
+        $this->assertFalse($u->managesEqGroup($not_managed));
+
+        $this->assertTrue($u->managesEqGroup($managed_indirect->eq_group_id));
+        $this->assertTrue($u->managesEqGroup($managed_direct->eq_group_id));
+        $this->assertFalse($u->managesEqGroup($not_managed->eq_group_id));
+    }
+
+    //// auth-related tests
 
 	function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
@@ -284,7 +301,6 @@ class TestOfUser extends WMSUnitTestCaseDB {
         // should let caller/program know there's a problem
         $this->assertFalse($status);
     }
-   
 
 }
 ?>

@@ -68,7 +68,7 @@
 				trigger_error('cannot load equipment groups for a user with no user_id');
 				return;
 			}
-			$this->eq_groups = EqGroup::getAllEqGroupsForNonAdminUser($this);
+			$this->eq_groups = EqGroup::getAllEqGroupsForUser($this);
 		}
 
 		public function loadReservations() {
@@ -210,6 +210,21 @@
 			return TRUE;
 
 		}
+
+        public function managesEqGroup($g) {
+            if (is_object($g)) {
+                $g = $g->eq_group_id;
+            }
+            if (! $this->eq_groups) {
+                $this->loadEqGroups();
+            }
+            return in_array($g, array_map(function($eqg){
+                if ($eqg->permission->role_id == 1) {
+                    return $eqg->eq_group_id;
+                }
+                return -1;
+            },$this->eq_groups));
+        }
 	}
 
 
