@@ -211,7 +211,10 @@
 
 		}
 
-        public function managesEqGroup($g) {
+        public function canManageEqGroup($g) {
+            if ($this->flag_is_system_admin) {
+                return true;
+            }
             if (is_object($g)) {
                 $g = $g->eq_group_id;
             }

@@ -84,7 +84,7 @@
         else {
             echo '<p class="view-control text-info"><i class="icon-user"></i> <strong>This is a regular user schedule</strong></p>';
         }
-        if ($USER->managesEqGroup($SCHED->reservations[0]->eq_item->eq_group->eq_group_id)) {
+        if ($USER->canManageEqGroup($SCHED->reservations[0]->eq_item->eq_group->eq_group_id)) {
         ?>
         <div class="editing-control hide text-warning">
             <a href="#" id="sched-is-manager-btn" class="btn btn-medium btn-warning">

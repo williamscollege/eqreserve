@@ -143,7 +143,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual(count($u->schedules),4);
     }
 
-    function testUserManagesEqGroup() {
+    function testUserCanManageEqGroup() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 
         $managed_indirect = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
@@ -151,13 +151,13 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $not_managed = EqGroup::getOneFromDb(['eq_group_id'=>202],$this->DB);
 
 
-        $this->assertTrue($u->managesEqGroup($managed_indirect));
-        $this->assertTrue($u->managesEqGroup($managed_direct));
-        $this->assertFalse($u->managesEqGroup($not_managed));
+        $this->assertTrue($u->canManageEqGroup($managed_indirect));
+        $this->assertTrue($u->canManageEqGroup($managed_direct));
+        $this->assertFalse($u->canManageEqGroup($not_managed));
 
-        $this->assertTrue($u->managesEqGroup($managed_indirect->eq_group_id));
-        $this->assertTrue($u->managesEqGroup($managed_direct->eq_group_id));
-        $this->assertFalse($u->managesEqGroup($not_managed->eq_group_id));
+        $this->assertTrue($u->canManageEqGroup($managed_indirect->eq_group_id));
+        $this->assertTrue($u->canManageEqGroup($managed_direct->eq_group_id));
+        $this->assertFalse($u->canManageEqGroup($not_managed->eq_group_id));
     }
 
     //// auth-related tests
