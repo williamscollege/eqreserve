@@ -32,6 +32,34 @@
                     $("#toggleEditMode").attr('data-cur-mode','view');
                 }
             });
+
+            $("#sched-notes").blur(function () {
+                alert('TODO: implement sched notes save (check for change - implement change tracker)');
+            });
+
+            $("#sched-is-manager-btn").click(function () {
+                // toggle form or plain-text
+                var curType = $("#resv-current-type").html();
+                if (curType == 'management') {
+                    $("#resv-current-type").html('regular')
+                    $("#resv-other-type").html('management')
+                }
+                else {
+                    $("#resv-current-type").html('management')
+                    $("#resv-other-type").html('regular')
+                }
+                $('#sched-is-manager-btn i.signifier').toggleClass('hide');
+                alert('TODO: implement schedule is-manager toggle');
+            });
+
+            $(".delete-reservation-btn").click(function () {
+                alert('TODO: implement delete a reservation');
+            });
+
+            $("#deleteEntireScheduleBtn").click(function () {
+                alert('TODO: implement delete entire schedule');
+            });
+
         });
     </script>
 
@@ -51,13 +79,20 @@
 
         <?php
         if ($SCHED->type == 'manager') {
-            echo '<p class="view-control text-warning"><strong>NOTE: These are management reservations</strong></p>';
+            echo '<p class="view-control text-warning"><i class="icon-wrench"></i> <strong>This is a management schedule!</strong></p>';
         }
-
+        else {
+            echo '<p class="view-control text-info"><i class="icon-user"></i> <strong>This is a regular user schedule</strong></p>';
+        }
         if ($USER->managesEqGroup($SCHED->reservations[0]->eq_item->eq_group->eq_group_id)) {
         ?>
         <div class="editing-control hide text-warning">
-            <input type="checkbox" name="sched-is-manager" id="sched-is-manager"<?php echo ($SCHED->type == 'manager')?' checked="checked"':''; ?>/> management reservations<br/><br/>
+            <a href="#" id="sched-is-manager-btn" class="btn btn-medium btn-warning">
+             <i class="icon-wrench signifier<?php echo ($SCHED->type == 'manager')?'':' hide';?>"></i>
+             <i class="icon-user signifier<?php echo ($SCHED->type == 'manager')?' hide':'';?>"></i>
+             This is a <strong><span id="resv-current-type"><?php echo ($SCHED->type == 'manager')?'management':'regular';?></span></strong> schedule;
+             make it a <strong><span id="resv-other-type"><?php echo ($SCHED->type == 'manager')?'regular':'management';?></span></strong> schedule instead</span></a>
+            <br/><br/>
         </div>
         <?php
         }
@@ -69,13 +104,16 @@
                 <?php
                 foreach ($SCHED->reservations as $r) {
                     echo '<li>';
-                    echo '<a href="#" id="delete-reservation-'.$r->reservation_id.'" class="editing-control hide btn btn-medium btn-danger" data-for-reservation="'.$r->reservation_id.'"><i class="icon icon-trash"></i> </a> ';
+                    echo '<a href="#" id="delete-reservation-'.$r->reservation_id.'" class="editing-control hide btn btn-medium btn-danger delete-reservation-btn" data-for-reservation="'.$r->reservation_id.'"><i class="icon icon-trash"></i> </a> ';
                     echo $r->eq_item->eq_subgroup->name.': '.$r->toString()."</li>\n";
                 }
                 ?>
             </ul>
         </div>
     </div>
+
+    <br/><br/>
+    <a href="#" id="deleteEntireScheduleBtn" class="editing-control hide btn btn-medium btn-danger"><i class="icon-trash"></i> DELETE ENTIRE SCHEDULE AND RESERVATIONS</a>
 
 <?php
 	require_once('foot.php');
