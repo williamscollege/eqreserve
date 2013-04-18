@@ -46,7 +46,7 @@
 			$this->assertResponse(200);
 
 			$this->get('http://localhost/eqreserve/equipment_group.php');
-			$this->assertPattern('/Equipment Groups/', 'Indicates redirect to home page.');
+			$this->assertPattern('/Equipment Group/', 'Indicates redirect to home page.');
 		}
 
 
