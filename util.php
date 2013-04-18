@@ -57,6 +57,7 @@
             , 50 => "You do not have access to that group."
             , 51 => "You do not have access to that institutional group."
             , 52 => "You do not have access to that schedule."
+            , 53 => "You do not have access to that account."
 			, 60 => "Record does not exist in database"
 			, 61 => "Record already exists in database"
 			#, 100 => "User or LDAP something or other message"

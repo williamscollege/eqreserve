@@ -1,6 +1,18 @@
 <?php
 	$pageTitle = 'Account Management';
-	require_once('head.php');
+    require_once('head.php');
+
+    $for_user = $USER;
+    if ((isset($_REQUEST['user'])) && ($_REQUEST['user'] != $USER->user_id)) {
+        if ($USER->flag_is_system_admin) {
+            $for_user = User::getOneFromDb(['user_id'=>$_REQUEST['user']],$DB);
+            $for_user->loadInstGroups();
+            $for_user->loadEqGroups();
+        }
+        else {
+            util_redirectToAppHome('failure',53);
+        }
+    }
 ?>
 
 
@@ -10,35 +22,35 @@
 			<label class="control-label" for="accountName">Name</label>
 
 			<div class="controls">
-				<input type="text" disabled="disabled" id="accountName" value="<?php echo $USER->fname . ' ' . $USER->lname; ?>" />
+				<?php echo $for_user->fname . ' ' . $for_user->lname; ?>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="accountUsername">Username</label>
 
 			<div class="controls">
-				<input type="text" disabled="disabled" id="accountUsername" value="<?php echo $USER->username; ?>" />
+				<?php echo $for_user->username; ?>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="accountEmail">Email</label>
 
 			<div class="controls">
-				<input type="text" disabled="disabled" id="accountEmail" class="input-xlarge" value="<?php echo $USER->email; ?>" />
+				<a href="mailto:<?php echo $for_user->email; ?>"><?php echo $for_user->email; ?></a>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="accountAdvisor">Advisor</label>
+			<label class="control-label" for="accountAdvisor">Advisor(s)</label>
 
 			<div class="controls">
-				<input type="text" disabled="disabled" id="accountAdvisor" value="<?php echo $USER->advisor; ?>" />
+				<input type="text" id="accountAdvisor" value="<?php echo $for_user->advisor; ?>" />
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="accountNotesPublic">Notes (public)</label>
 
 			<div class="controls">
-				<input type="text" disabled="disabled" id="accountNotesPublic" class="input-xxlarge" value="<?php echo $USER->notes; ?>" />
+				<textarea id="accountNotesPublic" class="notes-editing-region"><?php echo $for_user->notes; ?></textarea>
 			</div>
 		</div>
 		<div class="control-group">
@@ -47,7 +59,7 @@
 			<div class="controls">
 				<ul class="unstyled" id="institutionInfo">
 					<?php
-					foreach ($USER->inst_groups as $ig) {
+					foreach ($for_user->inst_groups as $ig) {
 						//echo "<input type=\"text\" disabled=\"disabled\" value=\"" . $ig->name . "\" /><br/>\n";
 						echo $ig->toListItemLinked()."\n";
 					}
@@ -61,8 +73,8 @@
 			<div class="controls">
 				<ul class="unstyled" id="equipmentGroups">
 					<?php
-                    if (count($USER->eq_groups) > 0) {
-                        foreach ($USER->eq_groups as $ueg) {
+                    if (count($for_user->eq_groups) > 0) {
+                        foreach ($for_user->eq_groups as $ueg) {
                             echo $ueg->toListItemLinked();
                         }
                     }
@@ -79,9 +91,9 @@
 			<div class="controls">
                 <ul id="equipmentGroups">
                     <?php
-                    $USER->loadSchedules();
-                    if (count($USER->schedules) > 0) {
-                        foreach ($USER->schedules as $sched) {
+                    $for_user->loadSchedules();
+                    if (count($for_user->schedules) > 0) {
+                        foreach ($for_user->schedules as $sched) {
                             echo $sched->toListItemLinked();
                         }
                     }

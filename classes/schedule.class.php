@@ -88,7 +88,7 @@ require_once dirname(__FILE__) . '/reservation.class.php';
             $li .= '<a href="schedule.php?schedule='.$this->schedule_id.'"> '.$this->toString().'</a><br/>';
             $li .= 'for <a href="equipment_group.php?eid='
                 .$this->reservations[0]->eq_item->eq_group->eq_group_id
-                .'">'.$this->reservations[0]->eq_item->eq_group->name.'</a> you have reserved:';
+                .'">'.$this->reservations[0]->eq_item->eq_group->name.'</a>:';
 
             $li .= "<ul>\n";
             foreach ($this->reservations as $r) {
