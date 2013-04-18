@@ -56,4 +56,17 @@ class ScheduleTest extends WMSWebTestCase {
         $this->assertPattern('/You do not have access to that schedule/i');
     }
 
+    function testAccessToAdjustManagerFlag() {
+        $this->signIn();
+
+        // indirect manager
+        $this->get('http://localhost/eqreserve/schedule.php?schedule=1006');
+        $this->assertNoPattern('/FAILED/i');
+        $this->assertPattern('/sched-is-manager/i');
+
+        // not a manager
+        $this->get('http://localhost/eqreserve/schedule.php?schedule=1010');
+        $this->assertNoPattern('/FAILED/i');
+        $this->assertNoPattern('/sched-is-manager/i');
+    }
 }
