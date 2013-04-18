@@ -551,7 +551,7 @@ if ($IS_AUTHENTICATED) {
 				# Subgroup Items
 				$key->loadEqItems();
 				if (count($key->eq_items) == 0) {
-					echo "<ul class=\"unstyled\"><li><div class=\"span1\">&nbsp;</div><p>No items are associated with this subgroup.</p></li></ul>";
+					echo "<ul class=\"unstyled\"><li><div class=\"span1\">&nbsp;</div><p>No items exist in this subgroup.</p></li></ul>";
 				}
 				else {
 					echo "<ul class=\"unstyled\">";
