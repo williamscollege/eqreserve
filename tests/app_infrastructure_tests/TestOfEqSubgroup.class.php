@@ -104,6 +104,10 @@
             $this->assertEqual($esg3->name,'testSubgroup4');
             $this->assertNull($esg3->eq_items);
 
+			$this->assertNotNull($esg1->flag_is_multi_select, 'this value really should exist, eh?');
+			$this->assertEqual($esg1->flag_is_multi_select, 0);
+			$this->assertEqual($esg2->flag_is_multi_select, 1);
+			$this->assertEqual($esg2->flag_is_multi_select, 1);
 
             // testing this
             $esg1->loadEqItems();

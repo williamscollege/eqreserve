@@ -18,11 +18,11 @@ FOR TESTING ONLY:
 	DROP TABLE `eq_items`;
 	DROP TABLE `users`;
 	DROP TABLE `inst_groups`;
-  DROP TABLE `inst_memberships`;
+	DROP TABLE `inst_memberships`;
 	DROP TABLE `comm_prefs`;
 	DROP TABLE `roles`;
 	DROP TABLE `permissions`;
-  DROP TABLE `reservations`;
+	DROP TABLE `reservations`;
 	DROP TABLE `schedules`;
 	DROP TABLE `time_blocks`;
 */
@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS `eq_subgroups` (
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
     `ordering` SMALLINT NOT NULL,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0,
+    `flag_is_multi_select` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: eq_groups.eq_group_id */
 

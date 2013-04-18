@@ -88,7 +88,6 @@
             $this->assertEqual($ei->eq_group->name,'testEqGroup1');
         }
 
-
 	}
 
 
