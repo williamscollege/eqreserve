@@ -87,7 +87,7 @@ if ($IS_AUTHENTICATED) {
 		// Toggle Manager View (text or editable form)
 		$("#toggleManagerOptions").click(function () {
 			// toggle form or plain-text
-			$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
+			$("#managerView, #managerEdit").toggleClass("hide");
 			// toggle button label
 			if ($("#managerView").hasClass('hide')) {
 				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
@@ -103,10 +103,10 @@ if ($IS_AUTHENTICATED) {
 			$(".reservationForm").toggleClass("hide");
 			// toggle button label
 			if ($(".reservationForm").hasClass('hide')) {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Show Form');
 			}
 			else {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Hide Form');
 			}
 		});
 
@@ -151,7 +151,7 @@ if ($IS_AUTHENTICATED) {
 		$("#btnCancelEditEqGroup").click(function () {
 			cleanUpForm("formEditEqGroup")
 			// toggle form or plain-text
-			$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
+			$("#managerView, #managerEdit").toggleClass("hide");
 			// toggle button label
 			if ($("#managerView").hasClass('hide')) {
 				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
@@ -167,10 +167,10 @@ if ($IS_AUTHENTICATED) {
 			$(".reservationForm").toggleClass("hide");
 			// toggle button label
 			if ($(".reservationForm").hasClass('hide')) {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Show Form');
 			}
 			else {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Hide Form');
 			}
 		});
 
@@ -288,192 +288,214 @@ if ($IS_AUTHENTICATED) {
 		?>
 		<a href="#" id="toggleManagerOptions" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Mode</a>
 		<div id="managerEdit" class="hide">
-			<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditEqGroup" name="formEditEqGroup" method="post">
-				<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+		<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditEqGroup" name="formEditEqGroup" method="post">
+		<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
-				<h3>Equipment Group</h3>
+		<h3>Equipment Group</h3>
 
-				<div id="eqGroupFields">
-					<div class="control-group">
-						<label class="control-label" for="groupName">Group</label>
+		<div id="eqGroupFields">
+		<div class="control-group">
+			<label class="control-label" for="groupName">Group</label>
 
-						<div class="controls">
-							<input type="text" id="groupName" class="input-large" name="groupName" value="<?php echo $Requested_EqGroup->name; ?>" placeholder="Name of group" maxlength="200" />
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="groupDescription">Description</label>
+			<div class="controls">
+				<input type="text" id="groupName" class="input-large" name="groupName" value="<?php echo $Requested_EqGroup->name; ?>" placeholder="Name of group" maxlength="200" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="groupDescription">Description</label>
 
-						<div class="controls">
-							<textarea rows="3" id="groupDescription" class="input-large" name="groupDescription" placeholder="Description of group"><?php echo $Requested_EqGroup->descr; ?></textarea>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="groupManagers">Managed by</label>
+			<div class="controls">
+				<textarea rows="3" id="groupDescription" class="input-large" name="groupDescription" placeholder="Description of group"><?php echo $Requested_EqGroup->descr; ?></textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="groupManagers">Managed by</label>
 
-						<div class="controls">
+			<div class="controls">
 
-							<?php
-							echo join(" ",
-								array_map(function ($m) {
-									$txt      = '';
-									$id       = 0;
-									$for_type = get_class($m);
-									if (get_class($m) == 'User') {
-										$id  = $m->user_id;
-										$txt = "$m->fname $m->lname ($m->email)";
-									}
-									else {
-										$id  = $m->inst_group_id;
-										$txt = "[$m->name]";
-									}
-									return "<button type=\"button\" class=\"btn btn-inverse\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
-								}, $managers)
-							);
-							?>
+				<?php
+				echo join(" ",
+					array_map(function ($m) {
+						$txt      = '';
+						$id       = 0;
+						$for_type = get_class($m);
+						if (get_class($m) == 'User') {
+							$id  = $m->user_id;
+							$txt = "$m->fname $m->lname ($m->email)";
+						}
+						else {
+							$id  = $m->inst_group_id;
+							$txt = "[$m->name]";
+						}
+						return "<button type=\"button\" class=\"btn btn-inverse\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
+					}, $managers)
+				);
+				?>
 
-							<button type="button" class="btn btn-success" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager
-								<i class="icon-plus-sign icon-white"></i></button>
+				<button type="button" class="btn btn-success" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager
+					<i class="icon-plus-sign icon-white"></i></button>
 
-							<?php
-							?>
-						</div>
-					</div>
+				<?php
+				?>
+			</div>
+		</div>
 
-					<div class="control-group">
-						<label class="control-label" for="groupManagers">Reservable by</label>
+		<div class="control-group">
+			<label class="control-label" for="groupManagers">Reservable by</label>
 
-						<div class="controls">
-							<i>use CTRL and/or SHIFT to select more than one</i></i><br />
-							<select name="consumers-select" id="consumers-select" class="user-select" size="12" multiple="multiple">
-								<?php
-								echo join(" ",
-									array_map(function ($c) {
-										$txt      = '';
-										$id       = 0;
-										$for_type = get_class($c);
-										if (get_class($c) == 'User') {
-											$id  = $c->user_id;
-											$txt = "$c->fname $c->lname ($c->email)";
-										}
-										else {
-											$id  = $c->inst_group_id;
-											$txt = "[$c->name]";
-										}
-										return "<option title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt</option>";
-									}, $consumers)
-								);
-								?>
-							</select><br /><br />
-							<button type="button" class="btn btn-danger" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove Selected
-								<i class="icon-minus-sign icon-white"></i></button>
-							<button type="button" class="btn btn-success" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
-								<i class="icon-plus-sign icon-white"></i></button>
-						</div>
-					</div>
-
-					<h3>Reservation Rules</h3>
-
-					<div class="control-group">
-						<label class="control-label" for="goStartMinute">Start time (minutes)</label>
-
-						<div class="controls">
-							<?php
-							$defaultStartMinute = [
-								""           => "Select or Edit",
-								"00"         => "hourly (00)",
-								"0,30"       => "half hours (00,30)",
-								"0,15,30,45" => "quarter hours (00,15,30,45)"
-							];
-							?>
-							<select id="goStartMinute" class="span2">
-								<?php
-								foreach ($defaultStartMinute as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-								?>
-							</select>
-							<i class="icon-arrow-right"></i>
-							<input type="text" id="startMinute" class="input-medium" name="startMinute" value="<?php echo $Requested_EqGroup->start_minute; ?>" placeholder="Minutes (with commas)" maxlength="200" />
-							Reservations must start and end on one of these minutes of the hour.
-						</div>
-					</div>
+			<div class="controls">
+				<i>use CTRL and/or SHIFT to select more than one</i></i><br />
+				<select name="consumers-select" id="consumers-select" class="user-select" size="12" multiple="multiple">
 					<?php
-					$defaultDuration = [
-						""    => "Select or Edit",
-						15    => "15 minutes",
-						30    => "30 minutes",
-						45    => "45 minutes",
-						60    => "1 hour",
-						120   => "2 hours",
-						240   => "4 hours",
-						480   => "8 hours",
-						960   => "16 hours",
-						1440  => "24 hours",
-						2880  => "2 days",
-						10080 => "1 week",
-						20160 => "2 weeks",
-						80640 => "4 weeks"
-					];
+					echo join(" ",
+						array_map(function ($c) {
+							$txt      = '';
+							$id       = 0;
+							$for_type = get_class($c);
+							if (get_class($c) == 'User') {
+								$id  = $c->user_id;
+								$txt = "$c->fname $c->lname ($c->email)";
+							}
+							else {
+								$id  = $c->inst_group_id;
+								$txt = "[$c->name]";
+							}
+							return "<option title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt</option>";
+						}, $consumers)
+					);
 					?>
-					<div class="control-group">
-						<label class="control-label" for="goMinDurationMinutes">Min duration (minutes)</label>
+				</select><br /><br />
+				<button type="button" class="btn btn-danger" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove Selected
+					<i class="icon-minus-sign icon-white"></i></button>
+				<button type="button" class="btn btn-success" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
+					<i class="icon-plus-sign icon-white"></i></button>
+			</div>
+		</div>
 
-						<div class="controls">
-							<select id="goMinDurationMinutes" class="span2">
-								<?php
-								foreach ($defaultDuration as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-								?>
-							</select>
-							<i class="icon-arrow-right"></i>
-							<input type="text" id="minDurationMinutes" class="input-mini" name="minDurationMinutes" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
-							The minimum length of time that can be reserved.
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="goMaxDurationMinutes">Max duration (minutes)</label>
+		<h3>Reservation Rules</h3>
 
-						<div class="controls">
-							<select id="goMaxDurationMinutes" class="span2">
-								<?php
-								foreach ($defaultDuration as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-								?>
-							</select>
-							<i class="icon-arrow-right"></i>
-							<input type="text" id="maxDurationMinutes" class="input-mini" name="maxDurationMinutes" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
-							The maximum length of time that can be reserved.
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="goDurationIntervalMinutes">Duration unit (minutes)</label>
+		<div class="control-group">
+			<label class="control-label" for="goStartMinute">Start time (minutes)</label>
 
-						<div class="controls">
-							<select id="goDurationIntervalMinutes" class="span2">
-								<?php
-								foreach ($defaultDuration as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-								?>
-							</select>
-							<i class="icon-arrow-right"></i>
-							<input type="text" id="durationIntervalMinutes" class="input-mini" name="durationIntervalMinutes" value="<?php echo $Requested_EqGroup->duration_chunk_minutes; ?>" placeholder="Duration" maxlength="6" />
-							The interval unit duration of time that can be reserved.
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="btnSubmitEditEqGroup"></label>
+			<div class="controls">
+				<?php
+				$defaultStartMinute = [
+					""           => "Select or Edit",
+					"00"         => "hourly (00)",
+					"0,30"       => "half hours (00,30)",
+					"0,15,30,45" => "quarter hours (00,15,30,45)"
+				];
+				?>
+				<select id="goStartMinute" class="span2">
+					<?php
+					foreach ($defaultStartMinute as $key => $val) {
+						echo "<option value=\"$key\">$val</option>\n";
+					}
+					?>
+				</select>
+				<i class="icon-arrow-right"></i>
+				<input type="text" id="startMinute" class="input-medium" name="startMinute" value="<?php echo $Requested_EqGroup->start_minute; ?>" placeholder="Minutes (with commas)" maxlength="200" />
+				Reservations must start and end on one of these minutes of the hour.
+			</div>
+		</div>
+		<?php
+		$defaultDuration = [
+			""    => "Select or Edit",
+			15    => "15 minutes",
+			30    => "30 minutes",
+			45    => "45 minutes",
+			60    => "1 hour",
+			120   => "2 hours",
+			240   => "4 hours",
+			480   => "8 hours",
+			960   => "16 hours",
+			1440  => "24 hours",
+			2880  => "2 days",
+			10080 => "1 week",
+			20160 => "2 weeks",
+			80640 => "4 weeks"
+		];
+		?>
+		<div class="control-group">
+			<label class="control-label" for="goMinDurationMinutes">Min duration (minutes)</label>
 
-						<div class="controls">
-							<button type="submit" id="btnSubmitEditEqGroup" class="btn btn-success" data-loading-text="Saving...">Save</button>
-							<button type="reset" id="btnCancelEditEqGroup" class="btn btn-link btn-cancel">Cancel</button>
-						</div>
-					</div>
-				</div>
-			</form>
+			<div class="controls">
+				<select id="goMinDurationMinutes" class="span2">
+					<?php
+					foreach ($defaultDuration as $key => $val) {
+						echo "<option value=\"$key\">$val</option>\n";
+					}
+					?>
+				</select>
+				<i class="icon-arrow-right"></i>
+				<input type="text" id="minDurationMinutes" class="input-mini" name="minDurationMinutes" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
+				The minimum length of time that can be reserved.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="goMaxDurationMinutes">Max duration (minutes)</label>
+
+			<div class="controls">
+				<select id="goMaxDurationMinutes" class="span2">
+					<?php
+					foreach ($defaultDuration as $key => $val) {
+						echo "<option value=\"$key\">$val</option>\n";
+					}
+					?>
+				</select>
+				<i class="icon-arrow-right"></i>
+				<input type="text" id="maxDurationMinutes" class="input-mini" name="maxDurationMinutes" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
+				The maximum length of time that can be reserved.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="goDurationIntervalMinutes">Duration unit (minutes)</label>
+
+			<div class="controls">
+				<select id="goDurationIntervalMinutes" class="span2">
+					<?php
+					foreach ($defaultDuration as $key => $val) {
+						echo "<option value=\"$key\">$val</option>\n";
+					}
+					?>
+				</select>
+				<i class="icon-arrow-right"></i>
+				<input type="text" id="durationIntervalMinutes" class="input-mini" name="durationIntervalMinutes" value="<?php echo $Requested_EqGroup->duration_chunk_minutes; ?>" placeholder="Duration" maxlength="6" />
+				The interval unit duration of time that can be reserved.
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="repeatReservation">Repeat reservation?</label>
+
+			<div class="controls">
+				<input type="radio" checked="true" id="repeatReservation" name="repeatReservation" value="0"> not repeated |
+				<input type="radio" id="repeatReservation" name="repeatReservation" value="1"> daily |
+				<input type="radio" id="repeatReservation" name="repeatReservation" value="2"> weekly |
+				<input type="radio" id="repeatReservation" name="repeatReservation" value="3"> monthly
+				<br />(repeat rates cause addition ui elements to appear to support specifying days of week, or month, and an end date)
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="managerReservation">Maintenance period?</label>
+
+			<div class="controls">
+				<input type="checkbox" id="managerReservation" name="managerReservation"> Check this box to block out maintenance or non-use periods; this
+				action will override all other reservations during this time period
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="btnSubmitEditEqGroup"></label>
+
+			<div class="controls">
+				<button type="submit" id="btnSubmitEditEqGroup" class="btn btn-success" data-loading-text="Saving...">Save</button>
+				<button type="reset" id="btnCancelEditEqGroup" class="btn btn-link btn-cancel">Cancel</button>
+			</div>
+		</div>
+		</div>
+		</form>
 		</div>
 	<?php
 	} # end: output toggle form for: manager or admin
@@ -507,7 +529,7 @@ if ($IS_AUTHENTICATED) {
 
 <br />
 
-	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-folder-open"></i> Reserve Equipment: Show
+	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Reserve Equipment: Show
 		Form</a>
 
 	<form action="reservation.php" class="form-horizontal" id="formReservation" name="formReservation" method="post">
@@ -522,30 +544,28 @@ if ($IS_AUTHENTICATED) {
 			$Requested_EqGroup->loadEqSubgroups();
 			//			util_prePrintR($Requested_EqGroup);
 
-			$jsPopovers = "";
 			foreach ($Requested_EqGroup->eq_subgroups as $key) {
 				# Subgroups
-				echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a>";
-				# Button: Add an Item
-				if ($USER->flag_is_system_admin || $is_group_manager) {
-					echo " <button type=\"button\" class=\"btn btn-primary editing-control hide\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
-				}
-				echo "</h4>\n";
-				# Create javascript string for: subgroups
-				$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'right', trigger: 'hover'});";
+				echo "<strong>" . $key->name . ":</strong> " . $key->descr . "\n";
 
-				# Items
+				# Subgroup Items
 				$key->loadEqItems();
 				if (count($key->eq_items) == 0) {
-					echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
+					echo "<ul class=\"unstyled\"><li><div class=\"span1\">&nbsp;</div><p>No items are associated with this subgroup.</p></li></ul>";
 				}
 				else {
+					echo "<ul class=\"unstyled\">";
 					foreach ($key->eq_items as $item) {
 						?>
-						<div class="control-group">
-							<label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" class="reservationForm hide" />
-								<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
+						<li>
+							<div class="span1">&nbsp;</div>
 
+							<label class="" for="item<?php echo $item->eq_item_id; ?>">
+								<input type="checkbox" id="item<?php echo $item->eq_item_id; ?>" class="reservationForm hide" />
+
+								<strong><?php echo $item->name; ?></strong>: <?php echo $item->descr; ?>
+							</label>
+							<!--Placeholder: Save For Later Use
 							<div class="controls">
 								<div class="progress span8">
 									<div class="bar bar-info" style="width: 35%;"></div>
@@ -553,17 +573,22 @@ if ($IS_AUTHENTICATED) {
 									<div class="bar bar-success" style="width: 35%;"></div>
 									<div class="bar bar-danger" style="width: 10%;"></div>
 								</div>
-							</div>
-						</div>
-						<?php
-						# Create javascript string for: items
-						$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'right', trigger: 'hover'});";
+							</div>-->
+						</li>
+					<?php
+					}
+					# Button: Add an Item
+					if ($USER->flag_is_system_admin || $is_group_manager) {
+						echo "<div class=\"control-group\">";
+						echo "<div class=\"span1\"></div>";
+						echo "<button type=\"button\" class=\"btn btn-primary btn-mini\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
+						echo "</div>";
 					}
 				}
 			}
 
 			if ($USER->flag_is_system_admin || $is_group_manager) {
-				echo "<br /><button type=\"button\" class=\"btn btn-primary\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
+				echo "<br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
 			}
 			?>
 
@@ -608,16 +633,6 @@ if ($IS_AUTHENTICATED) {
 				</div>
 			</div>
 
-			<script type="text/javascript">
-				$(document).ready(function () {
-					// ***************************
-					// Create Popover Listeners
-					// ***************************
-					<?php
-						echo $jsPopovers;
-					?>
-				});
-			</script>
 
 	</form>
 	</div>
