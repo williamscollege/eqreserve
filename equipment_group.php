@@ -87,7 +87,7 @@ if ($IS_AUTHENTICATED) {
 		// Toggle Manager View (text or editable form)
 		$("#toggleManagerOptions").click(function () {
 			// toggle form or plain-text
-			$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
+			$("#managerView, #managerEdit").toggleClass("hide");
 			// toggle button label
 			if ($("#managerView").hasClass('hide')) {
 				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
@@ -103,10 +103,10 @@ if ($IS_AUTHENTICATED) {
 			$(".reservationForm").toggleClass("hide");
 			// toggle button label
 			if ($(".reservationForm").hasClass('hide')) {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Show Form');
 			}
 			else {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Hide Form');
 			}
 		});
 
@@ -151,7 +151,7 @@ if ($IS_AUTHENTICATED) {
 		$("#btnCancelEditEqGroup").click(function () {
 			cleanUpForm("formEditEqGroup")
 			// toggle form or plain-text
-			$("#managerView, #managerEdit, .editing-control").toggleClass("hide");
+			$("#managerView, #managerEdit").toggleClass("hide");
 			// toggle button label
 			if ($("#managerView").hasClass('hide')) {
 				$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
@@ -167,10 +167,10 @@ if ($IS_AUTHENTICATED) {
 			$(".reservationForm").toggleClass("hide");
 			// toggle button label
 			if ($(".reservationForm").hasClass('hide')) {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Show Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Show Form');
 			}
 			else {
-				$("#toggleReserveEquipment").html('<i class="icon-white icon-folder-open"></i> Reserve Equipment: Hide Form');
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Hide Form');
 			}
 		});
 
@@ -327,12 +327,12 @@ if ($IS_AUTHENTICATED) {
 										$id  = $m->inst_group_id;
 										$txt = "[$m->name]";
 									}
-									return "<button type=\"button\" class=\"btn btn-inverse\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
+									return "<button type=\"button\" class=\"btn btn-inverse btn-small\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
 								}, $managers)
 							);
 							?>
 
-							<button type="button" class="btn btn-success" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager
+							<button type="button" class="btn btn-success btn-small" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add Manager
 								<i class="icon-plus-sign icon-white"></i></button>
 
 							<?php
@@ -365,9 +365,10 @@ if ($IS_AUTHENTICATED) {
 								);
 								?>
 							</select><br /><br />
-							<button type="button" class="btn btn-danger" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove Selected
+							<button type="button" class="btn btn-danger btn-small" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove
+								Selected
 								<i class="icon-minus-sign icon-white"></i></button>
-							<button type="button" class="btn btn-success" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
+							<button type="button" class="btn btn-success btn-small" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
 								<i class="icon-plus-sign icon-white"></i></button>
 						</div>
 					</div>
@@ -464,6 +465,7 @@ if ($IS_AUTHENTICATED) {
 							The interval unit duration of time that can be reserved.
 						</div>
 					</div>
+
 					<div class="control-group">
 						<label class="control-label" for="btnSubmitEditEqGroup"></label>
 
@@ -484,9 +486,9 @@ if ($IS_AUTHENTICATED) {
 	# Show this to all authenticated users
 	echo "<div id=\"managerView\">\n";
 	echo "<h3>Equipment Group</h3>\n";
-	echo "<p>Group: " . $Requested_EqGroup->name . "</p>\n";
-	echo "<p>Description: " . $Requested_EqGroup->descr . "</p>\n";
-	echo "<p>Managed by: ";
+	echo "Group: " . $Requested_EqGroup->name . "<br />\n";
+	echo "Description: " . $Requested_EqGroup->descr . "<br />\n";
+	echo "Managed by: ";
 	echo join(', ',
 		array_map(function ($m) {
 				if (get_class($m) == 'User') {
@@ -496,7 +498,7 @@ if ($IS_AUTHENTICATED) {
 			},
 			$managers)
 	);
-	echo "</p>\n";
+	echo "<br />\n";
 	echo "<h3>Reservation Rules</h3>\n";
 	echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"> " . $Requested_EqGroup->start_minute . " minutes</span><br />\n";
 	echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span><br />\n";
@@ -507,9 +509,8 @@ if ($IS_AUTHENTICATED) {
 
 <br />
 
-	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-folder-open"></i> Reserve Equipment: Show
-		Form</a>
-
+	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Reserve
+		Equipment: Show Form</a>
 	<form action="reservation.php" class="form-horizontal" id="formReservation" name="formReservation" method="post">
 		<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
@@ -522,30 +523,28 @@ if ($IS_AUTHENTICATED) {
 			$Requested_EqGroup->loadEqSubgroups();
 			//			util_prePrintR($Requested_EqGroup);
 
-			$jsPopovers = "";
 			foreach ($Requested_EqGroup->eq_subgroups as $key) {
 				# Subgroups
-				echo "<h4><a href=\"#\" id=\"subGroup" . $key->eq_subgroup_id . "\" data-content=\"" . $key->descr . "\" title=\"Description\" >" . $key->name . "</a>";
-				# Button: Add an Item
-				if ($USER->flag_is_system_admin || $is_group_manager) {
-					echo " <button type=\"button\" class=\"btn btn-primary editing-control hide\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
-				}
-				echo "</h4>\n";
-				# Create javascript string for: subgroups
-				$jsPopovers .= "$('#subGroup" . $key->eq_subgroup_id . "').popover({placement: 'right', trigger: 'hover'});";
+				echo "<strong>" . $key->name . ":</strong> " . $key->descr . "\n";
 
-				# Items
+				# Subgroup Items
 				$key->loadEqItems();
 				if (count($key->eq_items) == 0) {
-					echo "<div class=\"offset1\"><p>No items are associated with this subgroup.</p></div>";
+					echo "<ul class=\"unstyled\"><li><div class=\"span1\">&nbsp;</div><p>No items exist in this subgroup.</p></li></ul>";
 				}
 				else {
+					echo "<ul class=\"unstyled\">";
 					foreach ($key->eq_items as $item) {
 						?>
-						<div class="control-group">
-							<label class="control-label span1" for="item<?php echo $item->eq_item_id; ?>"><input type="checkbox" id="" class="reservationForm hide" />
-								<a href="#" id="item<?php echo $item->eq_item_id; ?>" data-content="<?php echo $item->descr; ?>" title="Description"> <?php echo $item->name; ?></a></label>
+						<li>
+							<div class="span1">&nbsp;</div>
 
+							<label class="" for="item<?php echo $item->eq_item_id; ?>">
+								<input type="checkbox" id="item<?php echo $item->eq_item_id; ?>" class="reservationForm hide" />
+
+								<strong><?php echo $item->name; ?></strong>: <?php echo $item->descr; ?>
+							</label>
+							<!--Placeholder: Save For Later Use
 							<div class="controls">
 								<div class="progress span8">
 									<div class="bar bar-info" style="width: 35%;"></div>
@@ -553,17 +552,22 @@ if ($IS_AUTHENTICATED) {
 									<div class="bar bar-success" style="width: 35%;"></div>
 									<div class="bar bar-danger" style="width: 10%;"></div>
 								</div>
-							</div>
-						</div>
-						<?php
-						# Create javascript string for: items
-						$jsPopovers .= "$('#item" . $item->eq_item_id . "').popover({placement: 'right', trigger: 'hover'});";
+							</div>-->
+						</li>
+					<?php
+					}
+					# Button: Add an Item
+					if ($USER->flag_is_system_admin || $is_group_manager) {
+						echo "<div class=\"control-group\">";
+						echo "<div class=\"span1\"></div>";
+						echo "<button type=\"button\" class=\"btn btn-primary btn-mini\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
+						echo "</div>";
 					}
 				}
 			}
 
 			if ($USER->flag_is_system_admin || $is_group_manager) {
-				echo "<br /><button type=\"button\" class=\"btn btn-primary\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
+				echo "<br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
 			}
 			?>
 
@@ -599,6 +603,31 @@ if ($IS_AUTHENTICATED) {
 					</div>
 				</div>
 			</div>
+
+
+			<div class="control-group reservationForm hide">
+				<label class="control-label" for="repeatReservation">Repeat Reservation?</label>
+
+				<div class="controls">
+					<input type="radio" checked="true" id="repeatReservation" name="repeatReservation" value="0"> not repeated |
+					<input type="radio" id="repeatReservation" name="repeatReservation" value="1"> daily |
+					<input type="radio" id="repeatReservation" name="repeatReservation" value="2"> weekly |
+					<input type="radio" id="repeatReservation" name="repeatReservation" value="3"> monthly
+					<br />(repeat rates cause addition ui elements to appear to support specifying days of week, or month, and an end date)
+				</div>
+			</div>
+
+			<div class="control-group reservationForm hide">
+				<label class="control-label" for="managerReservation">Maintenance Period?</label>
+
+				<div class="controls">
+					<input type="checkbox" id="managerReservation" name="managerReservation"> Check box to indicate this is a maintenance or non-use period
+				</div>
+			</div>
+
+			<?php
+			if ($USER->flag_is_system_admin || $is_group_manager) {
+			?>
 			<div class="control-group reservationForm hide">
 				<label class="control-label" for="btnSubmitReservation"></label>
 
@@ -607,17 +636,10 @@ if ($IS_AUTHENTICATED) {
 					<button type="reset" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
 				</div>
 			</div>
-
-			<script type="text/javascript">
-				$(document).ready(function () {
-					// ***************************
-					// Create Popover Listeners
-					// ***************************
-					<?php
-						echo $jsPopovers;
-					?>
-				});
-			</script>
+			<?php
+			}
+			?>
+		</div>
 
 	</form>
 	</div>

@@ -53,10 +53,8 @@
 			$this->assertText("testItem4");
 			$this->assertText("testItem1");
 
-			$this->assertText("notes1 with 1 block");
-			$this->assertText("notes2 normal with 3 blocks");
-
-			$this->assertText("2013-03-22 15:00:00");
+			$this->assertText("same priority as prev");
+			$this->assertText("same name, different subgroup");
 
 		}
 

@@ -46,7 +46,7 @@
 			$this->assertResponse(200);
 
 			$this->get('http://localhost/eqreserve/equipment_group.php');
-			$this->assertPattern('/Equipment Groups/', 'Indicates redirect to home page.');
+			$this->assertPattern('/Equipment Group/', 'Indicates redirect to home page.');
 		}
 
 
@@ -68,13 +68,6 @@
 			$this->assertText("0,15,30,45 minutes");
 			$this->assertText("1 hours");
 			$this->assertText("15 minutes");
-
-//			$this->assertText("Reserve Equipment");
-//			$this->assertText("Add an Item");
-//			$this->assertText("Add a Subgroup");
-//			$this->assertText("View Reservations as List");
-//			$this->assertText("Delete this Equipment Group");
-
 		}
 
 		function TestBasicPageElementsUser() {
@@ -93,12 +86,6 @@
 			$this->assertText("0,15,30,45 minutes");
 			$this->assertText("1 hours");
 			$this->assertText("15 minutes");
-
-//			$this->assertText("Reserve Equipment");
-//			$this->assertText("Add an Item");
-//			$this->assertText("Add a Subgroup");
-//			$this->assertText("View Reservations as List");
-//			$this->assertText("Delete this Equipment Group");
 		}
 
 		function TestAdminAccessToGroup() {
