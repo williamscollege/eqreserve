@@ -78,13 +78,21 @@ require_once dirname(__FILE__) . '/reservation.class.php';
         }
 
         function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
-            if (! $this->reservations) { $this->loadReservations(); }
+            if (! $this->reservations) { $this->loadReservationsDeeply(); }
+            if (! $this->reservations[0]->eq_item) { $this->loadReservationsDeeply(); }
 
             $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
-            $li .= '<a href="schedule.php?schedule='.$this->schedule_id.'">'.$this->toString().'</a>';
-            $li .= '<ul>';
+            if ($this->type == 'manager') {
+                $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
+            }
+            $li .= '<a href="schedule.php?schedule='.$this->schedule_id.'"> '.$this->toString().'</a><br/>';
+            $li .= 'for <a href="equipment_group.php?eid='
+                .$this->reservations[0]->eq_item->eq_group->eq_group_id
+                .'">'.$this->reservations[0]->eq_item->eq_group->name.'</a> you have reserved:';
+
+            $li .= "<ul>\n";
             foreach ($this->reservations as $r) {
-                $li .= '<li>'.$r->toString().'</li>';
+                $li .= '<li>'.$r->eq_item->eq_subgroup->name.': '.$r->eq_item->name."</li>\n";
             }
             $li .= '</ul></li>';
 

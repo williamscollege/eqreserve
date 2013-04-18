@@ -77,7 +77,7 @@
 			<label class="control-label" for="reservations">Reservations</label>
 
 			<div class="controls">
-                <ul class="unstyled" id="equipmentGroups">
+                <ul id="equipmentGroups">
                     <?php
                     $USER->loadSchedules();
                     if (count($USER->schedules) > 0) {
