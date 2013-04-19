@@ -116,6 +116,7 @@
 			});
 			$("#goMinDurationMinutes").change(function () {
 				$("#minDurationMinutes").val($("#goMinDurationMinutes").val());
+
 			});
 			$("#goMaxDurationMinutes").change(function () {
 				$("#maxDurationMinutes").val($("#goMaxDurationMinutes").val());
@@ -127,7 +128,7 @@
 			// Reserve Equipment: calendar
 			$("#reservationStartDate, #reservationEndDate").datepicker({
 				dateFormat: 'M dd, yy'
-			});
+			}).val($.datepicker.formatDate('M dd, yy', new Date()));
 			// Reserve Equipment: calendar: hack to make icon trigger
 			$("#iconHackForceStartDate").click(function () {
 				$("#reservationStartDate").datepicker('show');
@@ -180,11 +181,6 @@
 				return false;
 			});
 
-//			// if the form is altered, make sure the submit button is reset (and not in a disabled state)
-			$("#formEditEqGroup INPUT, TEXTAREA, SELECT").change(function () {
-				$("#btnSubmitEditEqGroup").button('reset');
-			})
-
 
 			// ***************************
 			// Form validation
@@ -231,6 +227,14 @@
 					// show loading text (button)
 					$("#btnSubmitEditEqGroup").button('loading');
 
+					// Update printed text values on screen with submitted values
+					$("#print_groupName").text($("#groupName").val());
+					$("#print_groupDescription").text($("#groupDescription").val());
+					$("#print_startMinute").text($("#startMinute").val());
+					$("#print_minDurationMinutes").text($("#minDurationMinutes").val());
+					$("#print_maxDurationMinutes").text($("#maxDurationMinutes").val());
+					$("#print_durationIntervalMinutes").text($("#durationIntervalMinutes").val());
+
 					var url = $("#formEditEqGroup").attr('action');
 					var formName = "formEditEqGroup";
 //							alert('url=' + url + '\n' + 'formName=' + formName + '\n');
@@ -249,13 +253,16 @@
 						},
 						dataType: 'html',
 						success: function (data) {
+							// reset the submit button (avoid disabled state)
+							$("#btnSubmitEditEqGroup").button('reset');
 							// reset form
 							cleanUpForm("formEditEqGroup")
 
 							if (data) {
 								// document.write(data);
-								// create visual indicator to show success
-								$("#btnSubmitEditEqGroup").text('Saved!');
+
+								// hide
+								$("#btnCancelEditEqGroup").click();
 							}
 							else {
 								// show error
@@ -487,8 +494,8 @@
 		# Show this to all authenticated users
 		echo "<div id=\"managerView\">\n";
 		echo "<h3>Equipment Group</h3>\n";
-		echo "Group: " . $Requested_EqGroup->name . "<br />\n";
-		echo "Description: " . $Requested_EqGroup->descr . "<br />\n";
+		echo "Group: <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
+		echo "Description: <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
 		echo "Managed by: ";
 		echo join(', ',
 			array_map(function ($m) {
@@ -501,10 +508,10 @@
 		);
 		echo "<br />\n";
 		echo "<h3>Reservation Rules</h3>\n";
-		echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"> " . $Requested_EqGroup->start_minute . " minutes</span><br />\n";
-		echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . " </span><br />\n";
-		echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . " </span><br />\n";
-		echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\">" . util_minutesToWords($Requested_EqGroup->duration_chunk_minutes) . " </span><br />\n";
+		echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"><span id=\"print_startMinute\">" . $Requested_EqGroup->start_minute . "</span> minutes</span><br />\n";
+		echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\"><span id=\"print_minDurationMinutes\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . "</span></span><br />\n";
+		echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\"><span id=\"print_maxDurationMinutes\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . "</span></span><br />\n";
+		echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\"><span id=\"print_durationIntervalMinutes\">" . util_minutesToWords($Requested_EqGroup->duration_chunk_minutes) . "</span></span><br />\n";
 		echo "</div>";
 		?>
 
@@ -634,28 +641,28 @@
 					</div>
 				</div>
 
-				<div class="control-group reservationForm hide">
-					<label class="control-label" for="managerReservation">Maintenance Period?</label>
-
-					<div class="controls">
-						<input type="checkbox" id="managerReservation" name="managerReservation"> Check box to indicate this is a maintenance or non-use period
-					</div>
-				</div>
-
 				<?php
 					if ($USER->flag_is_system_admin || $is_group_manager) {
 						?>
 						<div class="control-group reservationForm hide">
-							<label class="control-label" for="btnSubmitReservation"></label>
+							<label class="control-label" for="managerReservation">Maintenance Period?</label>
 
 							<div class="controls">
-								<button type="submit" id="btnSubmitReservation" class="btn btn-success" data-loading-text="Saving...">Save</button>
-								<button type="reset" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
+								<input type="checkbox" id="managerReservation" name="managerReservation"> Check box to indicate this is a maintenance or non-use period
 							</div>
 						</div>
 					<?php
 					}
 				?>
+
+				<div class="control-group reservationForm hide">
+					<label class="control-label" for="btnSubmitReservation"></label>
+
+					<div class="controls">
+						<button type="submit" id="btnSubmitReservation" class="btn btn-success" data-loading-text="Saving...">Save</button>
+						<button type="reset" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
+					</div>
+				</div>
 			</div>
 
 		</form>
