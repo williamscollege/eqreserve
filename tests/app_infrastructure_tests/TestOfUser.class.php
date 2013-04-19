@@ -128,11 +128,40 @@ class TestOfUser extends WMSUnitTestCaseDB {
     function testUserReservationsLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 
+        // testing this
         $u->loadReservations();
 
         $this->assertTrue(is_array($u->reservations));
         $this->assertEqual(count($u->reservations),4);
     }
+
+    public function testUserLoadCommPrefs(){
+        $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
+        $this->assertNull($u->comm_prefs);
+
+        // testing this
+        $u->loadCommPrefs();
+
+        $this->assertTrue(is_array($u->comm_prefs));
+        $this->assertEqual(count($u->comm_prefs),4);
+
+        $this->assertEqual($u->comm_prefs['201']->flag_alert_on_upcoming_reservation,0);
+        $this->assertEqual($u->comm_prefs['201']->flag_contact_on_reserve_create,0);
+        $this->assertEqual($u->comm_prefs['201']->flag_contact_on_reserve_cancel,0);
+
+        $this->assertEqual($u->comm_prefs['202']->flag_alert_on_upcoming_reservation,1);
+        $this->assertEqual($u->comm_prefs['202']->flag_contact_on_reserve_create,0);
+        $this->assertEqual($u->comm_prefs['202']->flag_contact_on_reserve_cancel,0);
+
+        $this->assertEqual($u->comm_prefs['203']->flag_alert_on_upcoming_reservation,0);
+        $this->assertEqual($u->comm_prefs['203']->flag_contact_on_reserve_create,1);
+        $this->assertEqual($u->comm_prefs['203']->flag_contact_on_reserve_cancel,0);
+
+        $this->assertEqual($u->comm_prefs['207']->flag_alert_on_upcoming_reservation,0);
+        $this->assertEqual($u->comm_prefs['207']->flag_contact_on_reserve_create,0);
+        $this->assertEqual($u->comm_prefs['207']->flag_contact_on_reserve_cancel,1);
+    }
+
 
     function testUserSchedulesLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
