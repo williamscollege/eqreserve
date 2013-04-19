@@ -248,6 +248,16 @@
             $this->assertEqual($eg->toListItemLinked(),'<li><a href="equipment_group.php?eid=201" title="testEqGroup1">testEqGroup1</a>: on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals <b>(manager)</b></li>');
         }
 
+        public function testOfToHTML() {
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+
+            $this->assertEqual($eg->toHTML(),'<a href="equipment_group.php?eid=201" title="testEqGroup1">testEqGroup1</a>: on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals');
+
+            $eg->permission = Permission::getOneFromDb(['permission_id'=>707],$this->DB);
+            $eg->permission->loadRole();
+
+            $this->assertEqual($eg->toHTML(),'<a href="equipment_group.php?eid=201" title="testEqGroup1">testEqGroup1</a>: on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals <b>(manager)</b>');
+        }
     }
 
 

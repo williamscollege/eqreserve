@@ -1,5 +1,6 @@
 <?php
 	require_once dirname(__FILE__) . '/db_linked.class.php';
+	require_once dirname(__FILE__) . '/comm_pref.class.php';
 	require_once dirname(__FILE__) . '/inst_group.class.php';
 	require_once dirname(__FILE__) . '/eq_group.class.php';
 	require_once dirname(__FILE__) . '/schedule.class.php';

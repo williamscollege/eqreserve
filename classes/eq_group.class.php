@@ -195,15 +195,21 @@
 
         public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
             $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
-            $li .= '<a href="equipment_group.php?eid='.$this->eq_group_id.'" title="'.$this->name.'">'.$this->name.'</a>: '.$this->descr;
+            $li .= $this->toHTML();
+            $li .= '</li>';
+            return $li;
+        }
+
+        public function toHTML() {
+            $ret = '<a href="equipment_group.php?eid='.$this->eq_group_id.'" title="'.$this->name.'">'.$this->name.'</a>: '.$this->descr;
             if ($this->permission &&
                 $this->permission->role &&
                 $this->permission->role->priority == 1)
             {
-                $li .= " <b>(manager)</b>";
+                $ret .= " <b>(manager)</b>";
             }
-            $li .= '</li>';
-            return $li;
+
+            return $ret;
         }
 	}
 

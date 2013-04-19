@@ -73,9 +73,21 @@
 			<div class="controls">
 				<ul class="unstyled" id="equipmentGroups">
 					<?php
+                    $USER->loadCommPrefs();
                     if (count($for_user->eq_groups) > 0) {
                         foreach ($for_user->eq_groups as $ueg) {
-                            echo $ueg->toListItemLinked();
+                            echo EqGroup::listItemTag();
+                            echo $ueg->toHTML();
+//                            echo '<div class="view-control">'.$USER->comm_prefs[$ueg->eq_group_id]->toHTML()."</div>\n";
+                            if (! array_key_exists($ueg->eq_group_id,$USER->comm_prefs)) {
+                                // TODO: create new comm prefs for this group
+                                // then re-load the comm prefs and/or adjust them to account for the new preference
+                                echo '<div><b>TO DO: handle missing comm pref</b></div>';
+                            }
+                            else {
+                                echo '<div>'.$USER->comm_prefs[$ueg->eq_group_id]->toHTMLForm()."</div>\n";
+                            }
+                            echo "</li>\n";
                         }
                     }
                     else {

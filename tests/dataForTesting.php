@@ -27,7 +27,7 @@ function createTestData_CommPrefs($dbConn) {
         (101,1101,201,0,0,0),
         (102,1101,202,1,0,0),
         (103,1101,203,0,1,0),
-        (104,1101,207,0,0,1)
+        (105,1101,207,0,0,1)
      ";
     $addTestCommPrefsStmt = $dbConn->prepare($addTestCommPrefsSql);
     $addTestCommPrefsStmt->execute();
