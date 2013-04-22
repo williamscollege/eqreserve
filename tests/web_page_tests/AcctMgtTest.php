@@ -70,6 +70,7 @@ class AcctMgtTest extends WMSWebTestCase {
 //        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_101','name','reminder_comm_pref_101')
 //        $this->assertEltByIdHasAttrOfValue('alert_create_comm_pref_101','name','alert_create_comm_pref_101')
 //        $this->assertEltByIdHasAttrOfValue('alert_cancel_comm_pref_101','name','alert_cancel_comm_pref_101')
+        $this->assertNoPattern('/failed/i');
 
         $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_105','name','reminder_comm_pref_105');
         $this->assertNoPattern('/alert_create_comm_pref_105/');

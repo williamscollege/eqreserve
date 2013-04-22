@@ -76,21 +76,31 @@
                     $USER->loadCommPrefs();
                     if (count($for_user->eq_groups) > 0) {
                         foreach ($for_user->eq_groups as $ueg) {
+                            $isManager = ($ueg->permission && $ueg->permission->role && ($ueg->permission->role->priority == 1));
                             echo EqGroup::listItemTag();
                             echo $ueg->toHTML();
 //                            echo '<div class="view-control">'.$USER->comm_prefs[$ueg->eq_group_id]->toHTML()."</div>\n";
                             if (! array_key_exists($ueg->eq_group_id,$USER->comm_prefs)) {
                                 // TODO: create new comm prefs for this group
                                 // then re-load the comm prefs and/or adjust them to account for the new preference
-                                echo '<div><b>TO DO: handle missing comm pref</b></div>';
-                            }
-                            else {
 
-                                echo '<div>'.$USER->comm_prefs[$ueg->eq_group_id]->toHTMLForm(($ueg->permission &&
-                                                                                               $ueg->permission->role &&
-                                                                                               ($ueg->permission->role->priority == 1))).
-                                    "</div>\n";
+                                $new_cp = new CommPref(['user_id'=>$USER->user_id,
+                                                        'eq_group_id'=>$ueg->eq_group_id,
+                                                        'flag_alert_on_upcoming_reservation'=>true,
+                                                        'flag_contact_on_reserve_create'=>$isManager,
+                                                        'flag_contact_on_reserve_cancel'=>$isManager,
+                                                        'DB'=>$DB]);
+
+                                $new_cp->updateDb();
+                                if (! $new_cp->matchesDb) {
+                                    echo '<div class="text-error"><b>failed to create initial communicaiton preferences for '.$ueg->name.'</b></div>';
+                                }
+                                else {
+                                    $USER->comm_prefs[$ueg->eq_group_id] = $new_cp;
+                                }
                             }
+                            echo '<div>'.$USER->comm_prefs[$ueg->eq_group_id]->toHTMLForm($isManager).
+                                "</div>\n";
                             echo "</li>\n";
                         }
                     }
