@@ -85,7 +85,11 @@
                                 echo '<div><b>TO DO: handle missing comm pref</b></div>';
                             }
                             else {
-                                echo '<div>'.$USER->comm_prefs[$ueg->eq_group_id]->toHTMLForm()."</div>\n";
+
+                                echo '<div>'.$USER->comm_prefs[$ueg->eq_group_id]->toHTMLForm(($ueg->permission &&
+                                                                                               $ueg->permission->role &&
+                                                                                               ($ueg->permission->role->priority == 1))).
+                                    "</div>\n";
                             }
                             echo "</li>\n";
                         }

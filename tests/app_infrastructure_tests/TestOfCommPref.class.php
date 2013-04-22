@@ -18,24 +18,38 @@
 		public function testCommPrefToHTML(){
 			$cp = CommPref::getOneFromDb(['comm_pref_id'=>101],$this->DB);
 
-            $html = $cp->toHTML();
+            $html = $cp->toHTML(true);
 
             $this->assertEqual($html,
             '<ul class="inline"><li>Reminder on upcoming reservations: NO</li><li>Alert on reservation created: NO</li><li>Alert on reservation cancelled: NO</li></ul>'
+            );
+
+            $html = $cp->toHTML(false);
+
+            $this->assertEqual($html,
+            '<ul class="inline"><li>Reminder on upcoming reservations: NO</li></ul>'
             );
 		}
 
         public function testCommPrefToHTMLForm(){
             $cp = CommPref::getOneFromDb(['comm_pref_id'=>102],$this->DB);
 
-            $html = $cp->toHTMLForm();
+            $html = $cp->toHTMLForm(true);
 
             $this->assertEqual($html,
                 '<ul class="inline">'.
-                    '<li>Reminder on upcoming reservations: <input type="checkbox" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/></li>'.
-                    '<li>Alert on reservation created: <input type="checkbox" name="alert_create_comm_pref_102" data-for-comm-pref="102"/></li>'.
-                    '<li>Alert on reservation cancelled: <input type="checkbox" name="alert_cancel_comm_pref_102" data-for-comm-pref="102"/></li>'.
+                    '<li>Reminder on upcoming reservations: <input type="checkbox" id="reminder_comm_pref_102" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/></li>'.
+                    '<li>Alert on reservation created: <input type="checkbox" id="alert_create_comm_pref_102" name="alert_create_comm_pref_102" data-for-comm-pref="102"/></li>'.
+                    '<li>Alert on reservation cancelled: <input type="checkbox" id="alert_cancel_comm_pref_102" name="alert_cancel_comm_pref_102" data-for-comm-pref="102"/></li>'.
                 '</ul>'
+            );
+
+            $html = $cp->toHTMLForm(false);
+
+            $this->assertEqual($html,
+                '<ul class="inline">'.
+                    '<li>Reminder on upcoming reservations: <input type="checkbox" id="reminder_comm_pref_102" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/></li>'.
+                    '</ul>'
             );
         }
 	}

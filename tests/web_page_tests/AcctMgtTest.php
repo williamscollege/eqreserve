@@ -46,4 +46,34 @@ class AcctMgtTest extends WMSWebTestCase {
         $this->assertText('testEqGroup7');
     }
 
+    function testAcctMgtCommPrefs() {
+        $this->getToAcctMgtPage();
+        $this->assertResponse(200);
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+
+        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_101','name','reminder_comm_pref_101');
+        $this->assertEltByIdHasAttrOfValue('alert_create_comm_pref_101','name','alert_create_comm_pref_101');
+        $this->assertEltByIdHasAttrOfValue('alert_cancel_comm_pref_101','name','alert_cancel_comm_pref_101');
+
+        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_102','name','reminder_comm_pref_102');
+        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_102','checked','checked');
+        $this->assertNoPattern('/alert_create_comm_pref_102/');
+        $this->assertNoPattern('/alert_cancel_comm_pref_102/');
+
+//        $this->assertNoText('Equipment Groups');
+
+        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_103','name','reminder_comm_pref_103');
+        $this->assertEltByIdHasAttrOfValue('alert_create_comm_pref_103','name','alert_create_comm_pref_103');
+        $this->assertEltByIdHasAttrOfValue('alert_create_comm_pref_103','checked','checked');
+        $this->assertEltByIdHasAttrOfValue('alert_cancel_comm_pref_103','name','alert_cancel_comm_pref_103');
+
+//        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_101','name','reminder_comm_pref_101')
+//        $this->assertEltByIdHasAttrOfValue('alert_create_comm_pref_101','name','alert_create_comm_pref_101')
+//        $this->assertEltByIdHasAttrOfValue('alert_cancel_comm_pref_101','name','alert_cancel_comm_pref_101')
+
+        $this->assertEltByIdHasAttrOfValue('reminder_comm_pref_105','name','reminder_comm_pref_105');
+        $this->assertNoPattern('/alert_create_comm_pref_105/');
+        $this->assertNoPattern('/alert_cancel_comm_pref_105/');
+//        $this->assertNoEltByIdHasAttrOfValue('alert_cancel_comm_pref_105','checked','checked');
+    }
 }
