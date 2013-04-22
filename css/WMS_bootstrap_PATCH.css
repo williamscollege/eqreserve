@@ -54,3 +54,8 @@ label.error {
     height: 60px;
     width: 480px;
 }
+
+.btn-delete-list-item {
+    margin: 1px;
+    padding: 1px;
+}
