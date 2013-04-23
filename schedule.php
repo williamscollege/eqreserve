@@ -49,6 +49,13 @@
                     .fail(function (data,status,xhr) {
                         eqrUtil_setTransientAlert('error','ERROR - not saved!');
                     })
+//                    .always(function(d,s,x){
+//                        for (p in d) {
+//                            if (d.hasOwnProperty(p)) {
+//                                console.log(p+': '+d[p]);
+//                            }
+//                        }
+//                    })
 
                 ;
             });

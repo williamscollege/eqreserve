@@ -96,7 +96,8 @@ function createTestData_EqItems($dbConn) {
         (407,305,'testItem6','subgroup is deleted',1,0),
         (408,307,'testItem7','group is deleted',1,0),
         (409,306,'testItem8','normal',10,0),
-        (410,308,'testItem9','normal',20,0)
+        (410,308,'testItem9','normal',20,0),
+        (411,306,'testItem10','normal',12,0)
     ";
     $addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
     $addTestEqItemsStmt->execute();
@@ -202,7 +203,8 @@ function createTestData_Reservations($dbConn) {
         (808,409,1008,0), # other user manager 1 item
         (809,401,1009,0), # single time block in the group, 2 items reserved
         (810,402,1009,0), #
-        (811,409,1010,0)  # primary user manager 1 item, non-managed group
+        (811,409,1010,0), # primary user manager 2 items, non-managed group
+        (812,411,1010,0)  # primary user manager 2 items, non-managed group
     ";
     $addTestReservationStmt = $dbConn->prepare($addTestReservationSql);
     $addTestReservationStmt->execute();
@@ -258,7 +260,7 @@ function createTestData_Schedules($dbConn) {
         (1007,'consumer',1102,'notes7 other user',0),           # other user single time block in the schedule
         (1008,'manager', 1102,'notes8 other user manager',0),   # other user single time block in the schedule
         (1009,'consumer',1103,'notes9 2 items',0),               # single time block in the schedule, 2 items reserved
-        (1010,'consumer',1101,'notes10 1 item not managed eq group',0)  # single time block in the schedule, 1 items reserved, eq group not managed
+        (1010,'consumer',1101,'notes10 2 items not managed eq group',0)  # single time block in the schedule, 1 items reserved, eq group not managed
     ";
     $addTestScheduleStmt = $dbConn->prepare($addTestScheduleSql);
     $addTestScheduleStmt->execute();

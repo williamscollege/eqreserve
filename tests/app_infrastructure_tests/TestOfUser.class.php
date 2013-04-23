@@ -132,7 +132,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $u->loadReservations();
 
         $this->assertTrue(is_array($u->reservations));
-        $this->assertEqual(count($u->reservations),4);
+        $this->assertEqual(count($u->reservations),5);
     }
 
     public function testUserLoadCommPrefs(){

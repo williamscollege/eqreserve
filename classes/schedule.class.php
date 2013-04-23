@@ -80,6 +80,7 @@ require_once dirname(__FILE__) . '/reservation.class.php';
         function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
             if (! $this->reservations) { $this->loadReservationsDeeply(); }
             if (! $this->reservations[0]->eq_item) { $this->loadReservationsDeeply(); }
+            if (! $this->reservations[0]->eq_item->eq_group) { $this->loadReservationsDeeply(); }
 
             $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
             if ($this->type == 'manager') {
