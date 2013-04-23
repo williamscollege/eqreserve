@@ -84,30 +84,58 @@
 			// Listeners
 			// ***************************
 
-			// Toggle Manager View (text or editable form)
-			$("#toggleManagerOptions").click(function () {
+			// Toggle Equipment Group Settings (text or input fields)
+			$("#toggleGroupSettings").click(function () {
 				// toggle form or plain-text
 				$("#managerView, #managerEdit").toggleClass("hide");
 				// toggle button label
 				if ($("#managerView").hasClass('hide')) {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
+					$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View');
+					// hide the other form
+					$("#btnCancelReservation").click();
+					// show special manager actions
+					$(".manager-action").removeClass("hide");
 				}
 				else {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Mode');
+					$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+					// hide special manager actions
+					$(".manager-action").addClass("hide");
 				}
 			});
 
-			// Toggle Reserve Equipment View (show/hide form)
+			// Toggle Reserve Equipment (show or hide form fields)
 			$("#toggleReserveEquipment").click(function () {
 				// toggle form or plain-text
 				$(".reservationForm").toggleClass("hide");
 				// toggle button label
 				if ($(".reservationForm").hasClass('hide')) {
-					$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Show Form');
+					$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
 				}
 				else {
-					$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Hide Form');
+					$("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
+					// hide the other form
+					$("#btnCancelEditEqGroup").click();
+					// hide special manager actions
+					$(".manager-action").addClass("hide");
 				}
+			});
+
+			// Cancel and cleanup
+			$("#btnCancelEditEqGroup").click(function () {
+				cleanUpForm("formEditEqGroup")
+				// hide form fields
+				$("#managerEdit").addClass("hide");
+				$("#managerView").removeClass("hide");
+				$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+				// hide special manager actions
+				$(".manager-action").addClass("hide");
+			});
+			// Cancel and cleanup
+			$("#btnCancelReservation").click(function () {
+				cleanUpForm("formReservation")
+				// hide form fields, restore button label
+				$(".reservationForm").addClass("hide");
+				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
 			});
 
 			// Update form values
@@ -146,33 +174,6 @@
 				minuteStep: 15,
 				defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 				showMeridian: true  /* true is 12hr mode, false is 12hr mode */
-			});
-
-			// custom form cleanup
-			$("#btnCancelEditEqGroup").click(function () {
-				cleanUpForm("formEditEqGroup")
-				// toggle form or plain-text
-				$("#managerView, #managerEdit").toggleClass("hide");
-				// toggle button label
-				if ($("#managerView").hasClass('hide')) {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: View Mode');
-				}
-				else {
-					$("#toggleManagerOptions").html('<i class="icon-white icon-pencil"></i> Manager: Edit Mode');
-				}
-			});
-			// custom form cleanup
-			$("#btnCancelReservation").click(function () {
-				cleanUpForm("formReservation")
-				// toggle form or plain-text
-				$(".reservationForm").toggleClass("hide");
-				// toggle button label
-				if ($(".reservationForm").hasClass('hide')) {
-					$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Show Form');
-				}
-				else {
-					$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment: Hide Form');
-				}
 			});
 
 			// Remove later: debugging jquery validator plugin
@@ -255,16 +256,14 @@
 						success: function (data) {
 							// reset the submit button (avoid disabled state)
 							$("#btnSubmitEditEqGroup").button('reset');
-							// reset form
-							cleanUpForm("formEditEqGroup")
 
 							if (data) {
-								// document.write(data);
-
 								// hide
 								$("#btnCancelEditEqGroup").click();
 							}
 							else {
+								// reset form
+								cleanUpForm("formEditEqGroup")
 								// show error
 								$("#btnSubmitEditEqGroup").append('<p><span class="label label-important">Important</span> An error occurred!</p>');
 							}
@@ -293,7 +292,7 @@
 		# admin or manager: is allowed to edit fields
 		if ($USER->flag_is_system_admin || $is_group_manager) {
 			?>
-			<a href="#" id="toggleManagerOptions" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Manager: Edit Mode</a>
+			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Edit</a>
 			<div id="managerEdit" class="hide">
 				<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditEqGroup" name="formEditEqGroup" method="post">
 					<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
@@ -479,7 +478,7 @@
 
 							<div class="controls">
 								<button type="submit" id="btnSubmitEditEqGroup" class="btn btn-success" data-loading-text="Saving...">Save</button>
-								<button type="reset" id="btnCancelEditEqGroup" class="btn btn-link btn-cancel">Cancel</button>
+								<button type="button" id="btnCancelEditEqGroup" class="btn btn-link btn-cancel">Cancel</button>
 							</div>
 						</div>
 					</div>
@@ -518,7 +517,7 @@
 		<br />
 
 		<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Reserve
-			Equipment: Show Form</a>
+			Equipment</a>
 		<form action="reservation.php" class="form-horizontal" id="formReservation" name="formReservation" method="post">
 			<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
@@ -582,7 +581,7 @@
 							}
 							# Button: Add an Item
 							if ($USER->flag_is_system_admin || $is_group_manager) {
-								echo "<div class=\"control-group\">";
+								echo "<div class=\"control-group manager-action hide\">";
 								echo "<div class=\"span1\"></div>";
 								echo "<button type=\"button\" class=\"btn btn-primary btn-mini\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
 								echo "</div>";
@@ -591,7 +590,7 @@
 					}
 
 					if ($USER->flag_is_system_admin || $is_group_manager) {
-						echo "<br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button>";
+						echo "<div class=\"manager-action hide\"><br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button></div>";
 					}
 				?>
 
@@ -648,7 +647,8 @@
 							<label class="control-label" for="managerReservation">Maintenance Period?</label>
 
 							<div class="controls">
-								<input type="checkbox" id="managerReservation" name="managerReservation"> Check box to indicate this is a maintenance or non-use period
+								<input type="checkbox" id="managerReservation" name="managerReservation"> Check box to indicate this is a maintenance or non-use
+								period
 							</div>
 						</div>
 					<?php
@@ -660,7 +660,7 @@
 
 					<div class="controls">
 						<button type="submit" id="btnSubmitReservation" class="btn btn-success" data-loading-text="Saving...">Save</button>
-						<button type="reset" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
+						<button type="button" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
 					</div>
 				</div>
 			</div>
