@@ -283,6 +283,20 @@
 				$(".control-group").removeClass('success').removeClass('error');
 			}
 
+
+			// Modals
+			$('.ajaxAction').click(function () {
+				// pass id value into modal
+				var par = $(this).attr("data-subgroupid");
+				var lbl = $(this).attr("data-subgroupname");
+				$("INPUT#ajaxSubgroupID").val(par);
+				$("H3#modalAddItemLabel").text(lbl);
+			});
+			$('#btnAjaxCancelAddItem, #btnAjaxCancelAddSubgroup').click(function () {
+				// clear form: reset
+				$("input[type=hidden], input[type=text], textarea").val("");
+			});
+
 		});
 		</script>
 
@@ -583,14 +597,15 @@
 							if ($USER->flag_is_system_admin || $is_group_manager) {
 								echo "<div class=\"control-group manager-action hide\">";
 								echo "<div class=\"span1\"></div>";
-								echo "<button type=\"button\" class=\"btn btn-primary btn-mini\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</button>";
+								echo "<a href=\"#modalAddItem\" data-subgroupid=\"" . $key->eq_subgroup_id . "\" data-subgroupname=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxAction\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 								echo "</div>";
 							}
 						}
 					}
 
 					if ($USER->flag_is_system_admin || $is_group_manager) {
-						echo "<div class=\"manager-action hide\"><br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button></div>";
+//						echo "<div class=\"manager-action hide\"><br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button></div>";
+						echo "<div class=\"manager-action hide\"><br /><a href=\"#modalAddSubgroup\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini\" title=\"Add a subgroup to this equipment group\"><i class='icon-plus icon-white'></i> Add a Subgroup</a></div>";
 					}
 				?>
 
@@ -667,6 +682,76 @@
 
 		</form>
 		</div>
+
+
+		<!-- Modal: Item-->
+		<div id="modalAddItem" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
+			<form action="ajax-add-subgroup-item.php" id="frmAjaxAddSubgroupItem" name="frmAjaxAddSubgroupItem" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+					<h3 id="modalAddItemLabel"></h3>
+				</div>
+				<div class="modal-body">
+					<div class="control-group">
+						<label class="control-label" for="ajaxItemName">Name</label>
+
+						<div class="controls">
+							<input type="hidden" id="ajaxSubgroupID" name="ajaxSubgroupID" value="" />
+							<input type="text" id="ajaxItemName" name="ajaxItemName" class="input-large" value="" placeholder="Name of Item" maxlength="200" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="ajaxItemDescription">Description</label>
+
+						<div class="controls">
+							<input type="text" id="ajaxItemDescription" class="input-xlarge" name="ajaxItemDescription" value="" placeholder="Description of Item" maxlength="200" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="btnAjaxSubmitAddItem" name="btnAjaxSubmitAddItem" class="btn btn-success pull-left" data-loading-text="Saving...">
+						Add Item
+					</button>
+					<button type="reset" id="btnAjaxCancelAddItem" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Modal: Subgroup-->
+		<div id="modalAddSubgroup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
+			<form action="ajax-add-subgroup.php" id="frmAjaxAddSubgroup" name="frmAjaxAddSubgroup" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+					<h3 id="modalAddSubgroupLabel">Add a Subgroup</h3>
+				</div>
+				<div class="modal-body">
+					<div class="control-group">
+						<label class="control-label" for="ajaxSubgroupName">Name</label>
+
+						<div class="controls">
+							<input type="hidden" id="ajaxEqGroupID" name="ajaxEqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+							<input type="text" id="ajaxSubgroupName" name="ajaxSubgroupName" class="input-large" value="" placeholder="Name of Subgroup" maxlength="200" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="ajaxSubgroupDescription">Description</label>
+
+						<div class="controls">
+							<input type="text" id="ajaxSubgroupDescription" class="input-xlarge" name="ajaxSubgroupDescription" value="" placeholder="Description of Subgroup" maxlength="200" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="btnAjaxSubmitAddSubgroup" name="btnAjaxSubmitAddSubgroup" class="btn btn-success pull-left" data-loading-text="Saving...">
+						Add Subgroup
+					</button>
+					<button type="reset" id="btnAjaxCancelAddSubgroup" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
+					</button>
+				</div>
+			</form>
+		</div>
+
 		<?php
 		require_once('foot.php');
 	}

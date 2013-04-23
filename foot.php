@@ -17,7 +17,7 @@
 			</ol>
 
 			<p>&nbsp;</p>
-			<p><i class="icon-question-sign"></i> More questions?
+			<p><i class="icon-question-sign"></i> More questions?</p>
 				<?php
 				if (isset($managersList)) {
 					# show list of managers for this group
