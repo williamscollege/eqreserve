@@ -15,6 +15,8 @@
     $SCHED->loadReservationsDeeply();
 ?>
     <script type="text/javascript">
+        var ajax_url = 'ajax_schedule.php';
+
         $(document).ready(function () {
             // Toggle view vs edit
             $("#toggleEditMode").click(function () {
@@ -35,6 +37,20 @@
 
             $("#sched-notes").blur(function () {
                 alert('TODO: implement sched notes save (check for change - implement change tracker)');
+                eqrUtil_setTransientAlert('progress','saving...');
+                $.ajax({
+                    url:ajax_url,
+                    dataType: 'json',
+                    data: {'action':'updateNotes'}
+                })
+                    .done(function (data,status,xhr) {
+                        eqrUtil_setTransientAlert('success','saved');
+                    })
+                    .fail(function (data,status,xhr) {
+                        eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                    })
+
+                ;
             });
 
             $("#sched-is-manager-btn").click(function () {
@@ -67,6 +83,10 @@
     </script>
 
     <legend>Schedule of Reservations</legend>
+
+<div id="page_alert" class="transient_alert in_progress_alert hide alert">
+    Saved
+</div>
 
     <a href="#" id="toggleEditMode" class="btn btn-medium btn-primary pull-right" data-cur-mode="view"><i class="icon-white icon-pencil"></i> Edit</a>
 

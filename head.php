@@ -99,6 +99,8 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
 	<script src="<?php echo URL_JQUERY_VALIDATE_CDN; ?>"></script>
+    <!-- local JS -->
+    <script src="js/eq_reserve_util.js"></script>
 </head>
 <body>
 
