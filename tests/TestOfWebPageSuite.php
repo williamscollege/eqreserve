@@ -17,6 +17,7 @@ class TestOfWebSuite extends TestSuite {
 
 		# Tests: Equipment Group
         $this->addFile('web_page_tests/EqGroupPageEditGroupTest.php');
+        $this->addFile('web_page_tests/EqGroupPageReservationsTest.php');
 
         # Tests: Account management
 		$this->addFile('web_page_tests/AcctMgtTest.php');
@@ -26,7 +27,7 @@ class TestOfWebSuite extends TestSuite {
 
         # Tests: Schedules / Reservations
         $this->addFile('web_page_tests/ScheduleTest.php');
-
+        $this->addFile('web_page_tests/AjaxScheduleTest.php');
 
 		# Sound Effect
 		$this->addFile('soundForTesting.php');

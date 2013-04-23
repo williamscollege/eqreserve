@@ -52,6 +52,9 @@
                 alert('TODO: implement schedule is-manager toggle');
             });
 
+            $(".delete-time-block-btn").click(function () {
+                alert('TODO: implement delete a time block');
+            });
             $(".delete-reservation-btn").click(function () {
                 alert('TODO: implement delete a reservation');
             });
@@ -68,7 +71,18 @@
     <a href="#" id="toggleEditMode" class="btn btn-medium btn-primary pull-right" data-cur-mode="view"><i class="icon-white icon-pencil"></i> Edit</a>
 
     <div class="control-group">
-        <label class="control-label" for="reservations">Reservations on <strong><?php echo $SCHED->toString(); ?></strong></label>
+        <label class="control-label" for="reservations">Reservations on
+            <ul id="time_blocks">
+            <?php
+            $SCHED->loadTimeBlocks();
+            foreach ($SCHED->time_blocks as $tb) {
+                echo '<li>';
+                echo '<a href="#" id="delete-time-block-'.$tb->time_block_id.'" class="editing-control hide btn btn-medium btn-danger btn-delete-list-item delete-time-block-btn" data-for-time-block="'.$tb->time_block_id.'"><i class="icon icon-trash"></i> </a> ';
+                echo $tb->toString()."</li>\n";
+            }
+            ?>
+            </ul>
+        </label>
 
         <p>
             <small class="view-control"><?php echo $SCHED->notes; ?></small>
@@ -104,7 +118,7 @@
                 <?php
                 foreach ($SCHED->reservations as $r) {
                     echo '<li>';
-                    echo '<a href="#" id="delete-reservation-'.$r->reservation_id.'" class="editing-control hide btn btn-medium btn-danger delete-reservation-btn" data-for-reservation="'.$r->reservation_id.'"><i class="icon icon-trash"></i> </a> ';
+                    echo '<a href="#" id="delete-reservation-'.$r->reservation_id.'" class="editing-control hide btn btn-medium btn-danger btn-delete-list-item delete-reservation-btn" data-for-reservation="'.$r->reservation_id.'"><i class="icon icon-trash"></i> </a> ';
                     echo $r->eq_item->eq_subgroup->name.': '.$r->toString()."</li>\n";
                 }
                 ?>
