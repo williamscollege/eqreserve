@@ -10,7 +10,7 @@
 //	$strDescription = (isset($_POST["ajaxVal_GroupDescription"])) ? util_quoteSmart($_POST["ajaxVal_GroupDescription"]) : 0;
 
     $results = [
-        'status': 'fail'
+        'status'=> 'fail'
     ];
 
     echo json_encode($results);

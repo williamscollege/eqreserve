@@ -59,3 +59,25 @@ label.error {
     margin: 1px;
     padding: 1px;
 }
+
+.transient_alert {
+    position: absolute;
+    top: 100px;
+    left: 500px;
+    padding: 6px;
+}
+.in_progress_alert {
+    border: 1px solid #973;
+    color: #973;
+    background-color: #eda;
+}
+.success_alert {
+    border: 1px solid #393;
+    color: #393;
+    background-color: #dfd;
+}
+.error_alert {
+    border: 1px solid #933;
+    color: #933;
+    background-color: #fdd;
+}
