@@ -81,7 +81,7 @@ class TestOfInstGroup extends WMSUnitTestCaseDB {
         $g = InstGroup::getOneFromDb(['inst_group_id'=>505],$this->DB);
         $this->assertNotEqual($u->inst_groups[0]->inst_group_id,$g->inst_gorup_id);
 
-        $m = InstMembership::getOneFromDb(['inst_membership_id'=>603],$this->DB);
+        $m = InstMembership::getOneFromDb(['inst_membership_id'=>603,'flag_delete'=>true],$this->DB);
         $this->assertTrue($m->flag_delete);
         $this->assertEqual($m->user_id,$u->user_id);
         $this->assertEqual($m->inst_group_id,$g->inst_group_id);

@@ -15,13 +15,13 @@ user 1101:
     has 4 schedules: 1001, 1002, 1006, 1010
         all are for items in eq group 1
         schedule 1006 is a mananger schedule
-        schedule 1010 is for an item in a group which the user does not manage
+        schedule 1010 is for 2 items in a group which the user does not manage
         also has 3 non-valid schedules
             1003- has no time blocks (actually has time block 905, but it's deleted)
             1004- is deleted
             1005- has no reservations (actually has reservation 805, but it's deleted)
 
-    has 5 reservations: 801, 802, 806 (manager reservation - i.e. tied to a manager time block group), 811 (for a not-managed eq group)
+    has 5 reservations: 801, 802, 806 (manager reservation - i.e. tied to a manager time block group), 811 & 812 (both for a not-managed eq group)
         also has 3 non-valid reservations
             803- the associated time block group has no time blocks
             804- the associated time block group is deleted

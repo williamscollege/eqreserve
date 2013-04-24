@@ -49,6 +49,13 @@
                     .fail(function (data,status,xhr) {
                         eqrUtil_setTransientAlert('error','ERROR - not saved!');
                     })
+//                    .always(function(d,s,x){
+//                        for (p in d) {
+//                            if (d.hasOwnProperty(p)) {
+//                                console.log(p+': '+d[p]);
+//                            }
+//                        }
+//                    })
 
                 ;
             });
@@ -69,13 +76,18 @@
             });
 
             $(".delete-time-block-btn").click(function () {
+                // TODO: notify that whole sched will be deleted if this is the last time block
+                // TODO: confirm action
                 alert('TODO: implement delete a time block');
             });
             $(".delete-reservation-btn").click(function () {
+                // TODO: notify that whole sched will be deleted if this is the last reservation
+                // TODO: confirm action
                 alert('TODO: implement delete a reservation');
             });
 
             $("#deleteEntireScheduleBtn").click(function () {
+                // TODO: confirm action
                 alert('TODO: implement delete entire schedule');
             });
 
