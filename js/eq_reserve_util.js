@@ -22,4 +22,29 @@ function eqrUtil_setTransientAlert(alertType,alertMessage) {
     //$('#page_alert').removeClass("hide");
     $('#page_alert').fadeIn({duration: 10, queue: false});
 }
+// NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
+$(document).ready(function () {
+    $('body').append('<div id="page_alert" class="transient_alert in_progress_alert hide alert">Saved</div>');
+});
 
+
+function eqrUtil_launchConfirm(msg,handler) {
+    $('#confirmModal .modal-body').html(msg);
+    $('#confirmModal').modal('show');
+    $('#confirmModal #confirm-yes').focus();
+    $('#confirm-yes').off("click");
+    $('#confirm-yes').click(handler);
+}
+var GLOBAL_confirmHandlerData = -1;
+
+// NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
+$(document).ready(function () {
+    $('body').append('<div id="confirmModal" class="modal hide confirmationDialog" data-backdrop="false">' +
+        '<div class="modal-header"><a href="#" class="close" data-dismiss="modal">&times;</a><h3 class="confirmationTitle"></h3></div>' +
+        '<div class="modal-body"></div>' +
+        '<div class="modal-footer">' +
+        '<input type="button" id="confirm-yes" class="btn btn-danger" data-dismiss="modal" value="Yes"/>' +
+        '<input type="button" id="confirm-no" class="btn btn-cancel" data-dismiss="modal" value="No"/>' +
+        '</div>' +
+        '</div>');
+});
