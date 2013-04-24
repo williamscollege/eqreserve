@@ -76,13 +76,18 @@
             });
 
             $(".delete-time-block-btn").click(function () {
+                // TODO: notify that whole sched will be deleted if this is the last time block
+                // TODO: confirm action
                 alert('TODO: implement delete a time block');
             });
             $(".delete-reservation-btn").click(function () {
+                // TODO: notify that whole sched will be deleted if this is the last reservation
+                // TODO: confirm action
                 alert('TODO: implement delete a reservation');
             });
 
             $("#deleteEntireScheduleBtn").click(function () {
+                // TODO: confirm action
                 alert('TODO: implement delete entire schedule');
             });
 

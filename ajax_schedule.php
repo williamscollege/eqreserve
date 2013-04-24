@@ -10,6 +10,51 @@
 	$action        = (isset($_REQUEST["scheduleAction"])) ? $_REQUEST["scheduleAction"] : 0;
     $actionVal     = htmlentities( (isset($_REQUEST["actionVal"])) ? $_REQUEST["actionVal"] : 0 );
 
+    #------------------------------------------------#
+
+    function doDeleteEntireSchedule($s) {
+        $s->loadTimeBlocks();
+        $s->loadReservations();
+        foreach ($s->time_blocks as $tb) {
+            $tb->flag_delete = true;
+            $tb->updateDb();
+            if (! $tb->matchesDb) {
+                doRevertDeleteEntireSchedule($s);
+                return false;
+            }
+        }
+        foreach ($s->reservations as $r) {
+            $r->flag_delete = true;
+            $r->updateDb();
+            if (! $r->matchesDb) {
+                doRevertDeleteEntireSchedule($s);
+                return false;
+            }
+        }
+        $s->flag_delete = true;
+        $s->updateDb();
+        if (! $s->matchesDb) {
+            doRevertDeleteEntireSchedule($s);
+            return false;
+        }
+        return true;
+    }
+
+    function doRevertDeleteEntireSchedule($s) {
+        foreach ($s->time_blocks as $tb) {
+            $tb->flag_delete = false;
+            $tb->updateDb();
+        }
+        foreach ($s->reservations as $r) {
+            $r->flag_delete = false;
+            $r->updateDb();
+        }
+        $s->flag_delete = false;
+        $s->updateDb();
+    }
+
+    #------------------------------------------------#
+
     $results = [
         'status'=> 'failure'
     ];
@@ -55,20 +100,29 @@
     }
     //###############################################################
     elseif ($action == 'deleteSchedule') {
-        $SCHED->loadTimeBlocks();
-        $SCHED->loadReservations();
-        foreach ($SCHED->time_blocks as $tb) {
-            $tb->flag_delete = true;
-            $tb->updateDb();
-        }
-        foreach ($SCHED->reservations as $r) {
-            $r->flag_delete = true;
-            $r->updateDb();
-        }
-        $SCHED->flag_delete = true;
-        $SCHED->updateDb();
-        if ($SCHED->matchesDb) {
+        if (doDeleteEntireSchedule($SCHED)) {
             $results['status'] = 'success';
+        }
+    }
+    //###############################################################
+    elseif ($action == 'deleteEqItem') {
+        $SCHED->loadReservations();
+        if (count($SCHED->reservations) == 1) {
+            if ($SCHED->reservations[0]->eq_item_id == $actionVal) {
+                if (doDeleteEntireSchedule($SCHED)) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+        else {
+            $RESV = Reservation::getOneFromDb(['schedule_id'=>$SCHED->schedule_id,'eq_item_id'=>$actionVal],$DB);
+            if ($RESV->matchesDb) {
+                $RESV->flag_delete = true;
+                $RESV->updateDb();
+                if ($RESV->matchesDb) {
+                    $results['status'] = 'success';
+                }
+            }
         }
     }
 
