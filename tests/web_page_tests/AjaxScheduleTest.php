@@ -117,8 +117,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=deleteSchedule');
 
         $this->assertPattern('/"status":"success"/');
-        // TODO - add automatic flag_delete search param to db_linked functions (if that param isn't already set in the search hash)
-        $s = Schedule::getOneFromDb(['schedule_id'=>1006,'flag_delete'=>false],$this->DB);
+        $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
         $this->assertFalse($s->matchesDb);
         $tb = TimeBlock::getOneFromDb(['time_block_id'=>908],$this->DB);
         $this->assertFalse($tb->matchesDb);

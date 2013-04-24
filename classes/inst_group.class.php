@@ -21,11 +21,17 @@
 			//		print_r($this);
 			//		echo "a\n";
 			$m = InstMembership::getOneFromDb(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id], $this->dbConnection);
+
+            if (!$m->matchesDb) {
+                $m = InstMembership::getOneFromDb(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id,'flag_delete' => true], $this->dbConnection);
+            }
 			//print_r($m);
 			//		echo "b\n";
 			if (!$m->matchesDb) {
+                $m = InstMembership::getOneFromDb(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id,'flag_delete' => true], $this->dbConnection);
+
 				//			echo "c\n";
-				$m = new InstMembership(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id, 'flag_delete' => FALSE, 'DB' => $this->dbConnection]);
+				$m = new InstMembership(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id, 'flag_delete' => false, 'DB' => $this->dbConnection]);
 				$m->updateDb();
 				//			echo "d\n";
 			}
@@ -42,7 +48,7 @@
 
 		// unlinks the given user from this group; makes the given user a NOT member of this group
 		public function unlinkUser($u) {
-			$m = InstMembership::getOneFromDb(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id, 'flag_delete' => FALSE], $this->dbConnection);
+			$m = InstMembership::getOneFromDb(['user_id' => $u->user_id, 'inst_group_id' => $this->inst_group_id, 'flag_delete' => false], $this->dbConnection);
 			if ($m->matchesDb) {
 				$m->flag_delete = TRUE;
 				$m->updateDb();

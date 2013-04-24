@@ -249,7 +249,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
 
         $this->auth->inst_groups = [$normalGroup,$initiallyDeletedGroup];
 
-        $deletedGroup = InstGroup::getOneFromDb(['name'=>$this->auth->inst_groups[1]],$this->DB);
+        $deletedGroup = InstGroup::getOneFromDb(['name'=>$this->auth->inst_groups[1],'flag_delete'=>true],$this->DB);
 
         $this->assertTrue($deletedGroup->matchesDb);
         $this->assertTrue($deletedGroup->flag_delete);

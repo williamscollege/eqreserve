@@ -201,6 +201,9 @@
 		}
 
 		public static function getAllFromDb($searchHash, $usingDb) {
+            if ((in_array('flag_delete',static::$fields)) && (! array_key_exists('flag_delete',$searchHash))) {
+                $searchHash['flag_delete'] = false;
+            }
 			$whichClass = get_called_class();
 			$fetchStmt  = self::_buildFetchStatement($searchHash, $usingDb);
 			$fetchStmt->execute($searchHash);
@@ -217,7 +220,10 @@
 		// NOTE: in the case of multiple rows found, only the first is used
 		// NOTE: in the case of no rows found the recipient->matchesDB is false
 		public static function getOneFromDb($searchHash, $usingDb) {
-			$fetchStmt = self::_buildFetchStatement($searchHash, $usingDb);
+            if ((in_array('flag_delete',static::$fields)) && (! array_key_exists('flag_delete',$searchHash))) {
+               $searchHash['flag_delete'] = false;
+            }
+            $fetchStmt = self::_buildFetchStatement($searchHash, $usingDb);
 			$fetchStmt->execute($searchHash);
 
 			$whichClass = get_called_class();
