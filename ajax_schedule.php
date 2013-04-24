@@ -125,6 +125,27 @@
             }
         }
     }
+    //###############################################################
+    elseif ($action == 'deleteTimeBlock') {
+        $SCHED->loadTimeBlocks();
+        if (count($SCHED->time_blocks) == 1) {
+            if ($SCHED->time_blocks[0]->time_block_id == $actionVal) {
+                if (doDeleteEntireSchedule($SCHED)) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+        else {
+            $TB = TimeBlock::getOneFromDb(['time_block_id'=>$actionVal],$DB);
+            if ($TB->matchesDb) {
+                $TB->flag_delete = true;
+                $TB->updateDb();
+                if ($TB->matchesDb) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+    }
 
     echo json_encode($results);
 ?>

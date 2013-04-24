@@ -160,8 +160,14 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1002);
 
-        $this->fail();
-//        $this->assertPattern('/"status":"success"/');
+        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1002&scheduleAction=deleteTimeBlock&actionVal=902');
+
+        $this->assertPattern('/"status":"success"/');
+        $s = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB);
+        $s->loadTimeBlocks();
+        $this->assertEqual(count($s->time_blocks),2);
+        $this->assertEqual($s->time_blocks[0]->time_block_id,903);
+        $this->assertEqual($s->time_blocks[1]->time_block_id,904);
     }
 
     function testScheduleAjaxDeleteLastTimeBlock() {
@@ -169,7 +175,14 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1001);
 
-        $this->fail();
-//        $this->assertPattern('/"status":"success"/');
+        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1001&scheduleAction=deleteTimeBlock&actionVal=901');
+
+        $this->assertPattern('/"status":"success"/');
+        $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
+        $this->assertFalse($s->matchesDb);
+        $tb = TimeBlock::getOneFromDb(['time_block_id'=>901],$this->DB);
+        $this->assertFalse($tb->matchesDb);
+        $r = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
+        $this->assertFalse($r->matchesDb);
     }
 }
