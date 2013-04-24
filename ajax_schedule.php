@@ -7,7 +7,7 @@
 
 	#------------------------------------------------#
 	$action        = (isset($_POST["action"])) ? $_POST["action"] : 0;
-//	$strDescription = (isset($_POST["ajaxVal_GroupDescription"])) ? util_quoteSmart($_POST["ajaxVal_GroupDescription"]) : 0;
+//	$strDescription = (isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0;
 
     $results = [
         'status'=> 'fail'

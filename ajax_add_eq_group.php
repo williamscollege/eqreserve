@@ -5,8 +5,8 @@
 	#------------------------------------------------#
 	# Forms Collections: AJAX posts and requests
 	#------------------------------------------------#
-	$strName        = (isset($_POST["ajaxVal_GroupName"])) ? util_quoteSmart($_POST["ajaxVal_GroupName"]) : 0;
-	$strDescription = (isset($_POST["ajaxVal_GroupDescription"])) ? util_quoteSmart($_POST["ajaxVal_GroupDescription"]) : 0;
+	$strName        = (isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0;
+	$strDescription = (isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0;
 
 	#------------------------------------------------#
 	# SQL: INSERT Item
@@ -33,14 +33,13 @@
 	//	print_r($test);
 	//	echo "</pre>";
 
-	# output html
+	# Output HTML
 	echo "<li><a href=\"equipment_group.php?eid=" . $output->eq_group_id . "\" title=\"\">" . $output->name . "</a>: " . $output->descr . "</li>";
 
 
 
 	/*
 	Debugging:
-		echo $resultsStudentsUsingGlow;
 		echo "<pre>" . print_r($_POST) . "</pre>";
 		print_r($_REQUEST);
 		exit();

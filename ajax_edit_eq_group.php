@@ -6,9 +6,9 @@
 	# Forms Collections: AJAX posts and requests
 	#------------------------------------------------#
 
-	$intID                      = (isset($_POST["ajaxVal_GroupID"])) ? $_POST["ajaxVal_GroupID"] : 0;
-	$strName                    = (isset($_POST["ajaxVal_GroupName"])) ? util_quoteSmart($_POST["ajaxVal_GroupName"]) : 0;
-	$strDescription             = (isset($_POST["ajaxVal_GroupDescription"])) ? util_quoteSmart($_POST["ajaxVal_GroupDescription"]) : 0;
+	$intID                      = (isset($_POST["ajaxVal_ID"])) ? $_POST["ajaxVal_ID"] : 0;
+	$strName                    = (isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0;
+	$strDescription             = (isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0;
 	$strStartMinute             = (isset($_POST["ajaxVal_StartMinute"])) ? util_quoteSmart($_POST["ajaxVal_StartMinute"]) : 0;
 	$intMinDurationMinute       = (isset($_POST["ajaxVal_MinDurationMinute"])) ? $_POST["ajaxVal_MinDurationMinute"] : 0;
 	$intMaxDurationMinute       = (isset($_POST["ajaxVal_MaxDurationMinute"])) ? $_POST["ajaxVal_MaxDurationMinute"] : 0;
@@ -49,12 +49,11 @@
 	//	print_r($output);
 	//	echo "</pre>";
 
-	# output html for ajax success/fail checker
+	# Output HTML (for ajax success/fail checker)
 	echo "success!"
 
 	/*
 	Debugging:
-		echo $resultsStudentsUsingGlow;
 		echo "<pre>" . print_r($_POST) . "</pre>";
 		print_r($_REQUEST);
 		exit();

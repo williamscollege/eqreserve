@@ -71,8 +71,8 @@
 							type: 'POST',
 							url: url,
 							data: {
-								ajaxVal_GroupName: data1,
-								ajaxVal_GroupDescription: data2
+								ajaxVal_Name: data1,
+								ajaxVal_Description: data2
 							},
 							dataType: 'html',
 							success: function (data) {
