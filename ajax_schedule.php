@@ -75,7 +75,7 @@
 
     //###############################################################
     if ($action == 'updateNotes') {
-        $SCHED->notes = $actionVal;
+        $SCHED->notes = htmlentities($actionVal);
         $SCHED->updateDb();
         if ($SCHED->matchesDb) {
             $results['status'] = 'success';

@@ -36,27 +36,38 @@
             });
 
             $("#sched-notes").blur(function () {
-                alert('TODO: implement sched notes save (check for change - implement change tracker)');
-                eqrUtil_setTransientAlert('progress','saving...');
-                $.ajax({
-                    url:ajax_url,
-                    dataType: 'json',
-                    data: {'action':'updateNotes'}
-                })
-                    .done(function (data,status,xhr) {
-                        eqrUtil_setTransientAlert('success','saved');
+                // check for change from original/previous notes, do the update if it differs
+                if ($('#sched-notes-view').html() != $("#sched-notes").val()) {
+                    eqrUtil_setTransientAlert('progress','saving...');
+                    $.ajax({
+                        url:ajax_url,
+                        dataType: 'json',
+                        data: {'schedule':<?php echo $SCHED->schedule_id; ?>,
+                               'action':'updateNotes',
+                               'actionVal':$("#sched-notes").val()
+                        }
                     })
-                    .fail(function (data,status,xhr) {
-                        eqrUtil_setTransientAlert('error','ERROR - not saved!');
-                    })
-//                    .always(function(d,s,x){
-//                        for (p in d) {
-//                            if (d.hasOwnProperty(p)) {
-//                                console.log(p+': '+d[p]);
-//                            }
-//                        }
-//                    })
-                ;
+                        .done(function (data,status,xhr) {
+                            if (data.status == 'success') {
+                                eqrUtil_setTransientAlert('success','saved');
+                                $('#sched-notes-view').html($("#sched-notes").val());
+                            }
+                            else {
+                                eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                            }
+                        })
+                        .fail(function (data,status,xhr) {
+                            eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                        })
+    //                    .always(function(d,s,x){
+    //                        for (p in d) {
+    //                            if (d.hasOwnProperty(p)) {
+    //                                console.log(p+': '+d[p]);
+    //                            }
+    //                        }
+    //                    })
+                    ;
+                }
             });
 
             $("#sched-is-manager-btn").click(function () {
@@ -140,7 +151,7 @@
         </label>
 
         <p>
-            <small class="view-control"><?php echo $SCHED->notes; ?></small>
+            <small class="view-control"><span id="sched-notes-view"><?php echo $SCHED->notes; ?></span></small>
             <div class="editing-control hide">
             <textarea id="sched-notes" name="sched-notes" class="notes-editing-region"><?php echo $SCHED->notes; ?></textarea>
             </div>
