@@ -124,10 +124,41 @@
                 eqrUtil_launchConfirm(confirmText,handleDeleteTimeBlock);
             });
             function handleDeleteTimeBlock() {
-                alert('TODO: implement delete time block '+GLOBAL_confirmHandlerData);
+                //alert('TODO: implement delete time block '+GLOBAL_confirmHandlerData);
                 // TODO: make the ajax call
                 // on success, update the DOM
                 // handle the case where the entire schedule has been deleted (head to acct mgt page by default, or sched_origin_page if that value is present)
+                eqrUtil_setTransientAlert('progress','saving...');
+                $.ajax({
+                    url:ajax_url,
+                    dataType: 'json',
+                    data: {'schedule':<?php echo $SCHED->schedule_id; ?>,
+                        'scheduleAction':'deleteTimeBlock',
+                        'actionVal':GLOBAL_confirmHandlerData
+                    }
+                })
+                    .done(function (data,status,xhr) {
+                        if (data.status == 'success') {
+                            eqrUtil_setTransientAlert('success','saved');
+                            // if there's only one item in the list, jump to user acct page
+                            // else remove the relevant list item
+
+                            if ($('ul#time_blocks > li').length <= 1) {
+                                window.location.href = 'account_management.php';
+                            }
+                            else {
+                                $('#list-of-time-block-'+GLOBAL_confirmHandlerData).remove();
+                            }
+                        }
+                        else {
+                            eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                        }
+                    })
+                    .fail(function (data,status,xhr) {
+                        eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                    })
+                ;
+
             }
 
             $(".delete-reservation-btn").click(function () {
@@ -172,7 +203,7 @@
             <?php
             $SCHED->loadTimeBlocks();
             foreach ($SCHED->time_blocks as $tb) {
-                echo '<li>';
+                echo '<li id="list-of-time-block-'.$tb->time_block_id.'">';
                 echo '<a href="#" id="delete-time-block-'.$tb->time_block_id.'" class="editing-control hide btn btn-medium btn-danger btn-delete-list-item delete-time-block-btn" data-for-time-block="'.$tb->time_block_id.'"><i class="icon icon-trash"></i> </a> ';
                 echo $tb->toString()."</li>\n";
             }
