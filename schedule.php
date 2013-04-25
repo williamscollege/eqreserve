@@ -223,13 +223,12 @@
         });
     </script>
 
-    <legend>Schedule of Reservations</legend>
 <!--
 <div id="page_alert" class="transient_alert in_progress_alert hide alert">
     Saved
 </div>
 -->
-    <a href="#" id="toggleEditMode" class="btn btn-medium btn-primary pull-right" data-cur-mode="view"><i class="icon-white icon-pencil"></i> Edit</a>
+	<legend class="pull-left row-fluid">Schedule of Reservations <a href="#" id="toggleEditMode" class="btn btn-medium btn-primary" data-cur-mode="view"><i class="icon-white icon-pencil"></i> Edit</a></legend>
 
     <div class="control-group">
         <label class="control-label" for="reservations">Reservations on

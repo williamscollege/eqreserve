@@ -40,7 +40,7 @@
 
 	/*
 	Debugging:
-		echo "<pre>" . print_r($_POST) . "</pre>";
+		echo "<pre>"; print_r($_POST); echo "</pre>";
 		print_r($_REQUEST);
 		exit();
 	 */

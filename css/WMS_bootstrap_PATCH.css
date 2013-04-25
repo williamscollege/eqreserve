@@ -19,23 +19,22 @@ label.error {
 }
 
 .text-warning {
-    color: #e17823
+	color: #e17823
 }
+
 /* =======================================
 	Patch For: bootstrap.css
 	Purpose: Williams custom tweaks to bootstrap.css
 ========================================== */
 
+/* add a placeholder to prevent page content from shifting to accommodate the scrollbar */
+html {
+	overflow-y: scroll;
+}
+
 .btn.btn-link.btn-cancel, .btn-link.btn-cancel {
 	color: #D15545 !important; /* red-orange */
 }
-/* Scrap Test: override bootstrap alert to make a layer, instead of an inline element; Unfortunately, this creates other UI issues -- DKC
-.alert
-{
-	position: absolute;
-	width: 500px;
-}
-*/
 
 /* =======================================
     Williams Custom CSS
@@ -43,7 +42,7 @@ label.error {
 ========================================== */
 
 .user-select {
-    width: 300px;
+	width: 300px;
 }
 
 .cursorPointer {
@@ -51,80 +50,84 @@ label.error {
 }
 
 .notes-editing-region {
-    height: 60px;
-    width: 480px;
+	height: 60px;
+	width: 480px;
 }
 
 .btn-delete-list-item {
-    margin: 1px;
-    padding: 1px;
+	margin: 1px;
+	padding: 1px;
 }
 
 .transient_alert {
-    position: absolute;
-    top: 100px;
-    left: 500px;
-    padding: 6px;
+	position: absolute;
+	top: 100px;
+	left: 500px;
+	padding: 6px;
 }
+
 .in_progress_alert {
-    border: 1px solid #973;
-    color: #973;
-    background-color: #eda;
+	border: 1px solid #973;
+	color: #973;
+	background-color: #eda;
 }
+
 .success_alert {
-    border: 1px solid #393;
-    color: #393;
-    background-color: #dfd;
+	border: 1px solid #393;
+	color: #393;
+	background-color: #dfd;
 }
+
 .error_alert {
-    border: 1px solid #933;
-    color: #933;
-    background-color: #fdd;
+	border: 1px solid #933;
+	color: #933;
+	background-color: #fdd;
 }
 
 .confirmationDialog {
-    border-width: 3px;
-    background-color: #feb;
+	border-width: 3px;
+	background-color: #feb;
 }
 
 .confirmationDialog .modal-header {
-    border: none;
-    padding: 0;
+	border: none;
+	padding: 0;
 }
 
 .confirmationDialog .modal-header .close {
-    width: 20px;
-    height: 20px;
-    margin: 6px 8px 0 0;
-    padding: 0;
-    color: #700;
-    border: 1px solid #700;
-    text-align: center;
-    vertical-align: middle;
-    /* text-shadow: none; */
-    opacity: .9;
-    filter: alpha(opacity=90);
-    background-color: #dcc;
+	width: 20px;
+	height: 20px;
+	margin: 6px 8px 0 0;
+	padding: 0;
+	color: #700;
+	border: 1px solid #700;
+	text-align: center;
+	vertical-align: middle;
+	/* text-shadow: none; */
+	opacity: .9;
+	filter: alpha(opacity=90);
+	background-color: #dcc;
 }
+
 .confirmationDialog .modal-header .close:hover {
-    color: #b00;
-    background-color: #ebb;
+	color: #b00;
+	background-color: #ebb;
 }
 
 .confirmationDialog .modal-body {
-    padding-bottom: 0;
-    border: none;
+	padding-bottom: 0;
+	border: none;
 }
 
 .confirmationDialog .modal-footer {
-    text-align: center;
-    padding: 6px;
-    border-width: 0;
-    background: none;
-    box-shadow: none;
-    -webkit-box-shadow: none;
+	text-align: center;
+	padding: 6px;
+	border-width: 0;
+	background: none;
+	box-shadow: none;
+	-webkit-box-shadow: none;
 }
 
 .confirmationDialog .modal-footer .btn {
-    margin: 0 24px;
+	margin: 0 24px;
 }

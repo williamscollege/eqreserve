@@ -30,7 +30,7 @@ $(document).ready(function () {
 
 function eqrUtil_launchConfirm(msg,handler) {
     $('#confirmModal .modal-body').html(msg);
-    $('#confirmModal').modal('show');
+    $('#confirmModal').modal({show:'true', backdrop:'static'});
     $('#confirmModal #confirm-yes').focus();
     $('#confirm-yes').off("click");
     $('#confirm-yes').click(handler);

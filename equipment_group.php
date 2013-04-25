@@ -186,7 +186,7 @@
 			// ***************************
 			// Form validation
 			// ***************************
-			var validator = $('#formEditEqGroup').validate({
+			var validator1 = $('#formEditEqGroup').validate({
 				rules: {
 					groupName: {
 						minlength: 2,
@@ -273,8 +273,73 @@
 				}
 			})
 
+			var validator2 = $('#frmAjaxAddItem').validate({
+				rules: {
+					ajaxItemName: {
+						minlength: 2,
+						required: true
+					},
+					ajaxItemDescription: {
+						minlength: 2,
+						required: true
+					}
+				},
+				highlight: function (element) {
+					$(element).closest('.control-group').removeClass('success').addClass('error');
+				},
+				success: function (element) {
+					element
+						.text('OK!').addClass('valid')
+						.closest('.control-group').removeClass('error').addClass('success');
+				},
+				submitHandler: function (form) {
+					// show loading text (button)
+					$("#btnAjaxSubmitAddItem").button('loading');
 
-			var validator2 = $('#frmAjaxAddSubgroup').validate({
+					var url = $("#frmAjaxAddItem").attr('action');			// get url from the form element
+					var formName = $("#frmAjaxAddItem").attr('name');		// get name from the form element
+					var data1 = $('#' + formName + ' #ajaxSubgroupID').val();
+					var data2 = $('#' + formName + ' #ajaxItemOrdering').val();
+					var data3 = $('#' + formName + ' #ajaxItemName').val();
+					var data4 = $('#' + formName + ' #ajaxItemDescription').val();
+					var data5 = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
+					// alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
+
+					$.ajax({
+						type: 'POST',
+						url: url,
+						data: {
+							ajaxVal_ID: data1,
+							ajaxVal_Order: data2,
+							ajaxVal_Name: data3,
+							ajaxVal_Description: data4,
+							ajaxVal_MultiSelect: data5
+						},
+						dataType: 'html',
+						success: function (data) {
+							// reset the submit button (avoid disabled state)
+							$("#btnAjaxSubmitAddItem").button('reset');
+
+							if (data) {
+								// update the element with new data from the ajax call
+								$("UL#displaySubgroup" + data1 + "Items li:nth-last-child(2)").append(data);
+
+								// hide and reset form
+								$("#btnAjaxCancelAddItem").click();
+							}
+							else {
+								// hide and reset form
+								cleanUpForm("frmAjaxAddItem")
+								// show error
+								$("UL#displaySubgroup" + data1 + "Items").append('<li><span class="label label-important">Important</span> An error occurred!</li>');
+							}
+						}
+					});
+
+				}
+			})
+
+			var validator3 = $('#frmAjaxAddSubgroup').validate({
 				rules: {
 					ajaxSubgroupName: {
 						minlength: 2,
@@ -348,8 +413,9 @@
 			// ***************************
 			function cleanUpForm(formName) {
 				// reset form
-				validator.resetForm(this);
+				validator1.resetForm(this);
 				validator2.resetForm(this);
+				validator3.resetForm(this);
 				// manually remove input highlights
 				$(".control-group").removeClass('success').removeClass('error');
 			}
@@ -362,9 +428,12 @@
 				var i = $(this).attr("data-subgroup-id");
 				// fetch item count, then increment for modal hidden input
 				var o = parseInt($(this).parent('LI').prev('LI').attr("data-item-order")) + 1;
+				// fetch subgroup characteristic 'IsMultiSelect' for modal hidden input
+				var m = $(this).attr("data-is-multiselect");
 				$("H3#modalAddItemLabel").text(n);
 				$("INPUT#ajaxSubgroupID").val(i);
 				$("INPUT#ajaxItemOrdering").val(o);
+				$("INPUT#ajaxItemIsMultiSelect").val(m);
 			});
 			$('.ajaxActionSubgroup').click(function () {
 				// pass values to modal
@@ -373,7 +442,7 @@
 				$("INPUT#ajaxSubgroupOrdering").val(o);
 			});
 			$('#btnAjaxCancelAddItem').click(function () {
-				cleanUpForm("frmAjaxAddSubgroupItem")
+				cleanUpForm("frmAjaxAddItem")
 				// clear form: reset
 				$("input[type=text], textarea").val("");
 				$("input[type=radio]").attr("checked", false);
@@ -394,12 +463,13 @@
 		# admin or manager: is allowed to edit fields
 		if ($USER->flag_is_system_admin || $is_group_manager) {
 			?>
-			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Edit</a>
+
+			<legend class="pull-left row-fluid">Equipment Group
+				<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit</a></legend>
+
 			<div id="managerEdit" class="hide">
 				<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditEqGroup" name="formEditEqGroup" method="post">
 					<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
-
-					<h3>Equipment Group</h3>
 
 					<div id="eqGroupFields">
 						<div class="control-group">
@@ -482,7 +552,7 @@
 							</div>
 						</div>
 
-						<h3>Reservation Rules</h3>
+						<legend>Reservation Rules</legend>
 
 						<div class="control-group">
 							<label class="control-label" for="goStartMinute">Start time (minutes)</label>
@@ -594,7 +664,6 @@
 
 		# Show this to all authenticated users
 		echo "<div id=\"managerView\">\n";
-		echo "<h3>Equipment Group</h3>\n";
 		echo "Group: <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
 		echo "Description: <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
 		echo "Managed by: ";
@@ -608,7 +677,7 @@
 				$managers)
 		);
 		echo "<br />\n";
-		echo "<h3>Reservation Rules</h3>\n";
+		echo "<legend>Reservation Rules</legend>\n";
 		echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"><span id=\"print_startMinute\">" . $Requested_EqGroup->start_minute . "</span> minutes</span><br />\n";
 		echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\"><span id=\"print_minDurationMinutes\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . "</span></span><br />\n";
 		echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\"><span id=\"print_maxDurationMinutes\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . "</span></span><br />\n";
@@ -618,12 +687,11 @@
 
 		<br />
 
-		<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary pull-right"><i class="icon-white icon-pencil"></i> Reserve
-			Equipment</a>
 		<form action="reservation.php" class="form-horizontal" id="formReservation" name="formReservation" method="post">
 			<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
-			<h3>Reserve Equipment</h3>
+			<legend class="pull-left row-fluid">Reserve Equipment
+				<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
 
 			<div id="reservationGroupFields">
 
@@ -632,12 +700,14 @@
 					$Requested_EqGroup->loadEqSubgroups();
 					//			util_prePrintR($Requested_EqGroup);
 
-					echo "<ul id=\"displaySubGroups\" class=\"unstyled\">";
+					echo "<ul id=\"displaySubGroups\" class=\"unstyled\">\n";
 					foreach ($Requested_EqGroup->eq_subgroups as $key) {
 
 						# Subgroup Items
 						$key->loadEqItems();
 
+						# Items
+						echo "<ul id=\"displaySubgroup" . $key->eq_subgroup_id . "Items\" class=\"unstyled\">\n";
 						if (count($key->eq_items) == 0) {
 							if ($USER->flag_is_system_admin || $is_group_manager) {
 								# Subgroup Title
@@ -646,7 +716,7 @@
 								# Button: Add an Item
 								echo "<li class=\"manager-action hide\">";
 								echo "<div class=\"span1\"></div>";
-								echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
+								echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-is-multiselect=\"" . $key->flag_is_multi_select . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 								echo "</li>";
 							}
 						}
@@ -696,15 +766,15 @@
 							if ($USER->flag_is_system_admin || $is_group_manager) {
 								echo "<li class=\"manager-action hide\">";
 								echo "<div class=\"span1\"></div>";
-								echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
+								echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-is-multiselect=\"" . $key->flag_is_multi_select . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 								echo "</li>";
 							}
 						}
+						echo "</ul>";
 					} # end of foreach: eq_subgroups
 					echo "</ul>";
 
 					if ($USER->flag_is_system_admin || $is_group_manager) {
-						//						echo "<div class=\"manager-action hide\"><br /><button type=\"button\" class=\"btn btn-primary btn-small\" title=\"Add a subgroup\"><i class='icon-plus icon-white'></i> Add a Subgroup</button></div>";
 						echo "<div class=\"manager-action hide\"><br /><a href=\"#modalAddSubgroup\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxActionSubgroup\" title=\"Add a subgroup to this equipment group\"><i class='icon-plus icon-white'></i> Add a Subgroup</a></div>";
 					}
 				?>
@@ -786,7 +856,7 @@
 
 		<!-- Modal: Item-->
 		<div id="modalAddItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
-			<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddSubgroupItem" name="frmAjaxAddSubgroupItem" method="post">
+			<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddItem" name="frmAjaxAddItem" method="post">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 					<h3 id="modalAddItemLabel"></h3>
@@ -798,6 +868,7 @@
 						<div class="controls">
 							<input type="hidden" id="ajaxSubgroupID" name="ajaxSubgroupID" value="" />
 							<input type="hidden" id="ajaxItemOrdering" name="ajaxItemOrdering" value="" />
+							<input type="hidden" id="ajaxItemIsMultiSelect" name="ajaxItemIsMultiSelect" value="" />
 							<input type="text" id="ajaxItemName" name="ajaxItemName" class="input-large" value="" placeholder="Name of Item" maxlength="200" />
 						</div>
 					</div>
