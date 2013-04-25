@@ -43,7 +43,7 @@
                         url:ajax_url,
                         dataType: 'json',
                         data: {'schedule':<?php echo $SCHED->schedule_id; ?>,
-                               'action':'updateNotes',
+                               'scheduleAction':'updateNotes',
                                'actionVal':$("#sched-notes").val()
                         }
                     })
@@ -71,18 +71,48 @@
             });
 
             $("#sched-is-manager-btn").click(function () {
-                // toggle form or plain-text
                 var curType = $("#resv-current-type").html();
-                if (curType == 'management') {
-                    $("#resv-current-type").html('regular')
-                    $("#resv-other-type").html('management')
-                }
-                else {
-                    $("#resv-current-type").html('management')
-                    $("#resv-other-type").html('regular')
-                }
-                $('#sched-is-manager-btn i.signifier').toggleClass('hide');
-                alert('TODO: implement schedule is-manager toggle');
+                var schedNewType = (curType == 'management') ? 'consumer' : 'manager';
+                eqrUtil_setTransientAlert('progress','saving...');
+                $.ajax({
+                    url:ajax_url,
+                    dataType: 'json',
+                    data: {'schedule':<?php echo $SCHED->schedule_id; ?>,
+                           'scheduleAction':'updateType',
+                           'actionVal':schedNewType
+                    }
+                })
+                    .done(function (data,status,xhr) {
+                        if (data.status == 'success') {
+                            eqrUtil_setTransientAlert('success','saved');
+                            // toggle form or plain-text
+                            if (curType == 'management') {
+                                $("#resv-current-type").html('regular')
+                                $("#resv-other-type").html('management')
+                                $('#sched-is-manager-view-text').html('This is a regular user schedule');
+                            }
+                            else {
+                                $("#resv-current-type").html('management')
+                                $("#resv-other-type").html('regular')
+                                $('#sched-is-manager-view-text').html('This is a management schedule!');
+                            }
+                            $('#sched-is-manager-btn i.signifier').toggleClass('hide');
+                            $('#sched-is-manager-btn').toggleClass('btn-warning');
+                            $('#sched-is-manager-btn').toggleClass('btn-info');
+                            $('#sched-is-manager-view').toggleClass('text-warning');
+                            $('#sched-is-manager-view').toggleClass('text-info');
+                            $('#sched-is-manager-view i').toggleClass('icon-user');
+                            $('#sched-is-manager-view i').toggleClass('icon-wrench');
+                        }
+                        else {
+                            eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                        }
+                    })
+                    .fail(function (data,status,xhr) {
+                        eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                    })
+                ;
+
             });
 
             $(".delete-time-block-btn").click(function () {
@@ -159,15 +189,15 @@
 
         <?php
         if ($SCHED->type == 'manager') {
-            echo '<p class="view-control text-warning"><i class="icon-wrench"></i> <strong>This is a management schedule!</strong></p>';
+            echo '<p id="sched-is-manager-view" class="view-control text-warning"><i class="icon-wrench"></i> <strong id="sched-is-manager-view-text">This is a management schedule!</strong></p>';
         }
         else {
-            echo '<p class="view-control text-info"><i class="icon-user"></i> <strong>This is a regular user schedule</strong></p>';
+            echo '<p id="sched-is-manager-view" class="view-control text-info"><i class="icon-user"></i> <strong id="sched-is-manager-view-text">This is a regular user schedule</strong></p>';
         }
         if ($USER->canManageEqGroup($SCHED->reservations[0]->eq_item->eq_group->eq_group_id)) {
         ?>
         <div class="editing-control hide text-warning">
-            <a href="#" id="sched-is-manager-btn" class="btn btn-medium btn-warning">
+            <a href="#" id="sched-is-manager-btn" class="btn btn-medium <?php echo ($SCHED->type == 'manager') ? 'btn-warning' : 'btn-info'; ?>">
              <i class="icon-wrench signifier<?php echo ($SCHED->type == 'manager')?'':' hide';?>"></i>
              <i class="icon-user signifier<?php echo ($SCHED->type == 'manager')?' hide':'';?>"></i>
              This is a <strong><span id="resv-current-type"><?php echo ($SCHED->type == 'manager')?'management':'regular';?></span></strong> schedule;
