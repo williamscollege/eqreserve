@@ -160,10 +160,6 @@
                 eqrUtil_launchConfirm(confirmText,handleDeleteReservation);
             });
             function handleDeleteReservation() {
-                //alert('TODO: implement delete a reservation '+GLOBAL_confirmHandlerData);
-                // TODO: make the ajax call
-                // on success, update the DOM
-                // handle the case where the entire schedule has been deleted (head to acct mgt page by default, or sched_origin_page if that value is present)
                 eqrUtil_setTransientAlert('progress','saving...');
                 $.ajax({
                     url:ajax_url,
@@ -200,9 +196,28 @@
                 eqrUtil_launchConfirm("<p>Are you sure you want to delete this entire schedule of reservations?</p>\n",handleDeleteSchedule);
             });
             function handleDeleteSchedule() {
-                alert('TODO: implement delete entire schedule '+GLOBAL_confirmHandlerData);
-                // TODO: make the ajax call
-                // on success, head to acct mgt page by default, or sched_origin_page if that value is present
+                eqrUtil_setTransientAlert('progress','saving...');
+                $.ajax({
+                    url:ajax_url,
+                    dataType: 'json',
+                    data: {'schedule':<?php echo $SCHED->schedule_id; ?>,
+                        'scheduleAction':'deleteSchedule',
+                        'actionVal':GLOBAL_confirmHandlerData
+                    }
+                })
+                    .done(function (data,status,xhr) {
+                        if (data.status == 'success') {
+                            eqrUtil_setTransientAlert('success','saved');
+                            window.location.href = headToOnScheduleGone;
+                        }
+                        else {
+                            eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                        }
+                    })
+                    .fail(function (data,status,xhr) {
+                        eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                    })
+                ;
             }
 
         });
