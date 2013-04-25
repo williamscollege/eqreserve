@@ -34,7 +34,6 @@
 	//	print_r($esg);
 	//	echo "</pre><hr/>";
 
-
 	$output = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
 	//	echo "<pre>";
 	//	print_r($test);
@@ -43,12 +42,12 @@
 	# Output HTML
 
 	# Subgroup Title
-	echo "<strong>" . $output->name . ":</strong> " . $output->descr . "\n";
-	echo "<li><div class=\"span1\">&nbsp;</div><em>No items exist.</em></li>";
+	echo "<span data-subgroup-order=\"" . $output->ordering . "\"><strong>" . $output->name . ":</strong></span> " . $output->descr . "\n";
+	echo "<li data-item-order=\"0\"><div class=\"span1\">&nbsp;</div><em>No items exist.</em></li>";
 	# Button: Add an Item
 	echo "<li class=\"manager-action\">"; # NOTE: OMIT class="hide" because this is direct output injected into the DOM
 	echo "<div class=\"span1\"></div>";
-	echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $output->eq_subgroup_id . "\" data-subgroup-name=\"" . $output->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxAction\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
+	echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $output->eq_subgroup_id . "\" data-subgroup-name=\"" . $output->name . "\" data-toggle=\"modal\" class=\"btn btn-primary btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 	echo "</li>";
 
 

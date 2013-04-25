@@ -6,7 +6,7 @@
 	</p>
 
 	<!-- Modal -->
-	<div id="modalHelp" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHelpLabel" aria-hidden="true">
+	<div id="modalHelp" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalHelpLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 			<h3 id="modalHelpLabel">Help FAQ</h3>

@@ -357,7 +357,7 @@
 
 			// Modals
 			$('.ajaxActionItem').click(function () {
-				// pass values into modal
+				// pass values to modal
 				var n = $(this).attr("data-subgroup-name");
 				var i = $(this).attr("data-subgroup-id");
 				// fetch item count, then increment for modal hidden input
@@ -367,9 +367,9 @@
 				$("INPUT#ajaxItemOrdering").val(o);
 			});
 			$('.ajaxActionSubgroup').click(function () {
-				// pass values into modal
+				// pass values to modal
 				// fetch subgroup count, then increment for modal hidden input
-				var o = parseInt($('SPAN.subgroup-identifier').length) + 1;
+				var o = parseInt($('SPAN[data-subgroup-order]').last().attr('data-subgroup-order')) + 1;
 				$("INPUT#ajaxSubgroupOrdering").val(o);
 			});
 			$('#btnAjaxCancelAddItem').click(function () {
@@ -641,7 +641,7 @@
 						if (count($key->eq_items) == 0) {
 							if ($USER->flag_is_system_admin || $is_group_manager) {
 								# Subgroup Title
-								echo "<span class=\"subgroup-identifier\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
+								echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
 								echo "<li data-item-order=\"0\"><div class=\"span1\">&nbsp;</div><em>No items exist.</em></li>";
 								# Button: Add an Item
 								echo "<li class=\"manager-action hide\">";
@@ -652,7 +652,7 @@
 						}
 						else {
 							# Subgroup Title
-							echo "<span class=\"subgroup-identifier\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
+							echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
 							foreach ($key->eq_items as $item) {
 								?>
 								<li data-item-order="<?php echo $item->ordering; ?>">
@@ -785,7 +785,7 @@
 
 
 		<!-- Modal: Item-->
-		<div id="modalAddItem" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
+		<div id="modalAddItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
 			<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddSubgroupItem" name="frmAjaxAddSubgroupItem" method="post">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -820,7 +820,7 @@
 		</div>
 
 		<!-- Modal: Subgroup-->
-		<div id="modalAddSubgroup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
+		<div id="modalAddSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
 			<form action="ajax_add_eq_subgroup.php" id="frmAjaxAddSubgroup" name="frmAjaxAddSubgroup" method="post">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
