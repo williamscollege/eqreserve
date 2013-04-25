@@ -79,6 +79,7 @@
 					$ei->eq_group = $this->eq_group;
 				}
 			}
+			usort($this->eq_items, "EqItem::cmp");
 			return TRUE;
 		}
 	}
