@@ -75,7 +75,7 @@
 
     //###############################################################
     if ($action == 'updateNotes') {
-        $SCHED->notes = $actionVal;
+        $SCHED->notes = htmlentities($actionVal);
         $SCHED->updateDb();
         if ($SCHED->matchesDb) {
             $results['status'] = 'success';
@@ -116,6 +116,27 @@
         }
         else {
             $RESV = Reservation::getOneFromDb(['schedule_id'=>$SCHED->schedule_id,'eq_item_id'=>$actionVal],$DB);
+            if ($RESV->matchesDb) {
+                $RESV->flag_delete = true;
+                $RESV->updateDb();
+                if ($RESV->matchesDb) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+    }
+    //###############################################################
+    elseif ($action == 'deleteReservation') {
+        $SCHED->loadReservations();
+        if (count($SCHED->reservations) == 1) {
+            if ($SCHED->reservations[0]->reservation_id == $actionVal) {
+                if (doDeleteEntireSchedule($SCHED)) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+        else {
+            $RESV = Reservation::getOneFromDb(['reservation_id'=>$actionVal],$DB);
             if ($RESV->matchesDb) {
                 $RESV->flag_delete = true;
                 $RESV->updateDb();
