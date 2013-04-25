@@ -170,6 +170,7 @@
 			foreach ($this->eq_subgroups as $esg) {
 				$esg->eq_group = $this;
 			}
+			usort($this->eq_subgroups, "EqSubgroup::cmp");
 			return TRUE;
 		}
 
@@ -181,6 +182,7 @@
 				foreach ($esg->eq_items as $itm) { // could maybe use array_merge here instead; not sure which is faster...
 					array_push($this->eq_items, $itm);
 				}
+				usort($esg->eq_items, "EqItem::cmp");
 			}
 
 			return TRUE;
