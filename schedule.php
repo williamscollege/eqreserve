@@ -2,11 +2,6 @@
 	$pageTitle = 'Schedule and Reservations';
 	require_once('head.php');
 
-//    $ig_ids = array_map(function($ig){return $ig->inst_group_id;},$USER->inst_groups);
-//    if (! in_array($_REQUEST['inst_group'],$ig_ids)) {
-//        util_redirectToAppHome('failure', 51);
-//    }
-
     $SCHED = Schedule::getOneFromDb(['schedule_id' => $_REQUEST['schedule']],$DB);
     if ((! $USER->flag_is_system_admin) && ($SCHED->user_id != $USER->user_id)) {
         util_redirectToAppHome('failure', 52);
@@ -16,6 +11,7 @@
 ?>
     <script type="text/javascript">
         var ajax_url = 'ajax_schedule.php';
+        var headToOnScheduleGone = '<?php echo (isset($_REQUEST["returnToEqGroup"]))?('equipment_group.php?eid='.$SCHED->reservations[0]->eq_item->eq_group->eq_group_id):'account_management.php'; ?>';
 
         $(document).ready(function () {
             // Toggle view vs edit
@@ -144,7 +140,7 @@
                             // else remove the relevant list item
 
                             if ($('ul#time_blocks > li').length <= 1) {
-                                window.location.href = 'account_management.php';
+                                window.location.href = headToOnScheduleGone;
                             }
                             else {
                                 $('#list-of-time-block-'+GLOBAL_confirmHandlerData).remove();
