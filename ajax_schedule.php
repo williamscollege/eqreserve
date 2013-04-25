@@ -126,6 +126,27 @@
         }
     }
     //###############################################################
+    elseif ($action == 'deleteReservation') {
+        $SCHED->loadReservations();
+        if (count($SCHED->reservations) == 1) {
+            if ($SCHED->reservations[0]->reservation_id == $actionVal) {
+                if (doDeleteEntireSchedule($SCHED)) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+        else {
+            $RESV = Reservation::getOneFromDb(['reservation_id'=>$actionVal],$DB);
+            if ($RESV->matchesDb) {
+                $RESV->flag_delete = true;
+                $RESV->updateDb();
+                if ($RESV->matchesDb) {
+                    $results['status'] = 'success';
+                }
+            }
+        }
+    }
+    //###############################################################
     elseif ($action == 'deleteTimeBlock') {
         $SCHED->loadTimeBlocks();
         if (count($SCHED->time_blocks) == 1) {
