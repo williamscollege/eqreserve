@@ -86,7 +86,7 @@ require_once dirname(__FILE__) . '/reservation.class.php';
             if ($this->type == 'manager') {
                 $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
             }
-            $li .= '<a href="schedule.php?schedule='.$this->schedule_id.'"> '.$this->toString().'</a><br/>';
+            $li .= '<strong><a href="schedule.php?schedule='.$this->schedule_id.'"> '.$this->toString().'</a></strong><br/>';
             $li .= 'for <a href="equipment_group.php?eid='
                 .$this->reservations[0]->eq_item->eq_group->eq_group_id
                 .'">'.$this->reservations[0]->eq_item->eq_group->name.'</a>:';
