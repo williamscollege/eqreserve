@@ -26,9 +26,8 @@
 	$eg = EqGroup::getOneFromDb(['eq_group_id' => $intID], $DB);
 
 	if (!$eg->matchesDb) {
-		// handle here case where id does not exist
-		echo "failed at MATCHESDB check";
-		//		util_redirectToAppHome('failure',51);
+		// error: matching record DOES NOT already exist
+		return false;
 		exit;
 	}
 	$eg->name                   = $strName;

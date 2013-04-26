@@ -11,14 +11,15 @@
 	#------------------------------------------------#
 	# SQL: INSERT Item
 	#------------------------------------------------#
-	$eg = EqGroup::getOneFromDb(['name' => $strName, 'descr' => $strDescription], $DB);
+	$eg = EqGroup::getOneFromDb(['name' => $strName], $DB);
 	//	echo "<pre>";
 	//	print_r($eg);
 	//	echo "</pre>";
 
 	if ($eg->matchesDb) {
-		// handle here case where group already exists
-		util_redirectToAppHome('failure', 61);
+		// error: matching record already exists
+		return false;
+		exit;
 	}
 	$eg->name  = $strName;
 	$eg->descr = $strDescription;

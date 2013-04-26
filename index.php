@@ -80,12 +80,15 @@
 								cleanUpForm("formAddEqGroup")
 
 								if (data) {
+									// remove error messages
+									$('DIV.alert-error').remove();
+
 									// update the element with new data from the ajax call
 									$("UL#displayEqGroups").append(data);
 								}
 								else {
-									// show error
-									$("UL#displayEqGroups").append('<li><span class="label label-important">Important</span> An error occurred!</li>');
+									// show error message
+									$("UL#displayEqGroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 								}
 							}
 						});

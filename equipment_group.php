@@ -114,25 +114,27 @@
 				else {
 					$("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
 					// hide the other form
-					$("#btnCancelEditEqGroup").click();
+					$("#btnCancelEditGroup").click();
 					// hide special manager actions
 					$(".manager-action").addClass("hide");
 				}
 			});
 
 			// Cancel and cleanup
-			$("#btnCancelEditEqGroup").click(function () {
-				cleanUpForm("formEditEqGroup")
+			$("#btnCancelEditGroup").click(function () {
+				cleanUpForm("formEditGroup")
 				// hide form fields
 				$("#managerEdit").addClass("hide");
 				$("#managerView").removeClass("hide");
 				$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
 				// hide special manager actions
 				$(".manager-action").addClass("hide");
+				// reset the submit button (avoid disabled state)
+				$("#btnSubmitEditGroup").button('reset');
 			});
 			// Cancel and cleanup
 			$("#btnCancelReservation").click(function () {
-				cleanUpForm("formReservation")
+				cleanUpForm("formScheduleReservations")
 				// hide form fields, restore button label
 				$(".reservationForm").addClass("hide");
 				$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
@@ -178,7 +180,7 @@
 
 			// Remove later: debugging jquery validator plugin
 			$("a.check").click(function () {
-				alert("is 'formEditEqGroup' Valid?: " + $("#formEditEqGroup").valid() + "\n" + "is 'formReservation' Valid?: " + $("#formReservation").valid());
+				alert("is 'formEditGroup' Valid?: " + $("#formEditGroup").valid() + "\n" + "is 'formScheduleReservations' Valid?: " + $("#formScheduleReservations").valid());
 				return false;
 			});
 
@@ -186,7 +188,7 @@
 			// ***************************
 			// Form validation
 			// ***************************
-			var validator1 = $('#formEditEqGroup').validate({
+			var validator1 = $('#formEditGroup').validate({
 				rules: {
 					groupName: {
 						minlength: 2,
@@ -226,7 +228,7 @@
 //					},
 				submitHandler: function (form) {
 					// show loading text (button)
-					$("#btnSubmitEditEqGroup").button('loading');
+					$("#btnSubmitEditGroup").button('loading');
 
 					// Update printed text values on screen with submitted values
 					$("#print_groupName").text($("#groupName").val());
@@ -236,15 +238,15 @@
 					$("#print_maxDurationMinutes").text($("#maxDurationMinutes").val());
 					$("#print_durationIntervalMinutes").text($("#durationIntervalMinutes").val());
 
-					var url = $("#formEditEqGroup").attr('action');
-					var formName = "formEditEqGroup";
+					var url = $("#formEditGroup").attr('action');
+					var formName = "formEditGroup";
 //							alert('url=' + url + '\n' + 'formName=' + formName + '\n');
 
 					$.ajax({
 						type: 'POST',
 						url: url,
 						data: {
-							ajaxVal_ID: $('#eqGroupID').val(),
+							ajaxVal_ID: $('#groupID').val(),
 							ajaxVal_Name: $('#groupName').val(),
 							ajaxVal_Description: $('#groupDescription').val(),
 							ajaxVal_StartMinute: $('#startMinute').val(),
@@ -254,18 +256,15 @@
 						},
 						dataType: 'html',
 						success: function (data) {
-							// reset the submit button (avoid disabled state)
-							$("#btnSubmitEditEqGroup").button('reset');
+							// hide and reset form
+							$("#btnCancelEditGroup").click();
 
 							if (data) {
-								// hide and reset form
-								$("#btnCancelEditEqGroup").click();
+								// nothing more to do
 							}
 							else {
-								// hide and reset form
-								cleanUpForm("formEditEqGroup")
-								// show error
-								$("#btnSubmitEditEqGroup").append('<p><span class="label label-important">Important</span> An error occurred!</p>');
+								// show error message
+								$("DIV.container legend:nth-child(2)").before('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> This record was not found in the database</div>');
 							}
 						}
 					});
@@ -317,21 +316,19 @@
 						},
 						dataType: 'html',
 						success: function (data) {
-							// reset the submit button (avoid disabled state)
-							$("#btnAjaxSubmitAddItem").button('reset');
+							// hide and reset form
+							$("#btnAjaxCancelAddItem").click();
 
 							if (data) {
-								// update the element with new data from the ajax call
-								$("UL#displaySubgroup" + data1 + "Items li:nth-last-child(2)").append(data);
+								// remove error messages
+								$('DIV.alert-error').remove();
 
-								// hide and reset form
-								$("#btnAjaxCancelAddItem").click();
+								// update the element with new data from the ajax call
+								$("UL#displaySubgroup" + data1 + " li:nth-last-child(2)").append(data);
 							}
 							else {
-								// hide and reset form
-								cleanUpForm("frmAjaxAddItem")
-								// show error
-								$("UL#displaySubgroup" + data1 + "Items").append('<li><span class="label label-important">Important</span> An error occurred!</li>');
+								// show error message
+								$("UL#displaySubgroup" + data1 + " li:nth-last-child(2)").append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 							}
 						}
 					});
@@ -367,7 +364,7 @@
 
 					var url = $("#frmAjaxAddSubgroup").attr('action');			// get url from the form element
 					var formName = $("#frmAjaxAddSubgroup").attr('name');		// get name from the form element
-					var data1 = $('#' + formName + ' #ajaxEqGroupID').val();
+					var data1 = $('#' + formName + ' #ajaxGroupID').val();
 					var data2 = $('#' + formName + ' #ajaxSubgroupOrdering').val();
 					var data3 = $('#' + formName + ' #ajaxSubgroupName').val();
 					var data4 = $('#' + formName + ' #ajaxSubgroupDescription').val();
@@ -386,21 +383,19 @@
 						},
 						dataType: 'html',
 						success: function (data) {
-							// reset the submit button (avoid disabled state)
-							$("#btnAjaxSubmitAddSubgroup").button('reset');
+							// hide and reset form
+							$("#btnAjaxCancelAddSubgroup").click();
 
 							if (data) {
-								// update the element with new data from the ajax call
-								$("UL#displaySubGroups").append(data);
+								// remove error messages
+								$('DIV.alert-error').remove();
 
-								// hide and reset form
-								$("#btnAjaxCancelAddSubgroup").click();
+								// update the element with new data from the ajax call
+								$("UL#displayAllSubgroups").append(data);
 							}
 							else {
-								// hide and reset form
-								cleanUpForm("frmAjaxAddSubgroup")
-								// show error
-								$("UL#displaySubGroups").append('<li><span class="label label-important">Important</span> An error occurred!</li>');
+								// show error message
+								$("UL#displayAllSubgroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 							}
 						}
 					});
@@ -446,12 +441,16 @@
 				// clear form: reset
 				$("input[type=text], textarea").val("");
 				$("input[type=radio]").attr("checked", false);
+				// reset the submit button (avoid disabled state)
+				$("#btnAjaxSubmitAddItem").button('reset');
 			});
 			$('#btnAjaxCancelAddSubgroup').click(function () {
 				cleanUpForm("frmAjaxAddSubgroup")
 				// clear form: reset
 				$("input[type=text], textarea").val("");
 				$("input[type=radio]").attr("checked", false);
+				// reset the submit button (avoid disabled state)
+				$("#btnAjaxSubmitAddSubgroup").button('reset');
 			});
 
 		});
@@ -468,10 +467,9 @@
 				<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit</a></legend>
 
 			<div id="managerEdit" class="hide">
-				<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditEqGroup" name="formEditEqGroup" method="post">
-					<input type="hidden" id="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+				<form action="ajax_edit_eq_group.php" class="form-horizontal" id="formEditGroup" name="formEditGroup" method="post">
+					<input type="hidden" id="groupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
-					<div id="eqGroupFields">
 						<div class="control-group">
 							<label class="control-label" for="groupName">Group</label>
 
@@ -646,14 +644,13 @@
 						</div>
 
 						<div class="control-group">
-							<label class="control-label" for="btnSubmitEditEqGroup"></label>
+							<label class="control-label" for="btnSubmitEditGroup"></label>
 
 							<div class="controls">
-								<button type="submit" id="btnSubmitEditEqGroup" class="btn btn-success" data-loading-text="Saving...">Save</button>
-								<button type="button" id="btnCancelEditEqGroup" class="btn btn-link btn-cancel">Cancel</button>
+								<button type="submit" id="btnSubmitEditGroup" class="btn btn-success" data-loading-text="Saving...">Save</button>
+								<button type="button" id="btnCancelEditGroup" class="btn btn-link btn-cancel">Cancel</button>
 							</div>
 						</div>
-					</div>
 				</form>
 			</div>
 		<?php
@@ -687,27 +684,25 @@
 
 		<br />
 
-		<form action="reservation.php" class="form-horizontal" id="formReservation" name="formReservation" method="post">
+		<form action="reservation.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
 			<input type="hidden" id="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
 			<legend class="pull-left row-fluid">Reserve Equipment
 				<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
-
-			<div id="reservationGroupFields">
 
 				<?php
 					# Load EQSubgroups
 					$Requested_EqGroup->loadEqSubgroups();
 					//			util_prePrintR($Requested_EqGroup);
 
-					echo "<ul id=\"displaySubGroups\" class=\"unstyled\">\n";
+					echo "<ul id=\"displayAllSubgroups\" class=\"unstyled\">\n";
 					foreach ($Requested_EqGroup->eq_subgroups as $key) {
 
 						# Subgroup Items
 						$key->loadEqItems();
 
 						# Items
-						echo "<ul id=\"displaySubgroup" . $key->eq_subgroup_id . "Items\" class=\"unstyled\">\n";
+						echo "<ul id=\"displaySubgroup" . $key->eq_subgroup_id . "\" class=\"unstyled\">\n";
 						if (count($key->eq_items) == 0) {
 							if ($USER->flag_is_system_admin || $is_group_manager) {
 								# Subgroup Title
@@ -848,15 +843,14 @@
 						<button type="button" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
 					</div>
 				</div>
-			</div>
-
 		</form>
 		</div>
 
 
 		<!-- Modal: Item-->
-		<div id="modalAddItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
-			<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddItem" name="frmAjaxAddItem" method="post">
+
+		<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddItem" name="frmAjaxAddItem" method="post">
+			<div id="modalAddItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 					<h3 id="modalAddItemLabel"></h3>
@@ -887,12 +881,13 @@
 					<button type="reset" id="btnAjaxCancelAddItem" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
 					</button>
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
+
 
 		<!-- Modal: Subgroup-->
-		<div id="modalAddSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
-			<form action="ajax_add_eq_subgroup.php" id="frmAjaxAddSubgroup" name="frmAjaxAddSubgroup" method="post">
+		<form action="ajax_add_eq_subgroup.php" id="frmAjaxAddSubgroup" name="frmAjaxAddSubgroup" method="post">
+			<div id="modalAddSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 					<h3 id="modalAddSubgroupLabel">Add a Subgroup</h3>
@@ -902,7 +897,7 @@
 						<label class="control-label" for="ajaxSubgroupName">Name</label>
 
 						<div class="controls">
-							<input type="hidden" id="ajaxEqGroupID" name="ajaxEqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+							<input type="hidden" id="ajaxGroupID" name="ajaxGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 							<input type="hidden" id="ajaxSubgroupOrdering" name="ajaxSubgroupOrdering" value="" />
 							<input type="text" id="ajaxSubgroupName" name="ajaxSubgroupName" class="input-large" value="" placeholder="Name of Subgroup" maxlength="200" />
 						</div>
@@ -930,8 +925,9 @@
 					<button type="reset" id="btnAjaxCancelAddSubgroup" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
 					</button>
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
+
 
 		<?php
 		require_once('foot.php');

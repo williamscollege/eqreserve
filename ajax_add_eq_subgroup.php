@@ -14,14 +14,15 @@
 	#------------------------------------------------#
 	# SQL: INSERT Item
 	#------------------------------------------------#
-	$esg = EqSubgroup::getOneFromDb(['name' => $strName, 'descr' => $strDescription], $DB);
-	//	echo "<pre>";
-	//	print_r($esg);
-	//	echo "</pre>";
+	$esg = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
+//		echo "<pre>";
+//		print_r($esg);
+//		echo "</pre>";
 
 	if ($esg->matchesDb) {
-		// handle here case where group already exists
-		util_redirectToAppHome('failure', 61);
+		// error: matching record already exists
+		return false;
+		exit;
 	}
 	$esg->eq_group_id          = $intID;
 	$esg->ordering             = $intOrder;
@@ -42,7 +43,7 @@
 	# Output HTML
 
 	# Subgroup Title
-	echo "<ul id=\"displaySubgroup" . $output->eq_subgroup_id . "Items\" class=\"unstyled\">\n";
+	echo "<ul id=\"displaySubgroup" . $output->eq_subgroup_id . "\" class=\"unstyled\">\n";
 	echo "<span data-subgroup-order=\"" . $output->ordering . "\"><strong>" . $output->name . ":</strong></span> " . $output->descr . "\n";
 	echo "<li data-item-order=\"0\"><div class=\"span1\">&nbsp;</div><em>No items exist.</em></li>";
 	# Button: Add an Item

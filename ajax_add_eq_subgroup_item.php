@@ -14,14 +14,15 @@
 	#------------------------------------------------#
 	# SQL: INSERT Item
 	#------------------------------------------------#
-	$ei = EqItem::getOneFromDb(['eq_subgroup_id' => $intID, 'name' => $strName, 'descr' => $strDescription], $DB);
+	$ei = EqItem::getOneFromDb(['eq_subgroup_id' => $intID, 'name' => $strName], $DB);
 	//	echo "<pre>";
 	//	print_r($ei);
 	//	echo "</pre>";
 
 	if ($ei->matchesDb) {
-		// handle here case where group already exists
-		util_redirectToAppHome('failure', 61);
+		// error: matching record already exists
+		return false;
+		exit;
 	}
 	$ei->eq_subgroup_id = $intID;
 	$ei->ordering       = $intOrder;
@@ -36,7 +37,7 @@
 	# Fetch the Item from this specific subgroup
 	$output = EqItem::getOneFromDb(['eq_subgroup_id' => $intID, 'name' => $strName], $DB);
 	//	echo "<pre>";
-	//	print_r($test);
+	//	print_r($output);
 	//	echo "</pre>";
 
 	# Output HTML
@@ -44,7 +45,7 @@
 	# Item Title
 	echo "<li data-item-order=\"" . $output->ordering . "\">";
 	echo "<div class=\"span1\">&nbsp;</div>";
-	echo "<label class=\"\" for=\"" . $output->eq_item_id . "\">";
+	echo "<label class=\"\" for=\"item" . $output->eq_item_id . "\">";
 	#conditional logic needed here to define: radio OR checkbox
 	if ($bitIsMultiSelect == 0) {
 		# radio: single select
