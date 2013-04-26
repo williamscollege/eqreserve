@@ -11,7 +11,7 @@
     $actionValParam= (isset($_REQUEST["actionVal"])) ? $_REQUEST["actionVal"] : 0;
 
     $actionVal = true;
-    if (($actionValParam == 0) || ($actionValParam == 'false') || ($actionValParam == '')) {
+    if (($actionValParam == '0') || ($actionValParam == 'false') || ($actionValParam == '')) {
         $actionVal = false;
     }
     #------------------------------------------------#
