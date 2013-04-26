@@ -59,6 +59,10 @@
         'status'=> 'failure'
     ];
 
+    if (! $schedule) {
+        echo json_encode($results);
+        exit;
+    }
 
     // make sure the specified schedule exists
     $SCHED = Schedule::getOneFromDb(['schedule_id'=>$schedule],$DB);

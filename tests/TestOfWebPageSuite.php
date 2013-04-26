@@ -9,6 +9,7 @@ require_once('../lang.cfg.php');
 class TestOfWebSuite extends TestSuite {
     function TestOfWebSuite() {
         $this->TestSuite('Web page tests');
+
         # Tests: Index page
 		$this->addFile('web_page_tests/IndexPageLoadTest.php');
         $this->addFile('web_page_tests/IndexPageAuthTest.php');
@@ -28,6 +29,9 @@ class TestOfWebSuite extends TestSuite {
         # Tests: Schedules / Reservations
         $this->addFile('web_page_tests/ScheduleTest.php');
         $this->addFile('web_page_tests/AjaxScheduleTest.php');
+
+        # Tests: Communication Preferences
+        $this->addFile('web_page_tests/AjaxCommPrefTest.php');
 
 		# Sound Effect
 		$this->addFile('soundForTesting.php');

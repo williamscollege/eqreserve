@@ -14,6 +14,17 @@
         }
     }
 ?>
+    <script type="text/javascript">
+$(document).ready(function () {
+    $(".comm_pref-checkbox").change(function () {
+        var comm_pref_id = $(this).attr('data-for-comm-pref');
+        var pref_type = $(this).attr('data-comm-pref-type');
+        var pref_state = $(this).is(':checked');
+        alert('TODO: handle pref set for pref:'+comm_pref_id+' of type:'+pref_type+' set value:'+pref_state);
+    });
+
+});
+    </script>
 
 
 	<form action="" id="" class="form-horizontal" name="" method="">
