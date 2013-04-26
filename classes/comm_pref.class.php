@@ -21,10 +21,10 @@
 
         function toHTMLForm($forManager=false) {
             $ret = '<ul class="inline">';
-            $ret .= '<li>Reminder on upcoming reservations: <input type="checkbox" id="reminder_comm_pref_'.$this->comm_pref_id.'" name="reminder_comm_pref_'.$this->comm_pref_id.'" data-for-comm-pref="'.$this->comm_pref_id.'"'.(($this->flag_alert_on_upcoming_reservation)?' checked="checked"':'').'/></li>';
+            $ret .= '<li>Reminder on upcoming reservations: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="reminder" id="reminder_comm_pref_'.$this->comm_pref_id.'" name="reminder_comm_pref_'.$this->comm_pref_id.'" data-for-comm-pref="'.$this->comm_pref_id.'"'.(($this->flag_alert_on_upcoming_reservation)?' checked="checked"':'').'/></li>';
             if ($forManager) {
-                $ret .= '<li>Alert on reservation created: <input type="checkbox" id="alert_create_comm_pref_'.$this->comm_pref_id.'" name="alert_create_comm_pref_'.$this->comm_pref_id.'" data-for-comm-pref="'.$this->comm_pref_id.'"'.(($this->flag_contact_on_reserve_create)?' checked="checked"':'').'/></li>';
-                $ret .= '<li>Alert on reservation cancelled: <input type="checkbox" id="alert_cancel_comm_pref_'.$this->comm_pref_id.'" name="alert_cancel_comm_pref_'.$this->comm_pref_id.'" data-for-comm-pref="'.$this->comm_pref_id.'"'.(($this->flag_contact_on_reserve_cancel)?' checked="checked"':'').'/></li>';
+                $ret .= '<li>Alert on reservation created: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="alert_create" id="alert_create_comm_pref_'.$this->comm_pref_id.'" name="alert_create_comm_pref_'.$this->comm_pref_id.'" data-for-comm-pref="'.$this->comm_pref_id.'"'.(($this->flag_contact_on_reserve_create)?' checked="checked"':'').'/></li>';
+                $ret .= '<li>Alert on reservation cancelled: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="alert_cancel" id="alert_cancel_comm_pref_'.$this->comm_pref_id.'" name="alert_cancel_comm_pref_'.$this->comm_pref_id.'" data-for-comm-pref="'.$this->comm_pref_id.'"'.(($this->flag_contact_on_reserve_cancel)?' checked="checked"':'').'/></li>';
             }
             $ret .= '</ul>';
 

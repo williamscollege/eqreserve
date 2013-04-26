@@ -14,6 +14,49 @@
         }
     }
 ?>
+    <script type="text/javascript">
+$(document).ready(function () {
+    $(".comm_pref-checkbox").change(function () {
+        var comm_pref_id = $(this).attr('data-for-comm-pref');
+        var pref_type = $(this).attr('data-comm-pref-type');
+        var pref_state = $(this).is(':checked');
+        var cached_this = this;
+        var pref_action = 'setReminder';
+        if (pref_type == 'alert_create') {
+            pref_action = 'setAlertCreate';
+        }
+        else if (pref_type == 'alert_cancel') {
+            pref_action = 'setAlertCancel';
+        }
+
+        //alert('TODO: handle pref set for pref:'+comm_pref_id+' of type:'+pref_type+' set value:'+pref_state);
+        eqrUtil_setTransientAlert('progress','saving...');
+        $.ajax({
+            url:'ajax_comm_pref.php',
+            dataType: 'json',
+            data: {'comm_pref':comm_pref_id,
+                'commPrefAction':pref_action,
+                'actionVal':pref_state
+            }
+        })
+            .done(function (data,status,xhr) {
+                if (data.status == 'success') {
+                    eqrUtil_setTransientAlert('success','saved');
+                }
+                else {
+                    eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                    $(cached_this).prop('checked', ! pref_state);
+                }
+            })
+            .fail(function (data,status,xhr) {
+                eqrUtil_setTransientAlert('error','ERROR - not saved!');
+                $(cached_this).prop('checked', ! pref_state);
+            })
+        ;
+    });
+
+});
+    </script>
 
 
 	<form action="" id="" class="form-horizontal" name="" method="">
