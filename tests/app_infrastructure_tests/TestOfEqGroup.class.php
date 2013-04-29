@@ -235,7 +235,7 @@
             $eg->loadSchedules();
 
             $this->assertTrue(is_array($eg->schedules));
-            $this->assertEqual(count($eg->schedules), 5);
+            $this->assertEqual(count($eg->schedules), 4);
         }
 
         public function TestOfToListItemLinked(){

@@ -39,21 +39,21 @@ require_once dirname(__FILE__) . '/reservation.class.php';
 		// instance methods
 
 		public function loadUser() {
-			$this->user = User::getOneFromDb(['user_id' => $this->user_id, 'flag_delete' => FALSE], $this->dbConnection);
+			$this->user = User::getOneFromDb(['user_id' => $this->user_id], $this->dbConnection);
 		}
 
 		public function loadTimeBlocks() {
-			$this->time_blocks = TimeBlock::getAllFromDb(['schedule_id' => $this->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
+			$this->time_blocks = TimeBlock::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
 			usort($this->time_blocks, "TimeBlock::cmp");
 		}
 
 		public function loadReservations() {
-			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
+			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
 			usort($this->reservations, "Reservation::cmp");
 		}
 
         public function loadReservationsDeeply() {
-            $this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id, 'flag_delete' => FALSE], $this->dbConnection);
+            $this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
             usort($this->reservations, "Reservation::cmp");
             foreach ($this->reservations as $r) {
                 $r->loadEqItem();

@@ -208,16 +208,21 @@
             }
             $this->reservations = Reservation::getAllFromDb(['eq_item_id'=>$ei_ids],$this->dbConnection);
 
-            //print_r($this->reservations); exit;
-
             $sched_ids = array();
             foreach ($this->reservations as $r) {
                 $sched_ids[$r->schedule_id] = 1;
             }
 
-            $this->schedules = Schedule::getAllFromDb(['schedule_id'=>array_keys($sched_ids)],$this->dbConnection);
-
-            //print_r($this->schedules); exit;
+            $init_scheds = Schedule::getAllFromDb(['schedule_id'=>array_keys($sched_ids)],$this->dbConnection);
+            $this->schedules = array();
+            foreach ($init_scheds as $insch) {
+                $insch->loadTimeBlocks();
+                if (count($insch->time_blocks) < 1) {
+                    continue;
+                }
+                $insch->loadReservationsDeeply();
+                array_push($this->schedules,$insch);
+            }
 
             return TRUE;
         }
