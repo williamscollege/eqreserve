@@ -197,7 +197,7 @@ function createTestData_Reservations($dbConn) {
         (801,401,1001,0), # single time block in the group, 1 item
         (802,402,1002,0), # three time blocks in the group, 1 item
         (803,403,1003,0), # single deleted time block in the group
-        (804,404,1004,0), # group is deleted
+        (804,404,1004,0), # schedule is deleted
         (805,406,1005,1), # reservations is deleted
         (806,401,1006,0), # user 1 manager reservation, 1 item
         (807,410,1007,0), # other user consumer 1 item

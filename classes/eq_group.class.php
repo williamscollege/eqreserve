@@ -17,6 +17,8 @@
 		public $eq_subgroups;
 		public $eq_items;
 		public $permissions; // all permission object associated with this eq group
+        public $reservations;
+        public $schedules;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -194,6 +196,31 @@
 			return TRUE;
 
 		}
+
+        public function loadSchedules() {
+            if (! $this->eq_items) {
+                $this->loadEqItems();
+            }
+
+            $ei_ids = array();
+            foreach ($this->eq_items as $ei) {
+                array_push($ei_ids,$ei->eq_item_id);
+            }
+            $this->reservations = Reservation::getAllFromDb(['eq_item_id'=>$ei_ids],$this->dbConnection);
+
+            //print_r($this->reservations); exit;
+
+            $sched_ids = array();
+            foreach ($this->reservations as $r) {
+                $sched_ids[$r->schedule_id] = 1;
+            }
+
+            $this->schedules = Schedule::getAllFromDb(['schedule_id'=>array_keys($sched_ids)],$this->dbConnection);
+
+            //print_r($this->schedules); exit;
+
+            return TRUE;
+        }
 
         public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
             $li = parent::listItemTag($id,$class_ar,$other_attr_hash);

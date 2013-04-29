@@ -6,22 +6,11 @@
 	{
 
 		function setUp() {
-            createTestData_InstGroups($this->DB);
-            createTestData_EqGroups($this->DB);
-            createTestData_EqSubgroups($this->DB);
-            createTestData_EqItems($this->DB);
-            createTestData_Permissions($this->DB);
-            createTestData_InstMemberships($this->DB);
-
+            createAllTestData($this->DB);
 		}
 
 		function tearDown() {
-            removeTestData_InstGroups($this->DB);
-            removeTestData_EqGroups($this->DB);
-            removeTestData_EqSubgroups($this->DB);
-            removeTestData_EqItems($this->DB);
-            removeTestData_Permissions($this->DB);
-            removeTestData_InstMemberships($this->DB);
+            removeAllTestData($this->DB);
 		}
 
 		//###################################
@@ -237,6 +226,17 @@
 			$this->assertEqual(count($eg->permissions), 4);
 
 		}
+
+        public function TestOfLoadSchedules(){
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+            $this->assertEqual($eg->name,'testEqGroup1');
+            $this->assertNull($eg->schedules);
+
+            $eg->loadSchedules();
+
+            $this->assertTrue(is_array($eg->schedules));
+            $this->assertEqual(count($eg->schedules), 5);
+        }
 
         public function TestOfToListItemLinked(){
             $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
