@@ -17,7 +17,7 @@
                     $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
                 }
                 if ($sched->user_id == $USER->user_id) {
-                    $li .= '<strong><a href="schedule.php?schedule='.$sched->schedule_id.'"> '.$sched->toString().'</a></strong> by you<br/>';
+                    $li .= '<strong><a href="schedule.php?schedule='.$sched->schedule_id.'&returnToEqGroup=1"> '.$sched->toString().'</a></strong> by you<br/>';
                 }
                 else {
                     $sched->loadUser();
