@@ -156,6 +156,7 @@ $(document).ready(function () {
             $("#print_groupDescription").text($("#groupDescription").val());
             $("#print_startMinute").text($("#startMinute").val());
             $("#print_minDurationMinutes").text($("#minDurationMinutes").val());
+//            $("#print_minDurationMinutes").text(utilPrettyTimeFormat($("#minDurationMinutes").val()));
             $("#print_maxDurationMinutes").text($("#maxDurationMinutes").val());
             $("#print_durationIntervalMinutes").text($("#durationIntervalMinutes").val());
 
@@ -193,6 +194,8 @@ $(document).ready(function () {
         }
     })
 
+
+
     var validator2 = $('#frmAjaxAddItem').validate({
         rules: {
             ajaxItemName: {
@@ -223,7 +226,7 @@ $(document).ready(function () {
             var data3 = $('#' + formName + ' #ajaxItemName').val();
             var data4 = $('#' + formName + ' #ajaxItemDescription').val();
             var data5 = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
-            // alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
+            // alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2 + '\n' + 'data3=' + data3 + '\n' + 'data4=' + data4 + '\n' + 'data5=' + data5);
 
             $.ajax({
                 type: 'POST',
@@ -338,38 +341,40 @@ $(document).ready(function () {
 
 
     // Modals
-    $('.ajaxActionItem').click(function () {
-        // pass values to modal
-        var n = $(this).attr("data-subgroup-name");
-        var i = $(this).attr("data-subgroup-id");
-        // fetch item count, then increment for modal hidden input
-        var o = parseInt($(this).parent('LI').prev('LI').attr("data-item-order")) + 1;
-        // fetch subgroup characteristic 'IsMultiSelect' for modal hidden input
-        var m = $(this).attr("data-is-multiselect");
-        $("H3#modalAddItemLabel").text(n);
-        $("INPUT#ajaxSubgroupID").val(i);
-        $("INPUT#ajaxItemOrdering").val(o);
-        $("INPUT#ajaxItemIsMultiSelect").val(m);
-    });
-    $('.ajaxActionSubgroup').click(function () {
+	$("body").on("click", "a.ajaxActionItem", function(){
+		// The 'on' method is necessary to bind classes to click event for dynamically created form elements
+		// pass values to modal
+		var n = $(this).attr("data-subgroup-name");
+		var i = $(this).attr("data-subgroup-id");
+		// fetch item count, then increment for modal hidden input
+		var o = parseInt($(this).parent('LI').prev('LI').attr("data-item-order")) + 1;
+		// fetch subgroup characteristic 'IsMultiSelect' for modal hidden input
+		var m = $(this).attr("data-is-multiselect");
+		$("H3#modalAddItemLabel").text(n);
+		$("INPUT#ajaxSubgroupID").val(i);
+		$("INPUT#ajaxItemOrdering").val(o);
+		$("INPUT#ajaxItemIsMultiSelect").val(m);
+	});
+    $('a.ajaxActionSubgroup').click(function () {
         // pass values to modal
         // fetch subgroup count, then increment for modal hidden input
         var o = parseInt($('SPAN[data-subgroup-order]').last().attr('data-subgroup-order')) + 1;
         $("INPUT#ajaxSubgroupOrdering").val(o);
+		alert('ajaxSubgroupOrdering = ' + o); //return false;
     });
     $('#btnAjaxCancelAddItem').click(function () {
         cleanUpForm("frmAjaxAddItem")
         // clear form: reset
-        $("input[type=text], textarea").val("");
-        $("input[type=radio]").attr("checked", false);
+        $("#frmAjaxAddItem input[type=text], #frmAjaxAddItem textarea").val("");
+        $("#frmAjaxAddItem input[type=radio]").attr("checked", false);
         // reset the submit button (avoid disabled state)
         $("#btnAjaxSubmitAddItem").button('reset');
     });
     $('#btnAjaxCancelAddSubgroup').click(function () {
         cleanUpForm("frmAjaxAddSubgroup")
         // clear form: reset
-        $("input[type=text], textarea").val("");
-        $("input[type=radio]").attr("checked", false);
+        $("#frmAjaxAddSubgroup input[type=text], #frmAjaxAddSubgroup textarea").val("");
+        $("#frmAjaxAddSubgroup input[type=radio]").attr("checked", false);
         // reset the submit button (avoid disabled state)
         $("#btnAjaxSubmitAddSubgroup").button('reset');
     });
