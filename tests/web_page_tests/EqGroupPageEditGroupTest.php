@@ -4,19 +4,11 @@
 	class EqGroupPageEditGroupTest extends WMSWebTestCase {
 
 		function setUp() {
-			createTestData_Users($this->DB);
-			createTestData_EqGroups($this->DB);
-			createTestData_InstGroups($this->DB);
-			createTestData_InstMemberships($this->DB);
-			createTestData_Permissions($this->DB);
+            createAllTestData($this->DB);
 		}
 
 		function tearDown() {
-			removeTestData_Users($this->DB);
-			removeTestData_EqGroups($this->DB);
-			removeTestData_InstGroups($this->DB);
-			removeTestData_InstMemberships($this->DB);
-			removeTestData_Permissions($this->DB);
+            removeAllTestData($this->DB);
 		}
 
 		//############################################################

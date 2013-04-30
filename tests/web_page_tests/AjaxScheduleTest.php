@@ -81,6 +81,17 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertEqual($s->notes,'foo123bar');
     }
 
+    function testScheduleAjaxGroupManagerCanAccessOthersSchedule() {
+        $this->getToSchedulePage();
+
+        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1009&scheduleAction=deleteSchedule');
+
+        $this->assertPattern('/"status":"success"/');
+
+        $s = Schedule::getOneFromDb(['schedule_id'=>1009],$this->DB);
+        $this->assertFalse($s->matchesDb);
+    }
+
     function testScheduleAjaxSaveType() {
         $initialSchedule = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
         $this->assertTrue($initialSchedule->matchesDb);

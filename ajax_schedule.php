@@ -73,8 +73,15 @@
 
     // check user access to the schedule
     if (! ((($USER->flag_is_system_admin) || ($USER->user_id == $SCHED->user_id)))) {
-        echo json_encode($results);
-        exit;
+        $SCHED->loadReservationsDeeply();
+        if (count($SCHED->reservations) < 1) {
+            echo json_encode($results);
+            exit;
+        }
+        if (! $USER->canManageEqGroup($SCHED->reservations[0]->eq_item->eq_group)) {
+            echo json_encode($results);
+            exit;
+        }
     }
 
     //###############################################################
