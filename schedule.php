@@ -135,6 +135,7 @@
                             // if there's only one item in the list, jump to user acct page
                             // else remove the relevant list item
                             if ($('ul#time_blocks > li').length <= 1) {
+                                eqrUtil_setTransientAlert('success','schedule deleted! Redirecting...');
                                 window.location.href = headToOnScheduleGone;
                             }
                             else {
@@ -175,6 +176,7 @@
                             // if there's only one item in the list, jump to user acct page
                             // else remove the relevant list item
                             if ($('ul#reservations > li').length <= 1) {
+                                eqrUtil_setTransientAlert('success','schedule deleted! Redirecting...');
                                 window.location.href = headToOnScheduleGone;
                             }
                             else {
@@ -207,7 +209,8 @@
                 })
                     .done(function (data,status,xhr) {
                         if (data.status == 'success') {
-                            eqrUtil_setTransientAlert('success','saved');
+//                            eqrUtil_setTransientAlert('success','saved');
+                            eqrUtil_setTransientAlert('success','schedule deleted! Redirecting...');
                             window.location.href = headToOnScheduleGone;
                         }
                         else {
