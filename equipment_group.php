@@ -52,6 +52,8 @@
         util_redirectToAppHome('failure', 50);
     }
 
+    $Requested_EqGroup->loadSchedules();
+
     # get list of all managers for this group
     $Requested_EqGroup->loadPermissions();
 

@@ -8,7 +8,7 @@ $(document).ready(function () {
     // Toggle Equipment Group Settings (text or input fields)
     $("#toggleGroupSettings").click(function () {
         // toggle form or plain-text
-        $("#managerView, #managerEdit").toggleClass("hide");
+        $("#managerView, #managerEdit, .editing-control, .view-control").toggleClass("hide");
         // toggle button label
         if ($("#managerView").hasClass('hide')) {
             $("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View');
@@ -323,6 +323,36 @@ $(document).ready(function () {
 
         }
     })
+
+    $(".delete-schedule-btn").click(function () {
+        GLOBAL_confirmHandlerData= $(this).attr('data-for-schedule');
+        var confirmText = "<p>Are you sure you want to remove that schedule of reservations?</p>\n";
+        eqrUtil_launchConfirm(confirmText,handleDeleteSchedule);
+    });
+    function handleDeleteSchedule() {
+        eqrUtil_setTransientAlert('progress','saving...',$('#list-of-schedule-'+GLOBAL_confirmHandlerData));
+        $.ajax({
+            url:'ajax_schedule.php',
+            dataType: 'json',
+            data: {'schedule':GLOBAL_confirmHandlerData,
+                'scheduleAction':'deleteSchedule',
+                'actionVal':GLOBAL_confirmHandlerData
+            }
+        })
+            .done(function (data,status,xhr) {
+                if (data.status == 'success') {
+                    eqrUtil_setTransientAlert('success','saved',$('#list-of-schedule-'+GLOBAL_confirmHandlerData));
+                    $('#list-of-schedule-'+GLOBAL_confirmHandlerData).remove();
+                }
+                else {
+                    eqrUtil_setTransientAlert('error','ERROR - not saved!',$('#list-of-schedule-'+GLOBAL_confirmHandlerData));
+                }
+            })
+            .fail(function (data,status,xhr) {
+                eqrUtil_setTransientAlert('error','ERROR - not saved!',$('#list-of-schedule-'+GLOBAL_confirmHandlerData));
+            })
+        ;
+    }
 
     // ***************************
     // Custom functions

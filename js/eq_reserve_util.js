@@ -1,7 +1,15 @@
 /* This function causes an alert to be displayed on the page. If the alert is of type success or error then it will fade away in a few seconds
 REQUIRES: a div of id page_alert
  */
-function eqrUtil_setTransientAlert(alertType,alertMessage) {
+function eqrUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) {
+    if (optionalReferenceElt !== undefined) {
+        $('#page_alert').css('top', optionalReferenceElt.position().top);
+        $('#page_alert').css('left', optionalReferenceElt.position().left*1 + optionalReferenceElt.css('width')*1 + 100);
+    }
+    else {
+        $('#page_alert').css('top', 100);
+        $('#page_alert').css('left', 500);
+    }
     $('#page_alert').removeClass("in_progress_alert");
     $('#page_alert').removeClass("success_alert");
     $('#page_alert').removeClass("error_alert");
@@ -30,7 +38,8 @@ $(document).ready(function () {
 
 function eqrUtil_launchConfirm(msg,handler) {
     $('#confirmModal .modal-body').html(msg);
-    $('#confirmModal').modal({show:'true', backdrop:'static'});
+//    $('#confirmModal').modal({show:'true', backdrop:'static'});
+    $('#confirmModal').modal({show:'true'});
     $('#confirmModal #confirm-yes').focus();
     $('#confirm-yes').off("click");
     $('#confirm-yes').click(handler);
