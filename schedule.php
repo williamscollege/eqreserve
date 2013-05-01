@@ -40,13 +40,13 @@
                         dataType: 'json',
                         data: {'schedule':<?php echo $SCHED->schedule_id; ?>,
                                'scheduleAction':'updateNotes',
-                               'actionVal':$("#sched-notes").val().text()
+                               'actionVal':$("#sched-notes").val()
                         }
                     })
                         .done(function (data,status,xhr) {
                             if (data.status == 'success') {
                                 eqrUtil_setTransientAlert('success','saved');
-                                $('#sched-notes-view').html($("#sched-notes").val().text());
+                                $('#sched-notes-view').html($("#sched-notes").val());
                             }
                             else {
                                 eqrUtil_setTransientAlert('error','ERROR - not saved!');

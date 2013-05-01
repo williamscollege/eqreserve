@@ -5,23 +5,22 @@
 	#------------------------------------------------#
 	# Forms Collections: AJAX posts and requests
 	#------------------------------------------------#
-	$intID            = (isset($_POST["ajaxVal_ID"])) ? $_POST["ajaxVal_ID"] : 0;
-	$intOrder         = (isset($_POST["ajaxVal_Order"])) ? $_POST["ajaxVal_Order"] : 0;
-	$strName          = (isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0;
-	$strDescription   = (isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0;
-	$bitIsMultiSelect = (isset($_POST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_POST["ajaxVal_MultiSelect"]) : 0;
+	$intID            = htmlentities((isset($_POST["ajaxVal_ID"])) ? $_POST["ajaxVal_ID"] : 0);
+	$intOrder         = htmlentities((isset($_POST["ajaxVal_Order"])) ? $_POST["ajaxVal_Order"] : 0);
+	$strName          = htmlentities((isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0);
+	$strDescription   = htmlentities((isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0);
+	$bitIsMultiSelect = htmlentities((isset($_POST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_POST["ajaxVal_MultiSelect"]) : 0);
+
 
 	#------------------------------------------------#
 	# SQL: INSERT Item
 	#------------------------------------------------#
 	$esg = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
-//		echo "<pre>";
-//		print_r($esg);
-//		echo "</pre>";
+
 
 	if ($esg->matchesDb) {
 		// error: matching record already exists
-		return false;
+		return FALSE;
 		exit;
 	}
 	$esg->eq_group_id          = $intID;
@@ -31,14 +30,10 @@
 	$esg->flag_is_multi_select = $bitIsMultiSelect;
 
 	$esg->updateDb();
-	//	echo "<pre>";
-	//	print_r($esg);
-	//	echo "</pre><hr/>";
+
 
 	$output = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
-	//	echo "<pre>";
-	//	print_r($test);
-	//	echo "</pre>";
+
 
 	# Output HTML
 
@@ -55,9 +50,7 @@
 
 
 	/*
-	Debugging:
-		echo "<pre>"; print_r($_POST); echo "</pre>";
-		print_r($_REQUEST);
-		exit();
-	 */
+		Debugging:
+		echo "<pre>"; print_r($_POST); echo "</pre>"; exit();
+	*/
 ?>
