@@ -99,6 +99,36 @@ $(document).ready(function () {
         showMeridian: true  /* true is 12hr mode, false is 12hr mode */
     });
 
+	// Convert initial integer values to pretty text for standard output to screen
+	$('#print_minDurationMinutes').text(util_minutesToWords($('#print_minDurationMinutes').text()));
+	$('#print_maxDurationMinutes').text(util_minutesToWords($('#print_maxDurationMinutes').text()));
+	$('#print_durationIntervalMinutes').text(util_minutesToWords($('#print_durationIntervalMinutes').text()));
+
+	// convert minute to pretty words using: days, hours, minutes
+	function util_minutesToWords(minutes) {
+		var ret = "";
+
+		/*** get the days ***/
+		var days = Math.floor( minutes / (60 * 24) );
+		if (days > 0) {
+			ret += days + " days ";
+		}
+
+		/*** get the hours ***/
+		var hours = Math.floor( (minutes / 60) % 24);
+		if (hours > 0) {
+			ret += hours + " hours ";
+		}
+
+		/*** get the minutes ***/
+		var mins = Math.floor( minutes % 60);
+		if (mins > 0) {
+			ret += mins + " minutes ";
+		}
+
+		return ret;
+	}
+
     // ***************************
     // Form validation
     // ***************************
@@ -148,10 +178,10 @@ $(document).ready(function () {
             $("#print_groupName").text($("#groupName").val());
             $("#print_groupDescription").text($("#groupDescription").val());
             $("#print_startMinute").text($("#startMinute").val());
-            $("#print_minDurationMinutes").text($("#minDurationMinutes").val());
-//            $("#print_minDurationMinutes").text(utilPrettyTimeFormat($("#minDurationMinutes").val()));
-            $("#print_maxDurationMinutes").text($("#maxDurationMinutes").val());
-            $("#print_durationIntervalMinutes").text($("#durationIntervalMinutes").val());
+			// Convert input values to pretty text for standard output to screen
+            $("#print_minDurationMinutes").text(util_minutesToWords($("#minDurationMinutes").val()));
+			$("#print_maxDurationMinutes").text(util_minutesToWords($("#maxDurationMinutes").val()));
+            $("#print_durationIntervalMinutes").text(util_minutesToWords($("#durationIntervalMinutes").val()));
 
             var url = $("#formEditGroup").attr('action');
             var formName = "formEditGroup";
@@ -186,8 +216,6 @@ $(document).ready(function () {
 
         }
     })
-
-
 
     var validator2 = $('#frmAjaxAddItem').validate({
         rules: {
@@ -350,9 +378,7 @@ $(document).ready(function () {
         ;
     }
 
-    // ***************************
-    // Custom functions
-    // ***************************
+
     function cleanUpForm(formName) {
         // reset form
         validator1.resetForm(this);
@@ -361,7 +387,6 @@ $(document).ready(function () {
         // manually remove input highlights
         $(".control-group").removeClass('success').removeClass('error');
     }
-
 
     // Modals
 	$("body").on("click", "a.ajaxActionItem", function(){

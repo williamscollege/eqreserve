@@ -213,9 +213,9 @@ echo join(', ',
 echo "<br />\n";
 echo "<legend>Reservation Rules</legend>\n";
 echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"><span id=\"print_startMinute\">" . $Requested_EqGroup->start_minute . "</span> minutes</span><br />\n";
-echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\"><span id=\"print_minDurationMinutes\">" . util_minutesToWords($Requested_EqGroup->min_duration_minutes) . "</span></span><br />\n";
-echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\"><span id=\"print_maxDurationMinutes\">" . util_minutesToWords($Requested_EqGroup->max_duration_minutes) . "</span></span><br />\n";
-echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\"><span id=\"print_durationIntervalMinutes\">" . util_minutesToWords($Requested_EqGroup->duration_chunk_minutes) . "</span></span><br />\n";
+echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\"><span id=\"print_minDurationMinutes\">" . $Requested_EqGroup->min_duration_minutes . "</span></span><br />\n";
+echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\"><span id=\"print_maxDurationMinutes\">" . $Requested_EqGroup->max_duration_minutes . "</span></span><br />\n";
+echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\"><span id=\"print_durationIntervalMinutes\">" . $Requested_EqGroup->duration_chunk_minutes . "</span></span><br />\n";
 echo "</div>";
 
 ?>
