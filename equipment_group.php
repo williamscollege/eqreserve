@@ -56,44 +56,58 @@
 
     # get list of all managers for this group
     $Requested_EqGroup->loadPermissions();
+    $Requested_EqGroup->loadManagers();
+    $Requested_EqGroup->loadConsumers();
 
-    $managers  = [];
-    $consumers = [];
-    foreach ($Requested_EqGroup->permissions as $perm) {
-        if ($perm->role_id == 1) {
-            if ($perm->entity_type == 'user') {
-                array_push($managers, User::getOneFromDb(['user_id' => $perm->entity_id], $DB));
-            }
-            elseif ($perm->entity_type == 'inst_group') {
-                array_push($managers, InstGroup::getOneFromDb(['inst_group_id' => $perm->entity_id], $DB));
-            }
-        }
-        else {
-            if ($perm->entity_type == 'user') {
-                array_push($consumers, User::getOneFromDb(['user_id' => $perm->entity_id], $DB));
-            }
-            elseif ($perm->entity_type == 'inst_group') {
-                array_push($consumers, InstGroup::getOneFromDb(['inst_group_id' => $perm->entity_id], $DB));
-            }
-        }
-    }
+//    $managers  = [];
+//    $consumers = [];
+//    $manager_user_ids = [];
+//    $manager_inst_group_ids = [];
+//    $consumer_user_ids = [];
+//    $consumer_inst_group_ids = [];
+//    foreach ($Requested_EqGroup->permissions as $perm) {
+//        if ($perm->role_id == 1) {
+//            if ($perm->entity_type == 'user') {
+//                array_push($manager_user_ids,$perm->entity_id);
+//            }
+//            elseif ($perm->entity_type == 'inst_group') {
+//                array_push($manager_inst_group_ids,$perm->entity_id);
+//            }
+//        }
+//        else {
+//            if ($perm->entity_type == 'user') {
+//                array_push($consumer_user_ids,$perm->entity_id);
+//            }
+//            elseif ($perm->entity_type == 'inst_group') {
+//                array_push($consumer_inst_group_ids,$perm->entity_id);
+//            }
+//        }
+//    }
+//    if (count($manager_user_ids) > 0) {
+//        $manager_users = User::getAllFromDb(['user_id'=>$manager_user_ids],$DB);
+//        $managers = array_merge($managers,$manager_users);
+//    }
+//    if (count($manager_inst_group_ids) > 0) {
+//        $manager_inst_groups = InstGroup::getAllFromDb(['inst_group_id'=>$manager_inst_group_ids],$DB);
+//        $managers = array_merge($managers,$manager_inst_groups);
+//    }
+//    if (count($consumer_user_ids) > 0) {
+//        $consumer_users = User::getAllFromDb(['user_id'=>$consumer_user_ids],$DB);
+//        $consumers = array_merge($consumers,$consumer_users);
+//    }
+//    if (count($consumer_inst_group_ids) > 0) {
+//        $consumer_inst_groups = InstGroup::getAllFromDb(['inst_group_id'=>$consumer_inst_group_ids],$DB);
+//        $consumers = array_merge($consumers,$consumer_inst_groups);
+//    }
 
     ?>
-    Remove this later: <a href="#" class="check">is form valid?</a><br>
-
     <script type="text/javascript" src="js/equipment_group.js"></script>
-
-
-    <?php include('equipment_group_per_se.frag.php'); ?>
-
-    <br />
-
-    <?php include('equipment_group_subgroups_and_items.frag.php'); ?>
-
-    <br />
-
-    <?php include('equipment_group_schedules_of_reservations.frag.php'); ?>
-
     <?php
+    include('equipment_group_per_se.frag.php');
+    echo "<br/>\n";
+    include('equipment_group_subgroups_and_items.frag.php');
+    echo "<br/>\n";
+    include('equipment_group_schedules_of_reservations.frag.php');
+    echo "<br/>\n";
     require_once('foot.php');
 ?>

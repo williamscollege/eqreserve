@@ -224,8 +224,32 @@
 
 			$this->assertTrue(is_array($eg->permissions));
 			$this->assertEqual(count($eg->permissions), 4);
-
 		}
+
+        public function TestOfLoadManagers() {
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+            $this->assertEqual($eg->name,'testEqGroup1');
+            $this->assertNull($eg->managers);
+
+            $eg->loadManagers();
+
+            $this->assertTrue(is_array($eg->managers));
+            $this->assertEqual(count($eg->managers), 1);
+            $this->assertEqual('testInstGroup1',$eg->managers[0]->name);
+        }
+
+        public function TestOfLoadConsumers() {
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+            $this->assertEqual($eg->name,'testEqGroup1');
+            $this->assertNull($eg->consumers);
+
+            $eg->loadConsumers();
+
+            $this->assertTrue(is_array($eg->consumers));
+            $this->assertEqual(count($eg->consumers), 2);
+            $this->assertEqual('Violet',$eg->consumers[0]->fname);
+            $this->assertEqual('testInstGroup2',$eg->consumers[1]->name);
+        }
 
         public function TestOfLoadSchedules(){
             $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);

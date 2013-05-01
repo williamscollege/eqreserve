@@ -19,6 +19,8 @@
 		public $permissions; // all permission object associated with this eq group
         public $reservations;
         public $schedules;
+        public $managers; // mixed array of users and inst groups
+        public $consumers; // mixed array of users and inst groups
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -192,10 +194,62 @@
 
 		public function loadPermissions() {
 			$this->permissions = Permission::getAllFromDb(['eq_group_id' => $this->eq_group_id, 'flag_delete' => FALSE], $this->dbConnection);
-
 			return TRUE;
-
 		}
+
+        public function loadManagers() {
+            if (! $this->permissions) {
+                $this->loadPermissions();
+            }
+            $this->managers = [];
+            $manager_user_ids = [];
+            $manager_inst_group_ids = [];
+            foreach ($this->permissions as $perm) {
+                if ($perm->role_id == 1) {
+                    if ($perm->entity_type == 'user') {
+                        array_push($manager_user_ids,$perm->entity_id);
+                    }
+                    elseif ($perm->entity_type == 'inst_group') {
+                        array_push($manager_inst_group_ids,$perm->entity_id);
+                    }
+                }
+            }
+            if (count($manager_user_ids) > 0) {
+                $manager_users = User::getAllFromDb(['user_id'=>$manager_user_ids],$this->dbConnection);
+                $this->managers = array_merge($this->managers,$manager_users);
+            }
+            if (count($manager_inst_group_ids) > 0) {
+                $manager_inst_groups = InstGroup::getAllFromDb(['inst_group_id'=>$manager_inst_group_ids],$this->dbConnection);
+                $this->managers = array_merge($this->managers,$manager_inst_groups);
+            }
+        }
+
+        public function loadConsumers() {
+            if (! $this->permissions) {
+                $this->loadPermissions();
+            }
+            $this->consumers = [];
+            $consumer_user_ids = [];
+            $consumer_inst_group_ids = [];
+            foreach ($this->permissions as $perm) {
+                if ($perm->role_id == 2) {
+                    if ($perm->entity_type == 'user') {
+                        array_push($consumer_user_ids,$perm->entity_id);
+                    }
+                    elseif ($perm->entity_type == 'inst_group') {
+                        array_push($consumer_inst_group_ids,$perm->entity_id);
+                    }
+                }
+            }
+            if (count($consumer_user_ids) > 0) {
+                $consumer_users = User::getAllFromDb(['user_id'=>$consumer_user_ids],$this->dbConnection);
+                $this->consumers = array_merge($this->consumers,$consumer_users);
+            }
+            if (count($consumer_inst_group_ids) > 0) {
+                $consumer_inst_groups = InstGroup::getAllFromDb(['inst_group_id'=>$consumer_inst_group_ids],$this->dbConnection);
+                $this->consumers = array_merge($this->consumers,$consumer_inst_groups);
+            }
+        }
 
         public function loadSchedules() {
             if (! $this->eq_items) {

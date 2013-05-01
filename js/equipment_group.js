@@ -99,13 +99,6 @@ $(document).ready(function () {
         showMeridian: true  /* true is 12hr mode, false is 12hr mode */
     });
 
-    // Remove later: debugging jquery validator plugin
-    $("a.check").click(function () {
-        alert("is 'formEditGroup' Valid?: " + $("#formEditGroup").valid() + "\n" + "is 'formScheduleReservations' Valid?: " + $("#formScheduleReservations").valid());
-        return false;
-    });
-
-
     // ***************************
     // Form validation
     // ***************************
