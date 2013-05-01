@@ -44,7 +44,7 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
                             $txt = "[$m->name]";
                         }
                         return "<button type=\"button\" class=\"btn btn-inverse btn-small\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
-                    }, $managers)
+                    }, $Requested_EqGroup->managers)
                 );
                 ?>
 
@@ -78,7 +78,7 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
                                 $txt = "[$c->name]";
                             }
                             return "<option title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt</option>";
-                        }, $consumers)
+                        }, $Requested_EqGroup->consumers)
                     );
                     ?>
                 </select><br /><br />
@@ -208,7 +208,7 @@ echo join(', ',
             }
             return "[$m->name]";
         },
-        $managers)
+        $Requested_EqGroup->managers)
 );
 echo "<br />\n";
 echo "<legend>Reservation Rules</legend>\n";
