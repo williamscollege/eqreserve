@@ -104,7 +104,7 @@ $(document).ready(function () {
 	$('#print_maxDurationMinutes').text(util_minutesToWords($('#print_maxDurationMinutes').text()));
 	$('#print_durationIntervalMinutes').text(util_minutesToWords($('#print_durationIntervalMinutes').text()));
 
-	// convert minute to pretty words using: days, hours, minutes
+	// Convert minute to pretty words using: days, hours, minutes
 	function util_minutesToWords(minutes) {
 		var ret = "";
 
