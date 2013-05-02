@@ -5,20 +5,14 @@
 	#------------------------------------------------#
 	# Forms Collections: AJAX posts and requests
 	#------------------------------------------------#
+	$intID                      = htmlentities((isset($_POST["ajaxVal_ID"])) ? $_POST["ajaxVal_ID"] : 0 );
+	$strName                    = htmlentities( (isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0 );
+	$strDescription             = htmlentities( (isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0 );
+	$strStartMinute             = htmlentities( (isset($_POST["ajaxVal_StartMinute"])) ? util_quoteSmart($_POST["ajaxVal_StartMinute"]) : 0 );
+	$intMinDurationMinute       = htmlentities( (isset($_POST["ajaxVal_MinDurationMinute"])) ? $_POST["ajaxVal_MinDurationMinute"] : 0 );
+	$intMaxDurationMinute       = htmlentities( (isset($_POST["ajaxVal_MaxDurationMinute"])) ? $_POST["ajaxVal_MaxDurationMinute"] : 0 );
+	$intDurationIntervalMinutes = htmlentities( (isset($_POST["ajaxVal_DurationIntervalMinutes"])) ? $_POST["ajaxVal_DurationIntervalMinutes"] : 0 );
 
-	$intID                      = (isset($_POST["ajaxVal_ID"])) ? $_POST["ajaxVal_ID"] : 0;
-	$strName                    = (isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0;
-	$strDescription             = (isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0;
-	$strStartMinute             = (isset($_POST["ajaxVal_StartMinute"])) ? util_quoteSmart($_POST["ajaxVal_StartMinute"]) : 0;
-	$intMinDurationMinute       = (isset($_POST["ajaxVal_MinDurationMinute"])) ? $_POST["ajaxVal_MinDurationMinute"] : 0;
-	$intMaxDurationMinute       = (isset($_POST["ajaxVal_MaxDurationMinute"])) ? $_POST["ajaxVal_MaxDurationMinute"] : 0;
-	$intDurationIntervalMinutes = (isset($_POST["ajaxVal_DurationIntervalMinutes"])) ? $_POST["ajaxVal_DurationIntervalMinutes"] : 0;
-
-	//	if ($intID == 0 || $strName == 0 || $strDescription == 0){
-	//		echo "failed at conditional check for ZERO";
-	////		echo $intID . "--" . $strName . "--" . $strDescription;
-	//		//util_redirectToAppHome('failure',50);
-	//	}
 
 	#------------------------------------------------#
 	# SQL: INSERT Item
@@ -39,22 +33,11 @@
 
 	$eg->updateDB();
 
-	//	echo "<pre>";
-	//	print_r($eg);
-	//	echo "</pre><hr/>";
-	//
-	//	$output = EqGroup::getOneFromDb(['eq_group_id'=>$intID], $DB);
-	//	echo "<pre>";
-	//	print_r($output);
-	//	echo "</pre>";
-
 	# Output HTML (for ajax success/fail checker)
 	echo "success!"
 
 	/*
-	Debugging:
-		echo "<pre>"; print_r($_POST); echo "</pre>";
-		print_r($_REQUEST);
-		exit();
-	 */
+		Debugging:
+		echo "<pre>"; print_r($_POST); echo "</pre>"; exit();
+	*/
 ?>

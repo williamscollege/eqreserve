@@ -133,7 +133,8 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
             2880  => "2 days",
             10080 => "1 week",
             20160 => "2 weeks",
-            80640 => "4 weeks"
+			40320 => "4 weeks",
+            80640 => "8 weeks"
         ];
         ?>
         <div class="control-group">
