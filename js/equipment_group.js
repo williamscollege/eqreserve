@@ -240,7 +240,7 @@ $(document).ready(function () {
 			});
 
 		}
-	})
+	});
 
 	var validator2 = $('#frmAjaxAddItem').validate({
 		rules: {
@@ -304,7 +304,7 @@ $(document).ready(function () {
 			});
 
 		}
-	})
+	});
 
 	var validator3 = $('#frmAjaxAddSubgroup').validate({
 		rules: {
@@ -371,7 +371,37 @@ $(document).ready(function () {
 			});
 
 		}
-	})
+	});
+
+	$(".delete-item-btn").click(function () {
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-item');
+		var confirmText = "<p>Are you sure you want to remove this item?</p>\n";
+		eqrUtil_launchConfirm(confirmText, handleDeleteItem);
+	});
+	function handleDeleteItem() {
+		eqrUtil_setTransientAlert('progress', 'saving...', $('#item' + GLOBAL_confirmHandlerData));
+		$.ajax({
+			url: 'ajax_delete_eq_subgroup_item.php',
+			dataType: 'json',
+			data: {'item': GLOBAL_confirmHandlerData,
+				'itemAction': 'deleteItem',
+				'actionVal': GLOBAL_confirmHandlerData
+			}
+		})
+			.done(function (data, status, xhr) {
+				if (data.status == 'success') {
+					eqrUtil_setTransientAlert('success', 'saved', $('#item' + GLOBAL_confirmHandlerData));
+					$('#item' + GLOBAL_confirmHandlerData).remove();
+				}
+				else {
+					eqrUtil_setTransientAlert('error', 'ERROR - not saved!', $('#item' + GLOBAL_confirmHandlerData));
+				}
+			})
+			.fail(function (data, status, xhr) {
+				eqrUtil_setTransientAlert('error', 'ERROR - not saved!', $('#item' + GLOBAL_confirmHandlerData));
+			})
+		;
+	}
 
 	$(".delete-schedule-btn").click(function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-schedule');
