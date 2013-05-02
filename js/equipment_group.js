@@ -215,6 +215,7 @@ $(document).ready(function () {
 				type: 'POST',
 				url: url,
 				data: {
+                    ajaxVal_action: 'saveEqGroup',
 					ajaxVal_ID: $('#groupID').val(),
 					ajaxVal_Name: $('#groupName').val(),
 					ajaxVal_Description: $('#groupDescription').val(),
