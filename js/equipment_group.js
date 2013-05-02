@@ -5,6 +5,30 @@ $(document).ready(function () {
     // Listeners
     // ***************************
 
+    $('#eq-group-add-manager-btn').click(function(evt){
+        //alert('clicked on '+$(this).attr('id'));
+        alert('hook for add manager');
+        // hook for add manager UI
+    });
+
+    $('.eq-group-remove-manager-btn').click(function(evt){
+        //alert('clicked on remove manager '+$(this).attr('data-for-type')+' '+$(this).attr('data-for-id'));
+        // hook for remove manager UI
+        GLOBAL_confirmHandlerData= {'for_type':$(this).attr('data-for-type'),'for_id':$(this).attr('data-for-id')};
+        var mgr_type = 'person';
+        if ($(this).attr('data-for-type') == 'inst_group') {
+            mgr_type = 'group';
+        }
+        eqrUtil_launchConfirm("Are you sure you want to remove that "+mgr_type+" as a manager of this group?",handleRemoveManager);
+    });
+    function handleRemoveManager() {
+        //eqrUtil_setTransientAlert('progress','saving...',$('#remove-manager-btn-'+GLOBAL_confirmHandlerData.for_id));
+        eqrUtil_setTransientAlert('progress','saving...');
+        alert('hook for remove manager');
+        eqrUtil_setTransientAlert('success','...manager removed');
+        //eqrUtil_setTransientAlert('success','...manager removed',$('#remove-manager-btn-'+GLOBAL_confirmHandlerData.for_id));
+    }
+
     // Toggle Equipment Group Settings (text or input fields)
     $("#toggleGroupSettings").click(function () {
         // toggle form or plain-text

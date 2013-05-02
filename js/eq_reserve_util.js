@@ -14,21 +14,23 @@ function eqrUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
     $('#page_alert').removeClass("success_alert");
     $('#page_alert').removeClass("error_alert");
     if (alertType == 'progress') {
+        $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-time"></i> '+alertMessage);
         $('#page_alert').addClass("in_progress_alert");
     }
     else if (alertType == 'success') {
+        $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-ok"></i> '+alertMessage);
         $('#page_alert').addClass("success_alert");
         $('#page_alert').fadeOut({duration: 3000, queue: false}); //,function(){$('#page_alert').addClass("hide");})
+        //alert('success ta');
     }
     else if (alertType == 'error') {
+        $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-exclamation-sign"></i> '+alertMessage);
         $('#page_alert').addClass("error_alert");
         $('#page_alert').fadeOut({duration: 10000, queue: false});//,function(){$('#page_alert').addClass("hide");})
     }
-    //$('#page_alert').removeClass("hide");
-    $('#page_alert').fadeIn({duration: 10, queue: false});
 }
 // NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
 $(document).ready(function () {
