@@ -269,11 +269,11 @@ $(document).ready(function () {
 						$('DIV.alert-error').remove();
 
 						// update the element with new data from the ajax call
-						$("UL#displaySubgroup" + data1 + " li:nth-last-child(2)").append(data);
+						$("UL#displaySubgroup" + data1 + " li:nth-last-child(2)").after(data);
 					}
 					else {
 						// show error message
-						$("UL#displaySubgroup" + data1 + " li:nth-last-child(2)").append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
+						$("UL#displaySubgroup" + data1 + " li:nth-last-child(2)").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 					}
 				}
 			});
@@ -395,11 +395,9 @@ $(document).ready(function () {
 		var n = $(this).attr("data-subgroup-name");
 		var i = $(this).attr("data-subgroup-id");
 		// fetch item count, then increment for modal hidden input
-
 //		alert('data-item-order = ' + parseInt($(this).parent('LI').prev('LI').attr("data-item-order"))); //return false;
 		var o = parseInt($(this).parent('LI').prev('LI').attr("data-item-order")) + 1;
 //		alert('data-item-order = ' + o);// return false;
-
 		// fetch subgroup characteristic 'IsMultiSelect' for modal hidden input
 		var m = $(this).attr("data-is-multiselect");
 		$("H3#modalAddItemLabel").text(n);
