@@ -34,21 +34,23 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
                     array_map(function ($m) {
                         $txt      = '';
                         $id       = 0;
-                        $for_type = get_class($m);
+                        $for_type = 'user';
                         if (get_class($m) == 'User') {
                             $id  = $m->user_id;
                             $txt = "$m->fname $m->lname ($m->email)";
+                            $for_type = 'user';
                         }
                         else {
                             $id  = $m->inst_group_id;
                             $txt = "[$m->name]";
+                            $for_type = 'inst_group';
                         }
-                        return "<button type=\"button\" class=\"btn btn-inverse btn-small\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
+                        return "<button type=\"button\" id=\"remove-manager-btn-".$id."\" class=\"btn btn-inverse btn-small eq-group-remove-manager-btn\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
                     }, $Requested_EqGroup->managers)
                 );
                 ?>
 
-                <button type="button" class="btn btn-success btn-small" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add
+                <button id="eq-group-add-manager-btn" type="button" class="btn btn-success btn-small" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add
                     Manager
                     <i class="icon-plus-sign icon-white"></i></button>
 
