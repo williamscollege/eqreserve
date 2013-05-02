@@ -20,6 +20,10 @@
 			if (count($key->eq_items) == 0) {
 				if ($USER->flag_is_system_admin || $is_group_manager) {
 					# Subgroup Title
+					if ($USER->flag_is_system_admin || $is_group_manager) {
+						# delete button
+						echo "<a href=\"#\" id=\"delete-subgroup-" . $key->eq_subgroup_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $key->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
+					}
 					echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
 					echo "<li data-item-order=\"0\"><em>No items exist.</em></li>";
 					# Button: Add an Item
