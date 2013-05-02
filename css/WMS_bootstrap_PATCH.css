@@ -36,6 +36,12 @@ html {
 	color: #D15545 !important; /* red-orange */
 }
 
+/* remove annoying margin-left:0 from core bootstrap.css */
+ul.unstyled LI,
+ol.unstyled LI {
+	margin-left: 50px;
+}
+
 /* =======================================
     Williams Custom CSS
     Purpose: CSS that's not an extension / modification of the bootstrap framework

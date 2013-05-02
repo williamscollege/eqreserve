@@ -1,7 +1,7 @@
 <div class="class="form-horizontal">
 
     <legend class="pull-left row-fluid">Existing Reservations</legend><br clear="all"/>
-    <ul id="reservationSchedules">
+    <ul id="reservationSchedules" class="unstyled">
         <?php
         $show_del_control = ($USER->flag_is_system_admin || $is_group_manager);
 
@@ -10,7 +10,7 @@
 
                 $li = Db_Linked::listItemTag('list-of-schedule-'.$sched->schedule_id);
                 if ($show_del_control) {
-                    $li .= '<a id="delete-schedule-'.$sched->schedule_id.'" class="editing-control hide btn btn-medium btn-danger btn-delete-list-item delete-schedule-btn" data-for-schedule="'.$sched->schedule_id.'"><i class="icon icon-trash"></i></a> ';
+                    $li .= '<a id="delete-schedule-'.$sched->schedule_id.'" class="editing-control hide btn btn-mini btn-danger delete-schedule-btn" data-for-schedule="'.$sched->schedule_id.'"><i class="icon-trash icon-white"></i></a> ';
                 }
 
                 if ($sched->type == 'manager') {
@@ -31,7 +31,7 @@
                         $li .= $sched->user->fname.' '.$sched->user->lname.'(TODO: add link/hover stuff)<br/>';
                     }
                 }
-                $li .= "<ul>\n";
+                $li .= "<ul class=\"\">\n";
                 foreach ($sched->reservations as $r) {
                     $li .= '<li>'.$r->eq_item->eq_subgroup->name.': '.$r->eq_item->name."</li>\n";
                 }

@@ -38,8 +38,11 @@
 
 	# Item Title
 	echo "<li data-item-order=\"" . $output->ordering . "\">";
-	echo "<div class=\"span1\">&nbsp;</div>";
 	echo "<label class=\"\" for=\"item" . $output->eq_item_id . "\">";
+	if ($USER->flag_is_system_admin || $is_group_manager) {
+		# delete button
+		echo "<a href=\"#\" id=\"delete-item-" . $output->eq_item_id . "\" class=\"manager-action btn btn-mini btn-danger delete-item-btn\" data-for-item=\"" . $output->eq_item_id . "\"><i class=\"icon-trash icon-white\"></i> </a> "; # OMIT class="hide" as this is injected into the DOM
+	}
 	# determine: radio or checkbox
 	if ($bitIsMultiSelect == 0) {
 		# radio: single select

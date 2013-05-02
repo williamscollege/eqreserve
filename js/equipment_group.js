@@ -215,7 +215,7 @@ $(document).ready(function () {
 			});
 
 		}
-	})
+	});
 
 	var validator2 = $('#frmAjaxAddItem').validate({
 		rules: {
@@ -279,7 +279,7 @@ $(document).ready(function () {
 			});
 
 		}
-	})
+	});
 
 	var validator3 = $('#frmAjaxAddSubgroup').validate({
 		rules: {
@@ -346,7 +346,9 @@ $(document).ready(function () {
 			});
 
 		}
-	})
+	});
+
+	
 
 	$(".delete-schedule-btn").click(function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-schedule');
