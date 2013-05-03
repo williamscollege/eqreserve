@@ -79,26 +79,27 @@
 	<meta name="description" content="<?php echo LANG_APP_NAME; ?>">
 	<meta name="author" content="OIT Project Group">
 	<!-- CSS: Framework -->
-	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="all">
-	<!--padding for bootstrap.css only, not for bootstrap-responsive.css-->
+	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_CSS; ?>" type="text/css" media="all">
+	<!-- apply padding for bootstrap.css only, not for bootstrap-responsive.css -->
 	<style type="text/css">
 		body {
 			padding-top: 60px;
 			padding-bottom: 40px;
 		}
 	</style>
-	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css">
+	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_RESPONSIVE_CSS; ?>" type="text/css">
 	<!-- CSS: Plugins -->
-	<link rel="stylesheet" href="<?php echo URL_JQUERYUI_CSS_CDN; ?>" />
-	<link rel="stylesheet" href="js/jquery/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" type="text/css" media="all">
+	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
+	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_TIMEPICKER_CSS; ?>" type="text/css" media="all">
 	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
-	<script src="<?php echo URL_JQUERY_CDN; ?>"></script>
-	<script src="<?php echo URL_JQUERYUI_CDN; ?>"></script>
+	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
+	<script src="<?php echo PATH_JQUERYUI_JS; ?>"></script>
 	<!-- jQuery: Plugins -->
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
-	<script src="<?php echo URL_JQUERY_VALIDATE_CDN; ?>"></script>
+	<script src="<?php echo PATH_BOOTSTRAP_JS; ?>"></script>
+	<script src="<?php echo PATH_BOOTSTRAP_BOOTBOX_JS; ?>"></script>
+	<script src="<?php echo PATH_BOOTSTRAP_TIMEPICKER_JS; ?>"></script>
+	<script src="<?php echo PATH_JQUERY_VALIDATION_JS; ?>"></script>
     <!-- local JS -->
     <script src="js/eq_reserve_util.js"></script>
 </head>
