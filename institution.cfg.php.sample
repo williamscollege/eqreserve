@@ -15,11 +15,24 @@
 	define('DB_USER',   'eqreserveweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
 	define('DB_PASS',   'yourfancypassword');
 
-	# external URLs
-	define('URL_JQUERY_CDN', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
-	define('URL_JQUERYUI_CDN', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js');
-	define('URL_JQUERYUI_CSS_CDN', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dot-luv/jquery-ui.min.css');
-	define('URL_JQUERY_VALIDATE_CDN', '//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js');
+	# external Content Delivery Network
+	# ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
+	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js');
+	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dot-luv/jquery-ui.min.css');
+
+	# local file paths
+	# ***** Bootstrap: http://twitter.github.io/bootstrap/
+	define('PATH_BOOTSTRAP_JS', 'js/bootstrap.min.js?rel=2.3.1');
+	define('PATH_BOOTSTRAP_CSS', 'css/bootstrap.min.css?rel=2.3.1');
+	define('PATH_BOOTSTRAP_RESPONSIVE_CSS', 'css/bootstrap-responsive.min.css?rel=2.3.1');
+	# ***** Bootstrap-Bootbox: https://github.com/makeusabrew/bootbox
+	define('PATH_BOOTSTRAP_BOOTBOX_JS', 'js/jquery/plugins/bootstrap-bootbox/bootbox.min.js?rel=3.2.0');
+	# ***** Bootstrap-Timepicker: https://github.com/jdewit/bootstrap-timepicker
+	define('PATH_BOOTSTRAP_TIMEPICKER_JS', 'js/jquery/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js?rel=0.2.3');
+	define('PATH_BOOTSTRAP_TIMEPICKER_CSS', 'js/jquery/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css?rel=0.2.3');
+	# ***** jQuery-Validation: http://bassistance.de/jquery-plugins/jquery-plugin-validation/
+	define('PATH_JQUERY_VALIDATION_JS', 'js/jquery/plugins/jquery-validation/dist/jquery.validate.min.js?rel=1.11.1');
 
 	# these are used in the automated tests.
 	define('TESTING_DB_SERVER','localhost'); // e.g. localhost

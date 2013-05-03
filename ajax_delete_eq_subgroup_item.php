@@ -6,7 +6,8 @@
 	$results = [
 		'status'=> 'success'
 	];
-
+	echo json_encode($results);
+	exit;
 	if (! $schedule) {
 		echo json_encode($results);
 		exit;
