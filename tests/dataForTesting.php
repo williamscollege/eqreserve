@@ -178,7 +178,9 @@ function createTestData_Permissions($dbConn) {
         (714,1103,'user',     2,201,0), # deleted user3
         (715,504,'inst_group',2,206,0), # deleted instgroup4
         (716,1102,'user',     2,207,0), # user2 user access to eqg 7
-        (717,1102,'user',     1,202,0)  # user2 manager access to eqg 2
+        (717,1102,'user',     1,202,0), # user2 manager access to eqg 2
+        (718,1102,'user',     2,201,0),  # user2 user access to eqg 1
+        (719,1106,'user',     1,201,0)  # user6 manager access to eqg 1
     ";
     $addTestPermissionStmt = $dbConn->prepare($addTestPermissionSql);
     $addTestPermissionStmt->execute();
@@ -281,7 +283,8 @@ function createTestData_Users($dbConn) {
         (1102,'testUser2','tu2F','tu2L','tu2L, tu2F','tu2@inst.edu','tu2Advisor','tu2 notes',0,0,0),
         (1103,'testUser3deleted','tu3F','tu3L','tu3L, tu3F','tu3@inst.edu','tu3Advisor','tu3 notes',0,0,1),
         (1104,'testUser4banned','tu4F','tu4L','tu4L, tu4F','tu4@inst.edu','tu4Advisor','tu4 notes',0,1,0),
-        (1105,'testUser5SystemAdmin','tu5F','tu5L','tu5L, tu5F','tu5@inst.edu','tu5Advisor','tu5 notes',1,0,0)
+        (1105,'testUser5SystemAdmin','tu5F','tu5L','tu5L, tu5F','tu5@inst.edu','tu5Advisor','tu5 notes',1,0,0),
+        (1106,'testUser6','tu6F','tu6L','tu6L, tu6F','tu6@inst.edu','tu6Advisor','tu6 notes',0,0,0)
     ";
     $addTestUserStmt = $dbConn->prepare($addTestUserSql);
     $addTestUserStmt->execute();

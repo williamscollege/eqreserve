@@ -223,7 +223,7 @@
 			$eg->loadPermissions();
 
 			$this->assertTrue(is_array($eg->permissions));
-			$this->assertEqual(count($eg->permissions), 4);
+			$this->assertEqual(count($eg->permissions), 6);
 		}
 
         public function TestOfLoadManagers() {
@@ -234,8 +234,8 @@
             $eg->loadManagers();
 
             $this->assertTrue(is_array($eg->managers));
-            $this->assertEqual(count($eg->managers), 1);
-            $this->assertEqual('testInstGroup1',$eg->managers[0]->name);
+            $this->assertEqual(count($eg->managers), 2);
+            $this->assertEqual('testInstGroup1',$eg->managers[1]->name);
         }
 
         public function TestOfLoadConsumers() {
@@ -246,9 +246,9 @@
             $eg->loadConsumers();
 
             $this->assertTrue(is_array($eg->consumers));
-            $this->assertEqual(count($eg->consumers), 2);
+            $this->assertEqual(count($eg->consumers), 3);
             $this->assertEqual('Violet',$eg->consumers[0]->fname);
-            $this->assertEqual('testInstGroup2',$eg->consumers[1]->name);
+            $this->assertEqual('testInstGroup2',$eg->consumers[2]->name);
         }
 
         public function TestOfLoadSchedules(){

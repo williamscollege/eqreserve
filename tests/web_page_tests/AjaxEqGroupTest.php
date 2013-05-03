@@ -22,43 +22,102 @@ class AjaxEqGroupTest extends WMSWebTestCase {
 
     //############################################################
 
+    // TODO: create tests for base eq group actions (create, delete, update)
+
+    function testEqGroupAjaxNoAccessWhenNotLoggedIn() {
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=null');
+
+        $this->assertPattern('/not authenticated/i');
+    }
+
     function testEqGroupAjaxInvalidAction() {
-//        $this->signIn();
-//
-//        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1007&scheduleAction=deleteSchedule');
-//
-//        $this->assertPattern('/"status":"failure"/');
-//
-//        $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
-//        $this->assertTrue($s->matchesDb);
-        $this->fail();
+        $this->signIn();
+        $base_eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $this->assertTrue($base_eg->matchesDb);
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?ajaxVal_ID=201&ajaxVal_action=blah');
+
+        $this->assertPattern('/"status":"failure"/');
+    }
+
+    function testEqGroupAjaxManagerGetsAccess() {
+        $this->signIn();
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=null');
+
+        $this->assertPattern('/"status":"success"/');
+        $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $this->assertTrue($eg->matchesDb);
     }
 
     function testEqGroupAjaxNonManagerGetsNoAccess() {
-        $this->fail();
+        $this->signIn();
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=202&ajaxVal_action=null');
+
+        $this->assertPattern('/"status":"failure"/');
+        $eg = EqGroup::getOneFromDb(['eq_group_id'=>202],$this->DB);
+        $this->assertTrue($eg->matchesDb);
     }
 
     function testEqGroupAjaxSystemAdminGetsAccess() {
-        $this->fail();
+        $this->signIn();
+        makeAuthedTestUserAdmin($this->DB);
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=202&ajaxVal_action=null');
+
+        $this->assertPattern('/"status":"success"/');
+        $eg = EqGroup::getOneFromDb(['eq_group_id'=>202],$this->DB);
+        $this->assertTrue($eg->matchesDb);
+    }
+
+    function testEqGroupAjaxRemoveConsumerAccess() {
+        $this->signIn();
+
+        // other user access
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=removePermission&permission_id=718');
+        $this->assertPattern('/"status":"success"/');
+        $p = Permission::getOneFromDb(['permission_id'=>718],$this->DB);
+        $this->assertFalse($p->matchesDb);
+
+        // self, but have manager access so OK to remove consumer access
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=removePermission&permission_id=702');
+        $this->assertPattern('/"status":"success"/');
+        $p = Permission::getOneFromDb(['permission_id'=>702],$this->DB);
+        $this->assertFalse($p->matchesDb);
+
+        // inst group access
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=removePermission&permission_id=711');
+        $this->assertPattern('/"status":"success"/');
+        $p = Permission::getOneFromDb(['permission_id'=>711],$this->DB);
+        $this->assertFalse($p->matchesDb);
+    }
+
+    function testEqGroupAjaxRemoveManagerAccess() {
+        $this->signIn();
+
+        // other user access
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=removePermission&permission_id=719');
+        $this->assertPattern('/"status":"success"/');
+        $p = Permission::getOneFromDb(['permission_id'=>719],$this->DB);
+        $this->assertFalse($p->matchesDb);
     }
 
     function testEqGroupAjaxNonAdminCannotRemoveTheirOwnManagerAccess() {
-        $this->fail();
-    }
+        $this->signIn();
+        $base_eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $this->assertTrue($base_eg->matchesDb);
 
-    function testEqGroupAjaxRemoveUserManagerAccess() {
-        $this->fail();
-    }
+        // direct
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=203&ajaxVal_action=removePermission&permission_id=703');
+        $this->assertPattern('/"status":"failure"/');
+        $p = Permission::getOneFromDb(['permission_id'=>703],$this->DB);
+        $this->assertTrue($p->matchesDb);
 
-    function testEqGroupAjaxRemoveUserConsumerAccess() {
-        $this->fail();
-    }
-
-    function testEqGroupAjaxRemoveInstGroupManagerAccess() {
-        $this->fail();
-    }
-
-    function testEqGroupAjaxRemoveInstGroupConsumerAccess() {
-        $this->fail();
+        // indirect, via inst group
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=removePermission&permission_id=707');
+        $this->assertPattern('/"status":"failure"/');
+        $p = Permission::getOneFromDb(['permission_id'=>707],$this->DB);
+        $this->assertTrue($p->matchesDb);
     }
 }
