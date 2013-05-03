@@ -24,7 +24,38 @@ $(document).ready(function () {
     function handleRemoveManager() {
         //eqrUtil_setTransientAlert('progress','saving...',$('#remove-manager-btn-'+GLOBAL_confirmHandlerData.for_id));
         eqrUtil_setTransientAlert('progress','saving...');
-        alert('hook for remove manager');
+        //alert('hook for remove manager');
+
+        $.ajax({
+            url: 'ajax_eq_group.php',
+            dataType: 'json',
+            data: {'eq_group':TODO,
+                   'ajaxVal_action': 'deleteTimeBlock',
+                   'permission_id': GLOBAL_confirmHandlerData.for_id
+                    }
+            })
+            .done(function (data, status, xhr) {
+                if (data.status == 'success') {
+                eqrUtil_setTransientAlert('success', 'saved');
+                // if there's only one item in the list, jump to user acct page
+                // else remove the relevant list item
+                if ($('ul#time_blocks > li').length <= 1) {
+                eqrUtil_setTransientAlert('success', 'schedule deleted! Redirecting...');
+                window.location.href = headToOnScheduleGone;
+                }
+            else {
+                $('#list-of-time-block-' + GLOBAL_confirmHandlerData).remove();
+                }
+            }
+            else {
+                eqrUtil_setTransientAlert('error', 'ERROR - not saved!');
+                }
+            })
+            .fail(function (data, status, xhr) {
+                eqrUtil_setTransientAlert('error', 'ERROR - not saved!');
+                })
+            ;
+
         eqrUtil_setTransientAlert('success','...manager removed');
         //eqrUtil_setTransientAlert('success','...manager removed',$('#remove-manager-btn-'+GLOBAL_confirmHandlerData.for_id));
     }
