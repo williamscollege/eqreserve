@@ -30,24 +30,50 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
             <div class="controls">
 
                 <?php
+//                echo join(" ",
+//                    array_map(function ($m) {
+//                        $txt      = '';
+//                        $id       = 0;
+//                        $for_type = 'user';
+//                        if (get_class($m) == 'User') {
+//                            $id  = $m->user_id;
+//                            $txt = "$m->fname $m->lname ($m->email)";
+//                            $for_type = 'user';
+//                        }
+//                        else {
+//                            $id  = $m->inst_group_id;
+//                            $txt = "[$m->name]";
+//                            $for_type = 'inst_group';
+//                        }
+//                        return "<button type=\"button\" id=\"remove-manager-btn-".$id."\" class=\"btn btn-inverse btn-small eq-group-remove-manager-btn\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
+//                    }, $Requested_EqGroup->managers)
+//                );
+                $manager_permission_data = array();
+                $consumer_permission_data = array();
+                foreach ($Requested_EqGroup->permissions as $p) {
+                    $perm_data = ['perm_id'=>$p->permission_id,'ent_type'=>$p->entity_type,'ent_id'=>$p->entity_id,'display_text'=>''];
+                    if ($p->entity_type == 'user') {
+                        $u = User::getOneFromDb(['user_id'=>$p->entity_id],$DB);
+                        $perm_data['display_text'] = $u->fname.' '.$u->lname.' ('.$u->email.')';
+                    }
+                    else {
+                        $g = InstGroup::getOneFromDb(['inst_group_id'=>$p->entity_id],$DB);
+                        $perm_data['display_text'] = '['.$g->name.']';
+                    }
+                    if ($p->role_id==1) {
+                        array_push($manager_permission_data,$perm_data);
+                    }
+                    else {
+                        array_push($consumer_permission_data,$perm_data);
+                    }
+                }
+
                 echo join(" ",
-                    array_map(function ($m) {
-                        $txt      = '';
-                        $id       = 0;
-                        $for_type = 'user';
-                        if (get_class($m) == 'User') {
-                            $id  = $m->user_id;
-                            $txt = "$m->fname $m->lname ($m->email)";
-                            $for_type = 'user';
-                        }
-                        else {
-                            $id  = $m->inst_group_id;
-                            $txt = "[$m->name]";
-                            $for_type = 'inst_group';
-                        }
-                        return "<button type=\"button\" id=\"remove-manager-btn-".$id."\" class=\"btn btn-inverse btn-small eq-group-remove-manager-btn\" title=\"$txt\" data-for-type=\"$for_type\" data-for-id=\"$id\">$txt <i class=\"icon-remove icon-white\"></i></button>";
-                    }, $Requested_EqGroup->managers)
+                    array_map(function ($pd) {
+                        return "<button type=\"button\" id=\"remove-manager-btn-".$pd['perm_id']."\" class=\"btn btn-inverse btn-small eq-group-remove-manager-btn\" title=\"".$pd['display_text']."\" data-ent-type=\"".$pd['ent_type']."\" data-ent-id=\"".$pd['ent_id']."\" data-for-id=\"".$pd['perm_id']."\">".$pd['display_text']." <i class=\"icon-remove icon-white\"></i></button>";
+                    }, $manager_permission_data)
                 );
+
                 ?>
 
                 <button id="eq-group-add-manager-btn" type="button" class="btn btn-success btn-small" title="Add Manager"><i class="icon-plus-sign icon-white"></i> Add

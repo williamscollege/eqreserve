@@ -12,52 +12,40 @@ $(document).ready(function () {
     });
 
     $('.eq-group-remove-manager-btn').click(function(evt){
-        //alert('clicked on remove manager '+$(this).attr('data-for-type')+' '+$(this).attr('data-for-id'));
-        // hook for remove manager UI
-        GLOBAL_confirmHandlerData= {'for_type':$(this).attr('data-for-type'),'for_id':$(this).attr('data-for-id')};
+        GLOBAL_confirmHandlerData= {'perm_id':$(this).attr('data-for-id'),
+                                    'ent_type':$(this).attr('data-ent-type'),
+                                    'ent_id':$(this).attr('data-ent-id')
+                                   };
         var mgr_type = 'person';
-        if ($(this).attr('data-for-type') == 'inst_group') {
+        if ($(this).attr('data-ent-type') == 'inst_group') {
             mgr_type = 'group';
         }
-        eqrUtil_launchConfirm("Are you sure you want to remove that "+mgr_type+" as a manager of this group?",handleRemoveManager);
+        eqrUtil_launchConfirm("Are you sure you want to remove that "+mgr_type+" as a manager of this group?",handleRemovePermission);
     });
-    function handleRemoveManager() {
-        //eqrUtil_setTransientAlert('progress','saving...',$('#remove-manager-btn-'+GLOBAL_confirmHandlerData.for_id));
+    function handleRemovePermission() {
         eqrUtil_setTransientAlert('progress','saving...');
-        //alert('hook for remove manager');
-
         $.ajax({
             url: 'ajax_eq_group.php',
             dataType: 'json',
-            data: {'eq_group':TODO,
-                   'ajaxVal_action': 'deleteTimeBlock',
-                   'permission_id': GLOBAL_confirmHandlerData.for_id
+            data: {'eq_group':$('#groupID').attr('value'),
+                   'ajaxVal_action': 'removePermission',
+                   'permission_ids[]': GLOBAL_confirmHandlerData.perm_id
                     }
             })
             .done(function (data, status, xhr) {
+                //console.log(data);
                 if (data.status == 'success') {
-                eqrUtil_setTransientAlert('success', 'saved');
-                // if there's only one item in the list, jump to user acct page
-                // else remove the relevant list item
-                if ($('ul#time_blocks > li').length <= 1) {
-                eqrUtil_setTransientAlert('success', 'schedule deleted! Redirecting...');
-                window.location.href = headToOnScheduleGone;
+                    eqrUtil_setTransientAlert('success','...done');
+                    $('#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id).remove();
                 }
-            else {
-                $('#list-of-time-block-' + GLOBAL_confirmHandlerData).remove();
-                }
-            }
-            else {
-                eqrUtil_setTransientAlert('error', 'ERROR - not saved!');
-                }
+                else {
+                    eqrUtil_setTransientAlert('error', 'ERROR - not saved! (bad response)');
+                 }
             })
             .fail(function (data, status, xhr) {
                 eqrUtil_setTransientAlert('error', 'ERROR - not saved!');
-                })
-            ;
-
-        eqrUtil_setTransientAlert('success','...manager removed');
-        //eqrUtil_setTransientAlert('success','...manager removed',$('#remove-manager-btn-'+GLOBAL_confirmHandlerData.for_id));
+            })
+        ;
     }
 
     // Toggle Equipment Group Settings (text or input fields)
