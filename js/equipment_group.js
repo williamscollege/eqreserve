@@ -20,6 +20,7 @@ $(document).ready(function () {
 
     $('.eq-group-remove-manager-btn').click(function(evt){
         GLOBAL_confirmHandlerData= {'perm_id':$(this).attr('data-for-id'),
+                                    'perm_type':'manager',
                                     'ent_type':$(this).attr('data-ent-type'),
                                     'ent_id':$(this).attr('data-ent-id')
                                    };
@@ -43,7 +44,14 @@ $(document).ready(function () {
                 //console.log(data);
                 if (data.status == 'success') {
                     eqrUtil_setTransientAlert('success','...done');
-                    $('#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id).remove();
+                    if (GLOBAL_confirmHandlerData.perm_type == 'manager') {
+                        $('#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id).remove();
+                    }
+                    else {
+                        for (var i=0; i<GLOBAL_confirmHandlerData.perm_id.length; i++) {
+                            $('#consumer-perm-option-' + GLOBAL_confirmHandlerData.perm_id[i]).remove();
+                        }
+                    }
                 }
                 else {
                     eqrUtil_setTransientAlert('error', 'ERROR - not saved! (bad response)');
@@ -57,13 +65,27 @@ $(document).ready(function () {
 
     $('#consumers-select').change(function (evt) {
         //alert('consumer selected');
-        var consumer_selected_count = $("#consumers-select :selected").length;
-        if (consumer_selected_count > 0) {
+        //var consumer_selected_count = $("#consumers-select :selected").length;
+        if ($("#consumers-select :selected").length > 0) {
             $('#eq-group-remove-consumers-btn').removeAttr('disabled');
         }
         else {
             $('#eq-group-remove-consumers-btn').attr('disabled','disabled')
         }
+    });
+
+    $('#eq-group-remove-consumers-btn').click(function (evt) {
+        GLOBAL_confirmHandlerData= {'perm_id':[],
+                                    'perm_type':'consumer'
+                                    };
+        $("#consumers-select :selected").each(function(idx,elt){
+            GLOBAL_confirmHandlerData['perm_id'].push($(this).attr('data-for-id'));
+        });
+        var ref_text = 'that user';
+        if ($("#consumers-select :selected").length != 1) {
+            ref_text = 'those users';
+        }
+        eqrUtil_launchConfirm("Are you sure you want to remove "+ref_text+"?",handleRemovePermission);
     });
 
     // Toggle Equipment Group Settings (text or input fields)
