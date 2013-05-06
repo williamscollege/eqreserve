@@ -81,10 +81,10 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
                     );
                     ?>
                 </select><br /><br />
-                <button type="button" class="btn btn-danger btn-small" title="Remove Selected"><i class="icon-minus-sign icon-white"></i> Remove
+                <button type="button" id="eq-group-remove-consumers-btn" class="btn btn-danger btn-small" title="Remove Selected" disabled="disabled"><i class="icon-minus-sign icon-white"></i> Remove
                     Selected
                     <i class="icon-minus-sign icon-white"></i></button>
-                <button type="button" class="btn btn-success btn-small" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
+                <button type="button" id="eq-group-add-consumer-btn" class="btn btn-success btn-small" title="Add User"><i class="icon-plus-sign icon-white"></i> Add User
                     <i class="icon-plus-sign icon-white"></i></button>
             </div>
         </div>

@@ -11,6 +11,13 @@ $(document).ready(function () {
         // hook for add manager UI
     });
 
+
+    $('#eq-group-add-consumer-btn').click(function(evt){
+        //alert('clicked on '+$(this).attr('id'));
+        alert('hook for add consumer');
+        // hook for add consumer UI
+    });
+
     $('.eq-group-remove-manager-btn').click(function(evt){
         GLOBAL_confirmHandlerData= {'perm_id':$(this).attr('data-for-id'),
                                     'ent_type':$(this).attr('data-ent-type'),
@@ -47,6 +54,17 @@ $(document).ready(function () {
             })
         ;
     }
+
+    $('#consumers-select').change(function (evt) {
+        //alert('consumer selected');
+        var consumer_selected_count = $("#consumers-select :selected").length;
+        if (consumer_selected_count > 0) {
+            $('#eq-group-remove-consumers-btn').removeAttr('disabled');
+        }
+        else {
+            $('#eq-group-remove-consumers-btn').attr('disabled','disabled')
+        }
+    });
 
     // Toggle Equipment Group Settings (text or input fields)
     $("#toggleGroupSettings").click(function () {
