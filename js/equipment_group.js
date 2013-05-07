@@ -1,201 +1,201 @@
 $(document).ready(function () {
-    // default conditions
+	// default conditions
 
-    // ***************************
-    // Listeners
-    // ***************************
+	// ***************************
+	// Listeners
+	// ***************************
 
-    $('#eq-group-add-manager-btn').click(function(evt){
-        //alert('clicked on '+$(this).attr('id'));
-        $("#addUserType").val('manager');
-        $("#modalFindUserUILabel").text('Add Manager');
-        $('#modalAddUserUI').modal({show:'true'});
-    });
+	$('#eq-group-add-manager-btn').click(function (evt) {
+		//alert('clicked on '+$(this).attr('id'));
+		$("#addUserType").val('manager');
+		$("#modalFindUserUILabel").text('Add Manager');
+		$('#modalAddUserUI').modal({show: 'true'});
+	});
 
-    $('#eq-group-add-consumer-btn').click(function(evt){
-        //alert('clicked on '+$(this).attr('id'));
-        $("#addUserType").val('consumer');
-        $("#modalFindUserUILabel").text('Add User');
-        $('#modalAddUserUI').modal({show:'true'});
-    });
+	$('#eq-group-add-consumer-btn').click(function (evt) {
+		//alert('clicked on '+$(this).attr('id'));
+		$("#addUserType").val('consumer');
+		$("#modalFindUserUILabel").text('Add User');
+		$('#modalAddUserUI').modal({show: 'true'});
+	});
 
-    $('#addUserSearchData').keypress(function(evt){
-        if (evt.which == 13) { // the return/enter key press
-            //alert('enter pressed');
-            evt.stopPropagation();
-            event.preventDefault();
-            return;
-        }
-        var curText = $(this).val() + String.fromCharCode(evt.which);
-        //alert('with '+evt.which+' currently: '+curText);
-    });
+	$('#addUserSearchData').keypress(function (evt) {
+		if (evt.which == 13) { // the return/enter key press
+			//alert('enter pressed');
+			evt.stopPropagation();
+			event.preventDefault();
+			return;
+		}
+		var curText = $(this).val() + String.fromCharCode(evt.which);
+		//alert('with '+evt.which+' currently: '+curText);
+	});
 //    $('#addUserSearchData').on('keydown keyup',function(evt){
 //        evt.stopPropagation();
 //    });
 
-    $('.eq-group-remove-manager-btn').click(function(evt){
-        GLOBAL_confirmHandlerData= {'perm_id':$(this).attr('data-for-id'),
-                                    'perm_type':'manager',
-                                    'ent_type':$(this).attr('data-ent-type'),
-                                    'ent_id':$(this).attr('data-ent-id')
-                                   };
-        var mgr_type = 'person';
-        if ($(this).attr('data-ent-type') == 'inst_group') {
-            mgr_type = 'group';
-        }
-        eqrUtil_launchConfirm("Are you sure you want to remove that "+mgr_type+" as a manager of this group?",handleRemovePermission);
-    });
+	$('.eq-group-remove-manager-btn').click(function (evt) {
+		GLOBAL_confirmHandlerData = {'perm_id': $(this).attr('data-for-id'),
+			'perm_type': 'manager',
+			'ent_type': $(this).attr('data-ent-type'),
+			'ent_id': $(this).attr('data-ent-id')
+		};
+		var mgr_type = 'person';
+		if ($(this).attr('data-ent-type') == 'inst_group') {
+			mgr_type = 'group';
+		}
+		eqrUtil_launchConfirm("Are you sure you want to remove that " + mgr_type + " as a manager of this group?", handleRemovePermission);
+	});
 
-    $('#eq-group-remove-consumers-btn').click(function (evt) {
-        GLOBAL_confirmHandlerData= {'perm_id':[],
-            'perm_type':'consumer'
-        };
-        $("#consumers-select :selected").each(function(idx,elt){
-            GLOBAL_confirmHandlerData['perm_id'].push($(this).attr('data-for-id'));
-        });
-        var ref_text = 'that user';
-        if ($("#consumers-select :selected").length != 1) {
-            ref_text = 'those users';
-        }
-        eqrUtil_launchConfirm("Are you sure you want to remove "+ref_text+"?",handleRemovePermission);
-    });
+	$('#eq-group-remove-consumers-btn').click(function (evt) {
+		GLOBAL_confirmHandlerData = {'perm_id': [],
+			'perm_type': 'consumer'
+		};
+		$("#consumers-select :selected").each(function (idx, elt) {
+			GLOBAL_confirmHandlerData['perm_id'].push($(this).attr('data-for-id'));
+		});
+		var ref_text = 'that user';
+		if ($("#consumers-select :selected").length != 1) {
+			ref_text = 'those users';
+		}
+		eqrUtil_launchConfirm("Are you sure you want to remove " + ref_text + "?", handleRemovePermission);
+	});
 
-    function handleRemovePermission() {
-        eqrUtil_setTransientAlert('progress','saving...');
-        $.ajax({
-            url: 'ajax_eq_group.php',
-            dataType: 'json',
-            data: {'eq_group':$('#groupID').attr('value'),
-                   'ajaxVal_action': 'removePermission',
-                   'permission_ids[]': GLOBAL_confirmHandlerData.perm_id
-                    }
-            })
-            .done(function (data, status, xhr) {
-                //console.log(data);
-                if (data.status == 'success') {
-                    eqrUtil_setTransientAlert('success','...done');
-                    if (GLOBAL_confirmHandlerData.perm_type == 'manager') {
-                        $('#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id).remove();
-                    }
-                    else {
-                        for (var i=0; i<GLOBAL_confirmHandlerData.perm_id.length; i++) {
-                            $('#consumer-perm-option-' + GLOBAL_confirmHandlerData.perm_id[i]).remove();
-                        }
-                    }
-                }
-                else {
-                    eqrUtil_setTransientAlert('error', 'ERROR - not saved! (bad response)');
-                 }
-            })
-            .fail(function (data, status, xhr) {
-                eqrUtil_setTransientAlert('error', 'ERROR - not saved!');
-            })
-        ;
-    }
+	function handleRemovePermission() {
+		eqrUtil_setTransientAlert('progress', 'saving...');
+		$.ajax({
+			url: 'ajax_eq_group.php',
+			dataType: 'json',
+			data: {'eq_group': $('#groupID').attr('value'),
+				'ajaxVal_action': 'removePermission',
+				'permission_ids[]': GLOBAL_confirmHandlerData.perm_id
+			}
+		})
+			.done(function (data, status, xhr) {
+				//console.log(data);
+				if (data.status == 'success') {
+					eqrUtil_setTransientAlert('success', '...done');
+					if (GLOBAL_confirmHandlerData.perm_type == 'manager') {
+						$('#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id).remove();
+					}
+					else {
+						for (var i = 0; i < GLOBAL_confirmHandlerData.perm_id.length; i++) {
+							$('#consumer-perm-option-' + GLOBAL_confirmHandlerData.perm_id[i]).remove();
+						}
+					}
+				}
+				else {
+					eqrUtil_setTransientAlert('error', 'ERROR - not saved! (bad response)');
+				}
+			})
+			.fail(function (data, status, xhr) {
+				eqrUtil_setTransientAlert('error', 'ERROR - not saved!');
+			})
+		;
+	}
 
-    // enables/disables the remove users button depending on whether any users have been selected
-    $('#consumers-select').change(function (evt) {
-        if ($("#consumers-select :selected").length > 0) {
-            $('#eq-group-remove-consumers-btn').removeAttr('disabled');
-        }
-        else {
-            $('#eq-group-remove-consumers-btn').attr('disabled','disabled')
-        }
-    });
+	// enables/disables the remove users button depending on whether any users have been selected
+	$('#consumers-select').change(function (evt) {
+		if ($("#consumers-select :selected").length > 0) {
+			$('#eq-group-remove-consumers-btn').removeAttr('disabled');
+		}
+		else {
+			$('#eq-group-remove-consumers-btn').attr('disabled', 'disabled')
+		}
+	});
 
-    // Toggle Equipment Group Settings (text or input fields)
-    $("#toggleGroupSettings").click(function () {
-        // toggle form or plain-text
-        $("#managerView, #managerEdit, .editing-control, .view-control").toggleClass("hide");
-        // toggle button label
-        if ($("#managerView").hasClass('hide')) {
-            $("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View');
-            // hide the other form
-            $("#btnCancelReservation").click();
-            // show special manager actions
-            $(".manager-action").removeClass("hide");
-        }
-        else {
-            $("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
-            // hide special manager actions
-            $(".manager-action").addClass("hide");
-        }
-    });
+	// Toggle Equipment Group Settings (text or input fields)
+	$("#toggleGroupSettings").click(function () {
+		// toggle form or plain-text
+		$("#managerView, #managerEdit, .editing-control, .view-control").toggleClass("hide");
+		// toggle button label
+		if ($("#managerView").hasClass('hide')) {
+			$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View');
+			// hide the other form
+			$("#btnCancelReservation").click();
+			// show special manager actions
+			$(".manager-action").removeClass("hide");
+		}
+		else {
+			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+			// hide special manager actions
+			$(".manager-action").addClass("hide");
+		}
+	});
 
-    // Toggle Reserve Equipment (show or hide form fields)
-    $("#toggleReserveEquipment").click(function () {
-        // toggle form or plain-text
-        $(".reservationForm").toggleClass("hide");
-        // toggle button label
-        if ($(".reservationForm").hasClass('hide')) {
-            $("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
-        }
-        else {
-            $("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
-            // hide the other form
-            $("#btnCancelEditGroup").click();
-            // hide special manager actions
-            $(".manager-action").addClass("hide");
-        }
-    });
+	// Toggle Reserve Equipment (show or hide form fields)
+	$("#toggleReserveEquipment").click(function () {
+		// toggle form or plain-text
+		$(".reservationForm").toggleClass("hide");
+		// toggle button label
+		if ($(".reservationForm").hasClass('hide')) {
+			$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+		}
+		else {
+			$("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
+			// hide the other form
+			$("#btnCancelEditGroup").click();
+			// hide special manager actions
+			$(".manager-action").addClass("hide");
+		}
+	});
 
-    // Cancel and cleanup
-    $("#btnCancelEditGroup").click(function () {
-        cleanUpForm("formEditGroup")
-        // hide form fields
-        $("#managerEdit").addClass("hide");
-        $("#managerView").removeClass("hide");
-        $("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
-        // hide special manager actions
-        $(".manager-action").addClass("hide");
-        // reset the submit button (avoid disabled state)
-        $("#btnSubmitEditGroup").button('reset');
-    });
-    // Cancel and cleanup
-    $("#btnCancelReservation").click(function () {
-        cleanUpForm("formScheduleReservations")
-        // hide form fields, restore button label
-        $(".reservationForm").addClass("hide");
-        $("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
-    });
+	// Cancel and cleanup
+	$("#btnCancelEditGroup").click(function () {
+		cleanUpForm("formEditGroup")
+		// hide form fields
+		$("#managerEdit").addClass("hide");
+		$("#managerView").removeClass("hide");
+		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+		// hide special manager actions
+		$(".manager-action").addClass("hide");
+		// reset the submit button (avoid disabled state)
+		$("#btnSubmitEditGroup").button('reset');
+	});
+	// Cancel and cleanup
+	$("#btnCancelReservation").click(function () {
+		cleanUpForm("formScheduleReservations")
+		// hide form fields, restore button label
+		$(".reservationForm").addClass("hide");
+		$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+	});
 
-    // Update form values
-    $("#goStartMinute").change(function () {
-        $("#startMinute").val($("#goStartMinute").val());
-    });
-    $("#goMinDurationMinutes").change(function () {
-        $("#minDurationMinutes").val($("#goMinDurationMinutes").val());
+	// Update form values
+	$("#goStartMinute").change(function () {
+		$("#startMinute").val($("#goStartMinute").val());
+	});
+	$("#goMinDurationMinutes").change(function () {
+		$("#minDurationMinutes").val($("#goMinDurationMinutes").val());
 
-    });
-    $("#goMaxDurationMinutes").change(function () {
-        $("#maxDurationMinutes").val($("#goMaxDurationMinutes").val());
-    });
-    $("#goDurationIntervalMinutes").change(function () {
-        $("#durationIntervalMinutes").val($("#goDurationIntervalMinutes").val());
-    });
+	});
+	$("#goMaxDurationMinutes").change(function () {
+		$("#maxDurationMinutes").val($("#goMaxDurationMinutes").val());
+	});
+	$("#goDurationIntervalMinutes").change(function () {
+		$("#durationIntervalMinutes").val($("#goDurationIntervalMinutes").val());
+	});
 
-    // Reserve Equipment: calendar
-    $("#reservationStartDate, #reservationEndDate").datepicker({
-        dateFormat: 'M dd, yy'
-    }).val($.datepicker.formatDate('M dd, yy', new Date()));
-    // Reserve Equipment: calendar: hack to make icon trigger
-    $("#iconHackForceStartDate").click(function () {
-        $("#reservationStartDate").datepicker('show');
-    });
-    $("#iconHackForceEndDate").click(function () {
-        $("#reservationEndDate").datepicker('show');
-    });
-    // Reserve Equipment: timepicker
-    $("#reservationStartTime").timepicker({
-        minuteStep: 15,
-        defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
-        showMeridian: true  /* true is 12hr mode, false is 12hr mode */
-    });
-    $("#reservationEndTime").timepicker({
-        minuteStep: 15,
-        defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
-        showMeridian: true  /* true is 12hr mode, false is 12hr mode */
-    });
+	// Reserve Equipment: calendar
+	$("#reservationStartDate, #reservationEndDate").datepicker({
+		dateFormat: 'M dd, yy'
+	}).val($.datepicker.formatDate('M dd, yy', new Date()));
+	// Reserve Equipment: calendar: hack to make icon trigger
+	$("#iconHackForceStartDate").click(function () {
+		$("#reservationStartDate").datepicker('show');
+	});
+	$("#iconHackForceEndDate").click(function () {
+		$("#reservationEndDate").datepicker('show');
+	});
+	// Reserve Equipment: timepicker
+	$("#reservationStartTime").timepicker({
+		minuteStep: 15,
+		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
+		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
+	});
+	$("#reservationEndTime").timepicker({
+		minuteStep: 15,
+		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
+		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
+	});
 
 	// Convert initial integer values to pretty text for standard output to screen
 	$('#print_minDurationMinutes').text(util_minutesToWords($('#print_minDurationMinutes').text()));
