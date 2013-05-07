@@ -555,7 +555,7 @@ $(document).ready(function () {
 			if (ret) {
 				eqrUtil_setTransientAlert('success', 'saved');
 				// removed last remaining item? then show message
-				if($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length > 1){
+				if ($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length = 2) { // LI item to be removed + LI button
 					// show message: 'No items exist.'
 					$('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('span.noItemsExist').removeClass("hide");
 				}
