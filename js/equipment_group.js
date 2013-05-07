@@ -361,8 +361,8 @@ $(document).ready(function () {
 						// remove error messages
 						$('DIV.alert-error').remove();
 
-						// remove text item: 'No items exist.'
-						$("UL#ul-of-subgroup-" + data1 + " li").remove(":contains('No items exist.')");
+						// hide message: 'No items exist.'
+						$("UL#ul-of-subgroup-" + data1 + " span.noItemsExist").addClass("hide");
 
 						// update element with resultant ajax data
 						$("UL#ul-of-subgroup-" + data1 + " li.manager-action").before(data);
@@ -554,6 +554,11 @@ $(document).ready(function () {
 		if (action == 'deleteItem') {
 			if (ret) {
 				eqrUtil_setTransientAlert('success', 'saved');
+				// removed last remaining item? then show message
+				if($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length > 1){
+					// show message: 'No items exist.'
+					$('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('span.noItemsExist').removeClass("hide");
+				}
 				// remove element
 				$('#list-of-item-' + GLOBAL_confirmHandlerData).remove();
 			}
