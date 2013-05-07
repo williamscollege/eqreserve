@@ -49,7 +49,7 @@ if ($action == 'saveEqGroup') {
     exit;
 }
 else {
-    $results = array('status' => 'failure');
+    $results = array('status' => 'failure','note'=>'');
 
     $eg_id = isset($_REQUEST["eq_group"]) ? $_REQUEST["eq_group"] : false;
     if (! $eg_id) { $results['note'] = 'no eg id'; echo json_encode($results); exit; }
@@ -62,35 +62,40 @@ else {
         $results['status'] = 'success';
     }
     elseif ($action == 'removePermission') {
-        $permission_id = isset($_REQUEST["permission_id"]) ? $_REQUEST["permission_id"] : false;
+//        print_r($_REQUEST);
+//        exit;
 
-        if ($permission_id) {
-            $permission = Permission::getOneFromDb(['permission_id'=>$permission_id],$DB);
-            if ($permission->matchesDb) {
-                $permission->flag_delete = true;
-                $permission->updateDB();
+        $permission_ids = isset($_REQUEST["permission_ids"]) ? $_REQUEST["permission_ids"] : false;
+
+        if ($permission_ids) {
+            foreach ($permission_ids as $permid) {
+                $permission = Permission::getOneFromDb(['permission_id'=>$permid],$DB);
                 if ($permission->matchesDb) {
-                    $USER->loadEqGroups();
-                    if (! $USER->canManageEqGroup($EQG)) {
-                        $permission = Permission::getOneFromDb(['permission_id'=>$permission_id,'flag_delete'=>true],$DB);
-                        $permission->flag_delete = false;
-                        $permission->updateDB();
-                        $results['note'] = 'may not remove own manager access'; // unless user is system admin
+                    $permission->flag_delete = true;
+                    $permission->updateDB();
+                    if ($permission->matchesDb) {
+                        $USER->loadEqGroups();
+                        if (! $USER->canManageEqGroup($EQG)) {
+                            $permission = Permission::getOneFromDb(['permission_id'=>$permission_ids,'flag_delete'=>true],$DB);
+                            $permission->flag_delete = false;
+                            $permission->updateDB();
+                            $results['note'] .= "may not remove own manager access\n"; // unless user is system admin, in which case they'll be able to manage the group regardless of other perms
+                        }
+                        else {
+                            $results['status'] = 'success';
+                        }
                     }
                     else {
-                        $results['status'] = 'success';
+                        $results['note'] .= "save failed\n";
                     }
                 }
                 else {
-                    $results['note'] = 'save failed';
+                    $results['note'] .= "permission fetch failed\n";
                 }
-            }
-            else {
-                $results['note'] = 'permission fetch failed';
             }
         }
         else {
-            $results['note'] = 'permission id invalid or missing';
+            $results['note'] .= "permission ids invalid or missing\n";
         }
     }
 }
