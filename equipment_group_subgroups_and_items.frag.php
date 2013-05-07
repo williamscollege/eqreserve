@@ -16,14 +16,12 @@
 			$key->loadEqItems();
 
 			# Items
-			echo "<ul id=\"displaySubgroup" . $key->eq_subgroup_id . "\" class=\"unstyled\">\n";
+			echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"unstyled\">\n";
 			if (count($key->eq_items) == 0) {
+				# Subgroup Title
 				if ($USER->flag_is_system_admin || $is_group_manager) {
-					# Subgroup Title
-					if ($USER->flag_is_system_admin || $is_group_manager) {
-						# delete button
-						echo "<a href=\"#\" id=\"delete-subgroup-" . $key->eq_subgroup_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $key->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
-					}
+					# delete button
+					echo "<a href=\"#\" id=\"delete-subgroup-" . $key->eq_subgroup_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $key->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
 					echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
 					echo "<li data-item-order=\"0\"><em>No items exist.</em></li>";
 					# Button: Add an Item
@@ -41,9 +39,9 @@
 				echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
 				foreach ($key->eq_items as $item) {
 					?>
-					<li data-item-order="<?php echo $item->ordering; ?>">
+					<li id="list-of-item-<?php echo $item->eq_item_id; ?>" data-item-order="<?php echo $item->ordering; ?>">
 
-						<label class="" for="item<?php echo $item->eq_item_id; ?>">
+						<label class="" for="item-<?php echo $item->eq_item_id; ?>">
 							<?php
 								if ($USER->flag_is_system_admin || $is_group_manager) {
 									# delete button
@@ -51,16 +49,16 @@
 								}
 								if ($key->flag_is_multi_select == 0) {
 									# radio: single select
-									echo "<input type=\"radio\" id=\"item" . $item->eq_item_id . "\" name=\"subgroup" . $key->eq_subgroup_id . "\" class=\"reservationForm hide\" /> ";
+									echo "<input type=\"radio\" id=\"item-" . $item->eq_item_id . "\" name=\"subgroup-" . $key->eq_subgroup_id . "\" class=\"reservationForm hide\" /> ";
 								}
 								elseif ($key->flag_is_multi_select == 1) {
 									# checkbox: multiple select
-									echo "<input type=\"checkbox\" id=\"item" . $item->eq_item_id . "\" name=\"\" class=\"reservationForm hide\" /> ";
+									echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"\" class=\"reservationForm hide\" /> ";
 								}
 								echo "<strong>" . $item->name . "</strong>: " . $item->descr;
 							?>
 						</label>
-						<!--Placeholder: Save For Later Use
+						<!--Placeholder: Save For Later Use: maybe utilize HighCharts bar graph?
 						<div class="controls">
 							<div class="progress span8">
 								<div class="bar bar-info" style="width: 35%;"></div>
@@ -99,7 +97,6 @@
 				<span id="iconHackForceStartDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 			</div>
 			&nbsp;&nbsp;Time
-			<!-- REMOVE LATER: http://jdewit.github.io/bootstrap-timepicker/ -->
 			<div class="input-append bootstrap-timepicker">
 				<input id="reservationStartTime" type="text" class="input-small" value="" maxlength="8" />
 				<span class="add-on"><i class="icon-time"></i></span>
@@ -161,8 +158,7 @@
 </form>
 
 
-<!-- Modal: Item-->
-
+<!-- MODAL: Item-->
 <form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddItem" name="frmAjaxAddItem" method="post">
 	<div id="modalAddItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
 		<div class="modal-header">
@@ -199,7 +195,7 @@
 </form>
 
 
-<!-- Modal: Subgroup-->
+<!-- MODAL: Subgroup-->
 <form action="ajax_add_eq_subgroup.php" id="frmAjaxAddSubgroup" name="frmAjaxAddSubgroup" method="post">
 	<div id="modalAddSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
 		<div class="modal-header">

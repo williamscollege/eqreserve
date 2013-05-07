@@ -1,4 +1,5 @@
 <?php
+	require_once('/classes/eq_subgroup.class.php');
 	require_once('/classes/eq_item.class.php');
 	require_once('/head_ajax.php');
 
@@ -17,18 +18,30 @@
 		'status' => 'failure'
 	];
 
-	$ei = EqItem::getOneFromDb(['eq_item_id' => $intID], $DB);
+	$esg = EqSubgroup::getOneFromDb(['eq_subgroup_id' => $intID], $DB);
 
-	if (! $ei->matchesDb) {
+	if (! $esg->matchesDb) {
 		// error: matching record already exists
 		echo json_encode($results);
 		exit;
 	}
 
-	if ($strAction == 'deleteItem') {
-		$ei->flag_delete = TRUE;
-		$ei->updateDb();
-		if ($ei->matchesDb) {
+	if ($strAction == 'deleteSubgroup') {
+
+		# get equipment items (for subsequent removal)
+		$esg->loadEqItems();
+
+		# remove subgroup items
+		foreach($esg->eq_items as $ei){
+			$ei->flag_delete = TRUE;
+			$ei->updateDb();
+		}
+
+		# remove subgroup
+		$esg->flag_delete = TRUE;
+		$esg->updateDb();
+
+		if ($esg->matchesDb) {
 			$results['status'] = 'success';
 		}
 	}
