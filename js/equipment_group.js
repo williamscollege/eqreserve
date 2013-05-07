@@ -7,15 +7,31 @@ $(document).ready(function () {
 
     $('#eq-group-add-manager-btn').click(function(evt){
         //alert('clicked on '+$(this).attr('id'));
-        alert('hook for add manager');
-        // hook for add manager UI
+        $("#addUserType").val('manager');
+        $("#modalFindUserUILabel").text('Add Manager');
+        $('#modalAddUserUI').modal({show:'true'});
     });
 
     $('#eq-group-add-consumer-btn').click(function(evt){
         //alert('clicked on '+$(this).attr('id'));
-        alert('hook for add consumer');
-        // hook for add consumer UI
+        $("#addUserType").val('consumer');
+        $("#modalFindUserUILabel").text('Add User');
+        $('#modalAddUserUI').modal({show:'true'});
     });
+
+    $('#addUserSearchData').keypress(function(evt){
+        if (evt.which == 13) { // the return/enter key press
+            //alert('enter pressed');
+            evt.stopPropagation();
+            event.preventDefault();
+            return;
+        }
+        var curText = $(this).val() + String.fromCharCode(evt.which);
+        //alert('with '+evt.which+' currently: '+curText);
+    });
+//    $('#addUserSearchData').on('keydown keyup',function(evt){
+//        evt.stopPropagation();
+//    });
 
     $('.eq-group-remove-manager-btn').click(function(evt){
         GLOBAL_confirmHandlerData= {'perm_id':$(this).attr('data-for-id'),

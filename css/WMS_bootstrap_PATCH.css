@@ -137,3 +137,8 @@ ol.unstyled LI {
 .confirmationDialog .modal-footer .btn {
 	margin: 0 24px;
 }
+
+.addUserSearchResultsPreview {
+    height: 300px;
+    overflow-y: scroll;
+}

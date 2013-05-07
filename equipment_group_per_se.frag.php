@@ -193,6 +193,26 @@ if ($USER->flag_is_system_admin || $is_group_manager) {
         </div>
     </form>
 </div>
+
+<div id="modalAddUserUI" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddUserUILabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h3 id="modalFindUserUILabel">Add User or Group</h3>
+    </div>
+    <div class="modal-body">
+        <form>
+            <input type="hidden" id="addUserType" value=""/>
+            <div class="control-group">
+                <p>Find user or group</p>
+                <input type="text" id="addUserSearchData" name="addUserSearchData" class="input-large" value="" placeholder="search" maxlength="200" title="search by name, user name, course name, or course id" /> <i class="muted">searches as you type after 3+ characters</i>
+            </div>
+            <div id="addUserSearchResultsPreview" class="control-group addUserSearchResultsPreview"><i>no search results yet</i></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="btnAjaxCancelAddUser" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
 <?php
 }
 
