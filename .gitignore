@@ -5,4 +5,4 @@ temp
 */temp
 .idea
 *.DS_Store
-TestOfNarrowSuite.php
+tests/TestNarrowSuite.php
