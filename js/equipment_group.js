@@ -11,7 +11,6 @@ $(document).ready(function () {
         // hook for add manager UI
     });
 
-
     $('#eq-group-add-consumer-btn').click(function(evt){
         //alert('clicked on '+$(this).attr('id'));
         alert('hook for add consumer');
@@ -30,6 +29,21 @@ $(document).ready(function () {
         }
         eqrUtil_launchConfirm("Are you sure you want to remove that "+mgr_type+" as a manager of this group?",handleRemovePermission);
     });
+
+    $('#eq-group-remove-consumers-btn').click(function (evt) {
+        GLOBAL_confirmHandlerData= {'perm_id':[],
+            'perm_type':'consumer'
+        };
+        $("#consumers-select :selected").each(function(idx,elt){
+            GLOBAL_confirmHandlerData['perm_id'].push($(this).attr('data-for-id'));
+        });
+        var ref_text = 'that user';
+        if ($("#consumers-select :selected").length != 1) {
+            ref_text = 'those users';
+        }
+        eqrUtil_launchConfirm("Are you sure you want to remove "+ref_text+"?",handleRemovePermission);
+    });
+
     function handleRemovePermission() {
         eqrUtil_setTransientAlert('progress','saving...');
         $.ajax({
@@ -63,29 +77,14 @@ $(document).ready(function () {
         ;
     }
 
+    // enables/disables the remove users button depending on whether any users have been selected
     $('#consumers-select').change(function (evt) {
-        //alert('consumer selected');
-        //var consumer_selected_count = $("#consumers-select :selected").length;
         if ($("#consumers-select :selected").length > 0) {
             $('#eq-group-remove-consumers-btn').removeAttr('disabled');
         }
         else {
             $('#eq-group-remove-consumers-btn').attr('disabled','disabled')
         }
-    });
-
-    $('#eq-group-remove-consumers-btn').click(function (evt) {
-        GLOBAL_confirmHandlerData= {'perm_id':[],
-                                    'perm_type':'consumer'
-                                    };
-        $("#consumers-select :selected").each(function(idx,elt){
-            GLOBAL_confirmHandlerData['perm_id'].push($(this).attr('data-for-id'));
-        });
-        var ref_text = 'that user';
-        if ($("#consumers-select :selected").length != 1) {
-            ref_text = 'those users';
-        }
-        eqrUtil_launchConfirm("Are you sure you want to remove "+ref_text+"?",handleRemovePermission);
     });
 
     // Toggle Equipment Group Settings (text or input fields)
