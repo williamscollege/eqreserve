@@ -102,6 +102,7 @@
 
 ?>
 	<script type="text/javascript" src="js/equipment_group.js"></script>
+	<script type="text/javascript" src="js/equipment_group_permissions_management.js"></script>
 <?php
 	include('equipment_group_per_se.frag.php');
 	echo "<br/>\n";
