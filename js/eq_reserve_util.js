@@ -59,3 +59,14 @@ $(document).ready(function () {
         '</div>' +
         '</div>');
 });
+
+function randomString(strSize)
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < strSize; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}

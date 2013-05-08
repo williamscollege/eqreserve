@@ -40,36 +40,41 @@ $(document).ready(function () {
         }
     });
 
+    var searchTimingTag = '';
     function handleUserGroupSearchCall(searchHandlerData) {
+        searchTimingTag = randomString(24);
         $('#addUserSearchResultsPreview ul').empty();
         $('#addUserSearchResultsPreview ul').append('<li><i>searching...</i></li>');
         $.ajax({
             url: 'ajax_user_and_group_search.php',
             dataType: 'json',
             data: {'action': 'find',
-                'searchTerm': searchHandlerData
+                   'searchTerm': searchHandlerData,
+                   'timingTag':searchTimingTag
             }
         })
             .done(function (data, status, xhr) {
                 //console.log(data);
-                if (data.status == 'success') {
-                    $('#addUserSearchResultsPreview ul').empty();
-                    if (data.searchResults.length > 0) {
-                        for (var i = 0; i < data.searchResults.length; i++) {
-                            $('#addUserSearchResultsPreview ul').append('<li>'+data.searchResults[i].sortname+'</li>');
+                if (data.timingTag == searchTimingTag) {  // make sure only the latest search results actually update the DOM
+                    if (data.status == 'success') {
+                        $('#addUserSearchResultsPreview ul').empty();
+                        if (data.searchResults.length > 0) {
+                            for (var i = 0; i < data.searchResults.length; i++) {
+                                $('#addUserSearchResultsPreview ul').append('<li>'+data.searchResults[i].sortname+'</li>');
+                            }
+                        }
+                        else {
+                            $('#addUserSearchResultsPreview ul').append('<li><i>no matches found</i></li>');
                         }
                     }
                     else {
-                        $('#addUserSearchResultsPreview ul').append('<li><i>no matches found</i></li>');
+                        var error_msg = 'bad response from server';
+                        if (data.note) {
+                            error_msg = data.note;
+                        }
+                        $('#addUserSearchResultsPreview ul').empty();
+                        $('#addUserSearchResultsPreview ul').append('<li>ERROR - '+error_msg+'</li>');
                     }
-                }
-                else {
-                    var error_msg = 'bad response from server';
-                    if (data.note) {
-                        error_msg = data.note;
-                    }
-                    $('#addUserSearchResultsPreview ul').empty();
-                    $('#addUserSearchResultsPreview ul').append('<li>ERROR - '+error_msg+'</li>');
                 }
             })
             .fail(function (data, status, xhr) {

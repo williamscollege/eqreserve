@@ -5,12 +5,14 @@
 	#------------------------------------------------#
 	$action        = (isset($_REQUEST["action"])) ? $_REQUEST["action"] : 0;
     $searchTerm = (isset($_REQUEST["searchTerm"])) ? $_REQUEST["searchTerm"] : 0;
+    $timingTag = (isset($_REQUEST["timingTag"])) ? $_REQUEST["timingTag"] : 0;
     // NOTE: the search term is not sanitized!
 
     #------------------------------------------------#
 
     $results = [
-        'status'=> 'failure'
+        'status'=> 'failure',
+        'timingTag'=>$timingTag
     ];
 
     // no user access limitations, aside from the logged-in check provided by head_ajax
