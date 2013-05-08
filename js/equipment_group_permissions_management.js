@@ -22,8 +22,61 @@ $(document).ready(function () {
 			return;
 		}
 		var curText = $(this).val() + String.fromCharCode(evt.which);
-		alert('TODO- handle keypress event on addUserSearchData - implement live search functionality');
+//		alert('TODO- handle keypress event on addUserSearchData - implement live search functionality');
+        if (curText.length >= 3) {
+            handleUserGroupSearchCall(curText);
+        }
 	});
+
+    $('#addUserSearchData').keyup(function (evt) {
+        if ((evt.which == 8) || // backspace
+            (evt.which == 46)) // delete
+        {
+            var curText = $(this).val();
+//            alert('curText is '+curText);
+            if (curText.length >= 3) {
+                handleUserGroupSearchCall(curText);
+            }
+        }
+    });
+
+    function handleUserGroupSearchCall(searchHandlerData) {
+        $('#addUserSearchResultsPreview ul').empty();
+        $('#addUserSearchResultsPreview ul').append('<li><i>searching...</i></li>');
+        $.ajax({
+            url: 'ajax_user_and_group_search.php',
+            dataType: 'json',
+            data: {'action': 'find',
+                'searchTerm': searchHandlerData
+            }
+        })
+            .done(function (data, status, xhr) {
+                //console.log(data);
+                if (data.status == 'success') {
+                    $('#addUserSearchResultsPreview ul').empty();
+                    if (data.searchResults.length > 0) {
+                        for (var i = 0; i < data.searchResults.length; i++) {
+                            $('#addUserSearchResultsPreview ul').append('<li>'+data.searchResults[i].sortname+'</li>');
+                        }
+                    }
+                    else {
+                        $('#addUserSearchResultsPreview ul').append('<li><i>no matches found</i></li>');
+                    }
+                }
+                else {
+                    var error_msg = 'bad response from server';
+                    if (data.note) {
+                        error_msg = data.note;
+                    }
+                    $('#addUserSearchResultsPreview ul').empty();
+                    $('#addUserSearchResultsPreview ul').append('<li>ERROR - '+error_msg+'</li>');
+                }
+            })
+            .fail(function (data, status, xhr) {
+                eqrUtil_setTransientAlert('error', 'ERROR - could not connect to server');
+            })
+        ;
+    }
 
 	$('.eq-group-remove-manager-btn').click(function (evt) {
 		GLOBAL_confirmHandlerData = {'perm_id': $(this).attr('data-for-id'),
@@ -63,7 +116,7 @@ $(document).ready(function () {
 			}
 		})
 			.done(function (data, status, xhr) {
-				console.log(data);
+				//console.log(data);
 				if (data.status == 'success') {
 					eqrUtil_setTransientAlert('success', '...done');
 					if (GLOBAL_confirmHandlerData.perm_type == 'manager') {

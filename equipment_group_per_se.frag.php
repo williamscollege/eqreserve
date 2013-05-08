@@ -211,7 +211,7 @@
 						<input type="text" id="addUserSearchData" name="addUserSearchData" class="input-large" value="" placeholder="search" maxlength="200" title="search by name, user name, course name, or course id" />
 						<i class="muted">searches as you type after 3+ characters</i>
 					</div>
-					<div id="addUserSearchResultsPreview" class="control-group addUserSearchResultsPreview"><i>no search results yet</i></div>
+					<div id="addUserSearchResultsPreview" class="control-group addUserSearchResultsPreview"><ul><li><i>no search results yet</i></li></ul></div>
 				</form>
 			</div>
 			<div class="modal-footer">
