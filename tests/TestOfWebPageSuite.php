@@ -24,6 +24,9 @@ class TestOfWebSuite extends TestSuite {
         # Tests: Account management
 		$this->addFile('web_page_tests/AcctMgtTest.php');
 
+        # Tests: user search / find
+        $this->addFile('web_page_tests/AjaxUserAndGroupSearchTest.php');
+
         # Tests: Institutional Group
 		$this->addFile('web_page_tests/InstGroupTest.php');
 
