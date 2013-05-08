@@ -23,9 +23,9 @@
 					# delete button
 					echo "<a href=\"#\" id=\"delete-subgroup-" . $key->eq_subgroup_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $key->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
 					echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
-					echo "<li data-item-order=\"0\"><em>No items exist.</em></li>";
 					# Button: Add an Item
 					echo "<li class=\"manager-action hide\">";
+					echo "<span class=\"noItemsExist\"><em>No items exist.</em><br /></span>";
 					echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-is-multiselect=\"" . $key->flag_is_multi_select . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-success btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 					echo "</li>";
 				}
@@ -74,6 +74,7 @@
 				# Button: Add an Item
 				if ($USER->flag_is_system_admin || $is_group_manager) {
 					echo "<li class=\"manager-action hide\">";
+					echo "<span class=\"noItemsExist hide\"><em>No items exist.</em><br /></span>";
 					echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-is-multiselect=\"" . $key->flag_is_multi_select . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-success btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 					echo "</li>";
 				}

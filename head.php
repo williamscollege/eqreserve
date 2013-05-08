@@ -100,8 +100,8 @@
 	<script src="<?php echo PATH_BOOTSTRAP_BOOTBOX_JS; ?>"></script>
 	<script src="<?php echo PATH_BOOTSTRAP_TIMEPICKER_JS; ?>"></script>
 	<script src="<?php echo PATH_JQUERY_VALIDATION_JS; ?>"></script>
-    <!-- local JS -->
-    <script src="js/eq_reserve_util.js"></script>
+	<!-- local JS -->
+	<script src="js/eq_reserve_util.js"></script>
 </head>
 <body>
 

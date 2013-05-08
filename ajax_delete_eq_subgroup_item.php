@@ -19,7 +19,7 @@
 
 	$ei = EqItem::getOneFromDb(['eq_item_id' => $intID], $DB);
 
-	if (! $ei->matchesDb) {
+	if (!$ei->matchesDb) {
 		// error: matching record already exists
 		echo json_encode($results);
 		exit;

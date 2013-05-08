@@ -20,7 +20,7 @@
 
 	$esg = EqSubgroup::getOneFromDb(['eq_subgroup_id' => $intID], $DB);
 
-	if (! $esg->matchesDb) {
+	if (!$esg->matchesDb) {
 		// error: matching record already exists
 		echo json_encode($results);
 		exit;
@@ -32,7 +32,7 @@
 		$esg->loadEqItems();
 
 		# remove subgroup items
-		foreach($esg->eq_items as $ei){
+		foreach ($esg->eq_items as $ei) {
 			$ei->flag_delete = TRUE;
 			$ei->updateDb();
 		}
