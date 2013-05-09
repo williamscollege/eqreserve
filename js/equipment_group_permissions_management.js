@@ -146,7 +146,7 @@ console.log(u);
         $(this).parent().parent().remove();
         alert('TODO: handle adding of permission');
 //        $("#addUserType").val(); // 'consumer' or 'manager'
-        // ajax call to ajax_eq_group with action=add_permission, perm_type=manager or consumer, entity_type=data add type, entity_id=data add id, username=data username
+        // ajax call to ajax_eq_group with action=add_permission, perm_type=manager or consumer, entity_type=data add type, entity_id=data add id, username=data username, eq group id
         // transient alert for 'saving...'
         // on success, update DOM: add to text list of managers, add button to remove manager controls if approp, add option to consumers select list if approp
         //    expecting back in ajax results: status, permission_id, text/info needed for creation of above DOM elements

@@ -24,6 +24,9 @@ class AjaxEqGroupTest extends WMSWebTestCase {
 
     // TODO: create tests for base eq group actions (create, delete, update)
 
+    //----------------------------------------------------------
+    // basic access checking
+
     function testEqGroupAjaxNoAccessWhenNotLoggedIn() {
         $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=null');
 
@@ -70,6 +73,9 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $eg = EqGroup::getOneFromDb(['eq_group_id'=>202],$this->DB);
         $this->assertTrue($eg->matchesDb);
     }
+
+    //----------------------------------------------------------
+    // remove permissions
 
     function testEqGroupAjaxRemoveConsumerAccess() {
         $this->signIn();
@@ -135,5 +141,64 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $this->assertPattern('/"status":"failure"/');
         $p = Permission::getOneFromDb(['permission_id'=>707],$this->DB);
         $this->assertTrue($p->matchesDb);
+    }
+
+    //----------------------------------------------------------
+    // add permissions
+
+    function testEqGroupAjaxAddManagerPermissionForUser() {
+        $this->signIn();
+        $base_eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $base_eg->loadManagers();
+        $this->assertEqual(count($base_eg->managers),2);
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=manager&entity_type=user&entity_id=1101&username=cswtestinguser');
+
+        $this->assertPattern('/"status":"success"/');
+        $base_eg->permissions = [];
+        $base_eg->loadManagers();
+        $this->assertEqual(count($base_eg->managers),3);
+    }
+
+    function testEqGroupAjaxAddManagerPermissionForInstGroup() {
+        $this->signIn();
+        $base_eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $base_eg->loadManagers();
+        $this->assertEqual(count($base_eg->managers),2);
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=manager&entity_type=inst_group&entity_id=503&username=testInstGroup3');
+
+        $this->assertPattern('/"status":"success"/');
+        $base_eg->permissions = [];
+        $base_eg->loadManagers();
+        $this->assertEqual(count($base_eg->managers),3);
+    }
+
+    function testEqGroupAjaxAddConsumerPermissionForUser() {
+        $this->signIn();
+        $base_eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $base_eg->loadConsumers();
+        $this->assertEqual(count($base_eg->consumers),3);
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=consumer&entity_type=user&entity_id=1106&username=testUser6');
+
+        $this->assertPattern('/"status":"success"/');
+        $base_eg->permissions = [];
+        $base_eg->loadConsumers();
+        $this->assertEqual(count($base_eg->consumers),4);
+    }
+
+    function testEqGroupAjaxAddConsumerPermissionForInstGroup() {
+        $this->signIn();
+        $base_eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+        $base_eg->loadConsumers();
+        $this->assertEqual(count($base_eg->consumers),3);
+
+        $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=consumer&entity_type=inst_group&entity_id=503&username=testInstGroup3');
+
+        $this->assertPattern('/"status":"success"/');
+        $base_eg->permissions = [];
+        $base_eg->loadConsumers();
+        $this->assertEqual(count($base_eg->consumers),4);
     }
 }

@@ -62,8 +62,6 @@ else {
         $results['status'] = 'success';
     }
     elseif ($action == 'removePermission') {
-//        print_r($_REQUEST);
-//        exit;
 
         $permission_ids = isset($_REQUEST["permission_ids"]) ? $_REQUEST["permission_ids"] : false;
 
@@ -96,6 +94,66 @@ else {
         }
         else {
             $results['note'] .= "permission ids invalid or missing\n";
+        }
+    }
+    elseif ($action == 'addPermission') {
+        $permission_type = isset($_REQUEST["permission_type"]) ? $_REQUEST["permission_type"] : false;
+        if (! $permission_type) { $results['note'] = 'no permission type'; echo json_encode($results); exit; }
+        $permission_entity_type = isset($_REQUEST["entity_type"]) ? $_REQUEST["entity_type"] : false;
+        if (! $permission_entity_type) { $results['note'] = 'no entity type'; echo json_encode($results); exit; }
+        $permission_entity_id = isset($_REQUEST["entity_id"]) ? $_REQUEST["entity_id"] : false;
+        if (! $permission_entity_id) { $results['note'] = 'no entity id'; echo json_encode($results); exit; }
+        $permission_username = isset($_REQUEST["username"]) ? $_REQUEST["username"] : false;
+        if (! $permission_username) { $results['note'] = 'no username'; echo json_encode($results); exit; }
+
+        $role_id = 2;
+        if ($permission_type == 'manager') {
+            $role_id = 1;
+        }
+
+        if ($entity_id == 'newFromAuthSource') {
+            $results['note'] = 'new entities are not yet supported as a part of permission creation';
+            echo json_encode($results);
+            exit;
+            // NOTE: there are two possibilities here.
+            // First, check to see the indicated entity exists but has been deleted
+            //  If it has/does, undelete them/it (for users, first make sure they're not banned - abort if they are)
+            // Second, the user needs to be created from data in the auth system
+        }
+
+        $p = Permission::getOneFromDb(['entity_id'=>$permission_entity_id,'entity_type'=>$permission_entity_type,'role_id'=>$role_id,'eq_group_id'=>$eg_id],$DB);
+        if ($p->matchesDb) {
+            $results['note'] = 'that access already exists';
+            echo json_encode($results);
+            exit;
+        }
+
+        $p = Permission::getOneFromDb(['entity_id'=>$permission_entity_id,'entity_type'=>$permission_entity_type,'role_id'=>$role_id,'eq_group_id'=>$eg_id,'flag_delete'=>true],$DB);
+        if ($p->matchesDb) {
+            $p->flag_delete = false;
+            $p->updateDb();
+            if ($p->matchesDb) {
+                $results['status'] = 'success';
+            }
+            else {
+                $results['note'] = 'problem updating the database to un-delete an existing record';
+            }
+            echo json_encode($results);
+            exit;
+        }
+
+        $p->entity_id = $permission_entity_id;
+        $p->entity_type = $permission_entity_type;
+        $p->role_id = $role_id;
+        $p->eq_group_id = $eg_id;
+        $p->flag_delete = false;
+
+        $p->updateDb();
+        if ($p->matchesDb) {
+            $results['status'] = 'success';
+        }
+        else {
+            $results['note'] = 'problem adding a record to the database';
         }
     }
 }
