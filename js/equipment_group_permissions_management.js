@@ -4,21 +4,32 @@ $(document).ready(function () {
 		//alert('clicked on '+$(this).attr('id'));
 		$("#addUserType").val('manager');
 		$("#modalFindUserUILabel").text('Add Manager');
-		$('#modalAddUserUI').modal({show: 'true'});
+        doShowAddUserSearchModal();
 	});
 
 	$('#eq-group-add-consumer-btn').click(function (evt) {
 		//alert('clicked on '+$(this).attr('id'));
 		$("#addUserType").val('consumer');
 		$("#modalFindUserUILabel").text('Add User');
-		$('#modalAddUserUI').modal({show: 'true'});
+        doShowAddUserSearchModal();
+//
+//        $("#addUserSearchData").val('');
+//		$('#modalAddUserUI').modal({show: 'true'});
 	});
+    function doShowAddUserSearchModal() {
+        $("#addUserSearchData").val('');
+        $('#addUserSearchResultsPreview ul').empty();
+        $('#addUserSearchResultsPreview ul').append('<li class="text-info"><i>type above to start a search</i></li>');
+        $('#modalAddUserUI').modal({show: 'true'});
+        $("#addUserSearchData").focus();
+    }
+
 
 	$('#addUserSearchData').keypress(function (evt) {
 		if (evt.which == 13) { // the return/enter key press
 			//alert('enter pressed');
 			evt.stopPropagation();
-			event.preventDefault();
+            evt.preventDefault();
 			return;
 		}
 		var curText = $(this).val() + String.fromCharCode(evt.which);
@@ -44,7 +55,7 @@ $(document).ready(function () {
     function handleUserGroupSearchCall(searchHandlerData) {
         searchTimingTag = randomString(24);
         $('#addUserSearchResultsPreview ul').empty();
-        $('#addUserSearchResultsPreview ul').append('<li><i>searching...</i></li>');
+        $('#addUserSearchResultsPreview ul').append('<li class="text-success"><i>searching...</i></li>');
         $.ajax({
             url: 'ajax_user_and_group_search.php',
             dataType: 'json',
@@ -54,17 +65,26 @@ $(document).ready(function () {
             }
         })
             .done(function (data, status, xhr) {
-                //console.log(data);
+//console.log(data);
                 if (data.timingTag == searchTimingTag) {  // make sure only the latest search results actually update the DOM
                     if (data.status == 'success') {
                         $('#addUserSearchResultsPreview ul').empty();
                         if (data.searchResults.length > 0) {
                             for (var i = 0; i < data.searchResults.length; i++) {
-                                $('#addUserSearchResultsPreview ul').append('<li>'+data.searchResults[i].sortname+'</li>');
+                                var item;
+console.log(data.searchResults[i]);
+                                if (data.searchResults[i].hasOwnProperty('user_id')) {
+                                    item = makeSearchResItemForUser(data.searchResults[i]);
+                                }
+                                else {
+                                    item = makeSearchResItemForInstGroup(data.searchResults[i]);
+                                }
+//                                $('#addUserSearchResultsPreview ul').append('<li>'+data.searchResults[i].sortname+'</li>');
+                                $('#addUserSearchResultsPreview ul').append(item);
                             }
                         }
                         else {
-                            $('#addUserSearchResultsPreview ul').append('<li><i>no matches found</i></li>');
+                            $('#addUserSearchResultsPreview ul').append('<li class="text-warning"><i>no matches found</i></li>');
                         }
                     }
                     else {
@@ -73,7 +93,7 @@ $(document).ready(function () {
                             error_msg = data.note;
                         }
                         $('#addUserSearchResultsPreview ul').empty();
-                        $('#addUserSearchResultsPreview ul').append('<li>ERROR - '+error_msg+'</li>');
+                        $('#addUserSearchResultsPreview ul').append('<li class="text-error">ERROR - '+error_msg+'</li>');
                     }
                 }
             })
@@ -82,6 +102,56 @@ $(document).ready(function () {
             })
         ;
     }
+
+    function makeSearchResItemForUser(u) {
+console.log(u);
+        var res = '<li>';
+        res += '<div class="searchResultAction pull-left">';
+        if (u.flag_is_banned == '1') {
+            res += '<button class="btn-danger btn-small" title="user has been banned!" disabled="disabled"><i class="icon-minus-sign icon-white"></i></button>';
+        }
+        else {
+            res += '<button class="btn-success btn-small" title="add this" data-add-type="user" data-add-id="'+ u.user_id+'" data-username="'+ u.username+'"><i class="icon-plus-sign icon-white"></i></button>';
+        }
+        res += '</div>';
+        res += '<div class="searchResultData  pull-left"><div>';
+        if (u.flag_is_banned == '1') {
+            res += '<span class="text-error"><i class="icon-user"></i> <b>BANNED</b> '+u.fname+' '+u.lname+' <i>('+u.username+')</i></span>';
+        }
+        else {
+            res += '<i class="icon-user"></i> '+u.fname+' '+u.lname+' <i>('+u.username+')</i>';
+        }
+        res += '</div></div><br clear="all"/>';
+        res += '</li>';
+        return res;
+    }
+
+    function makeSearchResItemForInstGroup(ig) {
+        var res = '<li>';
+        res += '<div class="searchResultAction pull-left">' +
+            '<button class="btn-success btn-small" title="add this" data-add-type="inst_group" data-add-id="'+ ig.inst_group_id+'" data-username="'+ ig.name+'"><i class="icon-plus-sign icon-white"></i></button>' +
+            '</div>';
+        res += '<div class="searchResultData  pull-left">' +
+            '<div>['+ig.name+']</div>' +
+            '</div><br clear="all"/>';
+        res += '</li>';
+        return res;
+    }
+
+    $(document).on('click','.searchResultAction .btn-success',function(evt){
+        evt.stopPropagation();
+        evt.preventDefault();
+//console.log($(this).parent().parent());
+//alert('add action clicked');
+        $(this).parent().parent().remove();
+        alert('TODO: handle adding of permission');
+//        $("#addUserType").val(); // 'consumer' or 'manager'
+        // ajax call to ajax_eq_group with action=add_permission, perm_type=manager or consumer, entity_type=data add type, entity_id=data add id, username=data username
+        // transient alert for 'saving...'
+        // on success, update DOM: add to text list of managers, add button to remove manager controls if approp, add option to consumers select list if approp
+        //    expecting back in ajax results: status, permission_id, text/info needed for creation of above DOM elements
+        // TODO: add structure and identifiers to text list of users, add identifers for group managers button set
+    });
 
 	$('.eq-group-remove-manager-btn').click(function (evt) {
 		GLOBAL_confirmHandlerData = {'perm_id': $(this).attr('data-for-id'),
@@ -121,7 +191,7 @@ $(document).ready(function () {
 			}
 		})
 			.done(function (data, status, xhr) {
-				//console.log(data);
+//console.log(data);
 				if (data.status == 'success') {
 					eqrUtil_setTransientAlert('success', '...done');
 					if (GLOBAL_confirmHandlerData.perm_type == 'manager') {

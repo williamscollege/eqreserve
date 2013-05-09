@@ -65,6 +65,9 @@ ol.unstyled LI {
 	padding: 1px;
 }
 
+/*-------------------------
+transient alert */
+
 .transient_alert {
 	position: absolute;
 	top: 100px;
@@ -89,6 +92,9 @@ ol.unstyled LI {
 	color: #933;
 	background-color: #fdd;
 }
+
+/*-------------------------
+confirmation dialog */
 
 .confirmationDialog {
 	border-width: 3px;
@@ -138,7 +144,26 @@ ol.unstyled LI {
 	margin: 0 24px;
 }
 
+/*-------------------------
+user selection / permission management */
+
 .addUserSearchResultsPreview {
     height: 300px;
     overflow-y: scroll;
+}
+
+ul.userGroupSearchResultList li {
+    margin: 6px;
+    background-color: #f2f2f2;
+    padding: 3px;
+}
+
+ul.userGroupSearchResultList li .searchResultAction {
+    height: 100%;
+    vertical-align: middle;
+}
+
+ul.userGroupSearchResultList li .searchResultData {
+    margin-left: 12px;
+    padding-top: 4px;
 }
