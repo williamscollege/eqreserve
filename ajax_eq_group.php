@@ -106,13 +106,21 @@ else {
         $permission_username = isset($_REQUEST["username"]) ? $_REQUEST["username"] : false;
         if (! $permission_username) { $results['note'] = 'no username'; echo json_encode($results); exit; }
 
-        $role_id = 2;
-        if ($permission_type == 'manager') {
+        $role_id = 0;
+        if ($permission_type == 'consumer') {
+            $role_id = 2;
+            $results['added_type'] = 'consumer';
+        }
+        elseif ($permission_type == 'manager') {
             $role_id = 1;
+            $results['added_type'] = 'manager';
+        }
+        if (! $role_id) {
+            $results['note'] = 'no valid permission type'; echo json_encode($results); exit;
         }
 
-        if ($entity_id == 'newFromAuthSource') {
-            $results['note'] = 'new entities are not yet supported as a part of permission creation';
+        if ($permission_entity_id == 'newFromAuthSource') {
+            $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
             echo json_encode($results);
             exit;
             // NOTE: there are two possibilities here.
@@ -133,7 +141,33 @@ else {
             $p->flag_delete = false;
             $p->updateDb();
             if ($p->matchesDb) {
+
                 $results['status'] = 'success';
+                $results['permission_id'] = $p->permission_id;
+                $results['entity_type'] = $p->entity_type;
+                $results['entity_id'] = $p->entity_id;
+                if ($p->entity_type == 'user') {
+                    $u = User::getOneFromDb(['user_id'=>$p->entity_id],$DB);
+                    if ($u->matchesDb) {
+                        $results['name'] = $u->fname.' '.$u->lname;
+                        $results['username'] = $u->username;
+                        $results['email'] = $u->email;
+                    }
+                    else {
+                        $results['name'] = 'database error';
+                    }
+                }
+                else {
+                    $ig = InstGroup::getOneFromDb(['inst_group_id'=>$p->entity_id],$DB);
+                    if ($ig->matchesDb) {
+                        $results['name'] = $ig->name;
+                    }
+                    else {
+                        $results['name'] = 'database error';
+                    }
+                }
+//                $results[''] = ;
+//                $results[''] = ;
             }
             else {
                 $results['note'] = 'problem updating the database to un-delete an existing record';
@@ -151,6 +185,29 @@ else {
         $p->updateDb();
         if ($p->matchesDb) {
             $results['status'] = 'success';
+            $results['permission_id'] = $p->permission_id;
+            $results['entity_type'] = $p->entity_type;
+            $results['entity_id'] = $p->entity_id;
+            if ($p->entity_type == 'user') {
+                $u = User::getOneFromDb(['user_id'=>$p->entity_id],$DB);
+                if ($u->matchesDb) {
+                    $results['name'] = $u->fname.' '.$u->lname;
+                    $results['username'] = $u->username;
+                    $results['email'] = $u->email;
+                }
+                else {
+                    $results['name'] = 'database error';
+                }
+            }
+            else {
+                $ig = InstGroup::getOneFromDb(['inst_group_id'=>$p->entity_id],$DB);
+                if ($ig->matchesDb) {
+                    $results['name'] = $ig->name;
+                }
+                else {
+                    $results['name'] = 'database error';
+                }
+            }
         }
         else {
             $results['note'] = 'problem adding a record to the database';

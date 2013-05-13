@@ -12,9 +12,6 @@ $(document).ready(function () {
 		$("#addUserType").val('consumer');
 		$("#modalFindUserUILabel").text('Add User');
         doShowAddUserSearchModal();
-//
-//        $("#addUserSearchData").val('');
-//		$('#modalAddUserUI').modal({show: 'true'});
 	});
     function doShowAddUserSearchModal() {
         $("#addUserSearchData").val('');
@@ -72,7 +69,7 @@ $(document).ready(function () {
                         if (data.searchResults.length > 0) {
                             for (var i = 0; i < data.searchResults.length; i++) {
                                 var item;
-console.log(data.searchResults[i]);
+//console.log(data.searchResults[i]);
                                 if (data.searchResults[i].hasOwnProperty('user_id')) {
                                     item = makeSearchResItemForUser(data.searchResults[i]);
                                 }
@@ -104,7 +101,7 @@ console.log(data.searchResults[i]);
     }
 
     function makeSearchResItemForUser(u) {
-console.log(u);
+//console.log(u);
         var res = '<li>';
         res += '<div class="searchResultAction pull-left">';
         if (u.flag_is_banned == '1') {
@@ -141,19 +138,64 @@ console.log(u);
     $(document).on('click','.searchResultAction .btn-success',function(evt){
         evt.stopPropagation();
         evt.preventDefault();
-//console.log($(this).parent().parent());
-//alert('add action clicked');
-        $(this).parent().parent().remove();
-        alert('TODO: handle adding of permission');
-//        $("#addUserType").val(); // 'consumer' or 'manager'
+        var cached_this = this;
         // ajax call to ajax_eq_group with action=add_permission, perm_type=manager or consumer, entity_type=data add type, entity_id=data add id, username=data username, eq group id
         // transient alert for 'saving...'
-        // on success, update DOM: add to text list of managers, add button to remove manager controls if approp, add option to consumers select list if approp
-        //    expecting back in ajax results: status, permission_id, text/info needed for creation of above DOM elements
-        // TODO: add structure and identifiers to text list of users, add identifers for group managers button set
+        eqrUtil_setTransientAlert('progress', 'saving...',$('#addUserSearchData'));
+        $.ajax({
+            url: 'ajax_eq_group.php',
+            dataType: 'json',
+            data: {'eq_group': $('#groupID').attr('value'),
+                'ajaxVal_action': 'addPermission',
+                'permission_type': $("#addUserType").val(),
+                'entity_type':$(this).attr('data-add-type'),
+                'entity_id':$(this).attr('data-add-id'),
+                'username':$(this).attr('data-username')
+            }
+        })
+            .done(function (data, status, xhr) {
+                console.log(data);
+                if (data.status == 'success') {
+                    // on success, update DOM: add to text list of managers, add button to remove manager controls if approp, add option to consumers select list if approp
+                    //    expecting back in ajax results: status, permission_id, text/info needed for creation of above DOM elements
+                    eqrUtil_setTransientAlert('success', '...done',$('#addUserSearchData'));
+                    $(cached_this).parent().parent().remove();
+                    var display_name = '';
+                    var display_shortname = '';
+                    if (data.entity_type == 'user') {
+                        display_name = data.name+' ('+data.email+')';
+                        display_shortname = data.name;
+                    }
+                    else {
+                        display_name = '['+data.name+']';
+                        display_shortname = '['+data.name+']';
+                    }
+                    if (data.added_type == 'manager') {
+                        // handle adding control (button) and display (li) elts for managers
+                        $('#managersControlSet').append(' <button type="button" id="remove-manager-btn-'+data.permission_id+'" class="btn btn-inverse btn-small eq-group-remove-manager-btn" title="'+display_name+'" data-ent-type="'+data.entity_type+'" data-ent-id="'+data.entity_id+'" data-for-id="'+data.permission_id+'"> '+((data.entity_type == 'user') ? '<i class="icon-user  icon-white"></i> ' : '') + display_name+'<i class="icon-remove icon-white"></i></button>');
+                        $('#displayListOfManagers').append(' <li id="display-manager-'+data.entity_type+'-'+data.entity_id+'">'+((data.entity_type == 'user') ? '<i class="icon-user"></i> ' : '')+display_shortname+'</li>');
+                    }
+                    else {
+                        // handle addition of control elts (options) for consumer
+                        $('#consumers-select').append('<option id="consumer-perm-option-'+data.permission_id+'" title="'+display_name+'" data-ent-type="'+data.entity_type+'" data-ent-id="'+data.entity_id+'" data-for-id="'+data.permission_id+'">'+display_name+'</option>');
+                    }
+                }
+                else {
+                    var error_msg = 'bad response from server';
+                    if (data.note) {
+                        error_msg = data.note;
+                    }
+                    eqrUtil_setTransientAlert('error', 'ERROR - not saved! ('+error_msg+')',$('#addUserSearchData'));
+                }
+            })
+            .fail(function (data, status, xhr) {
+                eqrUtil_setTransientAlert('error', 'ERROR - not saved!',$('#addUserSearchData'));
+            })
+        ;
+
     });
 
-	$('.eq-group-remove-manager-btn').click(function (evt) {
+    $(document).on('click','.eq-group-remove-manager-btn',function(evt){
 		GLOBAL_confirmHandlerData = {'perm_id': $(this).attr('data-for-id'),
 			'perm_type': 'manager',
 			'ent_type': $(this).attr('data-ent-type'),
@@ -194,8 +236,10 @@ console.log(u);
 //console.log(data);
 				if (data.status == 'success') {
 					eqrUtil_setTransientAlert('success', '...done');
-					if (GLOBAL_confirmHandlerData.perm_type == 'manager') {
-						$('#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id).remove();
+                    if (GLOBAL_confirmHandlerData.perm_type == 'manager') {
+                        var btn_id = '#remove-manager-btn-' + GLOBAL_confirmHandlerData.perm_id;
+                        $('#display-manager-'+$(btn_id).attr('data-ent-type')+'-'+$(btn_id).attr('data-ent-id')).remove();
+						$(btn_id).remove();
 					}
 					else {
 						for (var i = 0; i < GLOBAL_confirmHandlerData.perm_id.length; i++) {

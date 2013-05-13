@@ -155,6 +155,12 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=manager&entity_type=user&entity_id=1101&username=cswtestinguser');
 
         $this->assertPattern('/"status":"success"/');
+//        $this->assertPattern('/"permission_id":""/');
+        $this->assertPattern('/"entity_type":"user"/');
+        $this->assertPattern('/"entity_id":"1101"/');
+        $this->assertPattern('/"name":"Violet Bovine"/');
+        $this->assertPattern('/"username":"cswtestinguser"/');
+        $this->assertPattern('/"email":"'.Auth_Base::$TEST_EMAIL.'"/');
         $base_eg->permissions = [];
         $base_eg->loadManagers();
         $this->assertEqual(count($base_eg->managers),3);
@@ -169,6 +175,10 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=manager&entity_type=inst_group&entity_id=503&username=testInstGroup3');
 
         $this->assertPattern('/"status":"success"/');
+//        $this->assertPattern('/"permission_id":""/');
+        $this->assertPattern('/"entity_type":"inst_group"/');
+        $this->assertPattern('/"entity_id":"503"/');
+        $this->assertPattern('/"name":"testInstGroup3"/');
         $base_eg->permissions = [];
         $base_eg->loadManagers();
         $this->assertEqual(count($base_eg->managers),3);
@@ -183,6 +193,12 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=consumer&entity_type=user&entity_id=1106&username=testUser6');
 
         $this->assertPattern('/"status":"success"/');
+//        $this->assertPattern('/"permission_id":""/');
+        $this->assertPattern('/"entity_type":"user"/');
+        $this->assertPattern('/"entity_id":"1106"/');
+        $this->assertPattern('/"name":"tu6F tu6L"/');
+        $this->assertPattern('/"username":"testUser6"/');
+        $this->assertPattern('/"email":"tu6@inst.edu"/');
         $base_eg->permissions = [];
         $base_eg->loadConsumers();
         $this->assertEqual(count($base_eg->consumers),4);
@@ -197,6 +213,10 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $this->get('http://localhost/eqreserve/ajax_eq_group.php?eq_group=201&ajaxVal_action=addPermission&permission_type=consumer&entity_type=inst_group&entity_id=503&username=testInstGroup3');
 
         $this->assertPattern('/"status":"success"/');
+//        $this->assertPattern('/"permission_id":""/');
+        $this->assertPattern('/"entity_type":"inst_group"/');
+        $this->assertPattern('/"entity_id":"503"/');
+        $this->assertPattern('/"name":"testInstGroup3"/');
         $base_eg->permissions = [];
         $base_eg->loadConsumers();
         $this->assertEqual(count($base_eg->consumers),4);

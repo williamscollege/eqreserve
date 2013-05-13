@@ -30,7 +30,7 @@
 		}
 
 		?>
-		<legend class="pull-left row-fluid">Equipment Group
+		<legend class="pull-left row-fluid"><?php echo $Requested_EqGroup->name; ?>
 			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit</a></legend>
 
 		<div id="managerEdit" class="hide">
@@ -38,7 +38,7 @@
 				<input type="hidden" id="groupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
 				<div class="control-group">
-					<label class="control-label" for="groupName">Group</label>
+					<label class="control-label" for="groupName">Name</label>
 
 					<div class="controls">
 						<input type="text" id="groupName" class="input-large" name="groupName" value="<?php echo $Requested_EqGroup->name; ?>" placeholder="Name of group" maxlength="200" />
@@ -54,17 +54,18 @@
 				<div class="control-group">
 					<label class="control-label" for="groupManagers">Managed by</label>
 
-					<div class="controls">
+					<div class="controls" id="managersControlSet">
+                        <button id="eq-group-add-manager-btn" type="button" class="btn btn-success btn-small" title="Add Manager">
+                            <i class="icon-plus-sign icon-white"></i> Add
+                            Manager <i class="icon-plus-sign icon-white"></i></button>
 						<?php
+                            // TODO: sort appropriately
 							echo join(" ",
 								array_map(function ($pd) {
-									return "<button type=\"button\" id=\"remove-manager-btn-" . $pd['perm_id'] . "\" class=\"btn btn-inverse btn-small eq-group-remove-manager-btn\" title=\"" . $pd['display_text'] . "\" data-ent-type=\"" . $pd['ent_type'] . "\" data-ent-id=\"" . $pd['ent_id'] . "\" data-for-id=\"" . $pd['perm_id'] . "\">" . $pd['display_text'] . " <i class=\"icon-remove icon-white\"></i></button>";
+									return "<button type=\"button\" id=\"remove-manager-btn-" . $pd['perm_id'] . "\" class=\"btn btn-inverse btn-small eq-group-remove-manager-btn\" title=\"" . $pd['display_text'] . "\" data-ent-type=\"" . $pd['ent_type'] . "\" data-ent-id=\"" . $pd['ent_id'] . "\" data-for-id=\"" . $pd['perm_id'] . "\">" . (($pd['ent_type'] == 'user') ? '<i class="icon-user  icon-white"></i> ' : '') . $pd['display_text'] . " <i class=\"icon-remove icon-white\"></i></button>";
 								}, $manager_permission_data)
 							);
 						?>
-						<button id="eq-group-add-manager-btn" type="button" class="btn btn-success btn-small" title="Add Manager">
-							<i class="icon-plus-sign icon-white"></i> Add
-							Manager <i class="icon-plus-sign icon-white"></i></button>
 					</div>
 				</div>
 
@@ -75,20 +76,19 @@
 						<i>use CTRL and/or SHIFT to select more than one</i></i><br />
 						<select name="consumers-select" id="consumers-select" class="user-select" size="12" multiple="multiple">
 							<?php
-								echo join(" ",
+                                // TODO: sort appropriately
+                                echo join(" ",
 									array_map(function ($pd) {
+// icon does not show in options		return "<option id=\"consumer-perm-option-" . $pd['perm_id'] . "\" title=\"" . $pd['display_text'] . "\" data-ent-type=\"" . $pd['ent_type'] . "\" data-ent-id=\"" . $pd['ent_id'] . "\" data-for-id=\"" . $pd['perm_id'] . "\">" . (($pd['ent_type'] == 'user') ? '<i class="icon-user  icon-white"></i> ' : '') . $pd['display_text'] . "</option>\n";
 										return "<option id=\"consumer-perm-option-" . $pd['perm_id'] . "\" title=\"" . $pd['display_text'] . "\" data-ent-type=\"" . $pd['ent_type'] . "\" data-ent-id=\"" . $pd['ent_id'] . "\" data-for-id=\"" . $pd['perm_id'] . "\">" . $pd['display_text'] . "</option>\n";
 									}, $consumer_permission_data)
 								);
 							?>
 						</select><br /><br />
+                        <button type="button" id="eq-group-add-consumer-btn" class="btn btn-success btn-small" title="Add Group User">
+                            <i class="icon-plus-sign icon-white"></i> Add <i class="icon-plus-sign icon-white"></i></button>
 						<button type="button" id="eq-group-remove-consumers-btn" class="btn btn-danger btn-small" title="Remove Selected" disabled="disabled">
-							<i class="icon-minus-sign icon-white"></i> Remove
-							Selected
-							<i class="icon-minus-sign icon-white"></i></button>
-						<button type="button" id="eq-group-add-consumer-btn" class="btn btn-success btn-small" title="Add User">
-							<i class="icon-plus-sign icon-white"></i> Add User
-							<i class="icon-plus-sign icon-white"></i></button>
+							<i class="icon-minus-sign icon-white"></i> Remove Selected <i class="icon-minus-sign icon-white"></i></button>
 					</div>
 				</div>
 
@@ -223,24 +223,25 @@
 
 	# Show this to all authenticated users
 	echo "<div id=\"managerView\">\n";
-	echo "Group: <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
-	echo "Description: <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
-	echo "Managed by: ";
-	echo join(', ',
+//	echo "Group: <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
+	echo "<span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br /><br />\n";
+	echo "Managed by: <ul id=\"displayListOfManagers\" class=\"inline\">";
+	echo join("\n",
 		array_map(function ($m) {
 				if (get_class($m) == 'User') {
-					return "$m->fname $m->lname";
+					return "<li id=\"display-manager-user-".$m->user_id."\"><i class=\"icon-user\"></i> $m->fname $m->lname</li>";
 				}
-				return "[$m->name]";
+				return "<li id=\"display-manager-inst_group-".$m->inst_group_id."\">[$m->name]</li>";
 			},
 			$Requested_EqGroup->managers)
 	);
-	echo "<br />\n";
-	echo "<legend>Reservation Rules</legend>\n";
-	echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"><span id=\"print_startMinute\">" . $Requested_EqGroup->start_minute . "</span> minutes</span><br />\n";
-	echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\"><span id=\"print_minDurationMinutes\">" . $Requested_EqGroup->min_duration_minutes . "</span></span><br />\n";
-	echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\"><span id=\"print_maxDurationMinutes\">" . $Requested_EqGroup->max_duration_minutes . "</span></span><br />\n";
-	echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\"><span id=\"print_durationIntervalMinutes\">" . $Requested_EqGroup->duration_chunk_minutes . "</span></span><br />\n";
+	echo "</ul>\n";
+//	echo "<br />\n";
+//	echo "<legend>Reservation Rules</legend>\n";
+//	echo "Start times <span class=\"label label-inverse\" title=\"Reservations must start and end on one of these minutes of the hour\"><span id=\"print_startMinute\">" . $Requested_EqGroup->start_minute . "</span> minutes</span><br />\n";
+//	echo "Min duration <span class=\"label label-inverse\" title=\"The minimum length of time that can be reserved\"><span id=\"print_minDurationMinutes\">" . $Requested_EqGroup->min_duration_minutes . "</span></span><br />\n";
+//	echo "Max duration <span class=\"label label-inverse\" title=\"The maximum length of time that can be reserved\"><span id=\"print_maxDurationMinutes\">" . $Requested_EqGroup->max_duration_minutes . "</span></span><br />\n";
+//	echo "Duration unit <span class=\"label label-inverse\" title=\"The time reserved must be an even multiple of this - this is the smallest about by which a reservation duration may be altered\"><span id=\"print_durationIntervalMinutes\">" . $Requested_EqGroup->duration_chunk_minutes . "</span></span><br />\n";
 	echo "</div>";
 
 ?>

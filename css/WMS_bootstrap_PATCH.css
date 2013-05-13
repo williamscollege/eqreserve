@@ -73,6 +73,7 @@ transient alert */
 	top: 100px;
 	left: 500px;
 	padding: 6px;
+    z-index: 1060;
 }
 
 .in_progress_alert {
@@ -147,6 +148,10 @@ confirmation dialog */
 /*-------------------------
 user selection / permission management */
 
+#displayListOfManagers {
+    display: inline-block;
+}
+
 .addUserSearchResultsPreview {
     height: 300px;
     overflow-y: scroll;
@@ -166,4 +171,8 @@ ul.userGroupSearchResultList li .searchResultAction {
 ul.userGroupSearchResultList li .searchResultData {
     margin-left: 12px;
     padding-top: 4px;
+}
+
+.eq-group-remove-manager-btn {
+    margin-top: 4px;
 }
