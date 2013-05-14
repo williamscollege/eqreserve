@@ -24,6 +24,11 @@ require_once('classes/auth_LDAP.class.php');
 define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
 $AUTH = new Auth_LDAP();
 
+define('AUTH_SEARCH_HOST',	'ldapsearch.institution.edu');	// e.g. ldap2.acme.edu
+define('AUTH_SEARCH_PORT',	'389');
+define('AUTH_SEARCH_ACCT',	'searcher');                 	// account used to make searches
+define('AUTH_SEARCH_PASS',	'searcherpass');              	// password for that account
+
 
 # ---------------------------
 # authentication mode: Kerberos
