@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/auth_ldap.class.php';
+require_once dirname(__FILE__) . '/../../classes/auth_LDAP.class.php';
 
 class TestOfAuth_LDAP extends UnitTestCase {
 

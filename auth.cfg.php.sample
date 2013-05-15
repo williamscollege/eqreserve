@@ -22,13 +22,19 @@
 # ---------------------------
 require_once('classes/auth_LDAP.class.php');
 define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
+
+define('AUTH_LDAP_SEARCH_DN',	'o=institution');
+
+define('AUTH_LDAP_USERNAME_ATTR_LABEL',         'cn');
+define('AUTH_LDAP_USER_DN_ATTR_LABEL',          'dn');
+define('AUTH_LDAP_FIRSTNAME_ATTR_LABEL',        'fn');
+define('AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL',   'mi');
+define('AUTH_LDAP_LASTNAME_ATTR_LABEL',         'sn');
+define('AUTH_LDAP_FULLNAME_ATTR_LABEL',         'fullname');
+define('AUTH_LDAP_EMAIL_ATTR_LABEL',            'mail');
+define('AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL',  'groups');    // institutional groups
+
 $AUTH = new Auth_LDAP();
-
-define('AUTH_SEARCH_HOST',	'ldapsearch.institution.edu');	// e.g. ldap2.acme.edu
-define('AUTH_SEARCH_PORT',	'389');
-define('AUTH_SEARCH_ACCT',	'searcher');                 	// account used to make searches
-define('AUTH_SEARCH_PASS',	'searcherpass');              	// password for that account
-
 
 # ---------------------------
 # authentication mode: Kerberos

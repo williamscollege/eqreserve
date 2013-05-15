@@ -3,6 +3,8 @@
 	# copy this file to institution.cfg.php and replace the example values
 	# below with the ones appropriate for your institution
 
+	define('INSTITUTION_DOMAIN', 'institution.edu');
+
     # used for session security
     define('FINGERPRINT_SALT', 'yoursaltstringhere');
 
