@@ -21,6 +21,7 @@ $(document).ready(function () {
         $("#addUserSearchData").focus();
     }
 
+    var searchDelayTimer = 0; // used to delay submission of search until the user has stopped typing
 
 	$('#addUserSearchData').keypress(function (evt) {
 		if (evt.which == 13) { // the return/enter key press
@@ -30,9 +31,9 @@ $(document).ready(function () {
 			return;
 		}
 		var curText = $(this).val() + String.fromCharCode(evt.which);
-//		alert('TODO- handle keypress event on addUserSearchData - implement live search functionality');
         if (curText.length >= 3) {
-            handleUserGroupSearchCall(curText);
+            clearTimeout(searchDelayTimer);
+            searchDelayTimer = setTimeout(handleUserGroupSearchCall,400,curText);
         }
 	});
 
@@ -43,13 +44,15 @@ $(document).ready(function () {
             var curText = $(this).val();
 //            alert('curText is '+curText);
             if (curText.length >= 3) {
-                handleUserGroupSearchCall(curText);
+                clearTimeout(searchDelayTimer);
+                searchDelayTimer = setTimeout(handleUserGroupSearchCall,400,curText);
             }
         }
     });
 
     var searchTimingTag = '';
     function handleUserGroupSearchCall(searchHandlerData) {
+//        alert('made search handler call');
         searchTimingTag = randomString(24);
         $('#addUserSearchResultsPreview ul').empty();
         $('#addUserSearchResultsPreview ul').append('<li class="text-success"><i>searching...</i></li>');

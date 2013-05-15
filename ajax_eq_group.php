@@ -120,13 +120,32 @@ else {
         }
 
         if ($permission_entity_id == 'newFromAuthSource') {
-            $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
-            echo json_encode($results);
-            exit;
+//            $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
+//            echo json_encode($results);
+//            exit;
             // NOTE: there are two possibilities here.
             // First, check to see the indicated entity exists but has been deleted
             //  If it has/does, undelete them/it (for users, first make sure they're not banned - abort if they are)
             // Second, the user needs to be created from data in the auth system
+            $new_user = User::getOneFromDb(['username'=>$permission_username,'flag_delete'=>true],$DB);
+            if ($new_user->matchesDb) {
+                $new_user->flag_delete = false;
+                $new_user->updateDb();
+                if ($new_user->matchesDb) {
+                    $permission_entity_id = $new_user->user_id;
+                }
+                else {
+                    $results['note'] = 'failed to un-delete user '.$permission_username;
+                    echo json_encode($results);
+                    exit;
+                }
+            }
+            else {
+                // create a new user from LDAP info based on the username
+                $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
+                echo json_encode($results);
+                exit;
+            }
         }
 
         $p = Permission::getOneFromDb(['entity_id'=>$permission_entity_id,'entity_type'=>$permission_entity_type,'role_id'=>$role_id,'eq_group_id'=>$eg_id],$DB);

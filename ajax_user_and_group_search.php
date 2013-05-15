@@ -134,6 +134,7 @@
 
         $result_id    = ldap_search($ldap_link, $search_dn, $search_filter );      // Execute the LDAP search
         $result_count = ldap_count_entries($ldap_link, $result_id);                // Count the search results
+//        echo "result count is $result_count\n";
         if($result_count > 0) {
             $result_entries = ldap_get_entries ($ldap_link, $result_id);
             for($i = 0; $i < $result_count; $i++)  {
@@ -142,7 +143,7 @@
 //                exit;
                 $res_entry = [
                     'matchValue' => 3,
-                    'user_id'=> 'new',
+                    'user_id'=> 'newFromAuthSource',
                     'username'=> array_key_exists('uid',$entry) ? $entry['uid'][0] : 'no username from auth system search',
                     'fname'=> array_key_exists('givenname',$entry) ? $entry['givenname'][0] : 'no first name from auth system search',
                     'lname'=> array_key_exists('sn',$entry) ? $entry['sn'][0] : 'no last name from auth system search',
@@ -179,6 +180,23 @@
         //--------------------------------------------------------
         // IMPLEMENTATION 4. sort all results based on search match scoring-
         $searchRes = array_merge($local_users_res,$local_inst_groups_res);
+
+        // add in the LDAP results, skipping any for which we already have a local result
+        $local_usernames = array_map(function($e) {
+                if (array_key_exists('username',$e)) {
+                    return $e['username'];
+                }
+                return -1;
+            },$searchRes);
+
+        foreach ($ldap_users_res as $ldu) {
+            if (array_search($ldu['username'],$local_usernames) === false) {
+                array_push($searchRes,$ldu);
+            }
+        }
+
+        //print_r($searchRes);
+
         usort($searchRes,function($a,$b){
             if ($a['matchValue'] == $b['matchValue']) {
                 if ($a['sortname'] > $b['sortname']) { return 1; }

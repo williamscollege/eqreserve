@@ -36,9 +36,6 @@
 				$this->debug .= "passed - beginning fxn 'checkLDAP'<br />";
 			}
 
-			// HTTP and HTTPS connections
-			# Note: LIVE  SERVER: ldaps://nwldap.williams.edu/; LOCAL SERVER: nwldap.williams.edu
-
 			// Error Levels (while connecting and selecting): -1 will show all errors; 0 will hide all errors
 			# TODO: Production Code should hide errors, using param 0
 			$errorLevel = error_reporting(-1);
