@@ -94,88 +94,47 @@
         //--------------------------------------------------------
         // IMPLEMENTATION 3. auth system based users
 
-        // WARNING: this section contains code/parameters that are highly institution-specific!
-        // NOTE: not sure how to abstract this functionality - auth system and user search stuff is so institution-specific that trying to parameterize things in a general way would lead to MANY headaches; still, ideally this would go in some inst-specific file...
         $discard_chars = array(",", ".", "-", "*");
         $cleanedSearchTerm = str_replace($discard_chars, '', $searchTerm);
-        $is_two_part_search_term = false;
-        $term_parts = [];
-        if (strpos($cleanedSearchTerm,' ') > 0) {
-            $term_parts = explode(' ',$cleanedSearchTerm);
-            $is_two_part_search_term = true;
-        }
+        $is_two_part_search_term = (strpos($cleanedSearchTerm,' ') > 0);
 
         $ldap_users_res = [];
+        $result_entries = $AUTH->findAllUsersBySearchTerm($cleanedSearchTerm);
 
-        $ldap_host = AUTH_SEARCH_HOST;
-        $ldap_port = AUTH_SEARCH_PORT;
-        $ldap_search_user = AUTH_SEARCH_ACCT;
-        $ldap_search_pw = AUTH_SEARCH_PASS;
+        foreach ($result_entries as $k=>$entry) {
+            $mi = (array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$entry)) ? (' '.$entry[AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL][0]) : '';
+            $res_entry = [
+                'matchValue' => 3,
+                'user_id'=> 'newFromAuthSource',
+                'username'=> array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_USERNAME_ATTR_LABEL][0] : 'no username from auth system search',
+                'fname'=> array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0] : 'no first name from auth system search',
+                'lname'=> array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0] : 'no last name from auth system search',
+                'sortname'=> (array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$entry) && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$entry)) ? ($entry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0].', '.$entry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0].$mi) : 'no sortname created from auth system search',
+                'email'=> array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_EMAIL_ATTR_LABEL][0] : 'no mail from auth system search',
+                'advisor'=> '',
+                'notes'=> '',
+                'flag_is_system_admin'=> 0,
+                'flag_is_banned'=> 0,
+                'flag_delete'=> 0
+            ];
 
-        $search_filter = "(|(uid=*" . $cleanedSearchTerm . "*)(givenname=*" . $cleanedSearchTerm . "*)(sn=*" . $cleanedSearchTerm . "*))";
-        if ($is_two_part_search_term) {
-            $search_filter = "(&(givenname=*" . $term_parts[0] . "*)(sn=*" . $term_parts[1] . "*))";
-        }
-        $search_dn = "ou=people,o=williams";
-
-        $ldap_link = ldap_connect($ldap_host, $ldap_port);
-        if($ldap_link === false) {
-            $results['notes'] = "Failed to connect to the LDAP server on host: [$ldap_host] port: [$ldap_port]";
-            echo json_encode($results);
-            exit;
-        }
-        ldap_set_option($ldap_link, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-        if(ldap_bind($ldap_link, $ldap_search_user, $ldap_search_pw) === false) {
-            $results['notes'] = "Failed to connect to the LDAP server on host: [$ldap_host] port: [$ldap_port]";
-            echo json_encode($results);
-            exit;
-        }
-
-        $result_id    = ldap_search($ldap_link, $search_dn, $search_filter );      // Execute the LDAP search
-        $result_count = ldap_count_entries($ldap_link, $result_id);                // Count the search results
-//        echo "result count is $result_count\n";
-        if($result_count > 0) {
-            $result_entries = ldap_get_entries ($ldap_link, $result_id);
-            for($i = 0; $i < $result_count; $i++)  {
-                $entry = $result_entries[$i];
-//                print_r($entry);
-//                exit;
-                $res_entry = [
-                    'matchValue' => 3,
-                    'user_id'=> 'newFromAuthSource',
-                    'username'=> array_key_exists('uid',$entry) ? $entry['uid'][0] : 'no username from auth system search',
-                    'fname'=> array_key_exists('givenname',$entry) ? $entry['givenname'][0] : 'no first name from auth system search',
-                    'lname'=> array_key_exists('sn',$entry) ? $entry['sn'][0] : 'no last name from auth system search',
-                    'sortname'=> (array_key_exists('givenname',$entry) && array_key_exists('sn',$entry)) ? ($entry['givenname'][0].', '.$entry['sn'][0]) : 'no sortname created from auth system search',
-                    'email'=> array_key_exists('mail',$entry) ? $entry['mail'][0] : 'no mail from auth system search',
-                    'advisor'=> '',
-                    'notes'=> '',
-                    'flag_is_system_admin'=> 0,
-                    'flag_is_banned'=> 0,
-                    'flag_delete'=> 0
-                ];
-
-                if ($is_two_part_search_term) {
-                    if ($res_entry['fname'] == $term_parts[0]) { $res_entry['matchValue'] += 8; }
-                    if ($res_entry['lname'] == $term_parts[1]) { $res_entry['matchValue'] += 8; }
-                    if (stripos($res_entry['fname'],$term_parts[0]) !== false)    { $res_entry['matchValue'] += 2; }
-                    if (stripos($res_entry['lname'],$term_parts[1]) !== false)    { $res_entry['matchValue'] += 2; }
-                }
-                else {
-                    if ($res_entry['username']==$cleanedSearchTerm)                       { $res_entry['matchValue'] += 10; }
-                    elseif ($res_entry['lname'] == $cleanedSearchTerm)                    { $res_entry['matchValue'] += 5; }
-                    elseif ($res_entry['fname'] == $cleanedSearchTerm)                    { $res_entry['matchValue'] += 3; }
-                    elseif (stripos($res_entry['username'],$cleanedSearchTerm) !== false) { $res_entry['matchValue'] += 2; }
-                    elseif (stripos($res_entry['fname'],$cleanedSearchTerm) !== false)    { $res_entry['matchValue'] += 0; }
-                    elseif (stripos($res_entry['lname'],$cleanedSearchTerm) !== false)    { $res_entry['matchValue'] += 0; }
-                }
-
-                array_push($ldap_users_res,$res_entry);
+            if ($is_two_part_search_term) {
+                if ($res_entry['fname'] == $term_parts[0])                     { $res_entry['matchValue'] += 8; }
+                if ($res_entry['lname'] == $term_parts[1])                     { $res_entry['matchValue'] += 8; }
+                if (stripos($res_entry['fname'],$term_parts[0]) !== false)     { $res_entry['matchValue'] += 2; }
+                if (stripos($res_entry['lname'],$term_parts[1]) !== false)     { $res_entry['matchValue'] += 2; }
             }
-        }
+            else {
+                if ($res_entry['username']==$cleanedSearchTerm)                         { $res_entry['matchValue'] += 10; }
+                elseif ($res_entry['lname'] == $cleanedSearchTerm)                      { $res_entry['matchValue'] += 5; }
+                elseif ($res_entry['fname'] == $cleanedSearchTerm)                      { $res_entry['matchValue'] += 3; }
+                elseif (stripos($res_entry['username'],$cleanedSearchTerm) !== false)   { $res_entry['matchValue'] += 2; }
+                elseif (stripos($res_entry['fname'],$cleanedSearchTerm) !== false)      { $res_entry['matchValue'] += 0; }
+                elseif (stripos($res_entry['lname'],$cleanedSearchTerm) !== false)      { $res_entry['matchValue'] += 0; }
+            }
 
-        ldap_close($ldap_link);
+            array_push($ldap_users_res,$res_entry);
+        }
 
         //--------------------------------------------------------
         // IMPLEMENTATION 4. sort all results based on search match scoring-

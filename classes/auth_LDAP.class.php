@@ -96,9 +96,18 @@
 
             unset($search_results['count']);
 
-            // this statement makes sure that old entries are excluded (entries for graduated people and people who have left have no email attribute (at Williams, anyway))
+            // this statement makes sure that invalid entries are excluded
             $search_results = array_filter($search_results,function($e){
-                return array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$e);
+                return
+                    array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$e)
+                    && array_key_exists(AUTH_LDAP_USER_DN_ATTR_LABEL,$e)
+                    && array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$e)
+//                    && array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$e)
+                    && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$e)
+                    && array_key_exists(AUTH_LDAP_FULLNAME_ATTR_LABEL,$e)
+                    && array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$e)
+                    && array_key_exists(AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL,$e)
+                    ;
             });
 
             return $search_results;
@@ -111,10 +120,10 @@
 
             $res_id = 0;
             if ($attrList) {
-                $res_id = ldap_search($this->ldap_link,AUTH_LDAP_SEARCH_DN,$filterString,$attrList);
+                $res_id = @ldap_search($this->ldap_link,AUTH_LDAP_SEARCH_DN,$filterString,$attrList);
             }
             else {
-                $res_id = ldap_search($this->ldap_link,AUTH_LDAP_SEARCH_DN,$filterString);
+                $res_id = @ldap_search($this->ldap_link,AUTH_LDAP_SEARCH_DN,$filterString);
             }
             if (! $res_id) {
                 $this->msg = "No records found for $filterString";

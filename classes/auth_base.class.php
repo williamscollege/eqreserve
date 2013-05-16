@@ -55,4 +55,25 @@
 			echo "TODO: implement group names for testing user<br/>\n";
 		}
 
+        // TAKES: a string that is someone's username
+        // RETURNS: a data structure containing info about that user, fetched from the auth source
+        //        'username'
+        //        'fname'
+        //        'lname'
+        //        'sortname'
+        //        'email'
+        public function findOneUserByUsername($username) {
+            echo "You must override findOneUserByUsername in your auth class<br/>\n";
+        }
+
+        // TAKES: a string that is a search term - either with out spaces, or with a single space
+        // RETURNS: an array of data structures containing info about the users that have data that matches the search term, fetched from the auth source
+        //        'username'
+        //        'fname'
+        //        'lname'
+        //        'sortname'
+        //        'email'
+        public function findAllUsersBySearchTerm($searchTerm) {
+            echo "You must override findAllUsersBySearchTerm in your auth class<br/>\n";
+        }
 	}

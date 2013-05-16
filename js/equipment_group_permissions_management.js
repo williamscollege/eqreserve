@@ -55,7 +55,7 @@ $(document).ready(function () {
 //        alert('made search handler call');
         searchTimingTag = randomString(24);
         $('#addUserSearchResultsPreview ul').empty();
-        $('#addUserSearchResultsPreview ul').append('<li class="text-success"><i>searching...</i></li>');
+        $('#addUserSearchResultsPreview ul').append('<li id="live_search_status" class="text-success"><i>searching...</i></li>');
         $.ajax({
             url: 'ajax_user_and_group_search.php',
             dataType: 'json',
@@ -98,6 +98,8 @@ $(document).ready(function () {
                 }
             })
             .fail(function (data, status, xhr) {
+                $('#addUserSearchResultsPreview ul').empty();
+                $('#addUserSearchResultsPreview ul').append('<li class="text-error">search failed</li>');
                 eqrUtil_setTransientAlert('error', 'ERROR - could not connect to server');
             })
         ;
