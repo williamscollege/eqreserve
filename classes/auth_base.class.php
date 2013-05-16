@@ -80,4 +80,20 @@
         public function findAllUsersBySearchTerm($searchTerm) {
             echo "You must override findAllUsersBySearchTerm in your auth class<br/>\n";
         }
+
+        // TAKES: an auth source data set / entry for a single user
+        // RETURNS: the common structure for user data, populated with the relevant info from the auth entry
+        public function convertAuthInfoToUserDataStructure($authEntry) {
+            echo "You must override convertAuthInfoToUserDataStructure in your auth class<br/>\n";
+            $res = [
+                'username'=> '',
+                'fname'=> '',
+                'lname'=> '',
+                'sortname'=> '',
+                'email'=> '',
+                'inst_group_data' => '',
+                'auth_identifier' => ''
+            ];
+            return $res;
+        }
 	}

@@ -48,16 +48,16 @@
         }
 
 
-        private function convertLDAPInfoToUserDataStructure($ldapEntry) {
-            $mi = (array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$ldapEntry)) ? (' '.$ldapEntry[AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL][0]) : '';
+        public function convertAuthInfoToUserDataStructure($authEntry) {
+            $mi = (array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$authEntry)) ? (' '.$authEntry[AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL][0]) : '';
             $res = [
-                'username'=> array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_USERNAME_ATTR_LABEL][0] : 'no username from auth system search',
-                'fname'=> array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0] : 'no first name from auth system search',
-                'lname'=> array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0] : 'no last name from auth system search',
-                'sortname'=> (array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$ldapEntry) && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$ldapEntry)) ? ($ldapEntry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0].', '.$ldapEntry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0].$mi) : 'no sortname created from auth system search',
-                'email'=> array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_EMAIL_ATTR_LABEL][0] : ($ldapEntry[AUTH_LDAP_USERNAME_ATTR_LABEL][0].'@'.INSTITUTION_DOMAIN),
-                'inst_group_data' => $ldapEntry[AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL],
-                'auth_identifier' => $ldapEntry[AUTH_LDAP_USER_DN_ATTR_LABEL]
+                'username'=> array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$authEntry) ? $authEntry[AUTH_LDAP_USERNAME_ATTR_LABEL][0] : 'no username from auth system search',
+                'fname'=> array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$authEntry) ? $authEntry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0] : 'no first name from auth system search',
+                'lname'=> array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$authEntry) ? $authEntry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0] : 'no last name from auth system search',
+                'sortname'=> (array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$authEntry) && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$authEntry)) ? ($authEntry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0].', '.$authEntry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0].$mi) : 'no sortname created from auth system search',
+                'email'=> array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$authEntry) ? $authEntry[AUTH_LDAP_EMAIL_ATTR_LABEL][0] : ($authEntry[AUTH_LDAP_USERNAME_ATTR_LABEL][0].'@'.INSTITUTION_DOMAIN),
+                'inst_group_data' => $authEntry[AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL],
+                'auth_identifier' => $authEntry[AUTH_LDAP_USER_DN_ATTR_LABEL]
             ];
 
             return $res;
@@ -86,7 +86,7 @@
                 $this->msg = "User record appears more than once - invalid";
                 return FALSE;
             }
-            return $this->convertLDAPInfoToUserDataStructure($search_results[0]);
+            return $this->convertAuthInfoToUserDataStructure($search_results[0]);
         }
 
         public function findAllUsersBySearchTerm($searchTerm) {
@@ -127,7 +127,7 @@
             });
 
             return array_map(function($e) {
-                        return $this->convertLDAPInfoToUserDataStructure($e);
+                        return $this->convertAuthInfoToUserDataStructure($e);
                     }, $search_results);
         }
 
