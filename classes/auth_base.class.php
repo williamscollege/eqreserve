@@ -62,6 +62,8 @@
         //        'lname'
         //        'sortname'
         //        'email'
+        //        'inst_group_data'
+        //        'auth_identifier'
         public function findOneUserByUsername($username) {
             echo "You must override findOneUserByUsername in your auth class<br/>\n";
         }
@@ -73,6 +75,8 @@
         //        'lname'
         //        'sortname'
         //        'email'
+        //        'inst_group_data'
+        //        'auth_identifier'
         public function findAllUsersBySearchTerm($searchTerm) {
             echo "You must override findAllUsersBySearchTerm in your auth class<br/>\n";
         }

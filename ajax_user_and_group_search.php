@@ -102,15 +102,20 @@
         $result_entries = $AUTH->findAllUsersBySearchTerm($cleanedSearchTerm);
 
         foreach ($result_entries as $k=>$entry) {
-            $mi = (array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$entry)) ? (' '.$entry[AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL][0]) : '';
+
             $res_entry = [
                 'matchValue' => 3,
                 'user_id'=> 'newFromAuthSource',
-                'username'=> array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_USERNAME_ATTR_LABEL][0] : 'no username from auth system search',
-                'fname'=> array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0] : 'no first name from auth system search',
-                'lname'=> array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0] : 'no last name from auth system search',
-                'sortname'=> (array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$entry) && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$entry)) ? ($entry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0].', '.$entry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0].$mi) : 'no sortname created from auth system search',
-                'email'=> array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_EMAIL_ATTR_LABEL][0] : 'no mail from auth system search',
+                'username'=> $entry['username'],
+                'fname'=> $entry['fname'],
+                'lname'=> $entry['lname'],
+                'sortname'=> $entry['sortname'],
+                'email'=>$entry['email'],
+//                'username'=> array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_USERNAME_ATTR_LABEL][0] : 'no username from auth system search',
+//                'fname'=> array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0] : 'no first name from auth system search',
+//                'lname'=> array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0] : 'no last name from auth system search',
+//                'sortname'=> (array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$entry) && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$entry)) ? ($entry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0].', '.$entry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0].$mi) : 'no sortname created from auth system search',
+//                'email'=> array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$entry) ? $entry[AUTH_LDAP_EMAIL_ATTR_LABEL][0] : 'no mail from auth system search',
                 'advisor'=> '',
                 'notes'=> '',
                 'flag_is_system_admin'=> 0,

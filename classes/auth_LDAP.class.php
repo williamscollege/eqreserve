@@ -47,6 +47,22 @@
             return true;
         }
 
+
+        private function convertLDAPInfoToUserDataStructure($ldapEntry) {
+            $mi = (array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$ldapEntry)) ? (' '.$ldapEntry[AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL][0]) : '';
+            $res = [
+                'username'=> array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_USERNAME_ATTR_LABEL][0] : 'no username from auth system search',
+                'fname'=> array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0] : 'no first name from auth system search',
+                'lname'=> array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0] : 'no last name from auth system search',
+                'sortname'=> (array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$ldapEntry) && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$ldapEntry)) ? ($ldapEntry[AUTH_LDAP_LASTNAME_ATTR_LABEL][0].', '.$ldapEntry[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0].$mi) : 'no sortname created from auth system search',
+                'email'=> array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$ldapEntry) ? $ldapEntry[AUTH_LDAP_EMAIL_ATTR_LABEL][0] : ($ldapEntry[AUTH_LDAP_USERNAME_ATTR_LABEL][0].'@'.INSTITUTION_DOMAIN),
+                'inst_group_data' => $ldapEntry[AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL],
+                'auth_identifier' => $ldapEntry[AUTH_LDAP_USER_DN_ATTR_LABEL]
+            ];
+
+            return $res;
+        }
+
         public function findOneUserByUsername($username) {
             $discard_chars = array(",", ".", "-", "*");
             $cleanedUsername = str_replace($discard_chars, '', $username);
@@ -70,7 +86,7 @@
                 $this->msg = "User record appears more than once - invalid";
                 return FALSE;
             }
-            return $search_results[0];
+            return $this->convertLDAPInfoToUserDataStructure($search_results[0]);
         }
 
         public function findAllUsersBySearchTerm($searchTerm) {
@@ -110,7 +126,9 @@
                     ;
             });
 
-            return $search_results;
+            return array_map(function($e) {
+                        return $this->convertLDAPInfoToUserDataStructure($e);
+                    }, $search_results);
         }
 
         public function doLDAPSearch($filterString,$attrList=[]) {
@@ -161,7 +179,7 @@
             // try to Sign in NOTE: this is the actual auth check!
             $this->connectToLDAP();
 //            echo $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL];
-            $authed_ldap_link = ldap_bind($this->ldap_link, $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL], $pass);
+            $authed_ldap_link = ldap_bind($this->ldap_link, $found_user['auth_identifier'], $pass);
             ldap_close($this->ldap_link);
             if ($authed_ldap_link == FALSE) {
                 $this->msg = "The username and password don't match."; //: $user_dn";
@@ -176,30 +194,26 @@
 //            exit;
 
             // auth check passed, so populate the user data
-            $this->username = $found_user[AUTH_LDAP_USERNAME_ATTR_LABEL][0];
-            $this->fname = $found_user[AUTH_LDAP_FIRSTNAME_ATTR_LABEL][0];
-            $this->lname = $found_user[AUTH_LDAP_LASTNAME_ATTR_LABEL][0];
-            $this->sortname = preg_replace("/\\s+/",' ',preg_replace("/\\.$/", "", $this->lname.' '.$this->fname.' '.$found_user[AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL][0]));
-            if (array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$found_user)) {
-                $this->email = $found_user[AUTH_LDAP_EMAIL_ATTR_LABEL][0];
-            }
-            else {
-                $this->email = $this->username . '@' . INSTITUTION_DOMAIN;
-            }
+            $this->username = $found_user['username'];
+            $this->fname = $found_user['fname'];
+            $this->lname = $found_user['lname'];
+            $this->sortname = $found_user['sortname'];
+            $this->email = $found_user['email'];
+
             $this->inst_groups = [];
 //            echo '<pre>';
 //            print_r($found_user[AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL]);
 //            echo '</pre>';
 //            exit;
 			$group_finder_pattern = '/cn=((Everyone|Jesup|[A-Z]{4}-[0-9]{3}|\\d\\dstudents)[^\\,]*)/'; // match only desired groups, exclude all others
-            foreach ($found_user[AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL] as $g) {
+            foreach ($found_user['inst_group_data'] as $g) {
 				if (preg_match($group_finder_pattern, $g, $matches)) { // ensure no empty items
 					array_push($this->inst_groups, $matches[1]);
 				}
 			}
 
 			// append the position (STUDENT, FACULTY, STAFF, OTHER), as this is another kind of institutional group we want to know about
-			if (preg_match("/ou=(\\w+),/", $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL], $matches)) {
+			if (preg_match("/ou=(\\w+),/", $found_user['auth_identifier'], $matches)) {
                 array_push($this->inst_groups, $matches[1]);
 			}
             else {

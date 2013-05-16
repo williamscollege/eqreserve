@@ -48,7 +48,7 @@ class TestOfAuth_LDAP extends UnitTestCase {
         $uData = $AUTH->findOneUserByUsername('cwarren');
 
         $this->assertTrue($uData);
-        $this->assertEqual($uData[AUTH_LDAP_USERNAME_ATTR_LABEL][0],'cwarren');
+        $this->assertEqual($uData['username'],'cwarren');
     }
 
     function testAuthLDAPfindAllUsersBySearchTerm() {
