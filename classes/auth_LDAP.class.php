@@ -83,12 +83,23 @@
                 $is_two_part_search_term = true;
             }
 
-            $filter = ''; // TODO: create this filter (copy from ajax_user_and_group_search.php)
+            $filter = "(|(".AUTH_LDAP_USERNAME_ATTR_LABEL."=*" . $cleanedSearchTerm . "*)(".AUTH_LDAP_FIRSTNAME_ATTR_LABEL."=*" . $cleanedSearchTerm . "*)(".AUTH_LDAP_LASTNAME_ATTR_LABEL."=*" . $cleanedSearchTerm . "*))";
+            if ($is_two_part_search_term) {
+                $filter = "(&(".AUTH_LDAP_FIRSTNAME_ATTR_LABEL."=*" . $term_parts[0] . "*)(".AUTH_LDAP_LASTNAME_ATTR_LABEL."=*" . $term_parts[1] . "*))";
+            }
 
             $search_results = $this->doLDAPSearch($filter,$this->user_info_attrs);
+
             if (! $search_results) {
                 return FALSE;
             }
+
+            unset($search_results['count']);
+
+            // this statement makes sure that old entries are excluded (entries for graduated people and people who have left have no email attribute (at Williams, anyway))
+            $search_results = array_filter($search_results,function($e){
+                return array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$e);
+            });
 
             return $search_results;
         }
@@ -140,7 +151,7 @@
 
             // try to Sign in NOTE: this is the actual auth check!
             $this->connectToLDAP();
-            echo $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL];
+//            echo $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL];
             $authed_ldap_link = ldap_bind($this->ldap_link, $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL], $pass);
             ldap_close($this->ldap_link);
             if ($authed_ldap_link == FALSE) {

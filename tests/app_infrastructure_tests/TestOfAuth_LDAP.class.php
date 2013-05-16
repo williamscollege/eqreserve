@@ -1,6 +1,7 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/auth_LDAP.class.php';
+//require_once dirname(__FILE__) . '/../../classes/auth_LDAP.class.php';
+require_once dirname(__FILE__) . '/../../auth.cfg.php';
 
 class TestOfAuth_LDAP extends UnitTestCase {
 
@@ -39,5 +40,28 @@ class TestOfAuth_LDAP extends UnitTestCase {
         $this->assertEqual($AUTH->email,Auth_Base::$TEST_EMAIL);
         $this->assertEqual($AUTH->inst_groups,Auth_Base::$TEST_INST_GROUPS);
     }
+
+    function testAuthLDAPfindOneUserByUsername() {
+        $AUTH = new Auth_LDAP();
+
+        // NOTE: this test uses live data! Adjust to your own institutions data
+        $uData = $AUTH->findOneUserByUsername('cwarren');
+
+        $this->assertTrue($uData);
+        $this->assertEqual($uData[AUTH_LDAP_USERNAME_ATTR_LABEL][0],'cwarren');
+    }
+
+    function testAuthLDAPfindAllUsersBySearchTerm() {
+        $AUTH = new Auth_LDAP();
+
+        // NOTE: this test uses live data! Adjust to your own institutions data
+        $uDataList = $AUTH->findAllUsersBySearchTerm('warren');
+
+//        $this->dump($uDataList);
+
+        $this->assertEqual(count($uDataList),3);
+    }
+
 }
+
 ?>
