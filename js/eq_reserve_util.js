@@ -17,11 +17,15 @@ function eqrUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
         $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-time"></i> '+alertMessage);
         $('#page_alert').addClass("in_progress_alert");
+        $('#page_alert').stop();
+        $('#page_alert').css("opacity",1);
     }
     else if (alertType == 'success') {
         $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-ok"></i> '+alertMessage);
         $('#page_alert').addClass("success_alert");
+        $('#page_alert').stop();
+        $('#page_alert').css("opacity",1);
         $('#page_alert').fadeOut({duration: 3000, queue: false}); //,function(){$('#page_alert').addClass("hide");})
         //alert('success ta');
     }
@@ -29,6 +33,8 @@ function eqrUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
         $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-exclamation-sign"></i> '+alertMessage);
         $('#page_alert').addClass("error_alert");
+        $('#page_alert').stop();
+        $('#page_alert').css("opacity",1);
         $('#page_alert').fadeOut({duration: 10000, queue: false});//,function(){$('#page_alert').addClass("hide");})
     }
 }
