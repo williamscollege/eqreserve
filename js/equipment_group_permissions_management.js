@@ -33,7 +33,7 @@ $(document).ready(function () {
 		var curText = $(this).val() + String.fromCharCode(evt.which);
         if (curText.length >= 3) {
             clearTimeout(searchDelayTimer);
-            searchDelayTimer = setTimeout(handleUserGroupSearchCall,400,curText);
+            searchDelayTimer = setTimeout(handleUserGroupSearchCall,300,curText);
         }
 	});
 
@@ -45,7 +45,7 @@ $(document).ready(function () {
 //            alert('curText is '+curText);
             if (curText.length >= 3) {
                 clearTimeout(searchDelayTimer);
-                searchDelayTimer = setTimeout(handleUserGroupSearchCall,400,curText);
+                searchDelayTimer = setTimeout(handleUserGroupSearchCall,300,curText);
             }
         }
     });
@@ -159,7 +159,7 @@ $(document).ready(function () {
             }
         })
             .done(function (data, status, xhr) {
-                console.log(data);
+//                console.log(data);
                 if (data.status == 'success') {
                     // on success, update DOM: add to text list of managers, add button to remove manager controls if approp, add option to consumers select list if approp
                     //    expecting back in ajax results: status, permission_id, text/info needed for creation of above DOM elements
@@ -194,6 +194,7 @@ $(document).ready(function () {
                 }
             })
             .fail(function (data, status, xhr) {
+//                console.log(data);
                 eqrUtil_setTransientAlert('error', 'ERROR - not saved!',$('#addUserSearchData'));
             })
         ;

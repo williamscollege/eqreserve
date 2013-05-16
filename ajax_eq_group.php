@@ -142,9 +142,37 @@ else {
             }
             else {
                 // create a new user from LDAP info based on the username
-                $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
-                echo json_encode($results);
-                exit;
+//                $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
+//                echo json_encode($results);
+//                exit;
+                require_once('auth.cfg.php');
+                $auth_source_data = $AUTH->findOneUserByUsername($permission_username);
+                if ($auth_source_data) {
+                    $new_user->username = $auth_source_data['username'];
+                    $new_user->fname = $auth_source_data['fname'];
+                    $new_user->lname = $auth_source_data['lname'];
+                    $new_user->sortname = $auth_source_data['sortname'];
+                    $new_user->email = $auth_source_data['email'];
+                    $new_user->advisor = '';
+                    $new_user->notes = '';
+                    $new_user->flag_is_system_admin = false;
+                    $new_user->flag_is_banned = false;
+                    $new_user->flag_delete = false;
+                    $new_user->updateDb();
+                    if ($new_user->matchesDb) {
+                        $permission_entity_id = $new_user->user_id;
+                    }
+                    else {
+                        $results['note'] = 'failed to create new user from auth data for '.$permission_username;
+                        echo json_encode($results);
+                        exit;
+                    }
+                }
+                else {
+                    $results['note'] = 'failed to get auth data for '.$permission_username;
+                    echo json_encode($results);
+                    exit;
+                }
             }
         }
 
