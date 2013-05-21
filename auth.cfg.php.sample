@@ -22,6 +22,7 @@
 	# ---------------------------
 	require_once('classes/auth_LDAP.class.php');
 	define('AUTH_SERVER',	'ldap.institution.edu');	// e.g. ldap.acme.edu (TODO: or https://ldap.acme.edu)
+	define('AUTH_PORT', '123');
 
 	define('AUTH_LDAP_SEARCH_DN',	'o=institution');
 
