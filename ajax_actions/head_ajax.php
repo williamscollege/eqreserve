@@ -1,7 +1,7 @@
 <?php
-    require_once('/institution.cfg.php');
-	require_once('/util.php');
-    require_once('/classes/user.class.php');
+    require_once('../institution.cfg.php');
+	require_once('../util.php');
+    require_once('../classes/user.class.php');
 
     session_start();
 

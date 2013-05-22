@@ -1,5 +1,5 @@
 <?php
-	require_once('/classes/eq_group.class.php');
+	require_once('../classes/eq_group.class.php');
 	require_once('/head_ajax.php');
 
 	#------------------------------------------------#

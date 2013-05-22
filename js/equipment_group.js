@@ -351,7 +351,7 @@ $(document).ready(function () {
 			title: "Are you sure you want to remove this item?",
 			label: "Remove Item",
 			class: "btn btn-danger pull-left",
-			url: "ajax_delete_eq_subgroup_item.php",
+			url: "ajax_actions/ajax_delete_eq_subgroup_item.php",
 			ajax_action: "deleteItem",
 			ajax_id: GLOBAL_confirmHandlerData
 		};
@@ -367,7 +367,7 @@ $(document).ready(function () {
 			title: "Are you sure you want to remove this subgroup and all items?",
 			label: "Remove Subgroup and Items",
 			class: "btn btn-danger pull-left",
-			url: "ajax_delete_eq_subgroup.php",
+			url: "ajax_actions/ajax_delete_eq_subgroup.php",
 			ajax_action: "deleteSubgroup",
 			ajax_id: GLOBAL_confirmHandlerData
 		};
@@ -383,7 +383,7 @@ $(document).ready(function () {
 	function handleDeleteSchedule() {
 		eqrUtil_setTransientAlert('progress', 'saving...', $('#list-of-schedule-' + GLOBAL_confirmHandlerData));
 		$.ajax({
-			url: 'ajax_schedule.php',
+			url: 'ajax_actions/ajax_schedule.php',
 			dataType: 'json',
 			data: {'schedule': GLOBAL_confirmHandlerData,
 				'scheduleAction': 'deleteSchedule',

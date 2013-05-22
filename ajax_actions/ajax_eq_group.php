@@ -1,5 +1,5 @@
 <?php
-require_once('/classes/eq_group.class.php');
+require_once('../classes/eq_group.class.php');
 require_once('/head_ajax.php');
 
 /*
@@ -145,7 +145,7 @@ else {
 //                $results['note'] = 'TODO: new entities are not yet supported as a part of permission creation';
 //                echo json_encode($results);
 //                exit;
-                require_once('auth.cfg.php');
+                require_once('../auth.cfg.php');
                 $auth_source_data = $AUTH->findOneUserByUsername($permission_username);
                 if ($auth_source_data) {
                     $new_user->username = $auth_source_data['username'];

@@ -1,6 +1,6 @@
 <?php
     require_once('/head_ajax.php');
-	require_once('auth.cfg.php');
+	require_once('../auth.cfg.php');
 
 	#------------------------------------------------#
 	$action        = (isset($_REQUEST["action"])) ? $_REQUEST["action"] : 0;
