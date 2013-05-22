@@ -38,7 +38,10 @@
 			# Tests: Communication Preferences
 			$this->addFile('web_page_tests/AjaxCommPrefTest.php');
 
-			# Sound Effect
+            # no web access to command line scripts
+            $this->addFile('web_page_tests/CommandLineBlockedTest.php');
+
+            # Sound Effect
 			$this->addFile('soundForTesting.php');
 		}
 	}
