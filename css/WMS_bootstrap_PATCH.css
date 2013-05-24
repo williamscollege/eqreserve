@@ -1,113 +1,110 @@
-/* =======================================
-	Patch For: bootstrap.css
-	Purpose: New styles that add icons to validation plugin (jquery.validate.js)
-	Source: http://alittlecode.com/jquery-form-validation-with-styles-from-twitter-bootstrap/
-========================================== */
-label.valid {
+/*=======================================
+Patch For: bootstrap.css
+Purpose: New styles that add icons to validation plugin (jquery.validate.js)
+Source: http://alittlecode.com/jquery-form-validation-with-styles-from-twitter-bootstrap/
+==========================================*/
+LABEL.valid
+{
 	width: 24px;
 	height: 24px;
-	background: url(../img/valid.png) center center no-repeat;
+	background: url(../img/valid.png) no-repeat center center;
 	display: inline-block;
 	text-indent: -9999px;
 }
-
-label.error {
+LABEL.error
+{
 	font-weight: bold;
-	color: red;
+	color: #FF0000;
 	padding: 2px 8px;
 	margin-top: 2px;
 }
-
-.text-warning {
-	color: #e17823
+.text-warning
+{
+	color: #E17823;
 }
-
-/* =======================================
-	Patch For: bootstrap.css
-	Purpose: Williams custom tweaks to bootstrap.css
-========================================== */
-
-/* add a placeholder to prevent page content from shifting to accommodate the scrollbar */
-html {
+/*=======================================
+Patch For: bootstrap.css
+Purpose: Williams custom tweaks to bootstrap.css
+==========================================
+add a placeholder to prevent page content from shifting to accommodate the scrollbar*/
+HTML
+{
 	overflow-y: scroll;
 }
-
-.btn.btn-link.btn-cancel, .btn-link.btn-cancel {
-	color: #D15545 !important; /* red-orange */
+.btn.btn-link.btn-cancel, .btn-link.btn-cancel
+{
+	color: #D15545 !important;
+/*red-orange*/
 }
-
-/* remove annoying margin-left:0 from core bootstrap.css */
-ul.unstyled LI,
-ol.unstyled LI {
+/*remove annoying margin-left:0 from core bootstrap.css*/
+UL.unstyled LI, OL.unstyled LI
+{
 	margin-left: 50px;
 }
-
-/* =======================================
-    Williams Custom CSS
-    Purpose: CSS that's not an extension / modification of the bootstrap framework
-========================================== */
-
-.user-select {
+/*=======================================
+Williams Custom CSS
+Purpose: CSS that's not an extension / modification of the bootstrap framework
+==========================================*/
+.user-select
+{
 	width: 300px;
 }
-
-.cursorPointer {
+.cursorPointer
+{
 	cursor: pointer;
 }
-
-.notes-editing-region {
+.notes-editing-region
+{
 	height: 60px;
 	width: 480px;
 }
-
-.btn-delete-list-item {
+.btn-delete-list-item
+{
 	margin: 1px;
 	padding: 1px;
 }
-
 /*-------------------------
-transient alert */
-
-.transient_alert {
+transient alert*/
+.transient_alert
+{
 	position: absolute;
 	top: 100px;
 	left: 500px;
 	padding: 6px;
-    z-index: 1060;
+	z-index: 1060;
 }
-
-.in_progress_alert {
-	border: 1px solid #973;
-	color: #973;
-	background-color: #eda;
+.in_progress_alert
+{
+	border: 1px solid #F89406;
+	color: #F89406;
+	background-color: #FCF8E3;
 }
-
-.success_alert {
-	border: 1px solid #393;
-	color: #393;
-	background-color: #dfd;
+.success_alert
+{
+	border: 1px solid #468847;
+	color: #468847;
+	background-color: #DFF0D8;
 }
-
-.error_alert {
-	border: 1px solid #933;
-	color: #933;
-	background-color: #fdd;
+.error_alert
+{
+	border: 1px solid #B94A48;
+	color: #B94A48;
+	background-color: #F2DEDE;
 }
-
 /*-------------------------
-confirmation dialog */
-
-.confirmationDialog {
+confirmation dialog*/
+.confirmationDialog
+{
 	border-width: 3px;
-	background-color: #feb;
+	background-color: #FEB;
 }
-
-.confirmationDialog .modal-header {
+.confirmationDialog .modal-header
+{
 	border: none;
 	padding: 0;
 }
-
-.confirmationDialog .modal-header .close {
+.confirmationDialog .modal-header .close
+{
 	width: 20px;
 	height: 20px;
 	margin: 6px 8px 0 0;
@@ -116,23 +113,23 @@ confirmation dialog */
 	border: 1px solid #700;
 	text-align: center;
 	vertical-align: middle;
-	/* text-shadow: none; */
+/*text-shadow: none;*/
 	opacity: .9;
 	filter: alpha(opacity=90);
-	background-color: #dcc;
+	background-color: #DCC;
 }
-
-.confirmationDialog .modal-header .close:hover {
-	color: #b00;
-	background-color: #ebb;
+.confirmationDialog .modal-header .close:hover
+{
+	color: #B00;
+	background-color: #EBB;
 }
-
-.confirmationDialog .modal-body {
+.confirmationDialog .modal-body
+{
 	padding-bottom: 0;
 	border: none;
 }
-
-.confirmationDialog .modal-footer {
+.confirmationDialog .modal-footer
+{
 	text-align: center;
 	padding: 6px;
 	border-width: 0;
@@ -140,39 +137,38 @@ confirmation dialog */
 	box-shadow: none;
 	-webkit-box-shadow: none;
 }
-
-.confirmationDialog .modal-footer .btn {
+.confirmationDialog .modal-footer .btn
+{
 	margin: 0 24px;
 }
-
 /*-------------------------
-user selection / permission management */
-
-#displayListOfManagers {
-    display: inline-block;
+user selection / permission management*/
+#displayListOfManagers
+{
+	display: inline-block;
 }
-
-.addUserSearchResultsPreview {
-    height: 300px;
-    overflow-y: scroll;
+.addUserSearchResultsPreview
+{
+	height: 300px;
+	overflow-y: scroll;
 }
-
-ul.userGroupSearchResultList li {
-    margin: 6px;
-    background-color: #f2f2f2;
-    padding: 3px;
+UL.userGroupSearchResultList LI
+{
+	margin: 6px;
+	background-color: #F2F2F2;
+	padding: 3px;
 }
-
-ul.userGroupSearchResultList li .searchResultAction {
-    height: 100%;
-    vertical-align: middle;
+UL.userGroupSearchResultList LI .searchResultAction
+{
+	height: 100%;
+	vertical-align: middle;
 }
-
-ul.userGroupSearchResultList li .searchResultData {
-    margin-left: 12px;
-    padding-top: 4px;
+UL.userGroupSearchResultList LI .searchResultData
+{
+	margin-left: 12px;
+	padding-top: 4px;
 }
-
-.eq-group-remove-manager-btn {
-    margin-top: 4px;
+.eq-group-remove-manager-btn
+{
+	margin-top: 4px;
 }

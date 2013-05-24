@@ -1,7 +1,7 @@
 <?php
 	require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-	class IndexPageFormAddEqGroupTest extends WMSWebTestCase {
+	class IndexPagefrmAddEqGroupTest extends WMSWebTestCase {
 
 		function setUp() {
 			createTestData_Users($this->DB);
@@ -21,7 +21,7 @@
 
 		//############################################################
 
-		function TestFormAddEqGroup() {
+		function TestfrmAddEqGroup() {
 			# update test user to have system admin role
 			$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $this->DB);
 			$u1->flag_is_system_admin = TRUE;

@@ -34,7 +34,7 @@
 			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit</a></legend>
 
 		<div id="managerEdit" class="hide">
-			<form action="ajax_eq_group.php" class="form-horizontal" id="formEditGroup" name="formEditGroup" method="post">
+			<form action="ajax_eq_group.php" class="form-horizontal" id="frmEditGroup" name="frmEditGroup" method="post">
 				<input type="hidden" id="groupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 
 				<div class="control-group">

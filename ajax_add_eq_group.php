@@ -3,7 +3,7 @@
 	require_once('/head_ajax.php');
 
 	#------------------------------------------------#
-	# Forms Collections: AJAX posts and requests
+	# Fetch AJAX values
 	#------------------------------------------------#
 	$strName        = htmlentities((isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0);
 	$strDescription = htmlentities((isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0);

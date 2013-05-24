@@ -3,54 +3,85 @@
 	require_once('/head_ajax.php');
 
 	#------------------------------------------------#
-	# Forms Collections: AJAX posts and requests
+	# Fetch AJAX values
 	#------------------------------------------------#
-	$intID            = htmlentities((isset($_POST["ajaxVal_ID"])) ? $_POST["ajaxVal_ID"] : 0);
-	$intOrder         = htmlentities((isset($_POST["ajaxVal_Order"])) ? $_POST["ajaxVal_Order"] : 0);
-	$strName          = htmlentities((isset($_POST["ajaxVal_Name"])) ? util_quoteSmart($_POST["ajaxVal_Name"]) : 0);
-	$strDescription   = htmlentities((isset($_POST["ajaxVal_Description"])) ? util_quoteSmart($_POST["ajaxVal_Description"]) : 0);
-	$bitIsMultiSelect = htmlentities((isset($_POST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_POST["ajaxVal_MultiSelect"]) : 0);
+	$strAction        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
+	$intGroupID       = htmlentities((isset($_REQUEST["ajaxVal_GroupID"])) ? $_REQUEST["ajaxVal_GroupID"] : 0);
+	$intSubgroupID    = htmlentities((isset($_REQUEST["ajaxVal_SubgroupID"])) ? $_REQUEST["ajaxVal_SubgroupID"] : 0);
+	$intOrder         = htmlentities((isset($_REQUEST["ajaxVal_Order"])) ? $_REQUEST["ajaxVal_Order"] : 0);
+	$strName          = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
+	$strDescription   = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
+	$bitIsMultiSelect = htmlentities((isset($_REQUEST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_REQUEST["ajaxVal_MultiSelect"]) : 0);
 
 
 	#------------------------------------------------#
-	# SQL: INSERT Item
-	#------------------------------------------------#
-	$esg = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
 
+	$results = [
+		'status' => 'failure'
+	];
 
-	if ($esg->matchesDb) {
-		// error: matching record already exists
-		return FALSE;
+	//###############################################################
+	if ($strAction == 'add-subgroup') {
+		$esg = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
+
+		if ($esg->matchesDb) {
+			// error: matching record already exists
+			echo json_encode($results);
+			exit;
+		}
+		$esg->eq_group_id          = $intGroupID;
+		$esg->ordering             = $intOrder;
+		$esg->name                 = $strName;
+		$esg->descr                = $strDescription;
+		$esg->flag_is_multi_select = $bitIsMultiSelect;
+
+		$esg->updateDb();
+
+		$output = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
+
+		# Output
+		$results['status']       = 'success';
+		$results['which_action'] = 'add-subgroup';
+		$results['html_output']  = '';
+
+		# OMIT class="hide" as this is injected into the DOM
+		$results['html_output'] .= "<ul id=\"ul-of-subgroup-" . $output->eq_subgroup_id . "\" class=\"unstyled\">\n";
+		$results['html_output'] .= "<a id=\"btn-edit-subgroup-id-" . $output->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $output->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $output->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $output->name . "\" data-for-subgroup-descr=\"" . $output->descr . "\" class=\"manager-action btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+		$results['html_output'] .= "<a class=\"manager-action btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $output->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
+		$results['html_output'] .= "<span id=\"subgroupid-" . $output->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $output->ordering . "\"><strong>" . $output->name . ": </strong>" . $output->descr . "</span>\n";
+		$results['html_output'] .= "<li class=\"manager-action\">";
+		$results['html_output'] .= "<span class=\"noItemsExist\"><em>No items exist.</em><br /></span>";
+		$results['html_output'] .= "<a href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $output->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $bitIsMultiSelect . "\" data-for-subgroup-name=\"" . $output->name . "\" class=\"btn btn-success btn-mini eq-add-item\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
+		$results['html_output'] .= "</li>";
+		$results['html_output'] .= "</ul>";
+
+		echo json_encode($results);
 		exit;
 	}
-	$esg->eq_group_id          = $intID;
-	$esg->ordering             = $intOrder;
-	$esg->name                 = $strName;
-	$esg->descr                = $strDescription;
-	$esg->flag_is_multi_select = $bitIsMultiSelect;
+	//###############################################################
+	elseif ($strAction == 'edit-subgroup') {
+		$esg = EqSubgroup::getOneFromDb(['eq_subgroup_id' => $intSubgroupID], $DB);
 
-	$esg->updateDb();
+		if (!$esg->matchesDb) {
+			// error: no matching record found
+			echo json_encode($results);
+			exit;
+		}
+		$esg->name                 = $strName;
+		$esg->descr                = $strDescription;
+		$esg->flag_is_multi_select = $bitIsMultiSelect;
+
+		$esg->updateDb();
+
+		# Output
+		$results['status']       = 'success';
+		$results['which_action'] = 'edit-subgroup';
+		$results['html_output']  = '';
+
+		echo json_encode($results);
+		exit;
+	}
 
 
-	$output = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
-
-
-	# Output HTML
-
-	# Subgroup Title
-	echo "<ul id=\"ul-of-subgroup-" . $output->eq_subgroup_id . "\" class=\"unstyled\">\n";
-	echo "<a href=\"#\" id=\"delete-subgroup-" . $output->eq_subgroup_id . "\" class=\"manager-action btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $output->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
-	echo "<span data-subgroup-order=\"" . $output->ordering . "\"><strong>" . $output->name . ":</strong></span> " . $output->descr . "\n";
-	# Button: Add an Item
-	echo "<li class=\"manager-action\">"; # OMIT class="hide" as this is injected into the DOM
-	echo "<span class=\"noItemsExist\"><em>No items exist.</em><br /></span>";
-	echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $output->eq_subgroup_id . "\" data-is-multiselect=\"" . $bitIsMultiSelect . "\" data-subgroup-name=\"" . $output->name . "\" data-toggle=\"modal\" class=\"btn btn-success btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
-	echo "</li>";
-	echo "</ul>";
-
-
-	/*
-		Debugging:
-		echo "<pre>"; print_r($_POST); echo "</pre>"; exit();
-	*/
+	//	echo "<pre>"; print_r($_REQUEST); echo "</pre>"; exit();
 ?>

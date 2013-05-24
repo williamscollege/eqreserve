@@ -20,32 +20,38 @@
 			if (count($key->eq_items) == 0) {
 				# Subgroup Title
 				if ($USER->flag_is_system_admin || $is_group_manager) {
-					# delete button
-					echo "<a href=\"#\" id=\"delete-subgroup-" . $key->eq_subgroup_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $key->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
-					echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
-					# Button: Add an Item
+					# button: edit subgroup
+					echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+					# button: delete subgroup
+					echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
+					echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "</span>\n";
 					echo "<li class=\"manager-action hide\">";
 					echo "<span class=\"noItemsExist\"><em>No items exist.</em><br /></span>";
-					echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-is-multiselect=\"" . $key->flag_is_multi_select . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-success btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
+					# button: add item
+					echo "<a href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" class=\"btn btn-success btn-mini eq-add-item\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 					echo "</li>";
 				}
 			}
 			else {
 				# Subgroup Title
 				if ($USER->flag_is_system_admin || $is_group_manager) {
-					# delete button
-					echo "<a href=\"#\" id=\"delete-subgroup-" . $key->eq_subgroup_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-subgroup-btn\" data-for-subgroup=\"" . $key->eq_subgroup_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
+					# button: edit subgroup
+					echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+					# button: delete subgroup
+					echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 				}
-				echo "<span data-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ":</strong></span> " . $key->descr . "\n";
+				echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "</span>\n";
 				foreach ($key->eq_items as $item) {
 					?>
-					<li id="list-of-item-<?php echo $item->eq_item_id; ?>" data-item-order="<?php echo $item->ordering; ?>">
+					<li id="list-of-item-<?php echo $item->eq_item_id; ?>" data-for-item-order="<?php echo $item->ordering; ?>">
 
 						<label class="" for="item-<?php echo $item->eq_item_id; ?>">
 							<?php
 								if ($USER->flag_is_system_admin || $is_group_manager) {
-									# delete button
-									echo "<a href=\"#\" id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger delete-item-btn\" data-for-item=\"" . $item->eq_item_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
+									# button: edit item
+									echo "<a id=\"btn-edit-item-id-" . $item->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $key->name . "\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" data-for-item-descr=\"" . $item->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+									# button: delete item
+									echo "<a id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $item->eq_item_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 								}
 								if ($key->flag_is_multi_select == 0) {
 									# radio: single select
@@ -55,7 +61,7 @@
 									# checkbox: multiple select
 									echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"\" class=\"reservationForm hide\" /> ";
 								}
-								echo "<strong>" . $item->name . "</strong>: " . $item->descr;
+								echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . "</span>\n";
 							?>
 						</label>
 						<!--Placeholder: Save For Later Use: maybe utilize HighCharts bar graph?
@@ -71,11 +77,11 @@
 				<?php
 				} # end of foreach: eq_items
 
-				# Button: Add an Item
 				if ($USER->flag_is_system_admin || $is_group_manager) {
 					echo "<li class=\"manager-action hide\">";
 					echo "<span class=\"noItemsExist hide\"><em>No items exist.</em><br /></span>";
-					echo "<a href=\"#modalAddItem\" data-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-is-multiselect=\"" . $key->flag_is_multi_select . "\" data-subgroup-name=\"" . $key->name . "\" data-toggle=\"modal\" class=\"btn btn-success btn-mini ajaxActionItem\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
+					# button: add item
+					echo "<a href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" class=\"btn btn-success btn-mini eq-add-item\" title=\"Add an item to this subgroup\"><i class='icon-plus icon-white'></i> Add an Item</a>";
 					echo "</li>";
 				}
 			}
@@ -84,7 +90,7 @@
 		echo "</ul>";
 
 		if ($USER->flag_is_system_admin || $is_group_manager) {
-			echo "<div class=\"manager-action hide\"><br /><a href=\"#modalAddSubgroup\" data-toggle=\"modal\" class=\"btn btn-success btn-mini ajaxActionSubgroup\" title=\"Add a subgroup to this equipment group\"><i class='icon-plus icon-white'></i> Add a Subgroup</a></div>";
+			echo "<div class=\"manager-action hide\"><br /><a href=\"#modalSubgroup\" data-toggle=\"modal\" class=\"btn btn-success btn-mini eq-add-subgroup\" title=\"Add a subgroup to this equipment group\"><i class='icon-plus icon-white'></i> Add a Subgroup</a></div>";
 		}
 	?>
 
@@ -149,29 +155,32 @@
 	?>
 
 	<div class="control-group reservationForm hide">
-		<label class="control-label" for="btnSubmitReservation"></label>
+		<label class="control-label" for="btnReservationSubmit"></label>
 
 		<div class="controls">
-			<button type="submit" id="btnSubmitReservation" class="btn btn-success" data-loading-text="Saving...">Save</button>
-			<button type="button" id="btnCancelReservation" class="btn btn-link btn-cancel">Cancel</button>
+			<button type="submit" id="btnReservationSubmit" class="btn btn-success" data-loading-text="Saving...">Save</button>
+			<button type="button" id="btnReservationCancel" class="btn btn-link btn-cancel">Cancel</button>
 		</div>
 	</div>
 </form>
 
 
-<!-- MODAL: Item-->
-<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxAddItem" name="frmAjaxAddItem" method="post">
-	<div id="modalAddItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddItemLabel" aria-hidden="true">
+<!-- MODAL: Add/Edit Item-->
+<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxItem" name="frmAjaxItem" method="post">
+	<div id="modalItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalItemLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-			<h3 id="modalAddItemLabel"></h3>
+			<h3 id="modalItemLabel"></h3>
 		</div>
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="ajaxItemName">Name</label>
 
 				<div class="controls">
+					<input type="hidden" id="ajaxItemAction" name="ajaxItemAction" value="" />
+					<input type="hidden" id="ajaxSubgroupName" name="ajaxSubgroupName" value="" />
 					<input type="hidden" id="ajaxSubgroupID" name="ajaxSubgroupID" value="" />
+					<input type="hidden" id="ajaxItemID" name="ajaxItemID" value="" />
 					<input type="hidden" id="ajaxItemOrdering" name="ajaxItemOrdering" value="" />
 					<input type="hidden" id="ajaxItemIsMultiSelect" name="ajaxItemIsMultiSelect" value="" />
 					<input type="text" id="ajaxItemName" name="ajaxItemName" class="input-large" value="" placeholder="Name of Item" maxlength="200" />
@@ -186,29 +195,31 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button type="submit" id="btnAjaxSubmitAddItem" name="btnAjaxSubmitAddItem" class="btn btn-success pull-left" data-loading-text="Saving...">
-				Add Item
+			<button type="submit" id="btnAjaxItemSubmit" name="btnAjaxItemSubmit" class="btn btn-success pull-left" data-loading-text="Saving...">
+				Save Item
 			</button>
-			<button type="reset" id="btnAjaxCancelAddItem" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
+			<button type="reset" id="btnAjaxItemCancel" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
 			</button>
 		</div>
 	</div>
 </form>
 
 
-<!-- MODAL: Subgroup-->
-<form action="ajax_add_eq_subgroup.php" id="frmAjaxAddSubgroup" name="frmAjaxAddSubgroup" method="post">
-	<div id="modalAddSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddSubgroupLabel" aria-hidden="true">
+<!-- MODAL: Add/Edit Subgroup-->
+<form action="ajax_add_eq_subgroup.php" id="frmAjaxSubgroup" name="frmAjaxSubgroup" method="post">
+	<div id="modalSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalSubgroupLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-			<h3 id="modalAddSubgroupLabel">Add a Subgroup</h3>
+			<h3 id="modalSubgroupLabel">Subgroup</h3>
 		</div>
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="ajaxSubgroupName">Name</label>
 
 				<div class="controls">
+					<input type="hidden" id="ajaxSubgroupAction" name="ajaxSubgroupAction" value="" />
 					<input type="hidden" id="ajaxGroupID" name="ajaxGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+					<input type="hidden" id="ajaxSubgroupID" name="ajaxSubgroupID" value="" />
 					<input type="hidden" id="ajaxSubgroupOrdering" name="ajaxSubgroupOrdering" value="" />
 					<input type="text" id="ajaxSubgroupName" name="ajaxSubgroupName" class="input-large" value="" placeholder="Name of Subgroup" maxlength="200" />
 				</div>
@@ -230,10 +241,10 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button type="submit" id="btnAjaxSubmitAddSubgroup" name="btnAjaxSubmitAddSubgroup" class="btn btn-success pull-left" data-loading-text="Saving...">
-				Add Subgroup
+			<button type="submit" id="btnAjaxSubgroupSubmit" name="btnAjaxSubgroupSubmit" class="btn btn-success pull-left" data-loading-text="Saving...">
+				Save Subgroup
 			</button>
-			<button type="reset" id="btnAjaxCancelAddSubgroup" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
+			<button type="reset" id="btnAjaxSubgroupCancel" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
 			</button>
 		</div>
 	</div>

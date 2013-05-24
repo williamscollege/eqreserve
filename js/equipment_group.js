@@ -13,7 +13,7 @@ $(document).ready(function () {
 		if ($("#managerView").hasClass('hide')) {
 			$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View');
 			// hide the other form
-			$("#btnCancelReservation").click();
+			$("#btnReservationCancel").click();
 			// show special manager actions
 			$(".manager-action").removeClass("hide");
 		}
@@ -39,26 +39,6 @@ $(document).ready(function () {
 			// hide special manager actions
 			$(".manager-action").addClass("hide");
 		}
-	});
-
-	// Cancel and cleanup
-	$("#btnCancelEditGroup").click(function () {
-		cleanUpForm("formEditGroup")
-		// hide form fields
-		$("#managerEdit").addClass("hide");
-		$("#managerView").removeClass("hide");
-		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
-		// hide special manager actions
-		$(".manager-action").addClass("hide");
-		// reset the submit button (avoid disabled state)
-		$("#btnSubmitEditGroup").button('reset');
-	});
-	// Cancel and cleanup
-	$("#btnCancelReservation").click(function () {
-		cleanUpForm("formScheduleReservations")
-		// hide form fields, restore button label
-		$(".reservationForm").addClass("hide");
-		$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
 	});
 
 	// Update form values
@@ -129,10 +109,12 @@ $(document).ready(function () {
 		return ret;
 	}
 
+
 	// ***************************
 	// Form validation
 	// ***************************
-	var validator1 = $('#formEditGroup').validate({
+
+	var validator1 = $('#frmEditGroup').validate({
 		rules: {
 			groupName: {
 				minlength: 2,
@@ -184,8 +166,8 @@ $(document).ready(function () {
 			$("#print_maxDurationMinutes").text(util_minutesToWords($("#maxDurationMinutes").val()));
 			$("#print_durationIntervalMinutes").text(util_minutesToWords($("#durationIntervalMinutes").val()));
 
-			var url = $("#formEditGroup").attr('action');
-			var formName = "formEditGroup";
+			var url = $("#frmEditGroup").attr('action');
+			var formName = "frmEditGroup";
 
 			$.ajax({
 				type: 'POST',
@@ -218,7 +200,7 @@ $(document).ready(function () {
 		}
 	});
 
-	var validator2 = $('#frmAjaxAddItem').validate({
+	var validator2 = $('#frmAjaxItem').validate({
 		rules: {
 			ajaxItemName: {
 				minlength: 2,
@@ -239,39 +221,60 @@ $(document).ready(function () {
 		},
 		submitHandler: function (form) {
 			// show loading text (button)
-			$("#btnAjaxSubmitAddItem").button('loading');
+			$("#btnAjaxItemSubmit").button('loading');
 
-			var formName = $("#frmAjaxAddItem").attr('name');		// get name from the form element
-			var data1 = $('#' + formName + ' #ajaxSubgroupID').val();
+			var formName = $("#frmAjaxItem").attr('name');		// get name from the form element
+			var action = $('#' + formName + ' #ajaxItemAction').val();
+			var subgroup_id = $('#' + formName + ' #ajaxSubgroupID').val();
+			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
+			var item_id = $('#' + formName + ' #ajaxItemID').val();
+			var item_ordering = $('#' + formName + ' #ajaxItemOrdering').val();
+			var item_name = $('#' + formName + ' #ajaxItemName').val();
+			var item_description = $('#' + formName + ' #ajaxItemDescription').val();
+			var item_multiselect = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
 
 			$.ajax({
-				type: 'POST',
-				url: $("#frmAjaxAddItem").attr('action'),
+				type: 'GET',
+				url: $("#frmAjaxItem").attr('action'),
 				data: {
-					ajaxVal_ID: data1,
-					ajaxVal_Order: $('#' + formName + ' #ajaxItemOrdering').val(),
-					ajaxVal_Name: $('#' + formName + ' #ajaxItemName').val(),
-					ajaxVal_Description: $('#' + formName + ' #ajaxItemDescription').val(),
-					ajaxVal_MultiSelect: $('#' + formName + ' #ajaxItemIsMultiSelect').val()
+					ajaxVal_Action: action,
+					ajaxVal_SubgroupID: subgroup_id,
+					ajaxVal_SubgroupName: subgroup_name,
+					ajaxVal_ItemID: item_id,
+					ajaxVal_Order: item_ordering,
+					ajaxVal_Name: item_name,
+					ajaxVal_Description: item_description,
+					ajaxVal_MultiSelect: item_multiselect
 				},
-				dataType: 'html',
+				dataType: 'json',
 				success: function (data) {
 					// hide and reset form
-					$("#btnAjaxCancelAddItem").click();
+					$("#btnAjaxItemCancel").click();
+					$("#btnAjaxSubgroupCancel").click();
 
-					if (data) {
+					if (data.status == 'success') {
 						// remove error messages
 						$('DIV.alert-error').remove();
 
 						// hide message: 'No items exist.'
-						$("UL#ul-of-subgroup-" + data1 + " span.noItemsExist").addClass("hide");
+						$("UL#ul-of-subgroup-" + subgroup_id + " span.noItemsExist").addClass("hide");
 
-						// update element with resultant ajax data
-						$("UL#ul-of-subgroup-" + data1 + " li.manager-action").before(data);
+						if (data.which_action == 'add-item') {
+							// update element with resultant ajax data
+							$("UL#ul-of-subgroup-" + subgroup_id + " li.manager-action").before(data.html_output);
+						}
+						else if (data.which_action == 'edit-item') {
+							// update button data attributes
+							$("#btn-edit-item-id-" + item_id).attr("data-for-item-name", item_name);
+							$("#btn-edit-item-id-" + item_id).attr("data-for-item-descr", item_description);
+							$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-name", subgroup_name);
+							// update visible info
+							$("span#itemid-" + item_id).html("<strong>" + item_name + ": </strong>" + item_description);
+						}
 					}
 					else {
 						// error message
-						$("UL#ul-of-subgroup-" + data1 + " li.manager-action").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
+						$("UL#ul-of-subgroup-" + subgroup_id + " li.manager-action").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
 					}
 				}
 			});
@@ -279,7 +282,8 @@ $(document).ready(function () {
 		}
 	});
 
-	var validator3 = $('#frmAjaxAddSubgroup').validate({
+
+	var validator3 = $('#frmAjaxSubgroup').validate({
 		rules: {
 			ajaxSubgroupName: {
 				minlength: 2,
@@ -303,33 +307,51 @@ $(document).ready(function () {
 		},
 		submitHandler: function (form) {
 			// show loading text (button)
-			$("#btnAjaxSubmitAddSubgroup").button('loading');
+			$("#btnAjaxSubgroupSubmit").button('loading');
 
-			var url = $("#frmAjaxAddSubgroup").attr('action');			// get url from the form element
-			var formName = $("#frmAjaxAddSubgroup").attr('name');		// get name from the form element
-			// alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
+			var formName = $("#frmAjaxSubgroup").attr('name');		// get name from the form element
+			var action = $('#' + formName + ' #ajaxSubgroupAction').val();
+			var group_id = $('#' + formName + ' #ajaxGroupID').val();
+			var subgroup_id = $('#' + formName + ' #ajaxSubgroupID').val();
+			var subgroup_ordering = $('#' + formName + ' #ajaxSubgroupOrdering').val();
+			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
+			var subgroup_description = $('#' + formName + ' #ajaxSubgroupDescription').val();
+			var subgroup_multiselect = $('#' + formName + ' input:radio[name=ajaxSubgroupIsMultiSelect]:checked').val();
 
 			$.ajax({
-				type: 'POST',
-				url: url,
+				type: 'GET',
+				url: $("#frmAjaxSubgroup").attr('action'),
 				data: {
-					ajaxVal_ID: $('#' + formName + ' #ajaxGroupID').val(),
-					ajaxVal_Order: $('#' + formName + ' #ajaxSubgroupOrdering').val(),
-					ajaxVal_Name: $('#' + formName + ' #ajaxSubgroupName').val(),
-					ajaxVal_Description: $('#' + formName + ' #ajaxSubgroupDescription').val(),
-					ajaxVal_MultiSelect: $('#' + formName + ' input:radio[name=ajaxSubgroupIsMultiSelect]:checked').val()
+					ajaxVal_Action: action,
+					ajaxVal_GroupID: group_id,
+					ajaxVal_SubgroupID: subgroup_id,
+					ajaxVal_Order: subgroup_ordering,
+					ajaxVal_Name: subgroup_name,
+					ajaxVal_Description: subgroup_description,
+					ajaxVal_MultiSelect: subgroup_multiselect
 				},
-				dataType: 'html',
+				dataType: 'json',
 				success: function (data) {
 					// hide and reset form
-					$("#btnAjaxCancelAddSubgroup").click();
+					$("#btnAjaxItemCancel").click();
+					$("#btnAjaxSubgroupCancel").click();
 
-					if (data) {
+					if (data.status == 'success') {
 						// remove error messages
 						$('DIV.alert-error').remove();
 
-						// update element with resultant ajax data
-						$("UL#displayAllSubgroups").append(data);
+						if (data.which_action == 'add-subgroup') {
+							// update element with resultant ajax data
+							$("UL#displayAllSubgroups").append(data.html_output);
+						}
+						else if (data.which_action == 'edit-subgroup') {
+							// update button data attributes
+							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-name", subgroup_name);
+							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-descr", subgroup_description);
+							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-ismultiselect", subgroup_multiselect);
+							// update visible info
+							$("span#subgroupid-" + subgroup_id).html("<strong>" + subgroup_name + ": </strong>" + subgroup_description);
+						}
 					}
 					else {
 						// error message
@@ -341,39 +363,6 @@ $(document).ready(function () {
 		}
 	});
 
-	$(document).on("click", ".delete-item-btn", function () {
-		// The 'on' method binds the document with the function handler's actions for selected items ('.ajaxActionItem') to the 'click' event
-		// This is useful for binding dynamically generated DOM elements to the document
-
-		GLOBAL_confirmHandlerData = $(this).attr('data-for-item');
-
-		var params = {
-			title: "Are you sure you want to remove this item?",
-			label: "Remove Item",
-			class: "btn btn-danger pull-left",
-			url: "ajax_delete_eq_subgroup_item.php",
-			ajax_action: "deleteItem",
-			ajax_id: GLOBAL_confirmHandlerData
-		};
-
-		showConfirmBox(params);
-	});
-
-	$(document).on("click", ".delete-subgroup-btn", function () {
-
-		GLOBAL_confirmHandlerData = $(this).attr('data-for-subgroup');
-
-		var params = {
-			title: "Are you sure you want to remove this subgroup and all items?",
-			label: "Remove Subgroup and Items",
-			class: "btn btn-danger pull-left",
-			url: "ajax_delete_eq_subgroup.php",
-			ajax_action: "deleteSubgroup",
-			ajax_id: GLOBAL_confirmHandlerData
-		};
-
-		showConfirmBox(params);
-	});
 
 	$(".delete-schedule-btn").click(function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-schedule');
@@ -381,6 +370,7 @@ $(document).ready(function () {
 		eqrUtil_launchConfirm(confirmText, handleDeleteSchedule);
 	});
 	function handleDeleteSchedule() {
+		// show status
 		eqrUtil_setTransientAlert('progress', 'saving...', $('#list-of-schedule-' + GLOBAL_confirmHandlerData));
 		$.ajax({
 			url: 'ajax_schedule.php',
@@ -392,14 +382,17 @@ $(document).ready(function () {
 		})
 			.done(function (data, status, xhr) {
 				if (data.status == 'success') {
+					// show status
 					eqrUtil_setTransientAlert('success', 'saved', $('#list-of-schedule-' + GLOBAL_confirmHandlerData));
 					$('#list-of-schedule-' + GLOBAL_confirmHandlerData).remove();
 				}
 				else {
+					// show status
 					eqrUtil_setTransientAlert('error', 'ERROR - not saved!', $('#list-of-schedule-' + GLOBAL_confirmHandlerData));
 				}
 			})
 			.fail(function (data, status, xhr) {
+				// show status
 				eqrUtil_setTransientAlert('error', 'ERROR - not saved!', $('#list-of-schedule-' + GLOBAL_confirmHandlerData));
 			})
 		;
@@ -407,14 +400,14 @@ $(document).ready(function () {
 
 
 	function showConfirmBox(ary) {
-		eqrUtil_setTransientAlert('progress', 'saving...');
-
 		bootbox.dialog(ary['title'],
 			[
 				{
 					"label": ary['label'],
 					"class": ary['class'],
 					"callback": function () {
+						// show status
+						eqrUtil_setTransientAlert('progress', 'saving...');
 						$.ajax({
 							type: 'GET',
 							url: ary['url'],
@@ -455,6 +448,7 @@ $(document).ready(function () {
 	function updateDOM(action, ret) {
 		if (action == 'deleteItem') {
 			if (ret) {
+				// show status
 				eqrUtil_setTransientAlert('success', 'saved');
 				// removed last remaining item? then show message
 				if ($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length = 2) { // LI item to be removed + LI button
@@ -471,6 +465,7 @@ $(document).ready(function () {
 		}
 		else if (action == 'deleteSubgroup') {
 			if (ret) {
+				// show status
 				eqrUtil_setTransientAlert('success', 'saved');
 				// remove element
 				$('#ul-of-subgroup-' + GLOBAL_confirmHandlerData).remove();
@@ -483,6 +478,127 @@ $(document).ready(function () {
 	}
 
 
+	// ***************************
+	// Passing values to Modals (using either 'custom' or 'Bootbox' modals)
+	// Note: The 'on' method binds the document with the function handler's actions for selected items ('.eq-delete-item') to the 'click' event
+	// Note: This is useful for binding dynamically generated DOM elements to the document
+	// ***************************
+
+	$(document).on("click", ".eq-delete-item", function () {
+
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-item-id');
+
+		var params = {
+			title: "Are you sure you want to remove this item?",
+			label: "Remove Item",
+			class: "btn btn-danger pull-left",
+			url: "ajax_delete_eq_subgroup_item.php",
+			ajax_action: "deleteItem",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+
+		showConfirmBox(params);
+	});
+
+	$(document).on("click", ".eq-delete-subgroup", function () {
+
+		GLOBAL_confirmHandlerData = $(this).attr('data-for-subgroup-id');
+
+		var params = {
+			title: "Are you sure you want to remove this subgroup and all items?",
+			label: "Remove Subgroup and Items",
+			class: "btn btn-danger pull-left",
+			url: "ajax_delete_eq_subgroup.php",
+			ajax_action: "deleteSubgroup",
+			ajax_id: GLOBAL_confirmHandlerData
+		};
+
+		showConfirmBox(params);
+	});
+
+	$(document).on("click", ".eq-add-item", function () {
+		var subgroup_id = $(this).attr("data-for-subgroup-id");
+		var subgroup_name = $(this).attr("data-for-subgroup-name");
+		var item_order = parseInt($(this).parent('LI').prev('LI').attr("data-for-item-order"));
+		if (isNaN(item_order)) {
+			// user deleted all items: set initial value
+			item_order = 1;
+		}
+		else {
+			// increment ordering
+			item_order += 1;
+		}
+		var multiselect = $(this).attr("data-for-ismultiselect");
+
+		// update modal values
+		$("INPUT#ajaxItemAction").val("add-item");
+		$("H3#modalItemLabel").text(subgroup_name);
+		$("INPUT#ajaxSubgroupName").val(subgroup_name);
+		$("INPUT#ajaxSubgroupID").val(subgroup_id);
+		$("INPUT#ajaxItemOrdering").val(item_order);
+		$("INPUT#ajaxItemIsMultiSelect").val(multiselect);
+	});
+
+	$(document).on("click", ".eq-edit-item", function () {
+		var subgroup_name = $(this).attr("data-for-subgroup-name");
+		var item_id = $(this).attr("data-for-item-id");
+		var item_name = $(this).attr("data-for-item-name");
+		var item_descr = $(this).attr("data-for-item-descr");
+//		var multiselect = $(this).attr("data-for-ismultiselect");
+
+		// update modal values
+		$("INPUT#ajaxItemAction").val("edit-item");
+		$("H3#modalItemLabel").text(subgroup_name);
+		$("INPUT#ajaxItemID").val(item_id);
+		$("INPUT#ajaxItemName").val(item_name);
+		$("INPUT#ajaxItemDescription").val(item_descr);
+//		if (multiselect == 0) {
+//			$("INPUT:radio[name='ajaxSubgroupIsMultiSelect'][value='0']").prop('checked', true);
+//		}
+//		else {
+//			$("INPUT:radio[name='ajaxSubgroupIsMultiSelect'][value='1']").prop('checked', true);
+//		}
+	});
+
+	$(document).on("click", ".eq-add-subgroup", function () {
+		var subgroup_order = parseInt($('SPAN[data-for-subgroup-order]').last().attr('data-for-subgroup-order'));
+		if (isNaN(subgroup_order)) {
+			subgroup_order = 0;
+		}
+		else {
+			// increment ordering
+			subgroup_order += 1;
+		}
+
+		// update modal values
+		$("INPUT#ajaxSubgroupAction").val("add-subgroup");
+		$("INPUT#ajaxSubgroupOrdering").val(subgroup_order);
+	});
+
+	$(document).on("click", ".eq-edit-subgroup", function () {
+		var subgroup_id = $(this).attr("data-for-subgroup-id");
+		var subgroup_name = $(this).attr("data-for-subgroup-name");
+		var subgroup_descr = $(this).attr("data-for-subgroup-descr");
+		var multiselect = $(this).attr("data-for-ismultiselect");
+
+		// update modal values
+		$("INPUT#ajaxSubgroupAction").val("edit-subgroup");
+		$("INPUT#ajaxSubgroupID").val(subgroup_id);
+		$("INPUT#ajaxSubgroupName").val(subgroup_name);
+		$("INPUT#ajaxSubgroupDescription").val(subgroup_descr);
+		if (multiselect == 0) {
+			$("INPUT:radio[name='ajaxSubgroupIsMultiSelect'][value='0']").prop('checked', true);
+		}
+		else {
+			$("INPUT:radio[name='ajaxSubgroupIsMultiSelect'][value='1']").prop('checked', true);
+		}
+	});
+
+
+	// ***************************
+	// Cancel and cleanup
+	// ***************************
+
 	function cleanUpForm(formName) {
 		// reset form
 		validator1.resetForm(this);
@@ -492,65 +608,40 @@ $(document).ready(function () {
 		$(".control-group").removeClass('success').removeClass('error');
 	}
 
-
-	// Modals
-	$(document).on("click", "UL#displayAllSubgroups .ajaxActionItem", function () {
-		// The 'on' method binds the document with the function handler's actions for selected items ('.ajaxActionItem') to the 'click' event
-		// This is useful for binding dynamically generated DOM elements to the document
-
-		// pass values to modal
-		var n = $(this).attr("data-subgroup-name");
-		var i = $(this).attr("data-subgroup-id");
-		var o = parseInt($(this).parent('LI').prev('LI').attr("data-item-order"));
-		if (isNaN(o)) {
-			// i.e. user deleted all items
-			o = 1;
-		}
-		else {
-			// item: increment ordering value
-			o += 1;
-		}
-		// fetch subgroup characteristic 'IsMultiSelect' for modal hidden input
-		var m = $(this).attr("data-is-multiselect");
-
-		// update modal values
-		$("H3#modalAddItemLabel").text(n);
-		$("INPUT#ajaxSubgroupID").val(i);
-		$("INPUT#ajaxItemOrdering").val(o);
-		$("INPUT#ajaxItemIsMultiSelect").val(m);
+	$("#btnCancelEditGroup").click(function () {
+		cleanUpForm("frmEditGroup")
+		// hide form fields
+		$("#managerEdit").addClass("hide");
+		$("#managerView").removeClass("hide");
+		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+		// hide special manager actions
+		$(".manager-action").addClass("hide");
+		// reset the submit button (avoid disabled state)
+		$("#btnSubmitEditGroup").button('reset');
 	});
 
-	$('a.ajaxActionSubgroup').click(function () {
-		// pass values to modal
-		var o = parseInt($('SPAN[data-subgroup-order]').last().attr('data-subgroup-order'));
-		if (isNaN(o)) {
-			o = 0;
-		}
-		else {
-			// subgroup: increment ordering value
-			o += 1;
-		}
-
-		// update modal values
-		$("INPUT#ajaxSubgroupOrdering").val(o);
+	$("#btnReservationCancel").click(function () {
+		cleanUpForm("formScheduleReservations")
+		// hide form fields, restore button label
+		$(".reservationForm").addClass("hide");
+		$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
 	});
 
-	$('#btnAjaxCancelAddItem').click(function () {
-		cleanUpForm("frmAjaxAddItem")
+	$('#btnAjaxItemCancel').click(function () {
+		cleanUpForm("frmAjaxItem")
 		// clear and reset form
-		$("#frmAjaxAddItem input[type=text], #frmAjaxAddItem textarea").val("");
-		$("#frmAjaxAddItem input[type=radio]").attr("checked", false);
+		$("#frmAjaxItem input[type=text]").val('');
 		// reset submit button (avoid disabled state)
-		$("#btnAjaxSubmitAddItem").button('reset');
+		$("#btnAjaxItemSubmit").button('reset');
 	});
 
-	$('#btnAjaxCancelAddSubgroup').click(function () {
-		cleanUpForm("frmAjaxAddSubgroup")
+	$('#btnAjaxSubgroupCancel').click(function () {
+		cleanUpForm("frmAjaxSubgroup")
 		// clear and reset form
-		$("#frmAjaxAddSubgroup input[type=text], #frmAjaxAddSubgroup textarea").val("");
-		$("#frmAjaxAddSubgroup input[type=radio]").attr("checked", false);
+		$("#frmAjaxSubgroup input[type=text]").val('');
+		$("#frmAjaxSubgroup input[type=radio]").attr("checked", false);
 		// reset submit button (avoid disabled state)
-		$("#btnAjaxSubmitAddSubgroup").button('reset');
+		$("#btnAjaxSubgroupSubmit").button('reset');
 	});
 
 });

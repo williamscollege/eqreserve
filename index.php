@@ -24,13 +24,7 @@
 
 				// custom form cleanup
 				$("#btnCancelAddEqGroup").click(function () {
-					cleanUpForm("formAddEqGroup")
-				});
-
-				// Remove later: debugging jquery validator plugin
-				$("a.check").click(function () {
-					alert("Valid: " + $("#formAddEqGroup").valid());
-					return false;
+					cleanUpForm("frmAddEqGroup")
 				});
 
 
@@ -38,7 +32,7 @@
 				// Form validation
 				// ***************************
 
-				var validator = $('#formAddEqGroup').validate({
+				var validator = $('#frmAddEqGroup').validate({
 					rules: {
 						groupName: {
 							minlength: 2,
@@ -61,8 +55,8 @@
 						// show loading text (button)
 						$("#btnSubmitAddEqGroup").button('loading');
 
-						var url = $("#formAddEqGroup").attr('action');			// get url from the form element
-						var formName = $("#formAddEqGroup").attr('name');		// get name from the form element
+						var url = $("#frmAddEqGroup").attr('action');			// get url from the form element
+						var formName = $("#frmAddEqGroup").attr('name');		// get name from the form element
 						var data1 = $('#' + formName + ' #groupName').val();
 						var data2 = $('#' + formName + ' #groupDescription').val();
 						// alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
@@ -77,7 +71,7 @@
 							dataType: 'html',
 							success: function (data) {
 								// reset form
-								cleanUpForm("formAddEqGroup")
+								cleanUpForm("frmAddEqGroup")
 
 								if (data) {
 									// remove error messages
@@ -117,7 +111,6 @@
 			});
 		</script>
 
-		Remove this later: <a href="#" class="check">is form valid?</a><br>
 
 		<?php
 		echo "<hr />";
@@ -139,7 +132,7 @@
 			echo "</ul>";
 			# system admin may add new eq_groups
 			?>
-			<form action="ajax_add_eq_group.php" id="formAddEqGroup" class="form-horizontal" name="formAddEqGroup" method="post">
+			<form action="ajax_add_eq_group.php" id="frmAddEqGroup" class="form-horizontal" name="frmAddEqGroup" method="post">
 				<button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
 				</button>
 
@@ -176,7 +169,7 @@
 			$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
 			if (count($UserEqGroups) > 0) {
 				foreach ($UserEqGroups as $ueg) {
-                    echo $ueg->toListItemLinked();
+					echo $ueg->toListItemLinked();
 				}
 			}
 			else {

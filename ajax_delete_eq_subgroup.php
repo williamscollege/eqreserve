@@ -4,7 +4,7 @@
 	require_once('/head_ajax.php');
 
 	#------------------------------------------------#
-	# Forms Collections: AJAX posts and requests
+	# Fetch AJAX values
 	#------------------------------------------------#
 	$strAction = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
 	$intID     = htmlentities((isset($_REQUEST["ajaxVal_ID"])) ? $_REQUEST["ajaxVal_ID"] : 0);
