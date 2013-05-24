@@ -132,7 +132,7 @@
 			echo "</ul>";
 			# system admin may add new eq_groups
 			?>
-			<form action="ajax_add_eq_group.php" id="frmAddEqGroup" class="form-horizontal" name="frmAddEqGroup" method="post">
+			<form action="ajax_actions/ajax_add_eq_group.php" id="frmAddEqGroup" class="form-horizontal" name="frmAddEqGroup" method="post">
 				<button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
 				</button>
 

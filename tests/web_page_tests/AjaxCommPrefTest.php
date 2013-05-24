@@ -33,7 +33,7 @@ class AjaxCommPrefTest extends WMSWebTestCase {
     function testCommPrefAjaxUserCanNotAccessOthersCommPref() {
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_comm_pref.php?comm_pref=106&commPrefAction=setReminder&actionVal=false');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_comm_pref.php?comm_pref=106&commPrefAction=setReminder&actionVal=false');
 
         $this->assertPattern('/"status":"failure"/');
 
@@ -47,7 +47,7 @@ class AjaxCommPrefTest extends WMSWebTestCase {
         $this->assertTrue($initialCommPref->matchesDb);
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_comm_pref.php?comm_pref=101&commPrefAction=superpowers&actionVal=foo123bar');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_comm_pref.php?comm_pref=101&commPrefAction=superpowers&actionVal=foo123bar');
 
         $this->assertPattern('/"status":"failure"/');
         $s = CommPref::getOneFromDb(['comm_pref_id'=>101],$this->DB);
@@ -61,7 +61,7 @@ class AjaxCommPrefTest extends WMSWebTestCase {
         $this->assertTrue($initialCommPref->matchesDb);
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_comm_pref.php?comm_pref=101&commPrefAction=setReminder&actionVal=1');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_comm_pref.php?comm_pref=101&commPrefAction=setReminder&actionVal=1');
 
         $s = CommPref::getOneFromDb(['comm_pref_id'=>101],$this->DB);
         $this->assertNotEqual($s->flag_alert_on_upcoming_reservation,$initialCommPref->flag_alert_on_upcoming_reservation);
@@ -74,7 +74,7 @@ class AjaxCommPrefTest extends WMSWebTestCase {
         $this->assertTrue($initialCommPref->matchesDb);
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_comm_pref.php?comm_pref=101&commPrefAction=setAlertCreate&actionVal=1');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_comm_pref.php?comm_pref=101&commPrefAction=setAlertCreate&actionVal=1');
 
         $s = CommPref::getOneFromDb(['comm_pref_id'=>101],$this->DB);
         $this->assertEqual($s->flag_alert_on_upcoming_reservation,$initialCommPref->flag_alert_on_upcoming_reservation);
@@ -87,7 +87,7 @@ class AjaxCommPrefTest extends WMSWebTestCase {
         $this->assertTrue($initialCommPref->matchesDb);
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_comm_pref.php?comm_pref=101&commPrefAction=setAlertCancel&actionVal=1');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_comm_pref.php?comm_pref=101&commPrefAction=setAlertCancel&actionVal=1');
 
         $s = CommPref::getOneFromDb(['comm_pref_id'=>101],$this->DB);
         $this->assertEqual($s->flag_alert_on_upcoming_reservation,$initialCommPref->flag_alert_on_upcoming_reservation);
@@ -106,7 +106,7 @@ class AjaxCommPrefTest extends WMSWebTestCase {
         $this->getToAcctMgtPage();
 
 
-        $this->get('http://localhost/eqreserve/ajax_comm_pref.php?comm_pref=106&commPrefAction=setReminder&actionVal=false');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_comm_pref.php?comm_pref=106&commPrefAction=setReminder&actionVal=false');
 
 
         $this->assertPattern('/"status":"success"/');

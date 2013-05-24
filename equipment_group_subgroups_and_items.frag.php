@@ -166,7 +166,7 @@
 
 
 <!-- MODAL: Add/Edit Item-->
-<form action="ajax_add_eq_subgroup_item.php" id="frmAjaxItem" name="frmAjaxItem" method="post">
+<form action="ajax_actions/ajax_add_eq_subgroup_item.php" id="frmAjaxItem" name="frmAjaxItem" method="post">
 	<div id="modalItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalItemLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -206,7 +206,7 @@
 
 
 <!-- MODAL: Add/Edit Subgroup-->
-<form action="ajax_add_eq_subgroup.php" id="frmAjaxSubgroup" name="frmAjaxSubgroup" method="post">
+<form action="ajax_actions/ajax_add_eq_subgroup.php" id="frmAjaxSubgroup" name="frmAjaxSubgroup" method="post">
 	<div id="modalSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalSubgroupLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>

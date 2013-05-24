@@ -57,7 +57,7 @@ $(document).ready(function () {
         $('#addUserSearchResultsPreview ul').empty();
         $('#addUserSearchResultsPreview ul').append('<li id="live_search_status" class="text-success"><i>searching...</i></li>');
         $.ajax({
-            url: 'ajax_user_and_group_search.php',
+            url: 'ajax_actions/ajax_user_and_group_search.php',
             dataType: 'json',
             data: {'action': 'find',
                    'searchTerm': searchHandlerData,
@@ -148,7 +148,7 @@ $(document).ready(function () {
         // transient alert for 'saving...'
         eqrUtil_setTransientAlert('progress', 'saving...',$('#addUserSearchData'));
         $.ajax({
-            url: 'ajax_eq_group.php',
+            url: 'ajax_actions/ajax_eq_group.php',
             dataType: 'json',
             data: {'eq_group': $('#groupID').attr('value'),
                 'ajaxVal_action': 'addPermission',
@@ -231,7 +231,7 @@ $(document).ready(function () {
 	function handleRemovePermission() {
 		eqrUtil_setTransientAlert('progress', 'saving...');
 		$.ajax({
-			url: 'ajax_eq_group.php',
+			url: 'ajax_actions/ajax_eq_group.php',
 			dataType: 'json',
 			data: {'eq_group': $('#groupID').attr('value'),
 				'ajaxVal_action': 'removePermission',

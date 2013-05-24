@@ -30,7 +30,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
     function testScheduleAjaxUserCanNotAccessOthersSchedule() {
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1007&scheduleAction=deleteSchedule');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1007&scheduleAction=deleteSchedule');
 
         $this->assertPattern('/"status":"failure"/');
 
@@ -44,7 +44,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertNotEqual($initialSchedule->notes,'foo123bar');
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=superpowers&actionVal=foo123bar');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1006&scheduleAction=superpowers&actionVal=foo123bar');
 
         $this->assertPattern('/"status":"failure"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
@@ -57,7 +57,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertNotEqual($initialSchedule->notes,'foo123bar');
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=updateNotes&actionVal=foo123bar');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1006&scheduleAction=updateNotes&actionVal=foo123bar');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
@@ -73,7 +73,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
 
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1007&scheduleAction=updateNotes&actionVal=foo123bar');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1007&scheduleAction=updateNotes&actionVal=foo123bar');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1007],$this->DB);
@@ -84,7 +84,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
     function testScheduleAjaxGroupManagerCanAccessOthersSchedule() {
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1009&scheduleAction=deleteSchedule');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1009&scheduleAction=deleteSchedule');
 
         $this->assertPattern('/"status":"success"/');
 
@@ -98,21 +98,21 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertEqual($initialSchedule->type,'manager');
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=updateType&actionVal=consumer');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1006&scheduleAction=updateType&actionVal=consumer');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
         $this->assertTrue($s->matchesDb);
         $this->assertEqual($s->type,'consumer');
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=updateType&actionVal=manager');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1006&scheduleAction=updateType&actionVal=manager');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
         $this->assertTrue($s->matchesDb);
         $this->assertEqual($s->type,'manager');
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=updateType&actionVal=blah');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1006&scheduleAction=updateType&actionVal=blah');
 
         $this->assertPattern('/"status":"failure"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
@@ -125,7 +125,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage();
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1006&scheduleAction=deleteSchedule');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1006&scheduleAction=deleteSchedule');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB);
@@ -141,7 +141,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1010);
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1010&scheduleAction=deleteEqItem&actionVal=409');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1010&scheduleAction=deleteEqItem&actionVal=409');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1010],$this->DB);
@@ -155,7 +155,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1001);
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1001&scheduleAction=deleteEqItem&actionVal=401');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1001&scheduleAction=deleteEqItem&actionVal=401');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
@@ -171,7 +171,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1010);
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1010&scheduleAction=deleteReservation&actionVal=811');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1010&scheduleAction=deleteReservation&actionVal=811');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1010],$this->DB);
@@ -185,7 +185,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1001);
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1001&scheduleAction=deleteReservation&actionVal=801');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1001&scheduleAction=deleteReservation&actionVal=801');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
@@ -201,7 +201,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1002);
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1002&scheduleAction=deleteTimeBlock&actionVal=902');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1002&scheduleAction=deleteTimeBlock&actionVal=902');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB);
@@ -216,7 +216,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1001);
 
-        $this->get('http://localhost/eqreserve/ajax_schedule.php?schedule=1001&scheduleAction=deleteTimeBlock&actionVal=901');
+        $this->get('http://localhost/eqreserve/ajax_actions/ajax_schedule.php?schedule=1001&scheduleAction=deleteTimeBlock&actionVal=901');
 
         $this->assertPattern('/"status":"success"/');
         $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);

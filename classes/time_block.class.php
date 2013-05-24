@@ -38,6 +38,12 @@
 			usort($this->reservations, "Reservation::cmp");
 		}
 
+        public function loadAllRelated() {
+            $this->loadSchedule();
+            $this->loadReservations();
+            $this->loadUser();
+        }
+
         public function toString() {
             return util_timeRangeString($this->start_time,$this->end_time);
         }
