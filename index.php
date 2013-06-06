@@ -24,7 +24,7 @@
 
 				// custom form cleanup
 				$("#btnCancelAddEqGroup").click(function () {
-					cleanUpForm("frmAddEqGroup")
+					cleanUpForm("frmAddGroup")
 				});
 
 
@@ -32,7 +32,7 @@
 				// Form validation
 				// ***************************
 
-				var validator = $('#frmAddEqGroup').validate({
+				var validator = $('#frmAddGroup').validate({
 					rules: {
 						groupName: {
 							minlength: 2,
@@ -55,30 +55,31 @@
 						// show loading text (button)
 						$("#btnSubmitAddEqGroup").button('loading');
 
-						var url = $("#frmAddEqGroup").attr('action');			// get url from the form element
-						var formName = $("#frmAddEqGroup").attr('name');		// get name from the form element
-						var data1 = $('#' + formName + ' #groupName').val();
-						var data2 = $('#' + formName + ' #groupDescription').val();
-						// alert('url=' + url + '\n' + 'formName=' + formName + '\n' + 'data1=' + data1 + '\n' + 'data2=' + data2);
+						var formName = $("#frmAddGroup").attr('name');		// get name from the form element
+						var action = $('#' + formName + ' #ajaxGroupAction').val();
+						var group_name = $('#' + formName + ' #groupName').val();
+						var group_description = $('#' + formName + ' #groupDescription').val();
+						// alert('formName=' + formName + '\n' + 'group_name=' + group_name + '\n' + 'group_description=' + group_description);
 
 						$.ajax({
-							type: 'POST',
-							url: url,
+							type: 'GET',
+							url: $("#frmAddGroup").attr('action'),
 							data: {
-								ajaxVal_Name: data1,
-								ajaxVal_Description: data2
+								ajaxVal_Action: action,
+								ajaxVal_Name: group_name,
+								ajaxVal_Description: group_description
 							},
-							dataType: 'html',
+							dataType: 'json',
 							success: function (data) {
 								// reset form
-								cleanUpForm("frmAddEqGroup")
+								cleanUpForm("frmAddGroup")
 
-								if (data) {
+								if (data.status == 'success') {
 									// remove error messages
 									$('DIV.alert-error').remove();
 
 									// update the element with new data from the ajax call
-									$("UL#displayEqGroups").append(data);
+									$("UL#displayEqGroups").append(data.html_output);
 								}
 								else {
 									// show error message
@@ -132,7 +133,8 @@
 			echo "</ul>";
 			# system admin may add new eq_groups
 			?>
-			<form action="ajax_actions/ajax_add_eq_group.php" id="frmAddEqGroup" class="form-horizontal" name="frmAddEqGroup" method="post">
+
+			<form action="ajax_actions/ajax_eq_group.php" id="frmAddGroup" class="form-horizontal" name="frmAddGroup" method="post">
 				<button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
 				</button>
 
@@ -142,6 +144,7 @@
 						<label class="control-label" for="groupName">Name</label>
 
 						<div class="controls">
+							<input type="hidden" id="ajaxGroupAction" name="ajaxGroupAction" value="add-group" />
 							<input type="text" id="groupName" class="input-large" name="groupName" value="" placeholder="Name of group" maxlength="200" />
 						</div>
 					</div>

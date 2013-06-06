@@ -1,11 +1,15 @@
 <?php
 	require_once('../classes/eq_group.class.php');
+	require_once('../classes/eq_item.class.php');
+
 	require_once('/head_ajax.php');
+
 
 	#------------------------------------------------#
 	# Fetch AJAX values
 	#------------------------------------------------#
 	$strAction        = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
+	$intDeleteID      = htmlentities((isset($_REQUEST["ajaxVal_Delete_ID"])) ? $_REQUEST["ajaxVal_Delete_ID"] : 0);
 	$intSubgroupID    = htmlentities((isset($_REQUEST["ajaxVal_SubgroupID"])) ? $_REQUEST["ajaxVal_SubgroupID"] : 0);
 	$intSubgroupName  = htmlentities((isset($_REQUEST["ajaxVal_SubgroupName"])) ? $_REQUEST["ajaxVal_SubgroupName"] : 0);
 	$intItemID        = htmlentities((isset($_REQUEST["ajaxVal_ItemID"])) ? $_REQUEST["ajaxVal_ItemID"] : 0);
@@ -15,12 +19,19 @@
 	$bitIsMultiSelect = htmlentities((isset($_REQUEST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_REQUEST["ajaxVal_MultiSelect"]) : 0);
 
 
-	#------------------------------------------------#
+	$strAction = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
 
+	#------------------------------------------------#
+	# Set default return value
+	#------------------------------------------------#
 	$results = [
 		'status' => 'failure'
 	];
 
+
+	#------------------------------------------------#
+	# Identify and process requested action
+	#------------------------------------------------#
 	//###############################################################
 	if ($strAction == 'add-item') {
 		$ei = EqItem::getOneFromDb(['eq_subgroup_id' => $intSubgroupID, 'name' => $strName], $DB);
@@ -45,7 +56,7 @@
 		$results['which_action'] = 'add-item';
 		$results['html_output']  = '';
 
-		# OMIT class="hide" as this is injected into the DOM
+		# Omit class="hide" as this is injected into the DOM
 		$results['html_output'] .= "<li id=\"list-of-item-" . $output->eq_item_id . "\" data-for-item-order=\"" . $output->ordering . "\">";
 		$results['html_output'] .= "<label class=\"\" for=\"item-" . $output->eq_item_id . "\">";
 		$results['html_output'] .= "<a id=\"btn-edit-item-id-" . $output->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $intSubgroupName . "\" data-for-item-id=\"" . $output->eq_item_id . "\" data-for-item-name=\"" . $output->name . "\" data-for-item-descr=\"" . $output->descr . "\" class=\"manager-action btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
@@ -61,9 +72,6 @@
 		$results['html_output'] .= "<span id=\"itemid-" . $output->eq_item_id . "\"><strong>" . $output->name . ": </strong>" . $output->descr . "</span>\n";
 		$results['html_output'] .= "</label>";
 		$results['html_output'] .= "</li>";
-
-		echo json_encode($results);
-		exit;
 	}
 	//###############################################################
 	elseif ($strAction == 'edit-item') {
@@ -83,10 +91,38 @@
 		$results['status']       = 'success';
 		$results['which_action'] = 'edit-item';
 		$results['html_output']  = '';
-
-		echo json_encode($results);
-		exit;
 	}
+	//###############################################################
+	elseif ($strAction == 'delete-item') {
+		$ei = EqItem::getOneFromDb(['eq_item_id' => $intDeleteID], $DB);
 
+		if (!$ei->matchesDb) {
+			// error: no matching record found
+			echo json_encode($results);
+			exit;
+		}
+
+		$ei->flag_delete = TRUE;
+		$ei->updateDb();
+
+		# Output
+		if ($ei->matchesDb) {
+			$results['status'] = 'success';
+		}
+	}
+	//###############################################################
+
+
+	#------------------------------------------------#
+	# Debugging output
+	#------------------------------------------------#
 	//	echo "<pre>"; print_r($_REQUEST); echo "</pre>"; exit();
+
+
+	#------------------------------------------------#
+	# Return JSON array
+	#------------------------------------------------#
+	echo json_encode($results);
+	exit;
+
 ?>

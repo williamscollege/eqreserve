@@ -165,48 +165,8 @@
 </form>
 
 
-<!-- MODAL: Add/Edit Item-->
-<form action="ajax_actions/ajax_add_eq_subgroup_item.php" id="frmAjaxItem" name="frmAjaxItem" method="post">
-	<div id="modalItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalItemLabel" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-			<h3 id="modalItemLabel"></h3>
-		</div>
-		<div class="modal-body">
-			<div class="control-group">
-				<label class="control-label" for="ajaxItemName">Name</label>
-
-				<div class="controls">
-					<input type="hidden" id="ajaxItemAction" name="ajaxItemAction" value="" />
-					<input type="hidden" id="ajaxSubgroupName" name="ajaxSubgroupName" value="" />
-					<input type="hidden" id="ajaxSubgroupID" name="ajaxSubgroupID" value="" />
-					<input type="hidden" id="ajaxItemID" name="ajaxItemID" value="" />
-					<input type="hidden" id="ajaxItemOrdering" name="ajaxItemOrdering" value="" />
-					<input type="hidden" id="ajaxItemIsMultiSelect" name="ajaxItemIsMultiSelect" value="" />
-					<input type="text" id="ajaxItemName" name="ajaxItemName" class="input-large" value="" placeholder="Name of Item" maxlength="200" />
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="ajaxItemDescription">Description</label>
-
-				<div class="controls">
-					<input type="text" id="ajaxItemDescription" class="input-xlarge" name="ajaxItemDescription" value="" placeholder="Description of Item" maxlength="200" />
-				</div>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button type="submit" id="btnAjaxItemSubmit" name="btnAjaxItemSubmit" class="btn btn-success pull-left" data-loading-text="Saving...">
-				Save Item
-			</button>
-			<button type="reset" id="btnAjaxItemCancel" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
-			</button>
-		</div>
-	</div>
-</form>
-
-
 <!-- MODAL: Add/Edit Subgroup-->
-<form action="ajax_actions/ajax_add_eq_subgroup.php" id="frmAjaxSubgroup" name="frmAjaxSubgroup" method="post">
+<form action="ajax_actions/ajax_eq_subgroup.php" id="frmAjaxSubgroup" name="frmAjaxSubgroup" method="post">
 	<div id="modalSubgroup" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalSubgroupLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -245,6 +205,46 @@
 				Save Subgroup
 			</button>
 			<button type="reset" id="btnAjaxSubgroupCancel" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
+			</button>
+		</div>
+	</div>
+</form>
+
+
+<!-- MODAL: Add/Edit Item-->
+<form action="ajax_actions/ajax_eq_subgroup_item.php" id="frmAjaxItem" name="frmAjaxItem" method="post">
+	<div id="modalItem" class="modal hide" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalItemLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+			<h3 id="modalItemLabel"></h3>
+		</div>
+		<div class="modal-body">
+			<div class="control-group">
+				<label class="control-label" for="ajaxItemName">Name</label>
+
+				<div class="controls">
+					<input type="hidden" id="ajaxItemAction" name="ajaxItemAction" value="" />
+					<input type="hidden" id="ajaxSubgroupName" name="ajaxSubgroupName" value="" />
+					<input type="hidden" id="ajaxSubgroupID" name="ajaxSubgroupID" value="" />
+					<input type="hidden" id="ajaxItemID" name="ajaxItemID" value="" />
+					<input type="hidden" id="ajaxItemOrdering" name="ajaxItemOrdering" value="" />
+					<input type="hidden" id="ajaxItemIsMultiSelect" name="ajaxItemIsMultiSelect" value="" />
+					<input type="text" id="ajaxItemName" name="ajaxItemName" class="input-large" value="" placeholder="Name of Item" maxlength="200" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="ajaxItemDescription">Description</label>
+
+				<div class="controls">
+					<input type="text" id="ajaxItemDescription" class="input-xlarge" name="ajaxItemDescription" value="" placeholder="Description of Item" maxlength="200" />
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="submit" id="btnAjaxItemSubmit" name="btnAjaxItemSubmit" class="btn btn-success pull-left" data-loading-text="Saving...">
+				Save Item
+			</button>
+			<button type="reset" id="btnAjaxItemCancel" class="btn btn-link btn-cancel pull-left" data-dismiss="modal" aria-hidden="true">Cancel
 			</button>
 		</div>
 	</div>

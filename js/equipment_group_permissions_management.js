@@ -151,7 +151,7 @@ $(document).ready(function () {
             url: 'ajax_actions/ajax_eq_group.php',
             dataType: 'json',
             data: {'eq_group': $('#groupID').attr('value'),
-                'ajaxVal_action': 'addPermission',
+                'ajaxVal_Action': 'addPermission',
                 'permission_type': $("#addUserType").val(),
                 'entity_type':$(this).attr('data-add-type'),
                 'entity_id':$(this).attr('data-add-id'),
@@ -234,7 +234,7 @@ $(document).ready(function () {
 			url: 'ajax_actions/ajax_eq_group.php',
 			dataType: 'json',
 			data: {'eq_group': $('#groupID').attr('value'),
-				'ajaxVal_action': 'removePermission',
+				'ajaxVal_Action': 'removePermission',
 				'permission_ids[]': GLOBAL_confirmHandlerData.perm_id
 			}
 		})
