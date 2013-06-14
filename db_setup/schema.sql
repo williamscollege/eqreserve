@@ -138,6 +138,26 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 /* FK: eq_groups.eq_group_id */
 
 
+CREATE TABLE IF NOT EXISTS `schedules` (
+    `schedule_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `type` VARCHAR(255) NULL,
+    `user_id` INT NOT NULL,
+    `notes` TEXT NULL,
+    `frequency_type` VARCHAR(255) NULL, /* no_repeat, weekly, monthly */
+    `interval` INT DEFAULT 1, /*  */
+    `list_days` VARCHAR(255) NULL, /* csv of days (mon, tues) or (1,4,9,16) */
+	`start_time` DATETIME NULL, /*  */
+	`end_time` DATETIME NULL, /*  */
+    `end_on_type` VARCHAR(255) NULL, /* end_on_quantity, end_on_date */
+    `end_on_quantity` INT DEFAULT 1, /*  */
+    `end_on_date` DATETIME NULL, /*  */
+	`summary` TEXT NULL, /*  */
+	`flag_all_day` BIT(1) NOT NULL DEFAULT 0, /*  */
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='collects multiple time blocks into a related group';
+/* type: manager_reserve, consumer_reserve */
+
+
 CREATE TABLE IF NOT EXISTS `reservations` (
     `reservation_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `eq_item_id` INT NOT NULL,
@@ -145,16 +165,6 @@ CREATE TABLE IF NOT EXISTS `reservations` (
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='links an eq_item to blocks of time (i.e. a time block group)';
 /* FK: eq_items.eq_item_id */
-
-
-CREATE TABLE IF NOT EXISTS `schedules` (
-    `schedule_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `type` VARCHAR(255) NULL,
-    `user_id` INT NOT NULL,
-    `notes` TEXT NULL,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='collects multiple time blocks into a related group';
-/* type: manager_reserve, consumer_reserve */
 
 
 CREATE TABLE IF NOT EXISTS `time_blocks` (

@@ -63,11 +63,11 @@
 		$results['html_output'] .= "<a id=\"delete-item-" . $output->eq_item_id . "\" class=\"manager-action btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $output->eq_item_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
 		if ($bitIsMultiSelect == 0) {
 			# radio: single select
-			$results['html_output'] .= "<input type=\"radio\" id=\"item-" . $output->eq_item_id . "\" name=\"subgroup-" . $output->eq_subgroup_id . "\" class=\"reservationForm hide\" /> ";
+			$results['html_output'] .= "<input type=\"radio\" id=\"item-" . $output->eq_item_id . "\" name=\"subgroup-" . $output->eq_subgroup_id . "\" value=\"" . $output->eq_item_id . "\" class=\"reservationForm hide\" /> ";
 		}
 		elseif ($bitIsMultiSelect == 1) {
 			# checkbox: multiple select
-			$results['html_output'] .= "<input type=\"checkbox\" id=\"item-" . $output->eq_item_id . "\" name=\"subgroup-" . $output->eq_subgroup_id . "\" class=\"reservationForm hide\" /> ";
+			$results['html_output'] .= "<input type=\"checkbox\" id=\"item-" . $output->eq_item_id . "\" name=\"item-" . $output->eq_item_id . "\" value=\"" . $output->eq_item_id . "\" class=\"reservationForm hide\" /> ";
 		}
 		$results['html_output'] .= "<span id=\"itemid-" . $output->eq_item_id . "\"><strong>" . $output->name . ": </strong>" . $output->descr . "</span>\n";
 		$results['html_output'] .= "</label>";

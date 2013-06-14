@@ -9,11 +9,11 @@
 
 	$SCHED->loadReservationsDeeply();
 ?>
-    <script type="text/javascript">
-    var headToOnScheduleGone = '<?php echo (isset($_REQUEST["returnToEqGroup"]))?('equipment_group.php?eid='.$SCHED->reservations[0]->eq_item->eq_group->eq_group_id):'account_management.php'; ?>';
-    var scheduleId = <?php echo $SCHED->schedule_id; ?>;
-    </script>
-    <script type="text/javascript" src="js/schedule.js"></script>
+	<script type="text/javascript">
+		var headToOnScheduleGone = '<?php echo (isset($_REQUEST["returnToEqGroup"]))?('equipment_group.php?eid='.$SCHED->reservations[0]->eq_item->eq_group->eq_group_id):'account_management.php'; ?>';
+		var scheduleId = <?php echo $SCHED->schedule_id; ?>;
+	</script>
+	<script type="text/javascript" src="js/schedule.js"></script>
 
 	<!--
 	<div id="page_alert" class="transient_alert in_progress_alert hide alert">

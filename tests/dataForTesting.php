@@ -98,7 +98,8 @@ function createTestData_EqItems($dbConn) {
         (408,307,'testItem7','group is deleted',1,0),
         (409,306,'testItem8','normal',10,0),
         (410,308,'testItem9','normal',20,0),
-        (411,306,'testItem10','normal',12,0)
+        (411,306,'testItem10','normal',12,0),
+        (412,302,'testItem11','same name, different subgroup',1,0)
     ";
     $addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
     $addTestEqItemsStmt->execute();
@@ -252,18 +253,18 @@ function createTestData_TimeBlocks($dbConn) {
 
 function createTestData_Schedules($dbConn) {
     // 1000 series ids
-    // schedule: schedule_id, type, user_id, notes, flag_delete
+    // schedule: schedule_id, type, user_id, notes, frequency_type, interval, list_days, start_time, end_time, end_on_type, end_on_quantity, end_on_date, summary, flag_all_day, flag_delete
     $addTestScheduleSql = "INSERT INTO ".Schedule::$dbTable." VALUES
-        (1001,'consumer',1101,'notes1 with 1 block',0),         # single time block in the schedule, 1 item
-        (1002,'consumer',1101,'notes2 normal with 3 blocks',0), # three time blocks in the schedule, 1 item
-        (1003,'consumer',1101,'notes3',0),                      # single deleted time block in the schedule
-        (1004,'consumer',1101,'notes4 deleted',1),              # schedule is deleted
-        (1005,'consumer',1101,'notes5 reservation deleted',0),  # reservations is deleted
-        (1006,'manager', 1101,'notes6 manager',0),              # manager reservation, 1 item
-        (1007,'consumer',1102,'notes7 other user',0),           # other user single time block in the schedule
-        (1008,'manager', 1102,'notes8 other user manager',0),   # other user single time block in the schedule
-        (1009,'consumer',1103,'notes9 2 items',0),               # single time block in the schedule, 2 items reserved
-        (1010,'consumer',1101,'notes10 2 items not managed eq group',0)  # single time block in the schedule, 1 items reserved, eq group not managed
+        (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),         # single time block in the schedule, 1 item
+        (1002,'consumer',1101,'notes2 normal with 3 blocks','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0), # three time blocks in the schedule, 1 item
+        (1003,'consumer',1101,'notes3','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),                      # single deleted time block in the schedule
+        (1004,'consumer',1101,'notes4 deleted','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,1),              # schedule is deleted
+        (1005,'consumer',1101,'notes5 reservation deleted','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),  # reservations is deleted
+        (1006,'manager', 1101,'notes6 manager','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),              # manager reservation, 1 item
+        (1007,'consumer',1102,'notes7 other user','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),           # other user single time block in the schedule
+        (1008,'manager', 1102,'notes8 other user manager','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),   # other user single time block in the schedule
+        (1009,'consumer',1103,'notes9 2 items','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),               # single time block in the schedule, 2 items reserved
+        (1010,'consumer',1101,'notes10 2 items not managed eq group','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0)  # single time block in the schedule, 1 items reserved, eq group not managed
     ";
     $addTestScheduleStmt = $dbConn->prepare($addTestScheduleSql);
     $addTestScheduleStmt->execute();

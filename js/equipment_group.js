@@ -58,13 +58,15 @@ $(document).ready(function () {
 
 	// Reserve Equipment: calendar
 	$("#reservationStartDate, #reservationEndDate").datepicker({
-		dateFormat: 'M dd, yy'
-	}).val($.datepicker.formatDate('M dd, yy', new Date()));
-	// Reserve Equipment: calendar: hack to make icon trigger
-	$("#iconHackForceStartDate").click(function () {
+		dateFormat: 'mm/dd/yy',
+		minDate: -0,
+		maxDate: +730
+	}).val($.datepicker.formatDate('mm/dd/yy', new Date()));
+	// Hack to make calendar icon functional
+	$("#iconHackReservationStartDate").click(function () {
 		$("#reservationStartDate").datepicker('show');
 	});
-	$("#iconHackForceEndDate").click(function () {
+	$("#iconHackReservationEndDate").click(function () {
 		$("#reservationEndDate").datepicker('show');
 	});
 	// Reserve Equipment: timepicker
@@ -645,6 +647,224 @@ $(document).ready(function () {
 		$("#frmAjaxSubgroup input[type=radio]").attr("checked", false);
 		// reset submit button (avoid disabled state)
 		$("#btnAjaxSubgroupSubmit").button('reset');
+	});
+
+
+	// ***************************
+	// Schedule Reservation
+	// ***************************
+
+	// set initial form values
+	$("#repeatFrequencyType [value='no_repeat']").html('Only on ' + $("#reservationStartDate").val());
+
+	// update date values based on Start Date
+	$("#reservationStartDate, #repeatEndOnDate").change(function () {
+		// update the first select box option
+		$("#repeatFrequencyType [value='no_repeat']").html('Only on ' + $("#reservationStartDate").val());
+
+		// update the "Repeat Ends" date so that it is never less than the Start Date
+		if ($("#reservationStartDate").val() > ($("#repeatEndOnDate").val())) {
+			// alert('the new date is bigger!');
+			$("#repeatEndOnDate").val($("#reservationStartDate").val());
+		}
+
+		// update the "Reservation Ends" date so that it is never less than the Repeat Ends date
+		if ($("#repeatEndOnDate").val() > ($("#reservationEndDate").val())) {
+			$("#reservationEndDate").val($("#repeatEndOnDate").val());
+		}
+	})
+
+	// isAllDayEvent? show/hide time inputs
+	$("#isAllDayEvent").change(function () {
+		if ($("#isAllDayEvent").is(':checked')) {
+			$("#wrapperReservationStartTime, #wrapperReservationEndTime").addClass("hide");
+		}
+		else {
+			$("#wrapperReservationStartTime, #wrapperReservationEndTime").removeClass("hide");
+		}
+	});
+
+	// Repeats Frequency: update visible fields based on user selection
+	$("#repeatFrequencyType").change(function () {
+		if ($("#repeatFrequencyType").val() == 'no_repeat') {
+			// Only on single date
+			$("#wrapperRepeatOptions").addClass("hide");
+			$("#repeatIntervalDescription").html("days");
+			$("#wrapperDoW").addClass("hide");
+			$("#wrapperDoM").addClass("hide");
+		}
+		else if ($("#repeatFrequencyType").val() == 'weekly') {
+			// Repeat weekly
+			$("#wrapperRepeatOptions").removeClass("hide");
+			$("#repeatIntervalDescription").html("weeks");
+			$("#wrapperDoW").removeClass("hide");
+			$("#wrapperDoM").addClass("hide");
+		}
+		else if ($("#repeatFrequencyType").val() == 'monthly') {
+			// Repeat monthly
+			$("#wrapperRepeatOptions").removeClass("hide");
+			$("#repeatIntervalDescription").html("months");
+			$("#wrapperDoW").addClass("hide");
+			$("#wrapperDoM").removeClass("hide");
+		}
+		;
+	})
+
+	// Repeat Interval:
+	// this field needs no construction
+
+	// Repeat Ends: wire-up calendar widget
+	$("#repeatEndOnDate").datepicker({
+		dateFormat: 'mm/dd/yy',
+		minDate: -0,
+		maxDate: +730
+	}).val($.datepicker.formatDate('mm/dd/yy', new Date()));
+	// Hack to make calendar icon functional
+	$("#repeatEndOnDate,#iconHackRepeatEndOnDate").click(function () {
+		$("#repeatEndOnDate").datepicker('show');
+	});
+
+	// Weekly: toggler_dow
+	$(".toggler_dow").click(function (event) {
+		var which = event.target.id.substr(8, 3);
+		// alert("which is " + which);
+		if (!$(this).hasClass('btn-info')) {
+			//alert("turning on #repeat_dow_" + which);
+			$("#repeat_dow_" + which).attr("value", 1);
+			$("#btn_dow_" + which).addClass('btn-info');
+		}
+		else {
+			//alert("turning off #repeat_dow_" + which);
+			$("#repeat_dow_" + which).attr("value", 0);
+			$("#btn_dow_" + which).removeClass('btn-info');
+		}
+	});
+
+	// Monthly: toggler_dom
+	$(".toggler_dom").click(function (event) {
+		var which = event.target.id.substr(8, 2);
+		// alert("which is " + which);
+		if (!$(this).hasClass('btn-info')) {
+			//alert("turning on #repeat_dom_" + which);
+			$("#repeat_dom_" + which).attr("value", 1);
+			$("#btn_dom_" + which).addClass('btn-info');
+		}
+		else {
+			//alert("turning off #repeat_dom_" + which);
+			$("#repeat_dom_" + which).attr("value", 0);
+			$("#btn_dom_" + which).removeClass('btn-info');
+		}
+	});
+
+	// Construct text string summary
+	function getListofDates(){
+		var allday = "";
+		if ($("#isAllDayEvent").prop("checked")) {
+			var allday = "All day, ";
+		}
+
+		var interval = $("#repeatInterval").val();
+
+		var frequency = $("#repeatFrequencyType").val();
+		if (frequency == 'no_repeat') {
+			frequency = 'Once ';
+		}
+		else if (frequency == 'weekly') {
+			frequency = 'Every ' + interval + ' weeks ';
+		}
+		else if (frequency == 'monthly') {
+			frequency = 'Every ' + interval + ' months ';
+		}
+
+		var end_repeat = "";
+		if ($("#repeatEndType_1").is(':checked')) {
+			end_repeat = $("#repeatEndOnQuantity").val();
+			if (end_repeat > 1){
+				end_repeat += ' times';
+			} else{
+				end_repeat += ' time';
+			}
+		}
+		else if ($("#repeatEndType_2").is(':checked')) {
+			end_repeat = ' until ' + $("#repeatEndOnDate").val();
+		}
+
+		// Determine which value to pass (DoW or DoM)
+		var dates_selected = "";
+		if ($("#repeatFrequencyType").val() == 'weekly') {
+			// weekly
+			dates_selected = " on (";
+			$("input[id*='repeat_dow_'][value='1']").each(function(i, field){
+				var text = field.name.substr(11, 3);
+				switch (text) {
+					case "mon":
+						text = "Monday";
+						break;
+					case "tue":
+						text = "Tuesday";
+						break;
+					case "wed":
+						text = "Wednesday";
+						break;
+					case "thu":
+						text = "Thursday";
+						break;
+					case "fri":
+						text = "Friday";
+						break;
+					case "sat":
+						text = "Saturday";
+						break;
+					case "sun":
+						text = "Sunday";
+						break;
+					default:
+						text = "OOPS-PROBLEM!";
+						break;
+				}
+				dates_selected += text + ", ";
+			});
+			if(dates_selected.length > 10){
+				// remove trailing comma
+				dates_selected = dates_selected.substr(0, dates_selected.length - 2);
+			}
+			dates_selected += "), ";
+		} else if ($("#repeatFrequencyType").val() == 'monthly') {
+			// monthly
+			dates_selected = " on days (";
+			$("input[id*='repeat_dom_'][value='1']").each(function(i, field){
+				var text = field.name.substr(11, 2);
+				dates_selected += text + ", ";
+			});
+			if(dates_selected.length > 10){
+				// remove trailing comma
+				dates_selected = dates_selected.substr(0, dates_selected.length - 2);
+			}
+			dates_selected += "), ";
+		} else {
+			// no_repeat
+			dates_selected = "";
+		}
+
+		// Construct the summary string
+		$("#reservationSummary").text(allday + frequency + dates_selected + end_repeat);
+
+		// Update these values, in preparation of eventual form submit
+		$("#reservationSummaryText").val( $("#reservationSummary").text() );
+	}
+
+	// Listener: click
+	$(".toggler_dow, .toggler_dom").click(function () {
+		getListofDates();
+	});
+	// Listener: change
+	$("#isAllDayEvent, #repeatFrequencyType, #repeatInterval, input[name=repeatEndType], #repeatEndOnQuantity, #repeatEndOnDate").change(function () {
+		getListofDates();
+	});
+
+	// Listener: reservation submit button
+	$("#btnReservationSubmit").click(function(){
+		getListofDates();
 	});
 
 });
