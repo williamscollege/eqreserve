@@ -1,5 +1,7 @@
 <form action="reservation.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
 <input type="hidden" id="reservationGroupID" name="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+<input type="hidden" id="reservationStartTimeConverted" name="reservationStartTimeConverted" value="" />
+<input type="hidden" id="reservationEndTimeConverted" name="reservationEndTimeConverted" value="" />
 <input type="hidden" id="reservationSummaryText" name="reservationSummaryText" value="" />
 <legend class="pull-left row-fluid">Reserve Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>

@@ -17,35 +17,34 @@
 	# Fetch values
 	#------------------------------------------------#
 	# UNUSED: $strAction = htmlentities((isset($_REQUEST["xyz"])) ? util_quoteSmart($_REQUEST["xyz"]) : 0);
-
-	$bitAllDay           = htmlentities((isset($_REQUEST["isAllDayEvent"])) ? 1 : 0);
-	$strReservationType  = htmlentities((isset($_REQUEST["reservationType"])) ? 'manager' : 'consumer');
-	$dateRepeatEndOnDate = htmlentities((isset($_REQUEST["repeatEndOnDate"])) ? $_REQUEST["repeatEndOnDate"] : 0);
-
-	# TODO must correctly create proper datetime
-	$dateReservationEndDate     = htmlentities((isset($_REQUEST["reservationEndDate"])) ? $_REQUEST["reservationEndDate"] : 0);
-	$dateReservationEndTime     = htmlentities((isset($_REQUEST["reservationEndTime"])) ? $_REQUEST["reservationEndTime"] : 0);
-	$dateReservationEndDateTime = $dateReservationEndDate + $dateReservationEndTime;
-
-	# TODO must correctly create proper datetime
-	$dateReservationStartDate     = htmlentities((isset($_REQUEST["reservationStartDate"])) ? $_REQUEST["reservationStartDate"] : 0);
-	$dateReservationStartTime     = htmlentities((isset($_REQUEST["reservationStartTime"])) ? $_REQUEST["reservationStartTime"] : 0);
-	$dateReservationStartDateTime = $dateReservationStartDate + $dateReservationStartTime;
-
-	$intRepeatEndOnQuantity = htmlentities((isset($_REQUEST["repeatEndOnQuantity"])) ? $_REQUEST["repeatEndOnQuantity"] : 0);
-	$intRepeatInterval      = htmlentities((isset($_REQUEST["repeatInterval"])) ? $_REQUEST["repeatInterval"] : 0);
-	$intReservationGroupID  = htmlentities((isset($_REQUEST["reservationGroupID"])) ? $_REQUEST["reservationGroupID"] : 0);
+	$intReservationGroupID = htmlentities((isset($_REQUEST["reservationGroupID"])) ? $_REQUEST["reservationGroupID"] : 0);
 
 	# TODO must derive these lists
 	$intSubgroupID = htmlentities((isset($_REQUEST["xxxxx"])) ? $_REQUEST["xxxxx"] : 0);
 	$intItemID     = htmlentities((isset($_REQUEST["xxxxx"])) ? $_REQUEST["xxxxx"] : 0);
 
+	$bitAllDay             = htmlentities((isset($_REQUEST["isAllDayEvent"])) ? 1 : 0);
+	$strReservationType    = htmlentities((isset($_REQUEST["reservationType"])) ? 'manager' : 'consumer');
+
+	$dateReservationStartDate  = htmlentities((isset($_REQUEST["reservationStartDate"])) ? $_REQUEST["reservationStartDate"] : 0);
+	$dateReservationStartTime  = htmlentities((isset($_REQUEST["reservationStartTimeConverted"])) ? $_REQUEST["reservationStartTimeConverted"] : 0);
+	$dateComputedStartDateTime = htmlentities(!$bitAllDay ? ($dateReservationStartDate . ' ' . $dateReservationStartTime) : $dateReservationStartDate . ' 00:00:00');
+
+	$dateReservationEndDate  = htmlentities((isset($_REQUEST["reservationEndDate"])) ? $_REQUEST["reservationEndDate"] : 0);
+	$dateReservationEndTime  = htmlentities((isset($_REQUEST["reservationEndTimeConverted"])) ? $_REQUEST["reservationEndTimeConverted"] : 0);
+	$dateComputedEndDateTime = htmlentities(!$bitAllDay ? $dateReservationEndDate . ' ' . $dateReservationEndTime : $dateReservationEndDate . ' 23:59:00');
+
+	$strRepeatFrequencyType = htmlentities((isset($_REQUEST["repeatFrequencyType"])) ? util_quoteSmart($_REQUEST["repeatFrequencyType"]) : 0);
+	$intRepeatInterval      = htmlentities((isset($_REQUEST["repeatInterval"])) ? $_REQUEST["repeatInterval"] : 0);
+
+	$strRepeatEndType       = htmlentities((isset($_REQUEST["repeatEndType"])) ? util_quoteSmart($_REQUEST["repeatEndType"]) : 0);
+	$intRepeatEndOnQuantity = htmlentities((isset($_REQUEST["repeatEndOnQuantity"])) ? $_REQUEST["repeatEndOnQuantity"] : 0);
+	$dateRepeatEndOnDate    = htmlentities((isset($_REQUEST["repeatEndOnDate"])) ? $_REQUEST["repeatEndOnDate"] : 0);
+
 	# TODO must derive these lists
 	$strRepeat_dom_10  = htmlentities((isset($_REQUEST["repeat_dom_10"])) ? util_quoteSmart($_REQUEST["repeat_dom_10"]) : 0);
 	$strRepeat_dow_mon = htmlentities((isset($_REQUEST["repeat_dow_mon"])) ? util_quoteSmart($_REQUEST["repeat_dow_mon"]) : 0);
 
-	$strRepeatEndType          = htmlentities((isset($_REQUEST["repeatEndType"])) ? util_quoteSmart($_REQUEST["repeatEndType"]) : 0);
-	$strRepeatFrequencyType    = htmlentities((isset($_REQUEST["repeatFrequencyType"])) ? util_quoteSmart($_REQUEST["repeatFrequencyType"]) : 0);
 	$strReservationSummaryText = htmlentities((isset($_REQUEST["reservationSummaryText"])) ? util_quoteSmart($_REQUEST["reservationSummaryText"]) : 0);
 
 
@@ -76,8 +75,16 @@
 		$sched->type          = $strReservationType;
 		$sched->user_id       = $USER->user_id;
 		$sched->frequncy_type = $strRepeatFrequencyType;
+		$sched->start_time    = $dateComputedStartDateTime;
+		$sched->end_time      = $dateComputedEndDateTime;
+		$sched->end_on_date   = $dateRepeatEndOnDate;
 		$sched->summary       = $strReservationSummaryText;
 		$sched->flag_all_day  = $bitAllDay;
+
+		#------------
+		#DKC testing
+
+		#------------
 
 		$sched->updateDb();
 
@@ -110,7 +117,7 @@
 		# TODO: conflict checks, and below... weekly, monthly inserts
 
 		# Output
-//		$results['status'] = 'success';
+		//		$results['status'] = 'success';
 	}
 	//###############################################################
 	elseif ($strRepeatFrequencyType == 'weekly') {

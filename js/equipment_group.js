@@ -58,10 +58,10 @@ $(document).ready(function () {
 
 	// Reserve Equipment: calendar
 	$("#reservationStartDate, #reservationEndDate").datepicker({
-		dateFormat: 'mm/dd/yy',
+		dateFormat: 'yy-mm-dd',
 		minDate: -0,
 		maxDate: +730
-	}).val($.datepicker.formatDate('mm/dd/yy', new Date()));
+	}).val($.datepicker.formatDate('yy-mm-dd', new Date()));
 	// Hack to make calendar icon functional
 	$("#iconHackReservationStartDate").click(function () {
 		$("#reservationStartDate").datepicker('show');
@@ -85,6 +85,20 @@ $(document).ready(function () {
 	$('#print_minDurationMinutes').text(util_minutesToWords($('#print_minDurationMinutes').text()));
 	$('#print_maxDurationMinutes').text(util_minutesToWords($('#print_maxDurationMinutes').text()));
 	$('#print_durationIntervalMinutes').text(util_minutesToWords($('#print_durationIntervalMinutes').text()));
+
+	// Convert AM/PM time to 24 hour database-ready format
+	function util_12To24HourFormat(time) {
+		var hours = Number(time.match(/^(\d+)/)[1]);
+		var minutes = Number(time.match(/:(\d+)/)[1]);
+		var AMPM = time.match(/\s(.*)$/)[1];
+		if (AMPM == "PM" && hours < 12) hours = hours + 12;
+		if (AMPM == "AM" && hours == 12) hours = hours - 12;
+		var sHours = hours.toString();
+		var sMinutes = minutes.toString();
+		if (hours < 10) sHours = "0" + sHours;
+		if (minutes < 10) sMinutes = "0" + sMinutes;
+		return(sHours + ":" + sMinutes + ":00");
+	}
 
 	// Convert minute to pretty words using: days, hours, minutes
 	function util_minutesToWords(minutes) {
@@ -715,10 +729,10 @@ $(document).ready(function () {
 
 	// Repeat Ends: wire-up calendar widget
 	$("#repeatEndOnDate").datepicker({
-		dateFormat: 'mm/dd/yy',
+		dateFormat: 'yy-mm-dd',
 		minDate: -0,
 		maxDate: +730
-	}).val($.datepicker.formatDate('mm/dd/yy', new Date()));
+	}).val($.datepicker.formatDate('yy-mm-dd', new Date()));
 	// Hack to make calendar icon functional
 	$("#repeatEndOnDate,#iconHackRepeatEndOnDate").click(function () {
 		$("#repeatEndOnDate").datepicker('show');
@@ -756,8 +770,8 @@ $(document).ready(function () {
 		}
 	});
 
-	// Construct text string summary
-	function getListofDates(){
+	// Construct text string summary and final hidden values
+	function getListofDates() {
 		var allday = "";
 		if ($("#isAllDayEvent").prop("checked")) {
 			var allday = "All day, ";
@@ -779,9 +793,10 @@ $(document).ready(function () {
 		var end_repeat = "";
 		if ($("#repeatEndType_1").is(':checked')) {
 			end_repeat = $("#repeatEndOnQuantity").val();
-			if (end_repeat > 1){
+			if (end_repeat > 1) {
 				end_repeat += ' times';
-			} else{
+			}
+			else {
 				end_repeat += ' time';
 			}
 		}
@@ -794,7 +809,7 @@ $(document).ready(function () {
 		if ($("#repeatFrequencyType").val() == 'weekly') {
 			// weekly
 			dates_selected = " on (";
-			$("input[id*='repeat_dow_'][value='1']").each(function(i, field){
+			$("input[id*='repeat_dow_'][value='1']").each(function (i, field) {
 				var text = field.name.substr(11, 3);
 				switch (text) {
 					case "mon":
@@ -824,24 +839,26 @@ $(document).ready(function () {
 				}
 				dates_selected += text + ", ";
 			});
-			if(dates_selected.length > 10){
+			if (dates_selected.length > 10) {
 				// remove trailing comma
 				dates_selected = dates_selected.substr(0, dates_selected.length - 2);
 			}
 			dates_selected += "), ";
-		} else if ($("#repeatFrequencyType").val() == 'monthly') {
+		}
+		else if ($("#repeatFrequencyType").val() == 'monthly') {
 			// monthly
 			dates_selected = " on days (";
-			$("input[id*='repeat_dom_'][value='1']").each(function(i, field){
+			$("input[id*='repeat_dom_'][value='1']").each(function (i, field) {
 				var text = field.name.substr(11, 2);
 				dates_selected += text + ", ";
 			});
-			if(dates_selected.length > 10){
+			if (dates_selected.length > 10) {
 				// remove trailing comma
 				dates_selected = dates_selected.substr(0, dates_selected.length - 2);
 			}
 			dates_selected += "), ";
-		} else {
+		}
+		else {
 			// no_repeat
 			dates_selected = "";
 		}
@@ -850,7 +867,11 @@ $(document).ready(function () {
 		$("#reservationSummary").text(allday + frequency + dates_selected + end_repeat);
 
 		// Update these values, in preparation of eventual form submit
-		$("#reservationSummaryText").val( $("#reservationSummary").text() );
+		$("#reservationSummaryText").val($("#reservationSummary").text());
+
+		// Convert time values from 12-hour AM/PM to 24-hour database ready format
+		$("#reservationStartTimeConverted").val(util_12To24HourFormat($("#reservationStartTime").val()));
+		$("#reservationEndTimeConverted").val(util_12To24HourFormat($("#reservationEndTime").val()));
 	}
 
 	// Listener: click
@@ -863,7 +884,7 @@ $(document).ready(function () {
 	});
 
 	// Listener: reservation submit button
-	$("#btnReservationSubmit").click(function(){
+	$("#btnReservationSubmit").click(function () {
 		getListofDates();
 	});
 
