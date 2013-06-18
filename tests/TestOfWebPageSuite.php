@@ -14,7 +14,7 @@
 			$this->addFile('web_page_tests/IndexPageLoadTest.php');
 			$this->addFile('web_page_tests/IndexPageAuthTest.php');
 			$this->addFile('web_page_tests/IndexPageDBTest.php');
-			$this->addFile('web_page_tests/IndexPagefrmAddEqGroupTest.php');
+			$this->addFile('web_page_tests/IndexPageFormAddEqGroupTest.php');
 
 			# Tests: Equipment Group
 			$this->addFile('web_page_tests/EqGroupPageEditGroupTest.php');

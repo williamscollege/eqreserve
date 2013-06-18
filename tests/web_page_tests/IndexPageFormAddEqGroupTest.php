@@ -1,7 +1,7 @@
 <?php
 	require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-	class IndexPagefrmAddEqGroupTest extends WMSWebTestCase {
+	class IndexPageFormAddEqGroupTest extends WMSWebTestCase {
 
 		function setUp() {
 			createTestData_Users($this->DB);

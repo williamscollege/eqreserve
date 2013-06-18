@@ -61,7 +61,7 @@
 							}
 							elseif ($key->flag_is_multi_select == 1) {
 								# checkbox: multiple select
-								echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"item-" . $item->eq_item_id . "\" value=\"" . $item->eq_item_id . "\"  class=\"reservationForm hide\" /> ";
+								echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"subgroup-" . $key->eq_subgroup_id . "-" . $item->eq_item_id . "\" value=\"" . $item->eq_item_id . "\"  class=\"reservationForm hide\" /> ";
 							}
 							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . "</span>\n";
 						?>

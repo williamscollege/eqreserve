@@ -67,7 +67,7 @@
 		}
 		elseif ($bitIsMultiSelect == 1) {
 			# checkbox: multiple select
-			$results['html_output'] .= "<input type=\"checkbox\" id=\"item-" . $output->eq_item_id . "\" name=\"item-" . $output->eq_item_id . "\" value=\"" . $output->eq_item_id . "\" class=\"reservationForm hide\" /> ";
+			$results['html_output'] .= "<input type=\"checkbox\" id=\"item-" . $output->eq_item_id . "\" name=\"subgroup-" . $output->eq_subgroup_id . "-" . $output->eq_item_id . "\" value=\"" . $output->eq_item_id . "\" class=\"reservationForm hide\" /> ";
 		}
 		$results['html_output'] .= "<span id=\"itemid-" . $output->eq_item_id . "\"><strong>" . $output->name . ": </strong>" . $output->descr . "</span>\n";
 		$results['html_output'] .= "</label>";

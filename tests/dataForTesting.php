@@ -99,7 +99,7 @@ function createTestData_EqItems($dbConn) {
         (409,306,'testItem8','normal',10,0),
         (410,308,'testItem9','normal',20,0),
         (411,306,'testItem10','normal',12,0),
-        (412,302,'testItem11','same name, different subgroup',1,0)
+        (412,302,'testItem11','another item, different subgroup',25,0)
     ";
     $addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
     $addTestEqItemsStmt->execute();
