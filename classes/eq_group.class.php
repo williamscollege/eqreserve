@@ -17,10 +17,10 @@
 		public $eq_subgroups;
 		public $eq_items;
 		public $permissions; // all permission object associated with this eq group
-        public $reservations;
-        public $schedules;
-        public $managers; // mixed array of users and inst groups
-        public $consumers; // mixed array of users and inst groups
+		public $reservations;
+		public $schedules;
+		public $managers; // mixed array of users and inst groups
+		public $consumers; // mixed array of users and inst groups
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -197,79 +197,79 @@
 			return TRUE;
 		}
 
-        public function loadManagers() {
-            if (! $this->permissions) {
-                $this->loadPermissions();
-            }
-            $this->managers = [];
-            $manager_user_ids = [];
-            $manager_inst_group_ids = [];
-            foreach ($this->permissions as $perm) {
-                if ($perm->role_id == 1) {
-                    if ($perm->entity_type == 'user') {
-                        array_push($manager_user_ids,$perm->entity_id);
-                    }
-                    elseif ($perm->entity_type == 'inst_group') {
-                        array_push($manager_inst_group_ids,$perm->entity_id);
-                    }
-                }
-            }
-            if (count($manager_user_ids) > 0) {
-                $manager_users = User::getAllFromDb(['user_id'=>$manager_user_ids],$this->dbConnection);
-                $this->managers = array_merge($this->managers,$manager_users);
-            }
-            if (count($manager_inst_group_ids) > 0) {
-                $manager_inst_groups = InstGroup::getAllFromDb(['inst_group_id'=>$manager_inst_group_ids],$this->dbConnection);
-                $this->managers = array_merge($this->managers,$manager_inst_groups);
-            }
-        }
+		public function loadManagers() {
+			if (!$this->permissions) {
+				$this->loadPermissions();
+			}
+			$this->managers         = [];
+			$manager_user_ids       = [];
+			$manager_inst_group_ids = [];
+			foreach ($this->permissions as $perm) {
+				if ($perm->role_id == 1) {
+					if ($perm->entity_type == 'user') {
+						array_push($manager_user_ids, $perm->entity_id);
+					}
+					elseif ($perm->entity_type == 'inst_group') {
+						array_push($manager_inst_group_ids, $perm->entity_id);
+					}
+				}
+			}
+			if (count($manager_user_ids) > 0) {
+				$manager_users  = User::getAllFromDb(['user_id' => $manager_user_ids], $this->dbConnection);
+				$this->managers = array_merge($this->managers, $manager_users);
+			}
+			if (count($manager_inst_group_ids) > 0) {
+				$manager_inst_groups = InstGroup::getAllFromDb(['inst_group_id' => $manager_inst_group_ids], $this->dbConnection);
+				$this->managers      = array_merge($this->managers, $manager_inst_groups);
+			}
+		}
 
-        public function loadConsumers() {
-            if (! $this->permissions) {
-                $this->loadPermissions();
-            }
-            $this->consumers = [];
-            $consumer_user_ids = [];
-            $consumer_inst_group_ids = [];
-            foreach ($this->permissions as $perm) {
-                if ($perm->role_id == 2) {
-                    if ($perm->entity_type == 'user') {
-                        array_push($consumer_user_ids,$perm->entity_id);
-                    }
-                    elseif ($perm->entity_type == 'inst_group') {
-                        array_push($consumer_inst_group_ids,$perm->entity_id);
-                    }
-                }
-            }
-            if (count($consumer_user_ids) > 0) {
-                $consumer_users = User::getAllFromDb(['user_id'=>$consumer_user_ids],$this->dbConnection);
-                $this->consumers = array_merge($this->consumers,$consumer_users);
-            }
-            if (count($consumer_inst_group_ids) > 0) {
-                $consumer_inst_groups = InstGroup::getAllFromDb(['inst_group_id'=>$consumer_inst_group_ids],$this->dbConnection);
-                $this->consumers = array_merge($this->consumers,$consumer_inst_groups);
-            }
-        }
+		public function loadConsumers() {
+			if (!$this->permissions) {
+				$this->loadPermissions();
+			}
+			$this->consumers         = [];
+			$consumer_user_ids       = [];
+			$consumer_inst_group_ids = [];
+			foreach ($this->permissions as $perm) {
+				if ($perm->role_id == 2) {
+					if ($perm->entity_type == 'user') {
+						array_push($consumer_user_ids, $perm->entity_id);
+					}
+					elseif ($perm->entity_type == 'inst_group') {
+						array_push($consumer_inst_group_ids, $perm->entity_id);
+					}
+				}
+			}
+			if (count($consumer_user_ids) > 0) {
+				$consumer_users  = User::getAllFromDb(['user_id' => $consumer_user_ids], $this->dbConnection);
+				$this->consumers = array_merge($this->consumers, $consumer_users);
+			}
+			if (count($consumer_inst_group_ids) > 0) {
+				$consumer_inst_groups = InstGroup::getAllFromDb(['inst_group_id' => $consumer_inst_group_ids], $this->dbConnection);
+				$this->consumers      = array_merge($this->consumers, $consumer_inst_groups);
+			}
+		}
 
-        public function loadSchedules() {
-            if (! $this->eq_items) {
-                $this->loadEqItems();
-            }
-            $this->reservations = array();
-            $this->schedules = array();
+		public function loadSchedules() {
+			if (!$this->eq_items) {
+				$this->loadEqItems();
+			}
+			$this->reservations = array();
+			$this->schedules    = array();
 
-            $ei_ids = array();
-            foreach ($this->eq_items as $ei) {
-                array_push($ei_ids,$ei->eq_item_id);
-            }
-            if (count($ei_ids) > 0) {
-                $this->reservations = Reservation::getAllFromDb(['eq_item_id'=>$ei_ids],$this->dbConnection);
-                $sched_ids = array();
-                foreach ($this->reservations as $r) {
-                    $sched_ids[$r->schedule_id] = 1;
-                }
+			$ei_ids = array();
+			foreach ($this->eq_items as $ei) {
+				array_push($ei_ids, $ei->eq_item_id);
+			}
+			if (count($ei_ids) > 0) {
+				$this->reservations = Reservation::getAllFromDb(['eq_item_id' => $ei_ids], $this->dbConnection);
+				$sched_ids          = array();
+				foreach ($this->reservations as $r) {
+					$sched_ids[$r->schedule_id] = 1;
+				}
 				if (count($sched_ids) > 0) {
-					$init_scheds = Schedule::getAllFromDb(['schedule_id'=>array_keys($sched_ids)],$this->dbConnection);
+					$init_scheds     = Schedule::getAllFromDb(['schedule_id' => array_keys($sched_ids)], $this->dbConnection);
 					$this->schedules = array();
 					foreach ($init_scheds as $insch) {
 						$insch->loadTimeBlocks();
@@ -277,31 +277,31 @@
 							continue;
 						}
 						$insch->loadReservationsDeeply();
-						array_push($this->schedules,$insch);
+						array_push($this->schedules, $insch);
 					}
 				}
-            }
-            return TRUE;
-        }
+			}
+			return TRUE;
+		}
 
-        public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
-            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
-            $li .= $this->toHTML();
-            $li .= '</li>';
-            return $li;
-        }
+		public function toListItemLinked($id = '', $class_ar = [], $other_attr_hash = []) {
+			$li = parent::listItemTag($id, $class_ar, $other_attr_hash);
+			$li .= $this->toHTML();
+			$li .= '</li>';
+			return $li;
+		}
 
-        public function toHTML() {
-            $ret = '<a href="equipment_group.php?eid='.$this->eq_group_id.'" title="'.$this->name.'">'.$this->name.'</a>: '.$this->descr;
-            if ($this->permission &&
-                $this->permission->role &&
-                $this->permission->role->priority == 1)
-            {
-                $ret .= " <b>(manager)</b>";
-            }
+		public function toHTML() {
+			$ret = '<a href="equipment_group.php?eid=' . $this->eq_group_id . '" title="' . $this->name . '">' . $this->name . '</a>: ' . $this->descr;
+			if ($this->permission &&
+				$this->permission->role &&
+				$this->permission->role->priority == 1
+			) {
+				$ret .= " <b>(manager)</b>";
+			}
 
-            return $ret;
-        }
+			return $ret;
+		}
 	}
 
 ?>

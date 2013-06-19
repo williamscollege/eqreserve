@@ -1,4 +1,4 @@
-<form action="reservation.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
+<form action="schedule_reservations.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
 <input type="hidden" id="reservationGroupID" name="reservationGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="reservationStartTimeConverted" name="reservationStartTimeConverted" value="" />
 <input type="hidden" id="reservationEndTimeConverted" name="reservationEndTimeConverted" value="" />

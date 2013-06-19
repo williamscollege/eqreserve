@@ -1,7 +1,7 @@
 <?php
-    require_once dirname(__FILE__) . '/db_linked.class.php';
-    require_once dirname(__FILE__) . '/schedule.class.php';
-    require_once dirname(__FILE__) . '/reservation.class.php';
+	require_once dirname(__FILE__) . '/db_linked.class.php';
+	require_once dirname(__FILE__) . '/schedule.class.php';
+	require_once dirname(__FILE__) . '/reservation.class.php';
 
 	require_once dirname(__FILE__) . '../../util.php';
 
@@ -40,15 +40,15 @@
 			usort($this->reservations, "Reservation::cmp");
 		}
 
-        public function loadAllRelated() {
-            $this->loadSchedule();
-            $this->loadReservations();
-            $this->loadUser();
-        }
+		public function loadAllRelated() {
+			$this->loadSchedule();
+			$this->loadReservations();
+			$this->loadUser();
+		}
 
-        public function toString() {
-            return util_timeRangeString($this->start_time,$this->end_time);
-        }
+		public function toString() {
+			return util_timeRangeString($this->start_time, $this->end_time);
+		}
 	}
 
 ?>

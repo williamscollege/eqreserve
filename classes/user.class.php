@@ -14,7 +14,7 @@
 		public $eq_groups;
 		public $schedules;
 		public $reservations;
-        public $comm_prefs;
+		public $comm_prefs;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -108,17 +108,17 @@
 			usort($this->schedules, "Schedule::cmp");
 		}
 
-        public function loadCommPrefs() {
-            if (!$this->user_id) {
-                trigger_error('cannot load schedules for a user with no user_id');
-                return;
-            }
-            $this->comm_prefs = array();
-            $comm_prefs_ar = CommPref::getAllFromDb(['user_id'=>$this->user_id],$this->dbConnection);
-            foreach ($comm_prefs_ar as $cp) {
-                $this->comm_prefs[$cp->eq_group_id] = $cp;
-            }
-        }
+		public function loadCommPrefs() {
+			if (!$this->user_id) {
+				trigger_error('cannot load schedules for a user with no user_id');
+				return;
+			}
+			$this->comm_prefs = array();
+			$comm_prefs_ar    = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			foreach ($comm_prefs_ar as $cp) {
+				$this->comm_prefs[$cp->eq_group_id] = $cp;
+			}
+		}
 
 		public function updateDbFromAuth($auth) {
 			//echo "doing db update<br/>\n";
@@ -225,23 +225,23 @@
 
 		}
 
-        public function canManageEqGroup($g) {
-            if ($this->flag_is_system_admin) {
-                return true;
-            }
-            if (is_object($g)) {
-                $g = $g->eq_group_id;
-            }
-            if (! $this->eq_groups) {
-                $this->loadEqGroups();
-            }
-            return in_array($g, array_map(function($eqg){
-                if ($eqg->permission->role_id == 1) {
-                    return $eqg->eq_group_id;
-                }
-                return -1;
-            },$this->eq_groups));
-        }
+		public function canManageEqGroup($g) {
+			if ($this->flag_is_system_admin) {
+				return TRUE;
+			}
+			if (is_object($g)) {
+				$g = $g->eq_group_id;
+			}
+			if (!$this->eq_groups) {
+				$this->loadEqGroups();
+			}
+			return in_array($g, array_map(function ($eqg) {
+				if ($eqg->permission->role_id == 1) {
+					return $eqg->eq_group_id;
+				}
+				return -1;
+			}, $this->eq_groups));
+		}
 	}
 
 

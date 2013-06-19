@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . '/time_block.class.php';
-require_once dirname(__FILE__) . '/reservation.class.php';
+	require_once dirname(__FILE__) . '/time_block.class.php';
+	require_once dirname(__FILE__) . '/reservation.class.php';
 
 	class Schedule extends Db_Linked {
 		public static $fields = array('schedule_id', 'type', 'user_id', 'notes', 'frequency_type', 'repeat_interval', 'list_days', 'start_time', 'end_time', 'end_on_type', 'end_on_quantity', 'end_on_date', 'summary', 'flag_all_day', 'flag_delete');
@@ -52,53 +52,63 @@ require_once dirname(__FILE__) . '/reservation.class.php';
 			usort($this->reservations, "Reservation::cmp");
 		}
 
-        public function loadReservationsDeeply() {
-            $this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
-            usort($this->reservations, "Reservation::cmp");
-            foreach ($this->reservations as $r) {
-                $r->loadEqItem();
-                $r->eq_item->loadEqGroup(); // NOTE: also loads the subgroup
-            }
-        }
+		public function loadReservationsDeeply() {
+			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
+			usort($this->reservations, "Reservation::cmp");
+			foreach ($this->reservations as $r) {
+				$r->loadEqItem();
+				$r->eq_item->loadEqGroup(); // NOTE: also loads the subgroup
+			}
+		}
 
-        public function toString() {
-            if (! $this->time_blocks) { $this->loadTimeBlocks(); }
-            if (count($this->time_blocks) == 0) {
-                return 'no time blocks';
-            }
-            if (count($this->time_blocks) == 1) {
-                return $this->time_blocks[0]->toString();
-            }
-            $ret = '';
-            foreach ($this->time_blocks as $tb) {
-                if ($ret != '') { $ret .= ', '; }
-                $ret .= '['.$tb->toString().']';
-            }
-            return $ret;
-        }
+		public function toString() {
+			if (!$this->time_blocks) {
+				$this->loadTimeBlocks();
+			}
+			if (count($this->time_blocks) == 0) {
+				return 'no time blocks';
+			}
+			if (count($this->time_blocks) == 1) {
+				return $this->time_blocks[0]->toString();
+			}
+			$ret = '';
+			foreach ($this->time_blocks as $tb) {
+				if ($ret != '') {
+					$ret .= ', ';
+				}
+				$ret .= '[' . $tb->toString() . ']';
+			}
+			return $ret;
+		}
 
-        function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
-            if (! $this->reservations) { $this->loadReservationsDeeply(); }
-            if (! $this->reservations[0]->eq_item) { $this->loadReservationsDeeply(); }
-            if (! $this->reservations[0]->eq_item->eq_group) { $this->loadReservationsDeeply(); }
+		function toListItemLinked($id = '', $class_ar = [], $other_attr_hash = []) {
+			if (!$this->reservations) {
+				$this->loadReservationsDeeply();
+			}
+			if (!$this->reservations[0]->eq_item) {
+				$this->loadReservationsDeeply();
+			}
+			if (!$this->reservations[0]->eq_item->eq_group) {
+				$this->loadReservationsDeeply();
+			}
 
-            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
-            if ($this->type == 'manager') {
-                $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
-            }
-            $li .= '<strong><a href="schedule.php?schedule='.$this->schedule_id.'"> '.$this->toString().'</a></strong><br/>';
-            $li .= 'for <a href="equipment_group.php?eid='
-                .$this->reservations[0]->eq_item->eq_group->eq_group_id
-                .'">'.$this->reservations[0]->eq_item->eq_group->name.'</a>:';
+			$li = parent::listItemTag($id, $class_ar, $other_attr_hash);
+			if ($this->type == 'manager') {
+				$li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
+			}
+			$li .= '<strong><a href="schedule.php?schedule=' . $this->schedule_id . '"> ' . $this->toString() . '</a></strong><br/>';
+			$li .= 'for <a href="equipment_group.php?eid='
+				. $this->reservations[0]->eq_item->eq_group->eq_group_id
+				. '">' . $this->reservations[0]->eq_item->eq_group->name . '</a>:';
 
-            $li .= "<ul>\n";
-            foreach ($this->reservations as $r) {
-                $li .= '<li>'.$r->eq_item->eq_subgroup->name.': '.$r->eq_item->name."</li>\n";
-            }
-            $li .= '</ul></li>';
+			$li .= "<ul>\n";
+			foreach ($this->reservations as $r) {
+				$li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
+			}
+			$li .= '</ul></li>';
 
-            return $li;
-        }
+			return $li;
+		}
 	}
 
 ?>

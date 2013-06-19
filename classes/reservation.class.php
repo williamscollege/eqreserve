@@ -53,19 +53,25 @@
 			usort($this->time_blocks, "TimeBlock::cmp");
 		}
 
-        public function toListItemLinked($id='',$class_ar=[],$other_attr_hash=[]) {
-            if (! $this->schedule) { $this->loadSchedule(); }
-            if (! $this->eq_item) { $this->loadEqItem(); }
-            $li = parent::listItemTag($id,$class_ar,$other_attr_hash);
-            $li .= '<a href="reservation.php?reservation='.$this->reservation_id.'">'.$this->eq_item->name.'</a> '.$this->schedule->toString();
-            $li .= '</li>';
-            return $li;
-        }
+		public function toListItemLinked($id = '', $class_ar = [], $other_attr_hash = []) {
+			if (!$this->schedule) {
+				$this->loadSchedule();
+			}
+			if (!$this->eq_item) {
+				$this->loadEqItem();
+			}
+			$li = parent::listItemTag($id, $class_ar, $other_attr_hash);
+			$li .= '<a href="schedule_reservations.php?reservation=' . $this->reservation_id . '">' . $this->eq_item->name . '</a> ' . $this->schedule->toString();
+			$li .= '</li>';
+			return $li;
+		}
 
-        public function toString() {
-            if (! $this->eq_item) { $this->loadEqItem(); }
-            return $this->eq_item->name;
-        }
+		public function toString() {
+			if (!$this->eq_item) {
+				$this->loadEqItem();
+			}
+			return $this->eq_item->name;
+		}
 	}
 
 ?>
