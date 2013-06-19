@@ -24,7 +24,7 @@
 	# TODO - this value is unnecessary!
 	$intReservationGroupID = htmlentities((isset($_REQUEST["reservationGroupID"])) ? $_REQUEST["reservationGroupID"] : 0);
 
-	# How to schedule the reserveation(s)
+	# How to schedule the reservation(s)
 	$bitAllDay                 = htmlentities((isset($_REQUEST["isAllDayEvent"])) ? 1 : 0);
 	$strReservationType        = htmlentities((isset($_REQUEST["reservationType"])) ? 'manager' : 'consumer');
 	$dateReservationStartDate  = htmlentities((isset($_REQUEST["reservationStartDate"])) ? $_REQUEST["reservationStartDate"] : 0);
@@ -50,56 +50,61 @@
 
 
 	#------------------------------------------------#
-	# Identify and process requested action
+	# Conflict checks
+	#------------------------------------------------#
+	# TODO: conflict checks in function for single, weekly, monthly inserts:
+
+
+	#------------------------------------------------#
+	# Insert 1 Schedule
+	#------------------------------------------------#
+	$sched = New Schedule(['DB' => $DB]);
+
+	$sched->type            = $strReservationType;
+	$sched->user_id         = $USER->user_id;
+	$sched->frequency_type  = $strRepeatFrequencyType;
+	$sched->repeat_interval = $intRepeatInterval;
+	# TODO : need to derive this, above...
+	# $sched->list_days       = ;
+	$sched->start_time      = $dateComputedStartDateTime;
+	$sched->end_time        = $dateComputedEndDateTime;
+	$sched->end_on_type     = $strRepeatEndType;
+	$sched->end_on_quantity = $intRepeatEndOnQuantity;
+	$sched->end_on_date     = $dateRepeatEndOnDate;
+	$sched->summary         = $strReservationSummaryText;
+	$sched->flag_all_day    = $bitAllDay;
+	# $sched->notes           = ""; # field is not used in this context
+
+	$sched->updateDb();
+
+	if (!$sched->matchesDb) {
+		// error: no matching record found
+		# TODO : error redirecting: "Warning: Cannot modify header information - headers already sent by... \util.php on line 38"
+		#util_redirectToAppHome('failure', 60);
+		exit;
+	}
+
+	#------------------------------------------------#
+	# Insert X Reservation(s)
+	#------------------------------------------------#
+	foreach ($_REQUEST as $key => $val) {
+		if (substr($key, 0, 9) == 'subgroup-') {
+			# echo $key . ":" . $val . "<br />"; // test output
+			# TODO : Caching Problem results if user hits browser back button, then re-submits form: a new schedule is created, but the old schedule_id is entered for reservations.
+			$reserv = New Reservation(['DB' => $DB]);
+
+			$reserv->eq_item_id  = $val;
+			$reserv->schedule_id = $sched->schedule_id;
+
+			$reserv->updateDb();
+		}
+	}
+
+	#------------------------------------------------#
+	# Insert Time Block(s)
 	#------------------------------------------------#
 	//###############################################################
 	if ($strRepeatFrequencyType == 'no_repeat') {
-		# [Summary: Insert 1 Schedule, X Reservations, 1 Time Block]
-
-		# TODO: conflict checks in function for single, weekly, monthly inserts:
-
-
-		# Insert 1 Schedule
-		$sched = New Schedule(['DB' => $DB]);
-
-		$sched->type            = $strReservationType;
-		$sched->user_id         = $USER->user_id;
-		$sched->frequency_type  = $strRepeatFrequencyType;
-		$sched->repeat_interval = $intRepeatInterval;
-		$sched->start_time      = $dateComputedStartDateTime;
-		$sched->end_time        = $dateComputedEndDateTime;
-		$sched->end_on_type     = $strRepeatEndType;
-		$sched->end_on_quantity = $intRepeatEndOnQuantity;
-		$sched->end_on_date     = $dateRepeatEndOnDate;
-		$sched->summary         = $strReservationSummaryText;
-		$sched->flag_all_day    = $bitAllDay;
-		# $sched->notes           = ""; #hide
-		# $sched->list_days       = "1"; #hide
-
-		$sched->updateDb();
-
-		if (!$sched->matchesDb) {
-			// error: no matching record found
-			# TODO : error redirecting: "Warning: Cannot modify header information - headers already sent by... \util.php on line 38"
-			#util_redirectToAppHome('failure', 60);
-			exit;
-		}
-
-		# Insert X Reservations
-		foreach ($_REQUEST as $key => $val) {
-			if (substr($key, 0, 9) == 'subgroup-') {
-				# echo $key . ":" . $val . "<br />"; // test output
-				# TODO : Caching Problem
-				# TODO : Scenario: user hits browser back button, then re-submits form: a new schedule is created, but the old schedule_id is entered for reservations.
-				$reserv = New Reservation(['DB' => $DB]);
-
-				$reserv->eq_item_id  = $val;
-				$reserv->schedule_id = $sched->schedule_id;
-
-				$reserv->updateDb();
-			}
-		}
-
 		# Insert 1 Time Block
 		$timeblock = New TimeBlock(['DB' => $DB]);
 
@@ -115,13 +120,14 @@
 	}
 	//###############################################################
 	elseif ($strRepeatFrequencyType == 'weekly') {
-		# Summary: Insert 1 Schedule, X Reservations, X Time Blocks
+		# Insert X Time Block
 
 
 	}
 	//###############################################################
 	elseif ($strRepeatFrequencyType == 'monthly') {
-		# Summary: Insert 1 Schedule, X Reservations, X Time Blocks
+		# Insert X Time Block
+		# TODO : we may be able to combine the weekly and monthly else statements into a single statement
 
 
 	}
