@@ -159,7 +159,7 @@ class AjaxEqGroupTest extends WMSWebTestCase {
         $this->assertPattern('/"entity_type":"user"/');
         $this->assertPattern('/"entity_id":"1101"/');
         $this->assertPattern('/"name":"Violet Bovine"/');
-        $this->assertPattern('/"username":"cswtestinguser"/');
+		$this->assertPattern('/"username":"'.Auth_Base::$TEST_USERNAME.'"/');
         $this->assertPattern('/"email":"'.Auth_Base::$TEST_EMAIL.'"/');
         $base_eg->permissions = [];
         $base_eg->loadManagers();

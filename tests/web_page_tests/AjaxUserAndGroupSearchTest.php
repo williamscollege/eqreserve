@@ -21,7 +21,7 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
     }
 
     //############################################################
-    function testSearchUserAngGroupAccess() {
+    function testSearchUserAndGroupAccess() {
         $this->signIn();
 
         $this->get('http://localhost/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=test');
@@ -29,14 +29,14 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
         $this->assertPattern('/"status":"success"/');
 
         $res_data_structure = json_decode($this->getBrowser()->getContent());
-        $this->assertEqual(count($res_data_structure->searchResults),9);
+        $this->assertEqual(count($res_data_structure->searchResults),8);
 
 //        $this->dump($res_data_structure);
     }
 
 
     //############################################################
-    function testSearchUserAngGroupLDAPFindOne() {
+    function testSearchUserAndGroupLDAPFindOne() {
         $this->signIn();
 
         $this->get('http://localhost/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=cwarren');
@@ -50,7 +50,7 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
     }
 
     //############################################################
-    function testSearchUserAngGroupLDAPFindSeveral() {
+    function testSearchUserAndGroupLDAPFindSeveral() {
         $this->signIn();
 
         $this->get('http://localhost/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=warren');

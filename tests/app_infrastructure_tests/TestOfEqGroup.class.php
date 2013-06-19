@@ -190,7 +190,7 @@
             $this->assertEqual(count($eg->eq_subgroups),4);
 
             $this->assertTrue(is_array($eg->eq_items));
-            $this->assertEqual(count($eg->eq_items),5);
+            $this->assertEqual(count($eg->eq_items),6);
 
             usort($eg->eq_items,'EqItem::cmp');
 

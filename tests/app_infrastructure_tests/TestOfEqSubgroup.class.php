@@ -126,7 +126,7 @@
             $this->assertEqual($esg1->eq_items[3]->eq_item_id,404);
 
             $this->assertTrue(is_array($esg2->eq_items));
-            $this->assertEqual(count($esg2->eq_items),1);
+            $this->assertEqual(count($esg2->eq_items),2);
 
             $this->assertTrue(is_array($esg3->eq_items));
             $this->assertEqual(count($esg3->eq_items),0);
