@@ -20,7 +20,7 @@
 			parent::__construct($initsHash);
 
 			// now do custom stuff
-			// e.g. automatically load all accesibility info associated with the user
+			// e.g. automatically load all accessibility info associated with the user
 
 			$this->inst_groups = [];
 			$this->eq_groups   = [];

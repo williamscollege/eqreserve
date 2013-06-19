@@ -253,7 +253,7 @@ function createTestData_TimeBlocks($dbConn) {
 
 function createTestData_Schedules($dbConn) {
     // 1000 series ids
-    // schedule: schedule_id, type, user_id, notes, frequency_type, interval, list_days, start_time, end_time, end_on_type, end_on_quantity, end_on_date, summary, flag_all_day, flag_delete
+    // schedule: schedule_id, type, user_id, notes, frequency_type, repeat_interval, list_days, start_time, end_time, end_on_type, end_on_quantity, end_on_date, summary, flag_all_day, flag_delete
     $addTestScheduleSql = "INSERT INTO ".Schedule::$dbTable." VALUES
         (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0),         # single time block in the schedule, 1 item
         (1002,'consumer',1101,'notes2 normal with 3 blocks','no_repeat',1,'1','2013-03-25 19:00:00','2013-03-25 20:00:00','end_on_quantity',1,'2013-03-25 00:00:00','Once 1 time',0,0), # three time blocks in the schedule, 1 item

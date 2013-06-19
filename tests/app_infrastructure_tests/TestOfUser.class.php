@@ -123,7 +123,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual($u->eq_groups[2]->permission->role_id, 1);
         $this->assertEqual($u->eq_groups[3]->permission->role_id, 2);
         $this->assertEqual($u->eq_groups[4]->permission->role_id, 2);
-    }   
+    }
 
     function testUserReservationsLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);

@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `schedules` (
     `user_id` INT NOT NULL,
     `notes` TEXT NULL,
     `frequency_type` VARCHAR(255) NULL, /* no_repeat, weekly, monthly */
-    `interval` INT DEFAULT 1, /*  */
+    `repeat_interval` INT DEFAULT 1, /*  */
     `list_days` VARCHAR(255) NULL, /* csv of days (mon, tues) or (1,4,9,16) */
 	`start_time` DATETIME NULL, /*  */
 	`end_time` DATETIME NULL, /*  */

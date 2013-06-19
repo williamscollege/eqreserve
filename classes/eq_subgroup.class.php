@@ -16,7 +16,7 @@
 			parent::__construct($initsHash);
 
 			// now do custom stuff
-			// e.g. automatically load all accesibility info associated with the user
+			// e.g. automatically load all accessibility info associated with the user
 
 			if (!array_key_exists('ordering', $initsHash)) {
 				$this->ordering = 1;
