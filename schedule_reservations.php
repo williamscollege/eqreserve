@@ -16,15 +16,7 @@
 	#------------------------------------------------#
 	# Fetch values
 	#------------------------------------------------#
-	# Things to reserve
-	# TODO must derive these lists: list_days
-	$strRepeat_dom_10  = htmlentities((isset($_REQUEST["repeat_dom_10"])) ? util_quoteSmart($_REQUEST["repeat_dom_10"]) : 0);
-	$strRepeat_dow_mon = htmlentities((isset($_REQUEST["repeat_dow_mon"])) ? util_quoteSmart($_REQUEST["repeat_dow_mon"]) : 0);
-
-	# TODO - this value is unnecessary!
-	$intReservationGroupID = htmlentities((isset($_REQUEST["reservationGroupID"])) ? $_REQUEST["reservationGroupID"] : 0);
-
-	# How to schedule the reservation(s)
+	# Schedule the reservation(s)
 	$bitAllDay                 = htmlentities((isset($_REQUEST["isAllDayEvent"])) ? 1 : 0);
 	$strReservationType        = htmlentities((isset($_REQUEST["reservationType"])) ? 'manager' : 'consumer');
 	$dateReservationStartDate  = htmlentities((isset($_REQUEST["reservationStartDate"])) ? $_REQUEST["reservationStartDate"] : 0);
@@ -39,6 +31,40 @@
 	$intRepeatEndOnQuantity    = htmlentities((isset($_REQUEST["repeatEndOnQuantity"])) ? $_REQUEST["repeatEndOnQuantity"] : 0);
 	$dateRepeatEndOnDate       = htmlentities((isset($_REQUEST["repeatEndOnDate"])) ? $_REQUEST["repeatEndOnDate"] : 0);
 	$strReservationSummaryText = htmlentities((isset($_REQUEST["reservationSummaryText"])) ? util_quoteSmart($_REQUEST["reservationSummaryText"]) : 0);
+
+	# Which days to repeat (if any)
+	$dow_tags   = array('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat');
+	$repeat_dow = array();
+	foreach ($dow_tags as $dow) {
+		$repeat_dow[$dow] = htmlentities($_REQUEST['repeat_dow_' . $dow]);
+	}
+	$repeat_dom = array();
+	for ($dom = 1; $dom <= 31; $dom++) {
+		$repeat_dom[$dom] = htmlentities($_REQUEST['repeat_dom_' . $dom]); // 1 through 31
+	}
+	$strRepeat_dow = "'" . implode("','", $repeat_dow) . "'";
+	$strRepeat_dom = "'" . implode("','", $repeat_dom) . "'";
+
+
+	# Insert X Time Block
+	# loop: StartDate to EndDate
+	# frequency where x = weekly, monthly [insert which days]
+	# TODO DateChecks: StartDate,EndDate >= NOW; EndDate >= StartDate;
+	# IN PROCESS OF DEVELOPMENT....
+//	for ($dateIncrement = $dateReservationStartDate; $dateIncrement <= $dateRepeatEndOnDate; ) {
+//		# Insert 1 Time Block
+//		$timeblock = New TimeBlock(['DB' => $DB]);
+//
+//		$timeblock->schedule_id = $sched->schedule_id;
+//		$timeblock->start_time  = $dateComputedStartDateTime;
+//		$timeblock->end_time    = $dateComputedEndDateTime;
+//
+//		$timeblock->updateDb();
+//
+//		$dateIncrement->add(new DatePeriod('P'));
+//		# Increment by Interval
+//		$dateIncrement .= $dateIncrement + $intRepeatInterval; // reset using DATE format!
+//	}
 
 
 	#------------------------------------------------#
@@ -64,8 +90,12 @@
 	$sched->user_id         = $USER->user_id;
 	$sched->frequency_type  = $strRepeatFrequencyType;
 	$sched->repeat_interval = $intRepeatInterval;
-	# TODO : need to derive this, above...
-	# $sched->list_days       = ;
+	if ($strRepeatFrequencyType == 'weekly') {
+		$sched->which_days = $strRepeat_dow;
+	}
+	elseif ($strRepeatFrequencyType == 'monthly') {
+		$sched->which_days = $strRepeat_dom;
+	}
 	$sched->start_time      = $dateComputedStartDateTime;
 	$sched->end_time        = $dateComputedEndDateTime;
 	$sched->end_on_type     = $strRepeatEndType;
@@ -73,7 +103,7 @@
 	$sched->end_on_date     = $dateRepeatEndOnDate;
 	$sched->summary         = $strReservationSummaryText;
 	$sched->flag_all_day    = $bitAllDay;
-	# $sched->notes           = ""; # field is not used in this context
+
 
 	$sched->updateDb();
 
@@ -121,7 +151,8 @@
 	//###############################################################
 	elseif ($strRepeatFrequencyType == 'weekly') {
 		# Insert X Time Block
-
+		# loop: StartDate to EndDate
+		# frequecy where x = weekly, monthly [insert which days]
 
 	}
 	//###############################################################

@@ -3,7 +3,7 @@
 	require_once dirname(__FILE__) . '/reservation.class.php';
 
 	class Schedule extends Db_Linked {
-		public static $fields = array('schedule_id', 'type', 'user_id', 'notes', 'frequency_type', 'repeat_interval', 'list_days', 'start_time', 'end_time', 'end_on_type', 'end_on_quantity', 'end_on_date', 'summary', 'flag_all_day', 'flag_delete');
+		public static $fields = array('schedule_id', 'type', 'user_id', 'notes', 'frequency_type', 'repeat_interval', 'which_days', 'start_time', 'end_time', 'end_on_type', 'end_on_quantity', 'end_on_date', 'summary', 'flag_all_day', 'flag_delete');
 		public static $primaryKeyField = 'schedule_id';
 		public static $dbTable = 'schedules';
 
