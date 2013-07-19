@@ -144,12 +144,12 @@ CREATE TABLE IF NOT EXISTS `schedules` (
     `user_id` INT NOT NULL,
     `notes` TEXT NULL,
     `frequency_type` VARCHAR(255) NULL, /* no_repeat, weekly, monthly */
-    `repeat_interval` INT DEFAULT 1, /*  */
-    `which_days` VARCHAR(255) NULL, /* csv of days (mon, tues) or (1,4,9,16) */
-	`start_time` DATETIME NULL, /*  */
-	`duration_minutes` INT NOT NULL,
-	`end_time` DATETIME NULL, /*  */
-    `end_on_date` DATETIME NULL, /*  */
+    `repeat_interval` INT DEFAULT 1, /* repeat for 1 to 30 times (weekly or monthly) */
+    `which_days` VARCHAR(255) NULL, /* csv of the 7 weekdays ('0','1','1','1','1','1','0') or csv of selected monthdays (1,4,9,16) */
+	`timeblock_start_time` TIME NULL, /*  */
+	`timeblock_duration` INT NOT NULL,
+	`start_on_date` DATE NULL, /*  */
+    `end_on_date` DATE NULL, /*  */
 	`summary` TEXT NULL, /*  */
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='collects multiple time blocks into a related group';
@@ -169,8 +169,8 @@ CREATE TABLE IF NOT EXISTS `reservations` (
 CREATE TABLE IF NOT EXISTS `time_blocks` (
     `time_block_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `schedule_id` INT NOT NULL,
-    `start_time` DATETIME NULL,
-    `end_time` DATETIME NULL,
+    `start_datetime` DATETIME NULL,
+    `end_datetime` DATETIME NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: schedules.schedule_id */

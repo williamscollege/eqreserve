@@ -17,9 +17,9 @@
         // static method tests
 
         function testTimeBlockCmp() {
-            $t1 = new TimeBlock(['start_time'=>'2012-03-25 11:30:00','DB'=>$this->DB]);
-            $t2 = new TimeBlock(['start_time'=>'2012-03-25 10:30:00','DB'=>$this->DB]);
-            $t3 = new TimeBlock(['start_time'=>'2012-03-25 11:30:00','DB'=>$this->DB]);
+            $t1 = new TimeBlock(['start_datetime'=>'2012-03-25 11:30:00','DB'=>$this->DB]);
+            $t2 = new TimeBlock(['start_datetime'=>'2012-03-25 10:30:00','DB'=>$this->DB]);
+            $t3 = new TimeBlock(['start_datetime'=>'2012-03-25 11:30:00','DB'=>$this->DB]);
 
             $this->assertEqual(TimeBlock::cmp($t2,$t1),-1);
             $this->assertEqual(TimeBlock::cmp($t1,$t3),0);

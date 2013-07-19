@@ -6,7 +6,7 @@
 	require_once dirname(__FILE__) . '../../util.php';
 
 	class TimeBlock extends Db_Linked {
-		public static $fields = array('time_block_id', 'schedule_id', 'start_time', 'end_time', 'flag_delete');
+		public static $fields = array('time_block_id', 'schedule_id', 'start_datetime', 'end_datetime', 'flag_delete');
 		public static $primaryKeyField = 'time_block_id';
 		public static $dbTable = 'time_blocks';
 
@@ -15,10 +15,10 @@
 		public $reservations = '';
 
 		public static function cmp($a, $b) {
-			if ($a->start_time == $b->start_time) {
+			if ($a->start_datetime == $b->start_datetime) {
 				return 0;
 			}
-			return ($a->start_time < $b->start_time) ? -1 : 1;
+			return ($a->start_datetime < $b->start_datetime) ? -1 : 1;
 		}
 
 		public function loadSchedule() {
@@ -47,7 +47,7 @@
 		}
 
 		public function toString() {
-			return util_timeRangeString($this->start_time, $this->end_time);
+			return util_timeRangeString($this->start_datetime, $this->end_datetime);
 		}
 	}
 

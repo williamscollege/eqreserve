@@ -78,9 +78,9 @@
 	elseif ($strRepeatFrequencyType == 'monthly') {
 		$sched->which_days = $strRepeat_dom;
 	}
-	$sched->start_time      = $dateComputedStartDateTime;
-//	TODO $sched->duration_minutes        = TODO: $tododuration;
-	$sched->end_time        = $dateComputedEndDateTime;
+	$sched->timeblock_start_time      = $dateComputedStartDateTime;
+	$sched->timeblock_duration   = $DKC_TODO_duration;
+	$sched->start_on_date      = $dateComputedStartDateTime;
 	$sched->end_on_date     = $dateRepeatEndOnDate;
 	$sched->summary         = $strReservationSummaryText;
 
@@ -141,8 +141,8 @@
 		$timeblock = New TimeBlock(['DB' => $DB]);
 
 		$timeblock->schedule_id = $sched->schedule_id;
-		$timeblock->start_time  = $dateComputedStartDateTime;
-		$timeblock->end_time    = $dateComputedEndDateTime;
+		$timeblock->start_datetime  = $dateComputedStartDateTime;
+		$timeblock->end_datetime    = $dateComputedEndDateTime;
 
 		$timeblock->updateDb();
 
@@ -166,8 +166,8 @@
 //			$timeblock = New TimeBlock(['DB' => $DB]);
 //
 //			$timeblock->schedule_id = $sched->schedule_id;
-//			$timeblock->start_time  = $dateComputedStartDateTime;
-//			$timeblock->end_time    = $dateComputedEndDateTime;
+//			$timeblock->start_datetime  = $dateComputedStartDateTime;
+//			$timeblock->end_datetime    = $dateComputedEndDateTime;
 //
 //			$timeblock->updateDb();
 //		}
