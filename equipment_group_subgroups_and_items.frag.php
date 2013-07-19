@@ -1,6 +1,5 @@
 <form action="schedule_reservations.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
 <input type="hidden" id="reservationStartTimeConverted" name="reservationStartTimeConverted" value="" />
-<input type="hidden" id="reservationEndTimeConverted" name="reservationEndTimeConverted" value="" />
 <input type="hidden" id="reservationSummaryText" name="reservationSummaryText" value="" />
 <legend class="pull-left row-fluid">Reserve Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
@@ -109,86 +108,98 @@
 			<input type="text" id="reservationStartTime" name="reservationStartTime" class="input-small" value="" maxlength="8" />
 			<span class="add-on"><i class="icon-time"></i></span>
 		</div>
-		to
-		<div id="wrapperReservationEndTime" class="input-append bootstrap-timepicker" title="End time">
-			<input type="text" id="reservationEndTime" name="reservationEndTime" class="input-small" value="" maxlength="8" />
-			<span class="add-on"><i class="icon-time"></i></span>
-		</div>
-		<div class="input-append" title="End date">
-			<input type="text" id="reservationEndDate" name="reservationEndDate" class="input-small" maxlength="12" />
-			<span id="iconHackReservationEndDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
-		</div>
+		<select id="reservationDuration" name="reservationDuration" class="input-large">
+			<option value="0" title="Please select duration">Select duration</option>
+			<option value="5">5 minutes</option>
+			<option value="10">10 minutes</option>
+			<option value="15">15 minutes</option>
+			<option value="20">20 minutes</option>
+			<option value="30">30 minutes</option>
+			<option value="45">45 minutes</option>
+			<option value="60">60 minutes</option>
+			<option value="90">90 minutes</option>
+			<option value="120">2 hours</option>
+			<option value="180">3 hours</option>
+			<option value="240">4 hours</option>
+			<option value="300">5 hours</option>
+			<option value="360">6 hours</option>
+			<option value="420">7 hours</option>
+			<option value="480">8 hours</option>
+			<option value="960">16 hours</option>
+			<option value="1440">24 hours</option>
+			<option value="2880">2 days</option>
+			<option value="4320">3 days</option>
+			<option value="5760">4 days</option>
+			<option value="7200">5 days</option>
+			<option value="8640">6 days</option>
+			<option value="10080">1 week (7 days)</option>
+			<option value="20160">2 weeks</option>
+			<option value="40320">4 weeks</option>
+		</select>
+		<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>
 	</div>
 </div>
 
 <!--start google riff-->
 <div class="control-group reservationForm hide">
-	<div class="control-group">
-		<label class="control-label" for="isAllDayEvent">All day:</label>
+<div class="control-group">
+	<label class="control-label" for="repeatFrequencyType">Repeats:</label>
 
-		<div class="controls" title="Is this an all day event?">
-			<input type="checkbox" class="checkbox" id="isAllDayEvent" name="isAllDayEvent" />
-		</div>
+	<div class="controls" title="Repeat frequency">
+		<select id="repeatFrequencyType" name="repeatFrequencyType" class="input-xlarge">
+			<option value="no_repeat" title="Not repeated">Not repeated</option>
+			<option value="weekly" title="Repeat on days of the week">Repeat on days of the week</option>
+			<option value="monthly" title="Repeat on days of the month">Repeat on days of the month</option>
+		</select>
 	</div>
+</div>
 
+<div id="wrapperRepeatOptions" class="hide">
 	<div class="control-group">
-		<label class="control-label" for="repeatFrequencyType">Repeats:</label>
+		<label class="control-label" for="repeatInterval">Repeat every:</label>
 
-		<div class="controls" title="Repeat Frequency">
-			<select id="repeatFrequencyType" name="repeatFrequencyType" class="input-xlarge">
-				<option value="no_repeat" title="Only on this one date">Only on</option>
-				<option value="weekly" title="Repeat on days of the week">Repeat on days of the week</option>
-				<option value="monthly" title="Repeat on days of the month">Repeat on days of the month</option>
+		<div class="controls" title="Repeat every">
+			<select id="repeatInterval" name="repeatInterval" class="input-mini">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+				<option value="24">24</option>
+				<option value="25">25</option>
+				<option value="26">26</option>
+				<option value="27">27</option>
+				<option value="28">28</option>
+				<option value="29">29</option>
+				<option value="30">30</option>
 			</select>
+			<span id="repeatIntervalDescription">weeks</span>
 		</div>
 	</div>
 
-	<div id="wrapperRepeatOptions" class="hide">
-		<div class="control-group">
-			<label class="control-label" for="repeatInterval">Repeat every:</label>
+	<div id="wrapperDoW" class="control-group">
+		<label class="control-label" for="DoW">Repeat on:</label>
 
-			<div class="controls" title="Repeat every">
-				<select id="repeatInterval" name="repeatInterval" class="input-mini">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-					<option value="11">11</option>
-					<option value="12">12</option>
-					<option value="13">13</option>
-					<option value="14">14</option>
-					<option value="15">15</option>
-					<option value="16">16</option>
-					<option value="17">17</option>
-					<option value="18">18</option>
-					<option value="19">19</option>
-					<option value="20">20</option>
-					<option value="21">21</option>
-					<option value="22">22</option>
-					<option value="23">23</option>
-					<option value="24">24</option>
-					<option value="25">25</option>
-					<option value="26">26</option>
-					<option value="27">27</option>
-					<option value="28">28</option>
-					<option value="29">29</option>
-					<option value="30">30</option>
-				</select>
-				<span id="repeatIntervalDescription">weeks</span>
-			</div>
-		</div>
-
-		<div id="wrapperDoW" class="control-group">
-			<label class="control-label" for="DoW">Repeat on:</label>
-
-			<div class="controls">
-				<div id="DoW">
+		<div class="controls">
+			<div id="DoW">
 					<span class="pull-left row-fluid" style="padding: 4px">
 						<input type="hidden" name="repeat_dow_sun" id="repeat_dow_sun" value="0" />
 						<input type="hidden" name="repeat_dow_mon" id="repeat_dow_mon" value="0" />
@@ -207,16 +218,16 @@
 						<input type="button" id="btn_dow_sat" value="SAT" class="btn-mini toggler_dow" title="Repeat on Saturday" />&nbsp;
 						<input type="button" id="btn_dow_sun" value="SUN" class="btn-mini toggler_dow" title="Repeat on Sunday" />&nbsp;
 					</span>
-				</div>
 			</div>
 		</div>
+	</div>
 
 
-		<div id="wrapperDoM" class="control-group">
-			<label class="control-label" for="DoW">Repeat on:</label>
+	<div id="wrapperDoM" class="control-group">
+		<label class="control-label" for="DoW">Repeat on:</label>
 
-			<div class="controls">
-				<div id="DoW">
+		<div class="controls">
+			<div id="DoW">
 					<span class="pull-left row-fluid" style="padding: 4px">
 						<input type="hidden" name="repeat_dom_1" id="repeat_dom_1" value="0" />
 						<input type="button" id="btn_dom_1" value="01" class="btn-mini toggler_dom" title="Repeat on 1st day of month" />&nbsp;
@@ -289,46 +300,36 @@
 						<input type="hidden" name="repeat_dom_31" id="repeat_dom_31" value="0" />
 						<input type="button" id="btn_dom_31" value="31" class="btn-mini toggler_dom" title="Repeat on 31st day of month" />&nbsp;
 					</span>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="control-group">
-			<label class="control-label" for="">Ends:</label>
-
-			<div class="controls">
-				<label for="repeatEndType_1" title="Ends after a number of occurrences">
-					<input type="radio" id="repeatEndType_1" name="repeatEndType" checked="checked" value="end_on_quantity" /> After
-					<input type="text" id="repeatEndOnQuantity" name="repeatEndOnQuantity" size="3" value="1" class="input-mini" maxlength="3" />
-					occurrences
-				</label>
-				<label for="repeatEndType_2" title="Ends on a specified date">
-					<input type="radio" id="repeatEndType_2" name="repeatEndType" value="end_on_date" /> On
-					<div class="input-append">
-						<input type="text" id="repeatEndOnDate" name="repeatEndOnDate" class="input-small" maxlength="12" class="input-small" required="required" />
-						<span id="iconHackRepeatEndOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
-					</div>
-				</label>
 			</div>
 		</div>
 	</div>
+
+
 	<div class="control-group">
-		<label class="control-label" for="ajaxSubgroupIsMultiSelect">Summary:</label>
+		<label class="control-label" for="">Ends on:</label>
 
 		<div class="controls">
-			<span id="reservationSummary">Once.</span>
+			<label for="repeatEndOnDate" title="Ends on a specified date">
+				<div class="input-append">
+					<input type="text" id="repeatEndOnDate" name="repeatEndOnDate" class="input-small" maxlength="12" class="input-small" required="required" />
+					<span id="iconHackRepeatEndOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
+				</div>
+				(inclusive of this date)
+			</label>
 		</div>
 	</div>
 </div>
-<!--end google riff-->
+<div class="control-group">
+	<label class="control-label" for="ajaxSubgroupIsMultiSelect">Summary:</label>
 
-
-
+	<div class="controls">
+		<span id="reservationSummary">Once.</span>
+	</div>
+</div>
 <?php
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>
-		<div class="control-group reservationForm hide">
+		<div class="control-group">
 			<label class="control-label" for="reservationType">Maintenance Period?</label>
 
 			<div class="controls">
@@ -339,8 +340,7 @@
 	<?php
 	}
 ?>
-
-<div class="control-group reservationForm hide">
+<div class="control-group">
 	<label class="control-label" for="btnReservationSubmit"></label>
 
 	<div class="controls">
@@ -348,6 +348,8 @@
 		<button type="button" id="btnReservationCancel" name="btnReservationCancel" class="btn btn-link btn-cancel">Cancel</button>
 	</div>
 </div>
+</div>
+<!--end google riff-->
 </form>
 
 

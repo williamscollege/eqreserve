@@ -57,7 +57,7 @@ $(document).ready(function () {
 	});
 
 	// Reserve Equipment: calendar
-	$("#reservationStartDate, #reservationEndDate").datepicker({
+	$("#reservationStartDate").datepicker({
 		dateFormat: 'yy-mm-dd',
 		minDate: -0,
 		maxDate: +730
@@ -66,16 +66,8 @@ $(document).ready(function () {
 	$("#iconHackReservationStartDate").click(function () {
 		$("#reservationStartDate").datepicker('show');
 	});
-	$("#iconHackReservationEndDate").click(function () {
-		$("#reservationEndDate").datepicker('show');
-	});
 	// Reserve Equipment: timepicker
 	$("#reservationStartTime").timepicker({
-		minuteStep: 15,
-		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
-		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
-	});
-	$("#reservationEndTime").timepicker({
 		minuteStep: 15,
 		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
@@ -668,42 +660,26 @@ $(document).ready(function () {
 	// Schedule Reservation
 	// ***************************
 
-	// set initial form values
-	$("#repeatFrequencyType [value='no_repeat']").html('Only on ' + $("#reservationStartDate").val());
-
 	// update date values based on Start Date
 	$("#reservationStartDate, #repeatEndOnDate").change(function () {
-		// update the first select box option
-		$("#repeatFrequencyType [value='no_repeat']").html('Only on ' + $("#reservationStartDate").val());
-
 		// update the "Repeat Ends" date so that it is never less than the Start Date
 		if ($("#reservationStartDate").val() > ($("#repeatEndOnDate").val())) {
 			// alert('the new date is bigger!');
 			$("#repeatEndOnDate").val($("#reservationStartDate").val());
 		}
-
-		// update the "Reservation Ends" date so that it is never less than the Repeat Ends date
-		if ($("#repeatEndOnDate").val() > ($("#reservationEndDate").val())) {
-			$("#reservationEndDate").val($("#repeatEndOnDate").val());
-		}
 	})
 
-	// isAllDayEvent? show/hide time inputs
-	$("#isAllDayEvent").change(function () {
-		if ($("#isAllDayEvent").is(':checked')) {
-			$("#wrapperReservationStartTime, #wrapperReservationEndTime").addClass("hide");
-		}
-		else {
-			$("#wrapperReservationStartTime, #wrapperReservationEndTime").removeClass("hide");
-		}
+	// Easily set reservation for entire 24-hour period
+	$("#btnAllDayEvent").click(function () {
+		$("#reservationStartTime").timepicker('setTime', '12:00 AM');
+		$("#reservationDuration").val('1440');
 	});
 
 	// Repeats Frequency: update visible fields based on user selection
 	$("#repeatFrequencyType").change(function () {
 		if ($("#repeatFrequencyType").val() == 'no_repeat') {
-			// Only on single date
+			// Not repeated
 			$("#wrapperRepeatOptions").addClass("hide");
-			$("#repeatIntervalDescription").html("days");
 			$("#wrapperDoW").addClass("hide");
 			$("#wrapperDoM").addClass("hide");
 		}
@@ -772,11 +748,6 @@ $(document).ready(function () {
 
 	// Construct text string summary and final hidden values
 	function getListofDates() {
-		var allday = "";
-		if ($("#isAllDayEvent").prop("checked")) {
-			var allday = "All day, ";
-		}
-
 		var interval = $("#repeatInterval").val();
 
 		var frequency = $("#repeatFrequencyType").val();
@@ -790,19 +761,10 @@ $(document).ready(function () {
 			frequency = 'Every ' + interval + ' months ';
 		}
 
-		var end_repeat = "";
-		if ($("#repeatEndType_1").is(':checked')) {
-			end_repeat = $("#repeatEndOnQuantity").val();
-			if (end_repeat > 1) {
-				end_repeat += ' times';
-			}
-			else {
-				end_repeat += ' time';
-			}
-		}
-		else if ($("#repeatEndType_2").is(':checked')) {
-			end_repeat = ' until ' + $("#repeatEndOnDate").val();
-		}
+		var start_time = ' at ' + $("#reservationStartTime").val();
+		var duration = ' for ' + $("#reservationDuration").val() + ' minutes ';
+
+		var end_repeat = ' until ' + $("#repeatEndOnDate").val();
 
 		// Determine which value to pass (DoW or DoM)
 		var dates_selected = "";
@@ -864,22 +826,21 @@ $(document).ready(function () {
 		}
 
 		// Construct the summary string
-		$("#reservationSummary").text(allday + frequency + dates_selected + end_repeat);
+		$("#reservationSummary").text(frequency + start_time + duration + dates_selected + end_repeat);
 
 		// Update these values, in preparation of eventual form submit
 		$("#reservationSummaryText").val($("#reservationSummary").text());
 
 		// Convert time values from 12-hour AM/PM to 24-hour database ready format
 		$("#reservationStartTimeConverted").val(util_12To24HourFormat($("#reservationStartTime").val()));
-		$("#reservationEndTimeConverted").val(util_12To24HourFormat($("#reservationEndTime").val()));
 	}
 
 	// Listener: click
-	$(".toggler_dow, .toggler_dom").click(function () {
+	$("#btnAllDayEvent, .toggler_dow, .toggler_dom").click(function () {
 		getListofDates();
 	});
 	// Listener: change
-	$("#isAllDayEvent, #repeatFrequencyType, #repeatInterval, input[name=repeatEndType], #repeatEndOnQuantity, #repeatEndOnDate").change(function () {
+	$("#reservationStartDate, #reservationStartTime, #reservationDuration, #repeatFrequencyType, #repeatInterval, #repeatEndOnDate").change(function () {
 		getListofDates();
 	});
 

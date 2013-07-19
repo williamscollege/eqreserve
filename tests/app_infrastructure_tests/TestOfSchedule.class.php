@@ -17,11 +17,11 @@
         // static method tests
 
         function testScheduleCmp() {
-            $tg1 = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB); // u 1101, c, 2013-03-22 15:00
-            $tg2 = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB); // u 1101, c, 2013-03-26 10:30
-            $tg3 = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB); // u 1101, m, 2013-03-25 18:00
-            $tg4 = Schedule::getOneFromDb(['schedule_id'=>1008],$this->DB); // u 1102, m, 2013-03-25 18:00
-            $tg5 = Schedule::getOneFromDb(['schedule_id'=>1009],$this->DB); // u 1103, c, 2013-03-26 18:00
+            $tg1 = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB); // u 1101, c, 2013-03-22 10:00
+            $tg2 = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB); // u 1101, c, 2013-03-26 10:00
+            $tg3 = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB); // u 1101, m, 2013-03-25 19:00
+            $tg4 = Schedule::getOneFromDb(['schedule_id'=>1008],$this->DB); // u 1102, m, 2013-03-25 19:00
+            $tg5 = Schedule::getOneFromDb(['schedule_id'=>1009],$this->DB); // u 1103, c, 2013-03-26 19:00
 
             $this->assertEqual(Schedule::cmp($tg1,$tg1),0);
 
@@ -91,12 +91,12 @@
             $this->assertTrue($s->matchesDb);
 
             $this->assertEqual($s->toString(),
-                               '2013/3/22 3:00-3:45 PM');
+                               '2013/3/22 10:00-10:15 AM');
 
             $s = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB);
             $this->assertTrue($s->matchesDb);
             $this->assertEqual($s->toString(),
-                               '[2013/3/26 10:30-11:30 AM], [2013/4/2 10:30-11:30 AM], [2013/4/9 10:30-11:30 AM]');
+                               '[2013/3/26 10:00-10:30 AM], [2013/4/2 10:00-10:30 AM], [2013/4/9 10:00-10:30 AM]');
 
         }
 

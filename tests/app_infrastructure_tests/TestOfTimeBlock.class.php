@@ -66,7 +66,7 @@
             $t = TimeBlock::getOneFromDb(['time_block_id'=>901],$this->DB);
 
             $this->assertEqual($t->toString(),
-                               '2013/3/22 3:00-3:45 PM');
+                               '2013/3/22 10:00-10:15 AM');
         }
 
     }

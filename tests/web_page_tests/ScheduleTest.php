@@ -29,7 +29,7 @@ class ScheduleTest extends WMSWebTestCase {
         $this->getToSchedulePage();
 
         $this->assertResponse(200);
-        $this->assertText('2013/3/22 3:00-3:45 PM');
+        $this->assertText('2013/3/22 10:00-10:15 AM');
         $this->assertText('testItem1');
         $this->assertText('testSubgroup1');
         $this->assertText('testEqGroup1');
