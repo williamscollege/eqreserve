@@ -59,7 +59,7 @@ class TestOfAuth_LDAP extends UnitTestCase {
 
 //        $this->dump($uDataList);
 
-        $this->assertEqual(count($uDataList),3);
+        $this->assertEqual(count($uDataList),2);
     }
 
 }

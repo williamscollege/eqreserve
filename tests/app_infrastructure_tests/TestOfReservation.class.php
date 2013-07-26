@@ -27,6 +27,75 @@
             $this->assertEqual(Reservation::cmp($r2,$r1),EqItem::cmp($r2->eq_item,$r1->eq_item));
         }
 
+        function testTimingConflictsExist() {
+            # initial - no conflicts
+            $this->assertFalse(Reservation::timingConflictsExist($this->DB));
+
+
+            # global check - conflict (exact time block match)
+            $s = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
+            $s->schedule_id = false;
+            $s->updateDb(0);
+//            $this->dump($s);
+
+            $t = TimeBlock::getOneFromDb(['time_block_id'=>901],$this->DB);
+            $t->time_block_id = false;
+            $t->schedule_id = $s->schedule_id;
+            $t->updateDb();
+//            $this->dump($t);
+
+            $r = new Reservation(['eq_item_id'=>401, 'schedule_id'=>$s->schedule_id, 'flag_delete'=>0,'DB'=>$this->DB]);
+            $r->updateDb();
+//            $this->dump($r);
+
+            $this->assertTrue(Reservation::timingConflictsExist($this->DB));
+
+
+            # specific check - includes conflict
+            $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+
+
+            # specific check - excludes conflict
+            $this->assertFalse(Reservation::timingConflictsExist($this->DB,[404]));
+
+
+            ##################
+            # timing conflict relations
+            # tPrime start_datetime = '2013-03-22 10:00:00'
+            # tPrime end_datetime = '2013-03-22 10:15:00'
+
+            # 1. no conflict
+            $t->start_datetime = '2013-03-22 09:45:00';
+            $t->end_datetime = '2013-03-22 10:00:00';
+            $t->updateDb();
+//            $this->dump($t);
+            $this->assertFalse(Reservation::timingConflictsExist($this->DB,[401]));
+
+            # 2. fully internal
+            $t->start_datetime = '2013-03-22 10:05:00';
+            $t->end_datetime = '2013-03-22 10:10:00';
+            $t->updateDb();
+            $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+
+            # 3. fully external
+            $t->start_datetime = '2013-03-22 09:55:00';
+            $t->end_datetime = '2013-03-22 10:20:00';
+            $t->updateDb();
+            $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+
+            # 4. begin is internal, end is external
+            $t->start_datetime = '2013-03-22 10:05:00';
+            $t->end_datetime = '2013-03-22 10:20:00';
+            $t->updateDb();
+            $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+
+            # 5. end is internal, begin is external
+            $t->start_datetime = '2013-03-22 09:55:00';
+            $t->end_datetime = '2013-03-22 10:10:00';
+            $t->updateDb();
+            $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+        }
+
         //----------------
         // instance method tests
 

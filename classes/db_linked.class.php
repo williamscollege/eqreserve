@@ -424,8 +424,9 @@
 					echo "insert stm err result:\n";
 					print_r($insertStmt->errorInfo());
 				}
-				# $this->fieldValues[static::$primaryKeyField] = $res;
-				$this->refreshFromDb();
+				$this->fieldValues[static::$primaryKeyField] = $this->dbConnection->lastInsertId(static::$primaryKeyField);
+                $this->matchesDb = true;
+				//$this->refreshFromDb();
 			}
 			else {
 				$updateSql = 'UPDATE ' . static::$dbTable . ' SET ' . static::$primaryKeyField . '=' . $this->fieldValues[static::$primaryKeyField];
