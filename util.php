@@ -138,6 +138,8 @@
 
 	function util_createDbConnection() {
 		//print_r($_SERVER);
+//        TODO: figure out how to handle this for command line scripts (possibly build this directly into the command line header, but still need to resolve test vs live)
+//		if ((array_key_exists('SERVER_NAME',$_SERVER)) && ($_SERVER['SERVER_NAME'] == 'localhost')) {
 		if ($_SERVER['SERVER_NAME'] == 'localhost') {
 			return new PDO("mysql:host=" . TESTING_DB_SERVER . ";dbname=" . TESTING_DB_NAME . ";port=3306", TESTING_DB_USER, TESTING_DB_PASS);
 		}
