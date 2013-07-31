@@ -27,7 +27,7 @@
             $this->assertEqual(Reservation::cmp($r2,$r1),EqItem::cmp($r2->eq_item,$r1->eq_item));
         }
 
-        function testTimingConflictsExist() {
+        function testTimingConflicts() {
             # initial - no conflicts
             $this->assertFalse(Reservation::timingConflictsExist($this->DB));
 
@@ -49,14 +49,17 @@
 //            $this->dump($r);
 
             $this->assertTrue(Reservation::timingConflictsExist($this->DB));
-
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB)),1);
 
             # specific check - includes conflict
             $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[401])),1);
 
-
+//print "<h2>A</h2>";
             # specific check - excludes conflict
             $this->assertFalse(Reservation::timingConflictsExist($this->DB,[404]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[404])),0);
+//print "<h2>A</h2>";
 
 
             ##################
@@ -70,30 +73,35 @@
             $t->updateDb();
 //            $this->dump($t);
             $this->assertFalse(Reservation::timingConflictsExist($this->DB,[401]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[401])),0);
 
             # 2. fully internal
             $t->start_datetime = '2013-03-22 10:05:00';
             $t->end_datetime = '2013-03-22 10:10:00';
             $t->updateDb();
             $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[401])),1);
 
             # 3. fully external
             $t->start_datetime = '2013-03-22 09:55:00';
             $t->end_datetime = '2013-03-22 10:20:00';
             $t->updateDb();
             $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[401])),1);
 
             # 4. begin is internal, end is external
             $t->start_datetime = '2013-03-22 10:05:00';
             $t->end_datetime = '2013-03-22 10:20:00';
             $t->updateDb();
             $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[401])),1);
 
             # 5. end is internal, begin is external
             $t->start_datetime = '2013-03-22 09:55:00';
             $t->end_datetime = '2013-03-22 10:10:00';
             $t->updateDb();
             $this->assertTrue(Reservation::timingConflictsExist($this->DB,[401]));
+            $this->assertEqual(count(Reservation::findTimingConflicts($this->DB,[401])),1);
         }
 
         //----------------
