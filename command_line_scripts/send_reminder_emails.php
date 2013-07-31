@@ -14,7 +14,8 @@ require_once('cl_head.php');
 # TODO: consider grouping reservation data by schedule id in the email message - i.e. group together all items that were reserved together; currently the system put's each item on its own line with its own display of the time block
 
 $cur_date = date('Y-m-d');
-$lookahead_interval = 2;
+$cur_date = '2013-03-15';
+$lookahead_interval = 42;
 
 function reservationDataToHumanReadableString($rsv,$flag_include_name_of_user=false) {
     $start_dt = new DateTime($rsv['time_block_start_datetime']);
@@ -143,8 +144,9 @@ while ($row = $eq_reservation_stmt->fetch(PDO::FETCH_ASSOC)) {
         $users_info_hash[$row['user_id']] = [
             'user_id' => $row['user_id']
             ,'username' => $row['username']
-            ,'name' => $row['name']
-            ,'email' => $row['email']
+            ,'fname' => $row['user_fname']
+            ,'lname' => $row['user_lname']
+            ,'email' => $row['user_email']
             ,'managed_group_ids' => []
             ,'consumer_reservations' => []
             ,'manager_reservations' => []
@@ -152,7 +154,7 @@ while ($row = $eq_reservation_stmt->fetch(PDO::FETCH_ASSOC)) {
         ];
 
         # get the list of the groups that the user manages
-        $u = User::getOneFromDb(['user_id'=>$row[user_id]],$DB);
+        $u = User::getOneFromDb(['user_id'=>$row['user_id']],$DB);
         $u->loadEqGroups();
         foreach ($u->eq_groups AS $u_eqg) {
             if ($u->canManageEqGroup($u_eqg)) {
@@ -170,21 +172,26 @@ while ($row = $eq_reservation_stmt->fetch(PDO::FETCH_ASSOC)) {
     }
 
     # initialize the groups info data structure if need be
-    if (! array_key_exists($row['group_id'],$groups_reservations_hash)) {
-        $groups_reservations_hash[$row['group_id']] = [];
+    if (! array_key_exists('g'.$row['group_id'],$groups_reservations_hash)) {
+        $groups_reservations_hash['g'.$row['group_id']] = [];
     }
 
     # append the eq reservation data to the appropriate group list
-    array_push($groups_info_has[$row['group_id']],$row);
+    array_push($groups_reservations_hash['g'.$row['group_id']],$row);
 }
 
 # match the group reservation data up with the users that manage those groups
-foreach ($users_info_hash as $uid=>$udata) {
-    foreach ($udata['managed_group_ids'] as $managed_gid) {
-        foreach ($groups_reservations_hash[$managed_gid] as $grdata) {
-            array_push($udata['reservations_on_managed_groups'],$grdata);
+foreach (array_keys($users_info_hash) as $uid) {
+    foreach ($users_info_hash[$uid]['managed_group_ids'] as $managed_gid) {
+        if (array_key_exists('g'.$managed_gid,$groups_reservations_hash)) {
+            foreach ($groups_reservations_hash['g'.$managed_gid] as $grdata) {
+                if ($grdata['user_id'] != $uid) {
+                    array_push($users_info_hash[$uid]['reservations_on_managed_groups'],$grdata);
+                }
+            }
         }
     }
+
 }
 
 
@@ -194,10 +201,12 @@ foreach ($users_info_hash as $uid=>$udata) {
  */
 $from = 'equipment_reservation-no-reply@williams.edu';
 $subject = "[EqReserve] $cur_date upcoming equipment reservations";
+$headers = "From: $from";
+
 
 foreach ($users_info_hash as $uid=>$udata) {
     $body = "
-Hello ".$udata['fname'],."
+Hello ".$udata['fname'].",
 
 This is a reminder from the equipment reservation system about item reservations in the next $lookahead_interval days.";
     # add consumer reservation section if needed
@@ -232,6 +241,9 @@ This is a reminder from the equipment reservation system about item reservations
                     ".reservationDataToHumanReadableString($rsv,true);
         }
     }
-    
-    # TODO: actually send the email (the parts are built now
+
+    // now actually send the email
+    // TODO: test this! hard to test on a dev system...
+    // mail($udata['email'], $subject, $body, $headers);
+    echo $body; // for testing - use above line for actually sending the email
 }
