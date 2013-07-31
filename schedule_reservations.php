@@ -43,7 +43,7 @@
 	# TimeBlocks: Start/End DateTime
 	$dateTimeBlockStartDateTime = new DateTime($dateScheduleStartOnDate . ' ' . $dateScheduleTimeBlockStart);
 	$dateTimeBlockEndDateTime   = new DateTime($dateTimeBlockStartDateTime->format('Y-m-d H:i:s'));
-	# TODO: change minutes to proper time periods (see: http://us3.php.net/manual/en/dateinterval.format.php)
+	# Time periods (see: http://us3.php.net/manual/en/dateinterval.format.php)
 	if (strpos($strScheduleDuration, 'M')){
 		# Minutes
 		$dateTimeBlockEndDateTime->add(new DateInterval('P0Y0M0DT0H' . $strScheduleDuration . '0S'));

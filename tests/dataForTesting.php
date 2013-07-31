@@ -253,21 +253,6 @@
 
 	function createTestData_Schedules($dbConn) {
 		// 1000 series ids
-		# START - ELIMINATE FROM HERE...
-		//		// ORIGINAL - schedule: schedule_id, type, user_id, notes, frequency_type, repeat_interval, which_days, start_time, timeblock_duration, end_time, end_on_date, summary, flag_delete
-		//		$addTestScheduleSql = "INSERT INTO " . Schedule::$dbTable . " VALUES
-		//        (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,NULL,'2013-03-22 10:00:00','15','2013-03-22 10:15:00','2013-03-22 10:00:00','Once 1 time',0),         # single time block in the schedule, 1 item
-		//        (1002,'consumer',1101,'notes2 normal with 3 blocks','no_repeat',1,NULL,'2013-03-26 10:00:00','30','2013-03-26 10:30:00','2013-04-09 10:00:00','Once 1 time',0), # three time blocks in the schedule, 1 item
-		//        (1003,'consumer',1101,'notes3','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0),                      # single deleted time block in the schedule
-		//        (1004,'consumer',1101,'notes4 deleted','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',1),              # schedule is deleted
-		//        (1005,'consumer',1101,'notes5 reservation deleted','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0),  # reservations is deleted
-		//        (1006,'manager', 1101,'notes6 manager','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0),              # manager reservation, 1 item
-		//        (1007,'consumer',1102,'notes7 other user','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0),           # other user single time block in the schedule
-		//        (1008,'manager', 1102,'notes8 other user manager','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0),   # other user single time block in the schedule
-		//        (1009,'consumer',1103,'notes9 2 items','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0),               # single time block in the schedule, 2 items reserved
-		//        (1010,'consumer',1101,'notes10 2 items not managed eq group','no_repeat',1,NULL,'2013-03-25 19:00:00','60','2013-03-25 20:00:00','2013-03-25 00:00:00','Once 1 time',0)  # single time block in the schedule, 1 items reserved, eq group not managed
-		//    ";
-		# END - ELIMINATE TO HERE.
 		// schedule: schedule_id, type, user_id, notes, frequency_type, repeat_interval, which_days, timeblock_start_time, timeblock_duration, start_on_date, end_on_date, summary, flag_delete
 		$addTestScheduleSql  = "INSERT INTO " . Schedule::$dbTable . " VALUES
         (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,NULL,'10:00:00','15M','2013-03-22','2013-03-22','Once 1 time',0),         # single time block in the schedule, 1 item
