@@ -17,7 +17,7 @@ $cur_date = date('Y-m-d');
 $cur_date = '2013-03-15';
 $lookahead_interval = 42;
 
-function reservationDataToHumanReadableString($rsv,$flag_include_name_of_user=false) {
+function getReservationTimeRangeInfo($rsv) {
     $start_dt = new DateTime($rsv['time_block_start_datetime']);
     $end_dt = new DateTime($rsv['time_block_end_datetime']);
 
@@ -35,14 +35,15 @@ function reservationDataToHumanReadableString($rsv,$flag_include_name_of_user=fa
     }
     $time_range_string = $time_range_string_pt1_base.$time_range_string_pt1_ap.' - '.$time_range_string_pt2;
 
-    $item_info = $rsv['item_name'].' (in '.$rsv['group_name'].' : '.$rsv['subgroup_name'].')';
+    return $time_range_string;
+}
 
-    $user_info = '';
-    if ($flag_include_name_of_user) {
-        $user_info = ' reserved by '.$rsv['user_fname'].' '.$rsv['user_lname'].' ('.$rsv['username'].')';
-    }
+function getReservationItemInfo($rsv) {
+    return $rsv['item_name'].' (in '.$rsv['group_name'].' : '.$rsv['subgroup_name'].')';
+}
 
-    return "$time_range_string $item_info$user_info";
+function getReservationUserInfo($rsv) {
+    return 'reserved by '.$rsv['user_fname'].' '.$rsv['user_lname'].' ('.$rsv['username'].')';
 }
 
 # 1. get all the upcoming time blocks (cur time to cur time + 48 hours); for each time block, get the schedule, reservations, extended item info, and user info
@@ -208,15 +209,23 @@ foreach ($users_info_hash as $uid=>$udata) {
     $body = "
 Hello ".$udata['fname'].",
 
-This is a reminder from the equipment reservation system about item reservations in the next $lookahead_interval days.";
+This is a reminder about upcoming equipment reservations for the next $lookahead_interval days.";
     # add consumer reservation section if needed
     if (count($udata['consumer_reservations']) > 0) {
         $body .= "
 
         Equipment you have reserved for your use:";
+        $prev_rsv_stamp = '';
         foreach ($udata['consumer_reservations'] as $rsv) {
+            $cur_rsv_stamp = getReservationTimeRangeInfo($rsv);
+            if ($prev_rsv_stamp != $cur_rsv_stamp) {
+                $body .= "
+
+                    $cur_rsv_stamp";
+                $prev_rsv_stamp = $cur_rsv_stamp;
+            }
             $body .= "
-                    ".reservationDataToHumanReadableString($rsv);
+                            ".getReservationItemInfo($rsv);
         }
     }
 
@@ -224,10 +233,19 @@ This is a reminder from the equipment reservation system about item reservations
     if (count($udata['manager_reservations']) > 0) {
         $body .= "
 
+
         Equipment you have reserved for management/maintenance purposes:";
+        $prev_rsv_stamp = '';
         foreach ($udata['manager_reservations'] as $rsv) {
+            $cur_rsv_stamp = getReservationTimeRangeInfo($rsv);
+            if ($prev_rsv_stamp != $cur_rsv_stamp) {
+                $body .= "
+
+                    $cur_rsv_stamp";
+                $prev_rsv_stamp = $cur_rsv_stamp;
+            }
             $body .= "
-                    ".reservationDataToHumanReadableString($rsv);
+                            ".getReservationItemInfo($rsv);
         }
     }
 
@@ -235,10 +253,19 @@ This is a reminder from the equipment reservation system about item reservations
     if (count($udata['reservations_on_managed_groups']) > 0) {
         $body .= "
 
+
         Reservations other people have on equipment that you manage:";
+        $prev_rsv_stamp = '';
         foreach ($udata['reservations_on_managed_groups'] as $rsv) {
+            $cur_rsv_stamp = getReservationTimeRangeInfo($rsv);
+            if ($prev_rsv_stamp != $cur_rsv_stamp) {
+                $body .= "
+
+                    $cur_rsv_stamp ".getReservationUserInfo($rsv);
+                $prev_rsv_stamp = $cur_rsv_stamp;
+            }
             $body .= "
-                    ".reservationDataToHumanReadableString($rsv,true);
+                            ".getReservationItemInfo($rsv);
         }
     }
 
