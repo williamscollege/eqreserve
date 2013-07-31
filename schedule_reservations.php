@@ -1,5 +1,5 @@
 <?php
-	$pageTitle = 'Reservation Requested';
+	$pageTitle = 'Scheduling reservations...';
 	require_once('head.php');
 
 	require_once('/classes/schedule.class.php');
@@ -16,31 +16,48 @@
 	#------------------------------------------------#
 	# Fetch values
 	#------------------------------------------------#
-	# Schedule the reservation(s)
-	$strReservationType        = htmlentities((isset($_REQUEST["reservationType"])) ? 'manager' : 'consumer');
-	$dateReservationStartDate  = htmlentities((isset($_REQUEST["reservationStartDate"])) ? $_REQUEST["reservationStartDate"] : 0);
-	$dateReservationStartTime  = htmlentities((isset($_REQUEST["reservationStartTimeConverted"])) ? $_REQUEST["reservationStartTimeConverted"] : 0);
-	$dateComputedStartDateTime = $dateReservationStartDate . ' ' . $dateReservationStartTime;
-	#TODO: $dateComputedEndDateTime   = $dateComputedStartDateTime + duration;
-	$strRepeatFrequencyType    = htmlentities((isset($_REQUEST["repeatFrequencyType"])) ? util_quoteSmart($_REQUEST["repeatFrequencyType"]) : 0);
-	$intRepeatInterval         = htmlentities((isset($_REQUEST["repeatInterval"])) ? $_REQUEST["repeatInterval"] : 0);
-	$dateRepeatEndOnDate       = htmlentities((isset($_REQUEST["repeatEndOnDate"])) ? $_REQUEST["repeatEndOnDate"] : 0);
-	$strReservationSummaryText = htmlentities((isset($_REQUEST["reservationSummaryText"])) ? util_quoteSmart($_REQUEST["reservationSummaryText"]) : 0);
+	# Form values
+	$strScheduleType            = htmlentities((isset($_REQUEST["scheduleType"])) ? 'manager' : 'consumer');
+	$strScheduleFrequencyType   = htmlentities((isset($_REQUEST["scheduleFrequencyType"])) ? util_quoteSmart($_REQUEST["scheduleFrequencyType"]) : 0);
+	$intScheduleRepeatInterval  = isset($_REQUEST["scheduleRepeatInterval"]) ? $_REQUEST["scheduleRepeatInterval"] : 0;
+	$dateScheduleTimeBlockStart = htmlentities((isset($_REQUEST["scheduleStartTimeConverted"])) ? $_REQUEST["scheduleStartTimeConverted"] : 0);
+	$strScheduleDuration        =  htmlentities((isset($_REQUEST["scheduleDuration"])) ? $_REQUEST["scheduleDuration"] : 0);
+	$dateScheduleStartOnDate    = htmlentities((isset($_REQUEST["scheduleStartOnDate"])) ? $_REQUEST["scheduleStartOnDate"] : 0);
+	$dateScheduleEndOnDate      = htmlentities((isset($_REQUEST["scheduleEndOnDate"])) ? $_REQUEST["scheduleEndOnDate"] : 0);
+	$strScheduleSummaryText     = htmlentities((isset($_REQUEST["scheduleSummaryText"])) ? util_quoteSmart($_REQUEST["scheduleSummaryText"]) : 0);
 
-	# Which days to repeat (if any)
-	# Days of Week
+	# Which_Days: Days of Week
 	$dow_tags   = array('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat');
 	$repeat_dow = array();
 	foreach ($dow_tags as $dow) {
 		$repeat_dow[$dow] = htmlentities($_REQUEST['repeat_dow_' . $dow]);
 	}
-	# Days of Month
+	# Which_Days: Days of Month
 	$repeat_dom = array();
 	for ($dom = 1; $dom <= 31; $dom++) {
 		$repeat_dom[$dom] = htmlentities($_REQUEST['repeat_dom_' . $dom]); // 1 through 31
 	}
-	$strRepeat_dow = "'" . implode("','", $repeat_dow) . "'";
-	$strRepeat_dom = "'" . implode("','", $repeat_dom) . "'";
+	$strScheduleWhichDays_dow = "'" . implode("','", $repeat_dow) . "'";
+	$strScheduleWhichDays_dom = "'" . implode("','", $repeat_dom) . "'";
+
+	# TimeBlocks: Start/End DateTime
+	$dateTimeBlockStartDateTime = new DateTime($dateScheduleStartOnDate . ' ' . $dateScheduleTimeBlockStart);
+	$dateTimeBlockEndDateTime   = new DateTime($dateTimeBlockStartDateTime->format('Y-m-d H:i:s'));
+	# TODO: change minutes to proper time periods (see: http://us3.php.net/manual/en/dateinterval.format.php)
+	if (strpos($strScheduleDuration, 'M')){
+		# Minutes
+		$dateTimeBlockEndDateTime->add(new DateInterval('P0Y0M0DT0H' . $strScheduleDuration . '0S'));
+	}
+	elseif (strpos($strScheduleDuration, 'H')){
+		# Hours
+		$dateTimeBlockEndDateTime->add(new DateInterval('P0Y0M0DT' . $strScheduleDuration . '0M0S'));
+	}
+	elseif (strpos($strScheduleDuration, 'DT')){
+		# Days
+		$dateTimeBlockEndDateTime->add(new DateInterval('P0Y0M' . $strScheduleDuration . '0H0M0S'));
+	}
+
+
 
 
 	#------------------------------------------------#
@@ -68,21 +85,24 @@
 	#------------------------------------------------#
 	$sched = New Schedule(['DB' => $DB]);
 
-	$sched->type            = $strReservationType;
+	$sched->type            = $strScheduleType;
 	$sched->user_id         = $USER->user_id;
-	$sched->frequency_type  = $strRepeatFrequencyType;
-	$sched->repeat_interval = $intRepeatInterval;
-	if ($strRepeatFrequencyType == 'weekly') {
-		$sched->which_days = $strRepeat_dow;
+	$sched->frequency_type  = $strScheduleFrequencyType;
+	$sched->repeat_interval = $intScheduleRepeatInterval;
+	if ($strScheduleFrequencyType == 'weekly') {
+		$sched->which_days = $strScheduleWhichDays_dow;
 	}
-	elseif ($strRepeatFrequencyType == 'monthly') {
-		$sched->which_days = $strRepeat_dom;
+	elseif ($strScheduleFrequencyType == 'monthly') {
+		$sched->which_days = $strScheduleWhichDays_dom;
 	}
-	$sched->timeblock_start_time      = $dateComputedStartDateTime;
-	$sched->timeblock_duration   = $DKC_TODO_duration;
-	$sched->start_on_date      = $dateComputedStartDateTime;
-	$sched->end_on_date     = $dateRepeatEndOnDate;
-	$sched->summary         = $strReservationSummaryText;
+	else { # no_repeat
+		$sched->which_days = 1;
+	}
+	$sched->timeblock_start_time = $dateScheduleTimeBlockStart;
+	$sched->timeblock_duration   = $strScheduleDuration;
+	$sched->start_on_date        = $dateScheduleStartOnDate;
+	$sched->end_on_date          = $dateScheduleEndOnDate;
+	$sched->summary              = $strScheduleSummaryText;
 
 
 	$sched->updateDb();
@@ -136,13 +156,13 @@
 
 	# Below is older stuff, to be replaced with the newer, above, later
 	//###############################################################
-	if ($strRepeatFrequencyType == 'no_repeat') {
+	if ($strScheduleFrequencyType == 'no_repeat') {
 		# Insert 1 Time Block
 		$timeblock = New TimeBlock(['DB' => $DB]);
 
-		$timeblock->schedule_id = $sched->schedule_id;
-		$timeblock->start_datetime  = $dateComputedStartDateTime;
-		$timeblock->end_datetime    = $dateComputedEndDateTime;
+		$timeblock->schedule_id    = $sched->schedule_id;
+		$timeblock->start_datetime = $dateTimeBlockStartDateTime->format('Y-m-d H:i:s');
+		$timeblock->end_datetime   = $dateTimeBlockEndDateTime->format('Y-m-d H:i:s');
 
 		$timeblock->updateDb();
 
@@ -151,37 +171,37 @@
 		$results['status'] = 'success';
 	}
 	//###############################################################
-	elseif ($strRepeatFrequencyType == 'weekly') {
+	elseif ($strScheduleFrequencyType == 'weekly') {
 		# Insert X Time Blocks
 
-//		$start = DateTime::createFromFormat("Y-m-d H:i:s",$dateReservationStartDate,new DateTimeZone("America/Toronto"));
-//		$end = ...;
-//		# iterate through which_days for repeating days?
-//
-//		$interval = new DateInterval("P7D"); // 7 days
-//		foreach($period as $dt){
-//			#echo $dt->format("Y-m-d H:i:s") . "\n";
-//
-//			# Insert 1 Time Block
-//			$timeblock = New TimeBlock(['DB' => $DB]);
-//
-//			$timeblock->schedule_id = $sched->schedule_id;
-//			$timeblock->start_datetime  = $dateComputedStartDateTime;
-//			$timeblock->end_datetime    = $dateComputedEndDateTime;
-//
-//			$timeblock->updateDb();
-//		}
-//
-//		#END TEST
-//
-//		$dateIncrement->add(new DatePeriod('P'));
-//				# Increment by Interval
-//				$dateIncrement .= $dateIncrement + $intRepeatInterval; // reset using DATE format!
-//			}
+		//		$start = DateTime::createFromFormat("Y-m-d H:i:s",$dateScheduleStartOnDate,new DateTimeZone("America/Toronto"));
+		//		$end = ...;
+		//		# iterate through which_days for repeating days?
+		//
+		//		$interval = new DateInterval("P7D"); // 7 days
+		//		foreach($period as $dt){
+		//			#echo $dt->format("Y-m-d H:i:s") . "\n";
+		//
+		//			# Insert 1 Time Block
+		//			$timeblock = New TimeBlock(['DB' => $DB]);
+		//
+		//			$timeblock->schedule_id = $sched->schedule_id;
+		//			$timeblock->start_datetime  = $dateTimeBlockStartDateTime->format('Y-m-d H:i:s');;
+		//			$timeblock->end_datetime    = $dateTimeBlockEndDateTime->format('Y-m-d H:i:s');;
+		//
+		//			$timeblock->updateDb();
+		//		}
+		//
+		//		#END TEST
+		//
+		//		$dateIncrement->add(new DatePeriod('P'));
+		//				# Increment by Interval
+		//				$dateIncrement .= $dateIncrement + $intScheduleRepeatInterval; // reset using DATE format!
+		//			}
 
 	}
 	//###############################################################
-	elseif ($strRepeatFrequencyType == 'monthly') {
+	elseif ($strScheduleFrequencyType == 'monthly') {
 		# Insert X Time Block
 		# TODO : we may be able to combine the weekly and monthly else statements into a single statement
 

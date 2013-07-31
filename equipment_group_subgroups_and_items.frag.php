@@ -1,6 +1,6 @@
 <form action="schedule_reservations.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
-<input type="hidden" id="reservationStartTimeConverted" name="reservationStartTimeConverted" value="" />
-<input type="hidden" id="reservationSummaryText" name="reservationSummaryText" value="" />
+<input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
+<input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <legend class="pull-left row-fluid">Reserve Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
 
@@ -101,14 +101,42 @@
 	<!--	<legend class="pull-left row-fluid">Schedule Reservation</legend>-->
 	<div class="">
 		<div class="input-append" title="Start date">
-			<input type="text" id="reservationStartDate" name="reservationStartDate" class="input-small" maxlength="12" />
-			<span id="iconHackReservationStartDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
+			<input type="text" id="scheduleStartOnDate" name="scheduleStartOnDate" class="input-small" maxlength="12" />
+			<span id="iconHackScheduleStartOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 		</div>
-		<div id="wrapperReservationStartTime" class="input-append bootstrap-timepicker" title="Start time">
-			<input type="text" id="reservationStartTime" name="reservationStartTime" class="input-small" value="" maxlength="8" />
+		<div id="wrapperScheduleStartTimeRaw" class="input-append bootstrap-timepicker" title="Start time">
+			<input type="text" id="scheduleStartTimeRaw" name="scheduleStartTimeRaw" class="input-small" value="" maxlength="8" />
 			<span class="add-on"><i class="icon-time"></i></span>
 		</div>
-		<select id="reservationDuration" name="reservationDuration" class="input-large">
+		<select id="scheduleDuration" name="scheduleDuration" class="input-large">
+			<option value="0" title="Please select duration">Select duration</option>
+			<option value="5M">5 minutes</option>
+			<option value="10M">10 minutes</option>
+			<option value="15M">15 minutes</option>
+			<option value="20M">20 minutes</option>
+			<option value="30M">30 minutes</option>
+			<option value="45M">45 minutes</option>
+			<option value="60M">60 minutes</option>
+			<option value="90M">90 minutes</option>
+			<option value="2H">2 hours</option>
+			<option value="3H">3 hours</option>
+			<option value="4H">4 hours</option>
+			<option value="5H">5 hours</option>
+			<option value="6H">6 hours</option>
+			<option value="7H">7 hours</option>
+			<option value="8H">8 hours</option>
+			<option value="16H">16 hours</option>
+			<option value="1DT">24 hours</option>
+			<option value="2DT">2 days</option>
+			<option value="3DT">3 days</option>
+			<option value="4DT">4 days</option>
+			<option value="5DT">5 days</option>
+			<option value="6DT">6 days</option>
+			<option value="7DT">1 week (7 days)</option>
+			<option value="14DT">2 weeks</option>
+			<option value="28DT">4 weeks</option>
+		</select>
+<!--		<select id="scheduleDuration" name="scheduleDuration" class="input-large">
 			<option value="0" title="Please select duration">Select duration</option>
 			<option value="5">5 minutes</option>
 			<option value="10">10 minutes</option>
@@ -135,7 +163,7 @@
 			<option value="10080">1 week (7 days)</option>
 			<option value="20160">2 weeks</option>
 			<option value="40320">4 weeks</option>
-		</select>
+		</select>-->
 		<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>
 	</div>
 </div>
@@ -143,10 +171,10 @@
 <!--start google riff-->
 <div class="control-group reservationForm hide">
 <div class="control-group">
-	<label class="control-label" for="repeatFrequencyType">Repeats:</label>
+	<label class="control-label" for="scheduleFrequencyType">Repeats:</label>
 
-	<div class="controls" title="Repeat frequency">
-		<select id="repeatFrequencyType" name="repeatFrequencyType" class="input-xlarge">
+	<div class="controls" title="Reservation frequency">
+		<select id="scheduleFrequencyType" name="scheduleFrequencyType" class="input-xlarge">
 			<option value="no_repeat" title="Not repeated">Not repeated</option>
 			<option value="weekly" title="Repeat on days of the week">Repeat on days of the week</option>
 			<option value="monthly" title="Repeat on days of the month">Repeat on days of the month</option>
@@ -156,10 +184,10 @@
 
 <div id="wrapperRepeatOptions" class="hide">
 	<div class="control-group">
-		<label class="control-label" for="repeatInterval">Repeat every:</label>
+		<label class="control-label" for="scheduleRepeatInterval">Repeat every:</label>
 
 		<div class="controls" title="Repeat every">
-			<select id="repeatInterval" name="repeatInterval" class="input-mini">
+			<select id="scheduleRepeatInterval" name="scheduleRepeatInterval" class="input-mini">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -191,7 +219,7 @@
 				<option value="29">29</option>
 				<option value="30">30</option>
 			</select>
-			<span id="repeatIntervalDescription">weeks</span>
+			<span id="scheduleRepeatIntervalDescription">weeks</span>
 		</div>
 	</div>
 
@@ -309,10 +337,10 @@
 		<label class="control-label" for="">Ends on:</label>
 
 		<div class="controls">
-			<label for="repeatEndOnDate" title="Ends on a specified date">
+			<label for="scheduleEndOnDate" title="Ends on a specified date">
 				<div class="input-append">
-					<input type="text" id="repeatEndOnDate" name="repeatEndOnDate" class="input-small" maxlength="12" class="input-small" required="required" />
-					<span id="iconHackRepeatEndOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
+					<input type="text" id="scheduleEndOnDate" name="scheduleEndOnDate" class="input-small" maxlength="12" class="input-small" required="required" />
+					<span id="iconHackScheduleEndOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 				</div>
 				(inclusive of this date)
 			</label>
@@ -330,10 +358,10 @@
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>
 		<div class="control-group">
-			<label class="control-label" for="reservationType">Maintenance Period?</label>
+			<label class="control-label" for="scheduleType">Admin Override?</label>
 
 			<div class="controls">
-				<input type="checkbox" id="reservationType" name="reservationType"> Check box to indicate this is a maintenance or non-use
+				<input type="checkbox" id="scheduleType" name="scheduleType"> Check box to reserve this time block for maintenance or non-use
 				period
 			</div>
 		</div>

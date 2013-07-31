@@ -57,17 +57,17 @@ $(document).ready(function () {
 	});
 
 	// Reserve Equipment: calendar
-	$("#reservationStartDate").datepicker({
+	$("#scheduleStartOnDate").datepicker({
 		dateFormat: 'yy-mm-dd',
 		minDate: -0,
 		maxDate: +730
 	}).val($.datepicker.formatDate('yy-mm-dd', new Date()));
 	// Hack to make calendar icon functional
-	$("#iconHackReservationStartDate").click(function () {
-		$("#reservationStartDate").datepicker('show');
+	$("#iconHackScheduleStartOnDate").click(function () {
+		$("#scheduleStartOnDate").datepicker('show');
 	});
 	// Reserve Equipment: timepicker
-	$("#reservationStartTime").timepicker({
+	$("#scheduleStartTimeRaw").timepicker({
 		minuteStep: 15,
 		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
@@ -661,39 +661,39 @@ $(document).ready(function () {
 	// ***************************
 
 	// update date values based on Start Date
-	$("#reservationStartDate, #repeatEndOnDate").change(function () {
+	$("#scheduleStartOnDate, #scheduleEndOnDate").change(function () {
 		// update the "Repeat Ends" date so that it is never less than the Start Date
-		if ($("#reservationStartDate").val() > ($("#repeatEndOnDate").val())) {
+		if ($("#scheduleStartOnDate").val() > ($("#scheduleEndOnDate").val())) {
 			// alert('the new date is bigger!');
-			$("#repeatEndOnDate").val($("#reservationStartDate").val());
+			$("#scheduleEndOnDate").val($("#scheduleStartOnDate").val());
 		}
 	})
 
 	// Easily set reservation for entire 24-hour period
 	$("#btnAllDayEvent").click(function () {
-		$("#reservationStartTime").timepicker('setTime', '12:00 AM');
-		$("#reservationDuration").val('1440');
+		$("#scheduleStartTimeRaw").timepicker('setTime', '12:00 AM');
+		$("#scheduleDuration").val('1440');
 	});
 
 	// Repeats Frequency: update visible fields based on user selection
-	$("#repeatFrequencyType").change(function () {
-		if ($("#repeatFrequencyType").val() == 'no_repeat') {
+	$("#scheduleFrequencyType").change(function () {
+		if ($("#scheduleFrequencyType").val() == 'no_repeat') {
 			// Not repeated
 			$("#wrapperRepeatOptions").addClass("hide");
 			$("#wrapperDoW").addClass("hide");
 			$("#wrapperDoM").addClass("hide");
 		}
-		else if ($("#repeatFrequencyType").val() == 'weekly') {
+		else if ($("#scheduleFrequencyType").val() == 'weekly') {
 			// Repeat weekly
 			$("#wrapperRepeatOptions").removeClass("hide");
-			$("#repeatIntervalDescription").html("weeks");
+			$("#scheduleRepeatIntervalDescription").html("weeks");
 			$("#wrapperDoW").removeClass("hide");
 			$("#wrapperDoM").addClass("hide");
 		}
-		else if ($("#repeatFrequencyType").val() == 'monthly') {
+		else if ($("#scheduleFrequencyType").val() == 'monthly') {
 			// Repeat monthly
 			$("#wrapperRepeatOptions").removeClass("hide");
-			$("#repeatIntervalDescription").html("months");
+			$("#scheduleRepeatIntervalDescription").html("months");
 			$("#wrapperDoW").addClass("hide");
 			$("#wrapperDoM").removeClass("hide");
 		}
@@ -704,14 +704,14 @@ $(document).ready(function () {
 	// this field needs no construction
 
 	// Repeat Ends: wire-up calendar widget
-	$("#repeatEndOnDate").datepicker({
+	$("#scheduleEndOnDate").datepicker({
 		dateFormat: 'yy-mm-dd',
 		minDate: -0,
 		maxDate: +730
 	}).val($.datepicker.formatDate('yy-mm-dd', new Date()));
 	// Hack to make calendar icon functional
-	$("#repeatEndOnDate,#iconHackRepeatEndOnDate").click(function () {
-		$("#repeatEndOnDate").datepicker('show');
+	$("#scheduleEndOnDate,#iconHackScheduleEndOnDate").click(function () {
+		$("#scheduleEndOnDate").datepicker('show');
 	});
 
 	// Weekly: toggler_dow
@@ -748,9 +748,9 @@ $(document).ready(function () {
 
 	// Construct text string summary and final hidden values
 	function getListofDates() {
-		var interval = $("#repeatInterval").val();
+		var interval = $("#scheduleRepeatInterval").val();
 
-		var frequency = $("#repeatFrequencyType").val();
+		var frequency = $("#scheduleFrequencyType").val();
 		if (frequency == 'no_repeat') {
 			frequency = 'Once ';
 		}
@@ -761,14 +761,14 @@ $(document).ready(function () {
 			frequency = 'Every ' + interval + ' months ';
 		}
 
-		var start_time = ' at ' + $("#reservationStartTime").val();
-		var duration = ' for ' + $("#reservationDuration").val() + ' minutes ';
+		var start_time = ' at ' + $("#scheduleStartTimeRaw").val();
+		var duration = ' for ' + $("#scheduleDuration").val() + ' minutes ';
 
-		var end_repeat = ' until ' + $("#repeatEndOnDate").val();
+		var end_repeat = ' until ' + $("#scheduleEndOnDate").val();
 
 		// Determine which value to pass (DoW or DoM)
 		var dates_selected = "";
-		if ($("#repeatFrequencyType").val() == 'weekly') {
+		if ($("#scheduleFrequencyType").val() == 'weekly') {
 			// weekly
 			dates_selected = " on (";
 			$("input[id*='repeat_dow_'][value='1']").each(function (i, field) {
@@ -807,7 +807,7 @@ $(document).ready(function () {
 			}
 			dates_selected += "), ";
 		}
-		else if ($("#repeatFrequencyType").val() == 'monthly') {
+		else if ($("#scheduleFrequencyType").val() == 'monthly') {
 			// monthly
 			dates_selected = " on days (";
 			$("input[id*='repeat_dom_'][value='1']").each(function (i, field) {
@@ -829,10 +829,10 @@ $(document).ready(function () {
 		$("#reservationSummary").text(frequency + start_time + duration + dates_selected + end_repeat);
 
 		// Update these values, in preparation of eventual form submit
-		$("#reservationSummaryText").val($("#reservationSummary").text());
+		$("#scheduleSummaryText").val($("#reservationSummary").text());
 
 		// Convert time values from 12-hour AM/PM to 24-hour database ready format
-		$("#reservationStartTimeConverted").val(util_12To24HourFormat($("#reservationStartTime").val()));
+		$("#scheduleStartTimeConverted").val(util_12To24HourFormat($("#scheduleStartTimeRaw").val()));
 	}
 
 	// Listener: click
@@ -840,7 +840,7 @@ $(document).ready(function () {
 		getListofDates();
 	});
 	// Listener: change
-	$("#reservationStartDate, #reservationStartTime, #reservationDuration, #repeatFrequencyType, #repeatInterval, #repeatEndOnDate").change(function () {
+	$("#scheduleStartOnDate, #scheduleStartTimeRaw, #scheduleDuration, #scheduleFrequencyType, #scheduleRepeatInterval, #scheduleEndOnDate").change(function () {
 		getListofDates();
 	});
 
