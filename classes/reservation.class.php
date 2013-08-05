@@ -140,7 +140,7 @@
 				$this->loadEqItem();
 			}
 			$li = parent::listItemTag($id, $class_ar, $other_attr_hash);
-			$li .= '<a href="schedule_reservations.php?reservation=' . $this->reservation_id . '">' . $this->eq_item->name . '</a> ' . $this->schedule->toString();
+			$li .= '<a href="ajax_actions/ajax_schedule_reservations.php?reservation=' . $this->reservation_id . '">' . $this->eq_item->name . '</a> ' . $this->schedule->toString();
 			$li .= '</li>';
 			return $li;
 		}

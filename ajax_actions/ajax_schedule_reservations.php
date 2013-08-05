@@ -1,22 +1,40 @@
 <?php
-	$pageTitle = 'Scheduling reservations...';
-	require_once('head.php');
-
 	require_once('/classes/schedule.class.php');
 	require_once('/classes/eq_group.class.php');
 	require_once('/classes/eq_subgroup.class.php');
 	require_once('/classes/eq_item.class.php');
 
+    require_once('head_ajax.php');
 
 	# SCRAP THIS OUTPUT
 	echo "<pre>";
 	print_r($_POST);
 	echo "</pre>";
 
-	#------------------------------------------------#
+
+    #------------------------------------------------#
+    # Set default return value
+    #------------------------------------------------#
+    $results = [
+        'status' => 'failure'
+    ];
+
+    #------------------------------------------------#
+    # Access Validation checks
+    #------------------------------------------------#
+    # TODO: user access validation - is this user allowed to add a schedule of this type for this group?
+    # get group ID from _REQUEST
+    # check that the user has management access - if so, OK to continue, else abort
+    #   else if user does NOT have management access and type is manager - if so, abort
+    #   else if the user has consumer access - if so, OK to continue, else abort
+
+
+    #------------------------------------------------#
 	# Fetch values
 	#------------------------------------------------#
 	# Form values
+    # TODO: add a $confirmConflictOverrideFlag (name?) form value
+    # TODO: add a group id form value
 	$strScheduleType            = htmlentities((isset($_REQUEST["scheduleType"])) ? 'manager' : 'consumer');
 	$strScheduleFrequencyType   = htmlentities((isset($_REQUEST["scheduleFrequencyType"])) ? util_quoteSmart($_REQUEST["scheduleFrequencyType"]) : 0);
 	$intScheduleRepeatInterval  = isset($_REQUEST["scheduleRepeatInterval"]) ? $_REQUEST["scheduleRepeatInterval"] : 0;
@@ -57,28 +75,13 @@
 		$dateTimeBlockEndDateTime->add(new DateInterval('P0Y0M' . $strScheduleDuration . '0H0M0S'));
 	}
 
-
-
-
-	#------------------------------------------------#
-	# Set default return value
-	#------------------------------------------------#
-	$results = [
-		'status' => 'failure'
-	];
-
-
 	#------------------------------------------------#
 	# Validation checks (EndDate >= NOW, StartDate>=EndDate, etc.)
 	#------------------------------------------------#
-	# TODO: validation checks
+    # TODO: data validation checks
 
 
-	#------------------------------------------------#
-	# Conflict checks
-	#------------------------------------------------#
-	# TODO: conflict checks in function for single, weekly, monthly inserts:
-
+    # TODO: PDO start transaction
 
 	#------------------------------------------------#
 	# Insert 1 Schedule
@@ -134,6 +137,9 @@
 	# Insert Time Block(s)
 	#------------------------------------------------#
 
+    // TODO: figure out how to handle / account for manager vs consumer reservations
+    // TODO: figure out structure/process to handle alerts for over-ridden reservations
+
 	# one day at a time, starting with initial day, going until end day
 	#    if repeat type == no repeat, then end day = start day
 	# week counter = 1
@@ -152,6 +158,36 @@
 	#    if repeat == day of month
 	#        return (month_day_filter[cur day day of month] (where month day filter is an associative array)) && (month counter % month interval == 0)
 	#    return false
+
+
+    #------------------------------------------------#
+    # Conflict checks
+    #------------------------------------------------#
+    # TODO: conflict checks in function for single, weekly, monthly inserts:
+
+    #   if conflict
+    #      if override flag set
+    #         delete existing conflicts
+    #         for each one so deleted, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
+    #         commit
+    #         results status = success
+    #      else
+    #         store the list of conflicts in the result object (include the type of the conflicting reservation/time-block/schedule)
+    #         store the type of this schedule in the results (manager vs consumer) - NOTE: re-submit w/ override will be handled by the form page as needed
+    #         rollback
+    #   else
+    #     commit
+    #     results status = success
+
+
+    #------------------------------------------------#
+    # Queue Email Alerts
+    #------------------------------------------------#
+
+    # get all managers of the group
+    # for each manager:
+    #   get their comm prefs for the group
+    #   if flag_contact_on_reserve_create, queue an email alert to that manager about these reservations
 
 
 	# Below is older stuff, to be replaced with the newer, above, later
@@ -208,5 +244,8 @@
 
 	}
 	###############################################################
+
+
+
 
 ?>
