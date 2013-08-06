@@ -3,6 +3,8 @@ require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
 class SchedulesCreateTest extends WMSWebTestCase {
 
+    private $urlbase = 'http://localhost/eqreserve/ajax_actions/ajax_schedule_reservations.php';
+
     function setUp() {
         createAllTestData($this->DB);
     }
@@ -52,7 +54,9 @@ class SchedulesCreateTest extends WMSWebTestCase {
     }
 
     function testNotSignedInNoScheduling() {
-        $this->fail("to be implemented");
+        $this->get($this->urlbase);
+
+        $this->assertText("not authenticated");
     }
 
     //############################################################
@@ -67,7 +71,7 @@ class SchedulesCreateTest extends WMSWebTestCase {
     // action tests
     function testCreateShortNoRepeat() {
         $this->signIn();
-        $this->get('http://localhost/eqreserve/schedule.php?schedule=1006');
+        $this->get($this->urlbase);
 
         $this->fail("to be implemented");
 
