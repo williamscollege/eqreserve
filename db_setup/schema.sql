@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `time_blocks` (
 # The Absolute Minimalist Approach to Initial Data Population
 #####################
 
-# Default values for roles table
+# Required constant values for roles table
 INSERT INTO 
 	roles
 VALUES
