@@ -48,11 +48,14 @@ class SchedulesCreateTest extends WMSWebTestCase {
     }
 
     function testSignedInNoGroupAccessNoScheduling() {
-        $this->fail("to be implemented");
+		$this->fail("to be implemented");
     }
 
     function testNotSignedInNoScheduling() {
-        $this->fail("to be implemented");
+		# avoid signing in
+		$this->get('http://localhost/eqreserve/equipment_group.php?eid=201');
+		$this->assertResponse(200);
+		$this->assertText('Oops!Please sign in.');
     }
 
     //############################################################

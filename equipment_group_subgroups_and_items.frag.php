@@ -1,4 +1,5 @@
 <form action="ajax_actions/ajax_schedule_reservations.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
+<input type="hidden" id="scheduleGroupID" name="scheduleGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <legend class="pull-left row-fluid">Reserve Equipment
