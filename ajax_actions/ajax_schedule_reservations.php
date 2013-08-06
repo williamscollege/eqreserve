@@ -1,10 +1,10 @@
 <?php
+    require_once('head_ajax.php');
+
 	require_once('../classes/schedule.class.php');
 	require_once('../classes/eq_group.class.php');
 	require_once('../classes/eq_subgroup.class.php');
 	require_once('../classes/eq_item.class.php');
-
-    require_once('head_ajax.php');
 
 	# SCRAP THIS OUTPUT
 	echo "<pre>";

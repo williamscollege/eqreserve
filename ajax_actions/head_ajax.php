@@ -6,7 +6,7 @@
     session_start();
 
     # TODO: validate the request (user logged in, fingerprint checks out)
-    if (! $_SESSION['isAuthenticated']) {
+    if (! array_key_exists('isAuthenticated',$_SESSION) || ! $_SESSION['isAuthenticated']) {
         echo 'not authenticated';
         exit;
     }
