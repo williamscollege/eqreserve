@@ -25,7 +25,7 @@
 				}
 				else {
 					# show default suypport address
-					echo "<p>Please contact: <a href=\"mailto:itech@williams.edu?subject=EqReserve_Help_Request\"><i class=\"icon-envelope\"></i> itech@williams.edu</a></p>";
+					echo "<p>Please contact: <a href=\"mailto:itech@" . INSTITUTION_DOMAIN . "?subject=EqReserve_Help_Request\"><i class=\"icon-envelope\"></i> itech@williams.edu</a></p>";
 				}
 				?>
 		</div>

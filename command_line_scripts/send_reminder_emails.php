@@ -201,7 +201,7 @@ foreach (array_keys($users_info_hash) as $uid) {
 /*
  * cycle through hash ids; build each email from that hash entry; sort each reservation group by begin time; make the email; send it and sleep for a moment to avoid overwhelming the mail server
  */
-$from = 'equipment_reservation-no-reply@williams.edu';
+$from = 'equipment_reservation-no-reply@'.INSTITUTION_DOMAIN;
 $subject = "[EqReserve] $cur_date upcoming equipment reservations";
 $headers = "From: $from";
 
