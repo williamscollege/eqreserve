@@ -288,7 +288,20 @@
 					$fetchSql .= ')';
 				}
 				else {
-					$fetchSql .= ' AND ' . $k . ' = :' . $k;
+                    $k_parts = preg_split('/\s+/',$k);
+                    $num_k_parts = count($k_parts);
+                    if ($num_k_parts == 1) {
+    					$fetchSql .= ' AND ' . $k . ' = :' . $k;
+                    }
+                    else {
+                        $k_comp = strtoupper(implode(' ',array_slice($k_parts,1,$num_k_parts-1)));
+                        $valid_comps = ['<','<=','>','>=','!=','LIKE','NOT LIKE'];
+                        if (in_array($k_comp,$valid_comps)) {
+                            array_push($keys_to_remove, $k);
+                            $key_vals_to_add[$k_parts[0]]=$v;
+                            $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp .' :' . $k_parts[0];
+                        }
+                    }
 				}
 			}
 			foreach ($keys_to_remove as $k) {

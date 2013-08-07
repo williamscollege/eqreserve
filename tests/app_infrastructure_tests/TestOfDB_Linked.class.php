@@ -245,29 +245,73 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual($selectResult['flagfield'],false);
     }
 
+
+    function testBuildFetchSqlWithSpecialKeys() {
+        $testObj = new Trial_Db_Linked( ['DB'=>$this->DB,
+            'charfield'=>'even stringier',
+            'intfield'=>42,
+            'flagfield'=>false]);
+
+        $searchHash = ['dblinktest_id'=>$testObj->dblinktest_id];
+        $fetchSql = $testObj->buildFetchSql($searchHash);
+        $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND dblinktest_id = :dblinktest_id');
+        $this->assertEqual(':dblinktest_id',array_keys($searchHash)[0]);
+
+        $searchHash = ['intfield >'=>42];
+        $fetchSql = $testObj->buildFetchSql($searchHash);
+        $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND intfield > :intfield');
+        $this->assertEqual(':intfield',array_keys($searchHash)[0]);
+    }
+
     # BELOW: TESTS FOR STATIC METHODS
 
-        function testCheckStatementError() {
-            $badSql = "INSERT INTO dblinktest VALUES ('a')";
-            $badStmt = $this->DB->prepare($badSql);
-            $badStmt->execute();
+    function testCheckStatementError() {
+        $badSql = "INSERT INTO dblinktest VALUES ('a')";
+        $badStmt = $this->DB->prepare($badSql);
+        $badStmt->execute();
 
-            $this->expectError(Db_Linked::$ERR_MSG_SQL_STMT_ERROR);
-            Trial_Db_Linked::checkStmtError($badStmt);
-        }
+        $this->expectError(Db_Linked::$ERR_MSG_SQL_STMT_ERROR);
+        Trial_Db_Linked::checkStmtError($badStmt);
+    }
 
-        function testLoadExistingOneFromDb() {
-		$this->_dbClear();
-		$this->_dbInsertTestRecord(['id'=>1]);
+    function testLoadExistingOneFromDb() {
+        $this->_dbClear();
+        $this->_dbInsertTestRecord(['id'=>1]);
 
-		$matchingObject = Trial_Db_Linked::getOneFromDb(['intfield'=>1],$this->DB);
+        $matchingObject = Trial_Db_Linked::getOneFromDb(['intfield'=>1],$this->DB);
 
-		$this->assertNotNull($matchingObject);
-		$this->assertTrue($matchingObject->matchesDb);
-		$this->assertEqual($matchingObject->charfield,'char data');
-		$this->assertEqual($matchingObject->intfield,1);
-		$this->assertEqual($matchingObject->flagfield,false);
+        $this->assertNotNull($matchingObject);
+        $this->assertTrue($matchingObject->matchesDb);
+        $this->assertEqual($matchingObject->charfield,'char data');
+        $this->assertEqual($matchingObject->intfield,1);
+        $this->assertEqual($matchingObject->flagfield,false);
 	}
+
+    function testLoadExistingUsingKeyWithComparator() {
+        $this->_dbClear();
+        $this->_dbInsertTestRecord(['id'=>1]);
+
+        $matchingObject = Trial_Db_Linked::getOneFromDb(['intfield <'=>2],$this->DB);
+
+        $this->assertNotNull($matchingObject);
+        $this->assertTrue($matchingObject->matchesDb);
+        $this->assertEqual($matchingObject->charfield,'char data');
+        $this->assertEqual($matchingObject->intfield,1);
+        $this->assertEqual($matchingObject->flagfield,false);
+
+        $matchingObject = Trial_Db_Linked::getOneFromDb(['charfield like'=>'%data'],$this->DB);
+
+        $this->assertNotNull($matchingObject);
+        $this->assertTrue($matchingObject->matchesDb);
+        $this->assertEqual($matchingObject->charfield,'char data');
+        $this->assertEqual($matchingObject->intfield,1);
+        $this->assertEqual($matchingObject->flagfield,false);
+
+        $matchingObject = Trial_Db_Linked::getOneFromDb(['charfield not like'=>'%data'],$this->DB);
+
+        $this->assertNotNull($matchingObject);
+        $this->assertFalse($matchingObject->matchesDb);
+    }
 
     function testLoadNonexistingOneFromDb() {
         $this->_dbClear();
