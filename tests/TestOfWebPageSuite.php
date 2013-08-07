@@ -32,6 +32,7 @@
 
 
 			# Tests: Schedules / Reservations
+			$this->addFile('web_page_tests/SchedulesCreateTest.php');
 			$this->addFile('web_page_tests/ScheduleTest.php');
 			$this->addFile('web_page_tests/AjaxScheduleTest.php');
 

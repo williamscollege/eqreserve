@@ -1,4 +1,5 @@
 <form action="ajax_actions/ajax_schedule_reservations.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
+<input type="hidden" id="scheduleEqGroupID" name="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <legend class="pull-left row-fluid">Reserve Equipment
@@ -358,10 +359,10 @@
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>
 		<div class="control-group">
-			<label class="control-label" for="scheduleType">Admin Override?</label>
+			<label class="control-label" for="scheduleIsTypeManager">Admin Override?</label>
 
 			<div class="controls">
-				<input type="checkbox" id="scheduleType" name="scheduleType"> Check box to reserve this time block for maintenance or non-use
+				<input type="checkbox" id="scheduleIsTypeManager" name="scheduleIsTypeManager"> Check box to reserve this time block for maintenance or non-use
 				period
 			</div>
 		</div>
