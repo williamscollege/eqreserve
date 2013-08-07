@@ -7,10 +7,9 @@
 	require_once('../classes/eq_item.class.php');
 
 	# SCRAP THIS OUTPUT
-	echo "<pre>";
-	print_r($_POST);
-	echo "</pre>";
-
+//	echo "<pre>";
+//	print_r($_REQUEST);
+//	echo "</pre>";
 
     #------------------------------------------------#
     # Set default return value
@@ -23,11 +22,19 @@
     # Access Validation checks
     #------------------------------------------------#
     # TODO: user access validation - is this user allowed to add a schedule of this type for this group?
-	# get group ID from _REQUEST
-	$intScheduleGroupID  		= isset($_REQUEST["scheduleGroupID"]) ? $_REQUEST["scheduleGroupID"] : 0;
+	$intEqGroupID  		= isset($_REQUEST["eqGroupID"]) ? $_REQUEST["eqGroupID"] : 0;
     # check that the user has management access - if so, OK to continue, else abort
     #   else if user does NOT have management access and type is manager - if so, abort
     #   else if the user has consumer access - if so, OK to continue, else abort
+
+//	cannot create manager reservation - not a manager of this group/i');
+	$eq_group = EqGroup::getOneFromDb(['eq_group_id'=>$intEqGroupID],$DB);
+
+	if (! $eq_group->matchesDb) {
+		$results['note'] = 'equipment group does not exist';
+		echo json_encode($results);
+		exit;
+	}
 
 
     #------------------------------------------------#
@@ -191,61 +198,61 @@
 
 
 	# Below is older stuff, to be replaced with the newer, above, later
-	//###############################################################
-	if ($strScheduleFrequencyType == 'no_repeat') {
-		# Insert 1 Time Block
-		$timeblock = New TimeBlock(['DB' => $DB]);
+//	//###############################################################
+//	if ($strScheduleFrequencyType == 'no_repeat') {
+//		# Insert 1 Time Block
+//		$timeblock = New TimeBlock(['DB' => $DB]);
+//
+//		$timeblock->schedule_id    = $sched->schedule_id;
+//		$timeblock->start_datetime = $dateTimeBlockStartDateTime->format('Y-m-d H:i:s');
+//		$timeblock->end_datetime   = $dateTimeBlockEndDateTime->format('Y-m-d H:i:s');
+//
+//		$timeblock->updateDb();
+//
+//
+//		# Output
+//		$results['status'] = 'success';
+//	}
+//	//###############################################################
+//	elseif ($strScheduleFrequencyType == 'weekly') {
+//		# Insert X Time Blocks
+//
+//		//		$start = DateTime::createFromFormat("Y-m-d H:i:s",$dateScheduleStartOnDate,new DateTimeZone("America/Toronto"));
+//		//		$end = ...;
+//		//		# iterate through which_days for repeating days?
+//		//
+//		//		$interval = new DateInterval("P7D"); // 7 days
+//		//		foreach($period as $dt){
+//		//			#echo $dt->format("Y-m-d H:i:s") . "\n";
+//		//
+//		//			# Insert 1 Time Block
+//		//			$timeblock = New TimeBlock(['DB' => $DB]);
+//		//
+//		//			$timeblock->schedule_id = $sched->schedule_id;
+//		//			$timeblock->start_datetime  = $dateTimeBlockStartDateTime->format('Y-m-d H:i:s');;
+//		//			$timeblock->end_datetime    = $dateTimeBlockEndDateTime->format('Y-m-d H:i:s');;
+//		//
+//		//			$timeblock->updateDb();
+//		//		}
+//		//
+//		//		#END TEST
+//		//
+//		//		$dateIncrement->add(new DatePeriod('P'));
+//		//				# Increment by Interval
+//		//				$dateIncrement .= $dateIncrement + $intScheduleRepeatInterval; // reset using DATE format!
+//		//			}
+//
+//	}
+//	//###############################################################
+//	elseif ($strScheduleFrequencyType == 'monthly') {
+//		# Insert X Time Block
+//		# TODO : we may be able to combine the weekly and monthly else statements into a single statement
+//
+//
+//	}
+//	###############################################################
 
-		$timeblock->schedule_id    = $sched->schedule_id;
-		$timeblock->start_datetime = $dateTimeBlockStartDateTime->format('Y-m-d H:i:s');
-		$timeblock->end_datetime   = $dateTimeBlockEndDateTime->format('Y-m-d H:i:s');
 
-		$timeblock->updateDb();
-
-
-		# Output
-		$results['status'] = 'success';
-	}
-	//###############################################################
-	elseif ($strScheduleFrequencyType == 'weekly') {
-		# Insert X Time Blocks
-
-		//		$start = DateTime::createFromFormat("Y-m-d H:i:s",$dateScheduleStartOnDate,new DateTimeZone("America/Toronto"));
-		//		$end = ...;
-		//		# iterate through which_days for repeating days?
-		//
-		//		$interval = new DateInterval("P7D"); // 7 days
-		//		foreach($period as $dt){
-		//			#echo $dt->format("Y-m-d H:i:s") . "\n";
-		//
-		//			# Insert 1 Time Block
-		//			$timeblock = New TimeBlock(['DB' => $DB]);
-		//
-		//			$timeblock->schedule_id = $sched->schedule_id;
-		//			$timeblock->start_datetime  = $dateTimeBlockStartDateTime->format('Y-m-d H:i:s');;
-		//			$timeblock->end_datetime    = $dateTimeBlockEndDateTime->format('Y-m-d H:i:s');;
-		//
-		//			$timeblock->updateDb();
-		//		}
-		//
-		//		#END TEST
-		//
-		//		$dateIncrement->add(new DatePeriod('P'));
-		//				# Increment by Interval
-		//				$dateIncrement .= $dateIncrement + $intScheduleRepeatInterval; // reset using DATE format!
-		//			}
-
-	}
-	//###############################################################
-	elseif ($strScheduleFrequencyType == 'monthly') {
-		# Insert X Time Block
-		# TODO : we may be able to combine the weekly and monthly else statements into a single statement
-
-
-	}
-	###############################################################
-
-
-
+	echo json_encode($results);
 
 ?>
