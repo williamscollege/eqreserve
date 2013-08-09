@@ -25,6 +25,7 @@ class SchedulesCreateTest extends WMSWebTestCase {
 	function getBaseUrlParamsArray() {
 		return array(
 			'eqGroupID' => '201'
+			,'subgroup-301' => '402'
 			,'scheduleStartTimeConverted' => '14:45:00'
 			,'scheduleSummaryText' => 'Once%20at%2002:45%20PM%20for%200%20minutes%20until%202013-08-06'
 			,'scheduleStartOnDate' => '2013-08-06'
@@ -209,7 +210,6 @@ class SchedulesCreateTest extends WMSWebTestCase {
 
 		$this->assertPattern('/failure/i');
 		$this->assertPattern('/equipment group does not exist/i');
-
 	}
 
 
@@ -220,18 +220,56 @@ class SchedulesCreateTest extends WMSWebTestCase {
     }
 
 	function testTimeBlockDurationIsValid() {
-		# try valid value (e.g. "60M")
-		# try invalid value (e.g. "delete all")
+		$this->signIn();
 
-		# NOTE: implementation checks against a list that matches the values from the dropdown on the form page
+		$par = $this->getBaseUrlParamsArray();
+		$par['scheduleDuration'] = '60M'; // try valid value (e.g. "60M")
 
-		$this->fail("to be implemented");
+		$this->get($this->urlbase."?".$this->urlParamsArrayToString($par));
+
+		$this->assertNoPattern('/invalid time format for duration value/i');
+		$this->assertNoPattern('/failure/i');
+		$this->assertPattern('/success/i');
+
+
+		$par['scheduleDuration'] = 'delete all'; // try invalid value (e.g. "delete all")
+
+		$this->get($this->urlbase."?".$this->urlParamsArrayToString($par));
+
+		$this->assertPattern('/invalid time format for duration value/i');
+		$this->assertPattern('/failure/i');
+		$this->assertNoPattern('/success/i');
 	}
 
 	function testCannotCreateReservationOnDeletedItems() {
-		# try to create reservation for deleted group (205)
-		# try to create reservation for deleted item (405)
-		$this->fail("to be implemented");
+		$this->signIn();
+
+		$par = $this->getBaseUrlParamsArray();
+		# try to create reservation for deleted group
+		$par['eqGroupID'] = '205'; // deleted group (205)
+
+		$this->get($this->urlbase."?".$this->urlParamsArrayToString($par));
+
+		$this->assertPattern('/unable to create reservation for deleted group/i');
+		$this->assertPattern('/failure/i');
+		$this->assertNoPattern('/success/i');
+
+
+		# TODO: try to create reservation for deleted subgroup (305)?
+//		$this->assertNoPattern('/unable to create reservation for deleted subgroup/i');
+//		$this->assertNoPattern('/failure/i');
+//		$this->assertPattern('/success/i');
+
+
+		# try to create reservation for deleted item
+		$par['eqGroupID'] = '201'; // active group (201)
+		$par['subgroup-301'] = '405'; // deleted item (405)
+
+		$this->get($this->urlbase."?".$this->urlParamsArrayToString($par));
+
+		$this->assertPattern('/unable to create reservation for deleted item/i');
+		$this->assertPattern('/failure/i');
+		$this->assertNoPattern('/success/i');
 	}
 
     //############################################################

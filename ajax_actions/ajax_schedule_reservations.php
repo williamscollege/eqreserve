@@ -11,6 +11,7 @@
 //	print_r($_REQUEST);
 //	echo "</pre>";
 
+
     #------------------------------------------------#
     # Set default return value
     #------------------------------------------------#
@@ -18,31 +19,14 @@
         'status' => 'failure'
     ];
 
-    #------------------------------------------------#
-    # Access Validation checks
-    #------------------------------------------------#
-    # TODO: user access validation - is this user allowed to add a schedule of this type for this group?
-	$intEqGroupID  		= isset($_REQUEST["eqGroupID"]) ? $_REQUEST["eqGroupID"] : 0;
-    # check that the user has management access - if so, OK to continue, else abort
-    #   else if user does NOT have management access and type is manager - if so, abort
-    #   else if the user has consumer access - if so, OK to continue, else abort
-
-//	cannot create manager reservation - not a manager of this group/i');
-	$eq_group = EqGroup::getOneFromDb(['eq_group_id'=>$intEqGroupID],$DB);
-
-	if (! $eq_group->matchesDb) {
-		$results['note'] = 'equipment group does not exist';
-		echo json_encode($results);
-		exit;
-	}
-
 
     #------------------------------------------------#
 	# Fetch values
 	#------------------------------------------------#
 	# Form values
     # TODO: add a $confirmConflictOverrideFlag (name?) form value
-	$strScheduleType            = htmlentities((isset($_REQUEST["scheduleType"])) ? 'manager' : 'consumer');
+	$intEqGroupID  				= isset($_REQUEST["eqGroupID"]) ? $_REQUEST["eqGroupID"] : 0;
+	$strScheduleType            = htmlentities((isset($_REQUEST["scheduleIsTypeManager"])) ? 'manager' : 'consumer');
 	$strScheduleFrequencyType   = htmlentities((isset($_REQUEST["scheduleFrequencyType"])) ? util_quoteSmart($_REQUEST["scheduleFrequencyType"]) : 0);
 	$intScheduleRepeatInterval  = isset($_REQUEST["scheduleRepeatInterval"]) ? $_REQUEST["scheduleRepeatInterval"] : 0;
 	$dateScheduleTimeBlockStart = htmlentities((isset($_REQUEST["scheduleStartTimeConverted"])) ? $_REQUEST["scheduleStartTimeConverted"] : 0);
@@ -82,10 +66,83 @@
 		$dateTimeBlockEndDateTime->add(new DateInterval('P0Y0M' . $strScheduleDuration . '0H0M0S'));
 	}
 
+
+	#------------------------------------------------#
+	# Access Validation checks
+	#------------------------------------------------#
+	# check for existence of eqGroupID
+	$eq_group = EqGroup::getOneFromDb(['eq_group_id'=>$intEqGroupID],$DB);
+	if (! $eq_group->matchesDb) {
+		$results['note'] = 'equipment group does not exist';
+		echo json_encode($results);
+		exit;
+	}
+
+	# TODO: user access validation - is this user allowed to add a schedule of this type for this group?
+	# check that the user has system admin access - if so, OK to continue, else abort
+	#   else if user has management access - if so, OK to continue, else abort
+	#   else if user does NOT have management access and type is manager - if so, abort
+	#   else if the user has consumer access - if so, OK to continue, else abort
+
+	# check if system admin
+	if (!$USER->flag_is_system_admin) {
+		$permission = Permission::getOneFromDb(['entity_id' => $USER->user_id, 'entity_type' => 'user', 'eq_group_id'=>$eq_group->eq_group_id, 'flag_delete' => FALSE],$DB);
+
+		# check if user has access to this group
+		if (!$permission->matchesDb) {
+			$results['note'] = 'cannot create user reservation - not a user of this group';
+			echo json_encode($results);
+			exit;
+		}
+
+		# check if user has manager access to this group
+		if ($strScheduleType == 'manager') {
+			if ($permission->role_id != 1) {
+				$results['note'] = 'cannot create manager reservation - not a manager of this group';
+				echo json_encode($results);
+				exit;
+			}
+		}
+	}
+
+
 	#------------------------------------------------#
 	# Validation checks (EndDate >= NOW, StartDate>=EndDate, etc.)
 	#------------------------------------------------#
     # TODO: data validation checks
+
+	# check if duration time matches expected format
+	$aryDuration = ['5M','10M','15M','20M','30M','45M','60M','90M','2H','3H','4H','5H','6H','7H','8H','16H','1DT','2DT','3DT','4DT','5DT','6DT','7DT','14DT','28DT'];
+	if(! in_array($strScheduleDuration, $aryDuration) ){
+		$results['note'] = 'invalid time format for duration value';
+		echo json_encode($results);
+		exit;
+	}
+
+	# is deleted?: eq_group
+	if ($eq_group->flag_delete) {
+		$results['note'] = 'unable to create reservation for deleted group';
+		echo json_encode($results);
+		exit;
+	}
+	# is deleted?: eq_subgroup, eq_item
+	foreach ($_REQUEST as $key => $val) {
+		if (substr($key, 0, 9) == 'subgroup-') {
+			# echo $key . ":" . $val . "<br />"; // test output
+			$eq_item = EqItem::getOneFromDb(['eq_item_id'=>$val],$DB);
+			if ($eq_item->flag_delete) {
+				$results['note'] = 'unable to create reservation for deleted item';
+				echo json_encode($results);
+				exit;
+			}
+			$eq_subgroup = EqSubgroup::getOneFromDb(['eq_subgroup_id'=>$eq_item->eq_subgroup_id],$DB);
+			if ($eq_subgroup->flag_delete) {
+				$results['note'] = 'unable to create reservation for deleted subgroup';
+				echo json_encode($results);
+				exit;
+			}
+		}
+	}
 
 
     # TODO: PDO start transaction
