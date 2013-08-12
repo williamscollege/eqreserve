@@ -251,7 +251,7 @@
 			}
 		}
 
-		public function loadSchedules() {
+		public function loadSchedules($beginCutoff='',$endCutoff='') {
 			if (!$this->eq_items) {
 				$this->loadEqItems();
 			}
@@ -272,11 +272,11 @@
 					$init_scheds     = Schedule::getAllFromDb(['schedule_id' => array_keys($sched_ids)], $this->dbConnection);
 					$this->schedules = array();
 					foreach ($init_scheds as $insch) {
-						$insch->loadTimeBlocks();
+						$insch->loadTimeBlocks($beginCutoff,$endCutoff);
 						if (count($insch->time_blocks) < 1) {
 							continue;
 						}
-						$insch->loadReservationsDeeply();
+						$insch->loadReservationsDeeply($beginCutoff,$endCutoff);
 						array_push($this->schedules, $insch);
 					}
 				}

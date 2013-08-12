@@ -269,6 +269,7 @@
 			$fetchSql        = 'SELECT ' . implode(',', static::$fields) . ' FROM ' . static::$dbTable . ' WHERE 1=1';
 			$keys_to_remove  = [];
 			$key_vals_to_add = [];
+            $param_keys_counters = [];
 			foreach ($identHash as $k => $v) {
 				if (is_array($v)) {
 					if (count($v) <= 0) {
@@ -278,7 +279,13 @@
 					array_push($keys_to_remove, $k);
 					$fetchSql .= ' AND ' . $k . ' IN (';
 					for ($i = 0, $numElts = count($v); $i < $numElts; $i++) {
-						$newKey                   = "__$k$i";
+						$newKey = "__$k$i";
+                        $key_use_counter = 1;
+                        if (array_key_exists($newKey,$param_keys_counters)) {
+                            $key_use_counter = $param_keys_counters[$newKey]+1;
+                            $newKey = $newKey.'__'.$key_use_counter;
+                        }
+                        $param_keys_counters["__$k$i"] = $key_use_counter;
 						$key_vals_to_add[$newKey] = $v[$i];
 						if ($i > 0) {
 							$fetchSql .= ',';
@@ -291,7 +298,19 @@
                     $k_parts = preg_split('/\s+/',$k);
                     $num_k_parts = count($k_parts);
                     if ($num_k_parts == 1) {
-    					$fetchSql .= ' AND ' . $k . ' = :' . $k;
+
+                        # handle repeated use of same field in the query
+                        $newKey = $k;
+                        $key_use_counter = 1;
+                        if (array_key_exists($newKey,$param_keys_counters)) {
+                            $key_use_counter = $param_keys_counters[$newKey]+1;
+                            $newKey = $newKey.'__'.$key_use_counter;
+                            $key_vals_to_add[$newKey] = $v;
+                            array_push($keys_to_remove, $k);
+                        }
+                        $param_keys_counters[$k] = $key_use_counter;
+
+    					$fetchSql .= ' AND ' . $k . ' = :' . $newKey;
                     }
                     else {
                         $k_comp = strtoupper(implode(' ',array_slice($k_parts,1,$num_k_parts-1)));
@@ -302,8 +321,21 @@
                                 $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp;
                             } else
                             {
-                                $key_vals_to_add[$k_parts[0]]=$v;
-                                $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp .' :' . $k_parts[0];
+                                $k_field = $k_parts[0];
+                                $newKey = $k_field;
+
+                                # handle repeated use of same field in the query
+                                $key_use_counter = 1;
+                                if (array_key_exists($newKey,$param_keys_counters)) {
+                                    $key_use_counter = $param_keys_counters[$newKey]+1;
+                                    $newKey = $newKey.'__'.$key_use_counter;
+                                    $key_vals_to_add[$newKey] = $v;
+                                    array_push($keys_to_remove, $k);
+                                }
+                                $param_keys_counters[$k_field] = $key_use_counter;
+
+                                $key_vals_to_add[$newKey]=$v;
+                                $fetchSql .= ' AND ' . $k_field . ' '. $k_comp .' :' . $newKey;
                             }
                         }
                     }
