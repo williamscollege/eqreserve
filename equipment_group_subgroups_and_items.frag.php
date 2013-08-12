@@ -137,34 +137,6 @@
 			<option value="14DT">2 weeks</option>
 			<option value="28DT">4 weeks</option>
 		</select>
-<!--		<select id="scheduleDuration" name="scheduleDuration" class="input-large">
-			<option value="0" title="Please select duration">Select duration</option>
-			<option value="5">5 minutes</option>
-			<option value="10">10 minutes</option>
-			<option value="15">15 minutes</option>
-			<option value="20">20 minutes</option>
-			<option value="30">30 minutes</option>
-			<option value="45">45 minutes</option>
-			<option value="60">60 minutes</option>
-			<option value="90">90 minutes</option>
-			<option value="120">2 hours</option>
-			<option value="180">3 hours</option>
-			<option value="240">4 hours</option>
-			<option value="300">5 hours</option>
-			<option value="360">6 hours</option>
-			<option value="420">7 hours</option>
-			<option value="480">8 hours</option>
-			<option value="960">16 hours</option>
-			<option value="1440">24 hours</option>
-			<option value="2880">2 days</option>
-			<option value="4320">3 days</option>
-			<option value="5760">4 days</option>
-			<option value="7200">5 days</option>
-			<option value="8640">6 days</option>
-			<option value="10080">1 week (7 days)</option>
-			<option value="20160">2 weeks</option>
-			<option value="40320">4 weeks</option>
-		</select>-->
 		<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>
 	</div>
 </div>
