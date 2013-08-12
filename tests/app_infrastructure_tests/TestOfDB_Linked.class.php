@@ -261,6 +261,11 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $fetchSql = $testObj->buildFetchSql($searchHash);
         $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND intfield > :intfield');
         $this->assertEqual(':intfield',array_keys($searchHash)[0]);
+
+        $searchHash = ['flagfield IS NOT NULL'=>1];
+        $fetchSql = $testObj->buildFetchSql($searchHash);
+        $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND flagfield IS NOT NULL');
+        $this->assertEqual(count(array_keys($searchHash)),0);
     }
 
     # BELOW: TESTS FOR STATIC METHODS

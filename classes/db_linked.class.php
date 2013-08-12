@@ -295,11 +295,16 @@
                     }
                     else {
                         $k_comp = strtoupper(implode(' ',array_slice($k_parts,1,$num_k_parts-1)));
-                        $valid_comps = ['<','<=','>','>=','!=','LIKE','NOT LIKE'];
+                        $valid_comps = ['<','<=','>','>=','!=','LIKE','NOT LIKE','IS NULL','IS NOT NULL'];
                         if (in_array($k_comp,$valid_comps)) {
                             array_push($keys_to_remove, $k);
-                            $key_vals_to_add[$k_parts[0]]=$v;
-                            $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp .' :' . $k_parts[0];
+                            if (($k_comp == 'IS NULL') || ($k_comp == 'IS NOT NULL')) {
+                                $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp;
+                            } else
+                            {
+                                $key_vals_to_add[$k_parts[0]]=$v;
+                                $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp .' :' . $k_parts[0];
+                            }
                         }
                     }
 				}
