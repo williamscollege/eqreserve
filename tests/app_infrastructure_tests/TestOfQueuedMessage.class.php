@@ -155,6 +155,40 @@
             $this->assertTrue($qm->validateForDelivery());
             $this->assertEqual($qm->validate_status,'SUCCESS');
         }
+
+        public function testQueuedMessageAttemptDelivery(){
+            $qm = QueuedMessage::factory($this->DB,Auth_Base::$TEST_EMAIL,'this is a subject','this is the full message body');
+            $qm->updateDb();
+            $this->assertFalse($qm->flag_is_delivered);
+            $this->assertEqual($qm->action_status,'CREATED');
+
+            // send a known valid message
+            $this->assertTrue($qm->attemptDelivery());
+
+            $this->assertTrue($qm->flag_is_delivered);
+            $this->assertEqual($qm->action_status,'SUCCESS');
+            global $MAILER;
+            $this->assertPattern('/'.$qm->target.'/',$MAILER->delivery_notes);
+            $this->assertPattern('/'.$qm->summary.'/',$MAILER->delivery_notes);
+            $this->assertPattern('/'.$qm->body.'/',$MAILER->delivery_notes);
+
+            // verify it updated the DB correctly
+            $qm2 = QueuedMessage::getOneFromDb(['queued_message_id'=>$qm->queued_message_id],$this->DB);
+            $this->assertTrue($qm2->flag_is_delivered);
+            $this->assertEqual($qm2->action_status,'SUCCESS');
+
+            // attempt to send a known bad message (missing target)
+            $qm3 = QueuedMessage::factory($this->DB,'','this is a subject','this is the full message body');
+            $this->assertFalse($qm3->attemptDelivery());
+            $this->assertFalse($qm3->flag_is_delivered);
+            $this->assertEqual($qm3->action_status,'FAILURE');
+
+            // verify that updated the DB correctly
+            $qm4 = QueuedMessage::getOneFromDb(['queued_message_id'=>$qm3->queued_message_id],$this->DB);
+            $this->assertFalse($qm4->flag_is_delivered);
+            $this->assertEqual($qm4->action_status,'FAILURE');
+
+        }
     }
 
 ?>

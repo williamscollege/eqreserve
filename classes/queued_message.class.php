@@ -130,6 +130,27 @@
             $this->validate_message = '';
             return true;
         }
+
+        function attemptDelivery() {
+            $this->action_datetime = (new DateTime())->format('Y-m-d H:i:s');
+            if (! $this->validateForDelivery()) {
+                $this->trackAction($this->validate_status,$this->validate_message);
+                $this->updateDb();
+                return false;
+            }
+            global $MAILER;
+            if ($MAILER->send($this)) {
+                $this->trackAction('SUCCESS','message sent via '.$MAILER->label);
+                $this->flag_is_delivered = true;
+                $this->updateDb();
+                return true;
+            } else
+            {
+                $this->trackAction('FAILURE','message could not be sent via '.$MAILER->label);
+                $this->updateDb();
+                return false;
+            }
+        }
 	}
 
 ?>
