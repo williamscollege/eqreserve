@@ -15,6 +15,7 @@ require_once('../classes/comm_pref.class.php');
 require_once('../classes/eq_group.class.php');
 require_once('../classes/eq_subgroup.class.php');
 require_once('../classes/eq_item.class.php');
+require_once('../classes/queued_message.class.php');
 require_once('../classes/reservation.class.php');
 require_once('../classes/schedule.class.php');
 require_once('../classes/time_block.class.php');
