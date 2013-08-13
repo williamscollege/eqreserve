@@ -302,16 +302,16 @@
         // 1200 series ids
         // queued_message: queued_message_id, delivery_type, flag_is_delivered, hold_until_datetime, target, summary, body, action_datetime, action_status, action_notes, flag_delete
         $addTestQueuedMessageSql  = "INSERT INTO " . QueuedMessage::$dbTable . " VALUES
-            (1201, 'email', 0, NULL, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: basic email message', 'TEST BODY: basic email message basic email message', NULL, NULL, '', 0),
-            (1202, 'email', 1, NULL, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: already delivered email message', 'TEST BODY: already delivered email message already delivered email message', NOW() - INTERVAL 1 DAY, 'SUCCESS', CONCAT('SUCCESS: delivered at ',DATE_FORMAT(NOW() - INTERVAL 1 DAY,'%Y-%m-%d %H:%i:%s')), 0),
-            (1203, 'email', 0, NULL, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: previous delivery failed email message', 'TEST BODY: previous delivery failed email message previous delivery failed email message', NOW() - INTERVAL 1 DAY, 'FAILURE', CONCAT('FAILURE: intentional fail at ',DATE_FORMAT(NOW() - INTERVAL 1 DAY,'%Y-%m-%d %H:%i:%s')), 0),
-            (1204, 'email', 0, NOW() + INTERVAL 1 DAY, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: hold until this time tomorrow email message', 'TEST BODY: hold until this time tomorrow email message hold until this time tomorrow email message', NULL, NULL, '', 0),
-            (1205, 'email', 0, NULL, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: deleted message', 'TEST BODY: deleted message deleted message', NULL, NULL, '', 1),
-            (1206, 'email', 0, NULL, '', 'TEST: missing target message', 'TEST BODY: missing target message missing target message', NULL, NULL, '', 0),
-            (1207, 'email', 0, NULL, 'fred', 'TEST: bad/invalid target message', 'TEST BODY: bad/invalid target message bad/invalid target message', NULL, NULL, '', 0),
-            (1208, 'email', 0, NULL, '" . Auth_Base::$TEST_EMAIL . "', '', 'TEST BODY: empty summary message empty summary message', NULL, NULL, '', 0),
-            (1209, 'email', 0, NULL, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: empty body message', '', NULL, NULL, '', 0),
-            (1210, 'fred', 0, NULL, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: unsupported message type', 'TEST BODY: unsupported message type unsupported message type', NULL, NULL, '', 0)
+            (1201, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: basic email message', 'TEST BODY: basic email message basic email message', '', '', '', 0),
+            (1202, 'email', 1, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: already delivered email message', 'TEST BODY: already delivered email message already delivered email message', NOW() - INTERVAL 1 DAY, 'SUCCESS', CONCAT('SUCCESS: delivered at ',DATE_FORMAT(NOW() - INTERVAL 1 DAY,'%Y-%m-%d %H:%i:%s')), 0),
+            (1203, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: previous delivery failed email message', 'TEST BODY: previous delivery failed email message previous delivery failed email message', NOW() - INTERVAL 1 DAY, 'FAILURE', CONCAT('FAILURE: intentional fail at ',DATE_FORMAT(NOW() - INTERVAL 1 DAY,'%Y-%m-%d %H:%i:%s')), 0),
+            (1204, 'email', 0, NOW() + INTERVAL 1 DAY, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: hold until this time tomorrow email message', 'TEST BODY: hold until this time tomorrow email message hold until this time tomorrow email message', '', '', '', 0),
+            (1205, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: deleted message', 'TEST BODY: deleted message deleted message', '', '', '', 1),
+            (1206, 'email', 0, '', '', 'TEST: missing target message', 'TEST BODY: missing target message missing target message', '', '', '', 0),
+            (1207, 'email', 0, '', 'fred', 'TEST: bad/invalid target message', 'TEST BODY: bad/invalid target message bad/invalid target message', '', '', '', 0),
+            (1208, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', '', 'TEST BODY: empty summary message empty summary message', '', '', '', 0),
+            (1209, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: empty body message', '', '', '', '', 0),
+            (1210, 'fred', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: unsupported message type', 'TEST BODY: unsupported message type unsupported message type', '', '', '', 0)
         ";
         $addTestQueuedMessageStmt = $dbConn->prepare($addTestQueuedMessageSql);
         $addTestQueuedMessageStmt->execute();

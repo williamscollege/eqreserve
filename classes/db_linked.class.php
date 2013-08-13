@@ -206,6 +206,7 @@
             }
 			$whichClass = get_called_class();
 			$fetchStmt  = self::_buildFetchStatement($searchHash, $usingDb);
+//echo '<pre>';print_r($searchHash);echo'</pre>';
 			$fetchStmt->execute($searchHash);
 			$res = $fetchStmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $whichClass, [['DB' => $usingDb]]);
 			self::checkStmtError($fetchStmt);
@@ -250,12 +251,12 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
+//            echo '<pre>';
+//            print_r($identHash);
+//		    echo "\n$fetchSql\n";
+//            echo'</pre>';
 
-			//		print_r($identHash);
-
-			//		echo "$fetchSql\n";
-
-			$fetchStmt = $usingDb->prepare($fetchSql);
+            $fetchStmt = $usingDb->prepare($fetchSql);
 
 			return $fetchStmt;
 		}
