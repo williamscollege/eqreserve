@@ -206,6 +206,7 @@
             }
 			$whichClass = get_called_class();
 			$fetchStmt  = self::_buildFetchStatement($searchHash, $usingDb);
+//echo '<pre>';print_r($searchHash);echo'</pre>';
 			$fetchStmt->execute($searchHash);
 			$res = $fetchStmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $whichClass, [['DB' => $usingDb]]);
 			self::checkStmtError($fetchStmt);
@@ -250,12 +251,12 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
+//            echo '<pre>';
+//            print_r($identHash);
+//		    echo "\n$fetchSql\n";
+//            echo'</pre>';
 
-			//		print_r($identHash);
-
-			//		echo "$fetchSql\n";
-
-			$fetchStmt = $usingDb->prepare($fetchSql);
+            $fetchStmt = $usingDb->prepare($fetchSql);
 
 			return $fetchStmt;
 		}
@@ -269,6 +270,7 @@
 			$fetchSql        = 'SELECT ' . implode(',', static::$fields) . ' FROM ' . static::$dbTable . ' WHERE 1=1';
 			$keys_to_remove  = [];
 			$key_vals_to_add = [];
+            $param_keys_counters = [];
 			foreach ($identHash as $k => $v) {
 				if (is_array($v)) {
 					if (count($v) <= 0) {
@@ -278,7 +280,13 @@
 					array_push($keys_to_remove, $k);
 					$fetchSql .= ' AND ' . $k . ' IN (';
 					for ($i = 0, $numElts = count($v); $i < $numElts; $i++) {
-						$newKey                   = "__$k$i";
+						$newKey = "__$k$i";
+                        $key_use_counter = 1;
+                        if (array_key_exists($newKey,$param_keys_counters)) {
+                            $key_use_counter = $param_keys_counters[$newKey]+1;
+                            $newKey = $newKey.'__'.$key_use_counter;
+                        }
+                        $param_keys_counters["__$k$i"] = $key_use_counter;
 						$key_vals_to_add[$newKey] = $v[$i];
 						if ($i > 0) {
 							$fetchSql .= ',';
@@ -291,15 +299,45 @@
                     $k_parts = preg_split('/\s+/',$k);
                     $num_k_parts = count($k_parts);
                     if ($num_k_parts == 1) {
-    					$fetchSql .= ' AND ' . $k . ' = :' . $k;
+
+                        # handle repeated use of same field in the query
+                        $newKey = $k;
+                        $key_use_counter = 1;
+                        if (array_key_exists($newKey,$param_keys_counters)) {
+                            $key_use_counter = $param_keys_counters[$newKey]+1;
+                            $newKey = $newKey.'__'.$key_use_counter;
+                            $key_vals_to_add[$newKey] = $v;
+                            array_push($keys_to_remove, $k);
+                        }
+                        $param_keys_counters[$k] = $key_use_counter;
+
+    					$fetchSql .= ' AND ' . $k . ' = :' . $newKey;
                     }
                     else {
                         $k_comp = strtoupper(implode(' ',array_slice($k_parts,1,$num_k_parts-1)));
-                        $valid_comps = ['<','<=','>','>=','!=','LIKE','NOT LIKE'];
+                        $valid_comps = ['<','<=','>','>=','!=','LIKE','NOT LIKE','IS NULL','IS NOT NULL'];
                         if (in_array($k_comp,$valid_comps)) {
                             array_push($keys_to_remove, $k);
-                            $key_vals_to_add[$k_parts[0]]=$v;
-                            $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp .' :' . $k_parts[0];
+                            if (($k_comp == 'IS NULL') || ($k_comp == 'IS NOT NULL')) {
+                                $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp;
+                            } else
+                            {
+                                $k_field = $k_parts[0];
+                                $newKey = $k_field;
+
+                                # handle repeated use of same field in the query
+                                $key_use_counter = 1;
+                                if (array_key_exists($newKey,$param_keys_counters)) {
+                                    $key_use_counter = $param_keys_counters[$newKey]+1;
+                                    $newKey = $newKey.'__'.$key_use_counter;
+                                    $key_vals_to_add[$newKey] = $v;
+                                    array_push($keys_to_remove, $k);
+                                }
+                                $param_keys_counters[$k_field] = $key_use_counter;
+
+                                $key_vals_to_add[$newKey]=$v;
+                                $fetchSql .= ' AND ' . $k_field . ' '. $k_comp .' :' . $newKey;
+                            }
                         }
                     }
 				}

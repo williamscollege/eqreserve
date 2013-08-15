@@ -9,6 +9,7 @@
 	require_once dirname(__FILE__) . '/../classes/inst_group.class.php';
 	require_once dirname(__FILE__) . '/../classes/inst_membership.class.php';
 	require_once dirname(__FILE__) . '/../classes/permission.class.php';
+    require_once dirname(__FILE__) . '/../classes/queued_message.class.php';
 	require_once dirname(__FILE__) . '/../classes/reservation.class.php';
 	require_once dirname(__FILE__) . '/../classes/role.class.php';
 	require_once dirname(__FILE__) . '/../classes/time_block.class.php';
@@ -297,6 +298,31 @@
 		}
 	}
 
+    function createTestData_QueuedMessages($dbConn) {
+        // 1200 series ids
+        // queued_message: queued_message_id, delivery_type, flag_is_delivered, hold_until_datetime, target, summary, body, action_datetime, action_status, action_notes, flag_delete
+        $addTestQueuedMessageSql  = "INSERT INTO " . QueuedMessage::$dbTable . " VALUES
+            (1201, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: basic email message', 'TEST BODY: basic email message basic email message', '', '', '', 0),
+            (1202, 'email', 1, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: already delivered email message', 'TEST BODY: already delivered email message already delivered email message', NOW() - INTERVAL 1 DAY, 'SUCCESS', CONCAT('SUCCESS: delivered at ',DATE_FORMAT(NOW() - INTERVAL 1 DAY,'%Y-%m-%d %H:%i:%s')), 0),
+            (1203, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: previous delivery failed email message', 'TEST BODY: previous delivery failed email message previous delivery failed email message', NOW() - INTERVAL 1 DAY, 'FAILURE', CONCAT('FAILURE: intentional fail at ',DATE_FORMAT(NOW() - INTERVAL 1 DAY,'%Y-%m-%d %H:%i:%s')), 0),
+            (1204, 'email', 0, NOW() + INTERVAL 1 DAY, '" . Auth_Base::$TEST_EMAIL . "', 'TEST: hold until this time tomorrow email message', 'TEST BODY: hold until this time tomorrow email message hold until this time tomorrow email message', '', '', '', 0),
+            (1205, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: deleted message', 'TEST BODY: deleted message deleted message', '', '', '', 1),
+            (1206, 'email', 0, '', '', 'TEST: missing target message', 'TEST BODY: missing target message missing target message', '', '', '', 0),
+            (1207, 'email', 0, '', 'fred', 'TEST: bad/invalid target message', 'TEST BODY: bad/invalid target message bad/invalid target message', '', '', '', 0),
+            (1208, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', '', 'TEST BODY: empty summary message empty summary message', '', '', '', 0),
+            (1209, 'email', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: empty body message', '', '', '', '', 0),
+            (1210, 'fred', 0, '', '" . Auth_Base::$TEST_EMAIL . "', 'TEST: unsupported message type', 'TEST BODY: unsupported message type unsupported message type', '', '', '', 0)
+        ";
+        $addTestQueuedMessageStmt = $dbConn->prepare($addTestQueuedMessageSql);
+        $addTestQueuedMessageStmt->execute();
+        if ($addTestQueuedMessageStmt->errorInfo()[0] != '0000') {
+            echo "<pre>$addTestQueuedMessageSql\nerror adding test QueuedMessages data to the DB\n";
+            print_r($addTestQueuedMessageStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
 	function makeAuthedTestUserAdmin($dbConn) {
 		$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
 		$u1->flag_is_system_admin = TRUE;
@@ -315,6 +341,7 @@
 		createTestData_TimeBlocks($dbConn);
 		createTestData_Schedules($dbConn);
 		createTestData_Users($dbConn);
+        createTestData_QueuedMessages($dbConn);
 	}
 
 	//------------
@@ -371,6 +398,10 @@
 		_removeTestDataFromTable($dbConn, User::$dbTable);
 	}
 
+    function removeTestData_QueuedMessages($dbConn) {
+		_removeTestDataFromTable($dbConn, QueuedMessage::$dbTable);
+	}
+
 
 	function removeAllTestData($dbConn) {
 		removeTestData_CommPrefs($dbConn);
@@ -384,4 +415,5 @@
 		removeTestData_TimeBlocks($dbConn);
 		removeTestData_Schedules($dbConn);
 		removeTestData_Users($dbConn);
+        removeTestData_QueuedMessages($dbConn);
 	}

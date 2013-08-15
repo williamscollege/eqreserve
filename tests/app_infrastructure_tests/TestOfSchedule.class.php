@@ -51,6 +51,45 @@
             $this->assertEqual($tg->time_blocks[2]->time_block_id,904);
         }
 
+        function testScheduleLoadTimeBlocksWithDateRestrictions() {
+            $tg = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB);
+            $this->assertTrue($tg->matchesDb);
+            $this->assertFalse($tg->time_blocks);
+            $tg->loadTimeBlocks();
+            $this->assertTrue(is_array($tg->time_blocks));
+            $this->assertEqual(count($tg->time_blocks),3);
+
+            $tg->loadTimeBlocks();
+            $this->assertTrue(is_array($tg->time_blocks));
+            $this->assertEqual(count($tg->time_blocks),3);
+
+//            $this->dump($tg->time_blocks);
+
+            $tg->loadTimeBlocks('2013-03-01 00:00:00');
+            $this->assertEqual(count($tg->time_blocks),3);
+
+            $tg->loadTimeBlocks('2013-04-01');
+            $this->assertEqual(count($tg->time_blocks),2);
+
+            $tg->loadTimeBlocks('2013-04-01 00:00:00');
+            $this->assertEqual(count($tg->time_blocks),2);
+
+            $tg->loadTimeBlocks('2013-04-02 11:00:00');
+            $this->assertEqual(count($tg->time_blocks),1);
+//
+//            $this->dump($tg->time_blocks);
+//            exit;
+
+            $tg->loadTimeBlocks('2013-05-01 00:00:00');
+            $this->assertEqual(count($tg->time_blocks),0);
+
+            $tg->loadTimeBlocks('2013-04-01 00:00:00','2013-04-06 00:00:00');
+            $this->assertEqual(count($tg->time_blocks),1);
+
+            $tg->loadTimeBlocks('2013-04-01 00:00:00','2013-04-09');
+            $this->assertEqual(count($tg->time_blocks),1);
+        }
+
         function testScheduleLoadUser() {
             $tg = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB);
             $this->assertTrue($tg->matchesDb);
@@ -72,6 +111,36 @@
             $this->assertEqual(count($tg->reservations),2);
             $this->assertEqual($tg->reservations[0]->reservation_id,809);
             $this->assertEqual($tg->reservations[1]->reservation_id,810);
+        }
+
+        function testScheduleLoadReservationsWithDateRestrictions() {
+            $tg = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB);
+            $this->assertTrue($tg->matchesDb);
+            $this->assertFalse($tg->reservations);
+            $tg->loadReservations();
+            $this->assertTrue(is_array($tg->reservations));
+            $this->assertEqual(count($tg->reservations),1);
+
+            $tg->loadReservations('2013-03-01 00:00:00');
+            $this->assertEqual(count($tg->reservations),1);
+
+            $tg->loadReservations('2013-04-01');
+            $this->assertEqual(count($tg->reservations),1);
+
+            $tg->loadReservations('2013-04-01 00:00:00');
+            $this->assertEqual(count($tg->reservations),1);
+
+            $tg->loadReservations('2013-04-02 11:00:00');
+            $this->assertEqual(count($tg->reservations),1);
+
+            $tg->loadReservations('2013-05-01 00:00:00');
+            $this->assertEqual(count($tg->reservations),0);
+
+            $tg->loadReservations('2013-04-01 00:00:00','2013-04-06 00:00:00');
+            $this->assertEqual(count($tg->reservations),1);
+
+            $tg->loadReservations('2013-04-01 00:00:00','2013-04-09');
+            $this->assertEqual(count($tg->reservations),1);
         }
 
         function testScheduleLoadReservationsDeeply() {

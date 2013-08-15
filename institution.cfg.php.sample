@@ -46,4 +46,6 @@
 	define('TESTINGUSER','testinguser');
 	define('TESTINGPASSWORD','testinguserpassword');
 
+    require_once('classes/mailer_php_standard.class.php');
+	$MAILER = new Mailer_Php_Standard();
 ?>

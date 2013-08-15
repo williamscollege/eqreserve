@@ -25,6 +25,7 @@ FOR TESTING ONLY:
 	DROP TABLE `schedules`;
 	DROP TABLE `reservations`;
 	DROP TABLE `time_blocks`;
+	DROP TABLE `queued_messages`;
 */
 
 # ----------------------------
@@ -175,6 +176,19 @@ CREATE TABLE IF NOT EXISTS `time_blocks` (
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: schedules.schedule_id */
 
+CREATE TABLE IF NOT EXISTS `queued_messages` (
+  `queued_message_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `delivery_type` VARCHAR(16) NULL, /*email (future may support other types such as sms/text) */
+  `flag_is_delivered` BIT(1) NOT NULL DEFAULT 0,
+  `hold_until_datetime` DATETIME NULL,
+  `target` VARCHAR(255) NULL, /*email address, or perhaps phone number or other contact address/target */
+  `summary` VARCHAR(255) NULL, /* short version / description; used as subject for email messages */
+  `body` TEXT NULL,
+  `action_datetime` DATETIME NULL,
+  `action_status` VARCHAR(16) NULL, /* SUCCESS|FAILURE */
+  `action_notes` TEXT NULL, /* any more detailed messages/notes about the action */
+  `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 
 
 #####################

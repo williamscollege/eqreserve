@@ -262,6 +262,33 @@
             $this->assertEqual(count($eg->schedules), 4);
         }
 
+        public function TestOfLoadSchedulesWithDateRestrictions(){
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+            $this->assertEqual($eg->name,'testEqGroup1');
+            $this->assertNull($eg->schedules);
+            $eg->loadSchedules();
+            $this->assertTrue(is_array($eg->schedules));
+            $this->assertEqual(count($eg->schedules), 4);
+
+            $eg->loadSchedules('2013-03-22');
+            $this->assertEqual(count($eg->schedules), 4);
+
+            $eg->loadSchedules('2013-03-23');
+            $this->assertEqual(count($eg->schedules), 3);
+
+            $eg->loadSchedules('2013-03-23','2013-03-25 23:59:00');
+            $this->assertEqual(count($eg->schedules), 1);
+
+            $eg->loadSchedules('2013-03-26 14:00:00');
+            $this->assertEqual(count($eg->schedules), 2);
+
+            $eg->loadSchedules('2013-04-08 23:00:00');
+            $this->assertEqual(count($eg->schedules), 1);
+
+            $eg->loadSchedules('2013-04-09 23:00:00');
+            $this->assertEqual(count($eg->schedules), 0);
+        }
+
         public function TestOfToListItemLinked(){
             $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
 

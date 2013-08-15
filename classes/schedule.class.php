@@ -42,19 +42,37 @@
 			$this->user = User::getOneFromDb(['user_id' => $this->user_id], $this->dbConnection);
 		}
 
-		public function loadTimeBlocks() {
-			$this->time_blocks = TimeBlock::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
+		public function loadTimeBlocks($beginCutoff='',$endCutoff='') {
+            $searchHash = ['schedule_id' => $this->schedule_id];
+
+            if ($beginCutoff) {
+                $begin = date_create($beginCutoff);
+                if ($begin) { $searchHash['start_datetime >='] = $begin->format('Y-m-d H:i:s'); }
+            }
+            if ($endCutoff) {
+                $end = date_create($endCutoff);
+                if ($end) { $searchHash['start_datetime <='] = $end->format('Y-m-d H:i:s'); }
+            }
+//echo "<pre>------------------\n$beginCutoff,$endCutoff\n"; print_r($searchHash); echo '</pre>';
+			$this->time_blocks = TimeBlock::getAllFromDb($searchHash, $this->dbConnection);
 			usort($this->time_blocks, "TimeBlock::cmp");
 		}
 
-		public function loadReservations() {
-			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
-			usort($this->reservations, "Reservation::cmp");
+		public function loadReservations($beginCutoff='',$endCutoff='') {
+            if (($beginCutoff!='')||($endCutoff!='')) {
+                $this->loadTimeBlocks($beginCutoff,$endCutoff);
+//echo "<pre>$beginCutoff,$endCutoff\n"; print_r($this->time_blocks); echo '</pre>';
+                if (count($this->time_blocks) < 1) {
+                    $this->reservations = [];
+                    return;
+                }
+            }
+            $this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
+            usort($this->reservations, "Reservation::cmp");
 		}
 
-		public function loadReservationsDeeply() {
-			$this->reservations = Reservation::getAllFromDb(['schedule_id' => $this->schedule_id], $this->dbConnection);
-			usort($this->reservations, "Reservation::cmp");
+		public function loadReservationsDeeply($beginCutoff='',$endCutoff='') {
+            $this->loadReservations($beginCutoff,$endCutoff);
 			foreach ($this->reservations as $r) {
 				$r->loadEqItem();
 				$r->eq_item->loadEqGroup(); // NOTE: also loads the subgroup

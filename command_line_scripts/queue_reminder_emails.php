@@ -2,7 +2,7 @@
 require_once('cl_head.php');
 
 /*
- * this script sends emails to all users that have a reservation coming up in the next 2 days. only one email is sent to
+ * this script queues emails to all users that have a reservation coming up in the next 2 days. only one email is sent to
  * a user. that email contains three sections: consumer reservations (normal), manager reservations (manager only), and
  * reservations on groups the user manages (manager only).
  *
@@ -270,8 +270,9 @@ This is a reminder about upcoming equipment reservations for the next $lookahead
         }
     }
 
-    // now actually send the email
-    // TODO: test this! hard to test on a dev system...
+    // now queue the message
     // mail($udata['email'], $subject, $body, $headers);
-    echo $body; // for testing - use above line for actually sending the email
+    $qm = QueuedMessage::factory($DB,$udata['email'],$subject,$body);
+    $qm->updateDb();
+//    echo $body; // for testing - use above line for actually sending the email
 }

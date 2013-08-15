@@ -254,14 +254,39 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
 
         $searchHash = ['dblinktest_id'=>$testObj->dblinktest_id];
         $fetchSql = $testObj->buildFetchSql($searchHash);
+//        $this->dump($fetchSql);
         $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND dblinktest_id = :dblinktest_id');
         $this->assertEqual(':dblinktest_id',array_keys($searchHash)[0]);
 
         $searchHash = ['intfield >'=>42];
         $fetchSql = $testObj->buildFetchSql($searchHash);
+//        $this->dump($fetchSql);
         $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND intfield > :intfield');
         $this->assertEqual(':intfield',array_keys($searchHash)[0]);
+
+        $searchHash = ['flagfield IS NOT NULL'=>1];
+        $fetchSql = $testObj->buildFetchSql($searchHash);
+//        $this->dump($fetchSql);
+        $this->assertEqual($fetchSql,'SELECT dblinktest_id,charfield,intfield,flagfield FROM dblinktest WHERE 1=1 AND flagfield IS NOT NULL');
+        $this->assertEqual(count(array_keys($searchHash)),0);
     }
+
+
+        function testBuildFetchSqlWithPepeatedKeys() {
+            $testObj = new Trial_Db_Linked( ['DB'=>$this->DB,
+                'charfield'=>'even stringier',
+                'intfield'=>42,
+                'flagfield'=>false]);
+
+            $searchHash = ['intfield >'=>40,'intfield <'=>45];
+            $fetchSql = $testObj->buildFetchSql($searchHash);
+//            $this->dump($fetchSql);
+//            $this->dump($searchHash);
+            $this->assertPattern('/intfield </',$fetchSql);
+            $this->assertPattern('/intfield >/',$fetchSql);
+            $this->assertPattern('/:intfield/',$fetchSql);
+            $this->assertPattern('/:intfield__2/',$fetchSql);
+        }
 
     # BELOW: TESTS FOR STATIC METHODS
 
