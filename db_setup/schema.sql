@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `schedules` (
     `notes` TEXT NULL,
     `frequency_type` VARCHAR(255) NULL, /* no_repeat, weekly, monthly */
     `repeat_interval` INT DEFAULT 1, /* repeat for 1 to 30 times (weekly or monthly) */
-    `which_days` VARCHAR(255) NULL, /* csv of the 7 weekdays ('0','1','1','1','1','1','0') or csv of selected monthdays (1,4,9,16) */
+    `which_days` VARCHAR(255) NOT NULL DEFAULT 'none', /* none OR weekly: mon,wed,fri OR monthly: 1,4,9,16,30 */
 	`timeblock_start_time` TIME NULL, /*  */
 	`timeblock_duration` VARCHAR(255) NULL, /* supports standard PHP DateInterval formats */
 	`start_on_date` DATE NULL, /*  */

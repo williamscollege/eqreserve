@@ -189,6 +189,29 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertFalse($u->canManageEqGroup($not_managed->eq_group_id));
     }
 
+	function testUserCanUseEqGroup(){
+		$u = User::getOneFromDb(['user_id'=>1101],$this->DB);
+
+		$managed_indirect = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+		$managed_direct = EqGroup::getOneFromDb(['eq_group_id'=>203],$this->DB);
+		$user_indirect = EqGroup::getOneFromDb(['eq_group_id'=>206],$this->DB);
+		$user_direct = EqGroup::getOneFromDb(['eq_group_id'=>207],$this->DB);
+		$not_user = EqGroup::getOneFromDb(['eq_group_id'=>208],$this->DB);
+
+
+		$this->assertTrue($u->canUseEqGroup($managed_indirect));
+		$this->assertTrue($u->canUseEqGroup($managed_direct));
+		$this->assertTrue($u->canUseEqGroup($user_indirect));
+		$this->assertTrue($u->canUseEqGroup($user_direct));
+		$this->assertFalse($u->canUseEqGroup($not_user));
+
+		$this->assertTrue($u->canUseEqGroup($managed_indirect->eq_group_id));
+		$this->assertTrue($u->canUseEqGroup($managed_direct->eq_group_id));
+		$this->assertTrue($u->canUseEqGroup($user_indirect->eq_group_id));
+		$this->assertTrue($u->canUseEqGroup($user_direct->eq_group_id));
+		$this->assertFalse($u->canUseEqGroup($not_user->eq_group_id));
+	}
+
     //// auth-related tests
 
 	function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {

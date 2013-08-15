@@ -746,31 +746,38 @@ $(document).ready(function () {
 		}
 	});
 
+	// Convert param to text value
+	function convertDurationIntervalToText(dur) {
+		var durationsJSON = '{"5M":"5 minutes", "10M":"10 minutes", "15M":"15 minutes", "20M":"20 minutes", "30M":"30 minutes", "45M":"45 minutes", "60M":"60 minutes", "90M":"90 minutes", "2H":"2 hours", "3H":"3 hours", "4H":"4 hours", "5H":"5 hours", "6H":"6 hours", "7H":"7 hours", "8H":"8 hours", "16H":"16 hours", "1D":"24 hours", "2D":"2 days", "3D":"3 days", "4D":"4 days", "5D":"5 days", "6D":"6 days", "7D":"1 week (7 days)", "14D":"2 weeks", "28D":"4 weeks"}';
+		return($.parseJSON(durationsJSON)[dur]);
+	}
+
 	// Construct text string summary and final hidden values
 	function getListofDates() {
 		var interval = $("#scheduleRepeatInterval").val();
 
 		var frequency = $("#scheduleFrequencyType").val();
 		if (frequency == 'no_repeat') {
-			frequency = 'Once ';
+			frequency = 'Once';
 		}
 		else if (frequency == 'weekly') {
-			frequency = 'Every ' + interval + ' weeks ';
+			frequency = 'Every ' + interval + ' weeks';
 		}
 		else if (frequency == 'monthly') {
-			frequency = 'Every ' + interval + ' months ';
+			frequency = 'Every ' + interval + ' months';
 		}
 
 		var start_time = ' at ' + $("#scheduleStartTimeRaw").val();
-		var duration = ' for ' + $("#scheduleDuration").val() + ' minutes ';
 
-		var end_repeat = ' until ' + $("#scheduleEndOnDate").val();
+		var duration = ' for ' + convertDurationIntervalToText($("#scheduleDuration").val()) + ' ';
+
+		var end_repeat = 'until ' + $("#scheduleEndOnDate").val();
 
 		// Determine which value to pass (DoW or DoM)
 		var dates_selected = "";
 		if ($("#scheduleFrequencyType").val() == 'weekly') {
 			// weekly
-			dates_selected = " on (";
+			dates_selected = "on (";
 			$("input[id*='repeat_dow_'][value='1']").each(function (i, field) {
 				var text = field.name.substr(11, 3);
 				switch (text) {
@@ -809,7 +816,7 @@ $(document).ready(function () {
 		}
 		else if ($("#scheduleFrequencyType").val() == 'monthly') {
 			// monthly
-			dates_selected = " on days (";
+			dates_selected = "on days (";
 			$("input[id*='repeat_dom_'][value='1']").each(function (i, field) {
 				var text = field.name.substr(11, 2);
 				dates_selected += text + ", ";

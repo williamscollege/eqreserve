@@ -180,7 +180,7 @@
         (715,504,'inst_group',2,206,0), # deleted instgroup4
         (716,1102,'user',     2,207,0), # user2 user access to eqg 7
         (717,1102,'user',     1,202,0), # user2 manager access to eqg 2
-        (718,1102,'user',     2,201,0),  # user2 user access to eqg 1
+        (718,1102,'user',     2,201,0), # user2 user access to eqg 1
         (719,1106,'user',     1,201,0)  # user6 manager access to eqg 1
     ";
 		$addTestPermissionStmt = $dbConn->prepare($addTestPermissionSql);
@@ -237,8 +237,8 @@
         (908,1006,'2013-03-25 18:00:00','2013-03-25 19:00:00',0), # manager reservation, 1 item
         (909,1007,'2013-03-25 18:00:00','2013-03-25 19:00:00',0), # other user single time block in the group
         (910,1008,'2013-03-25 18:00:00','2013-03-25 19:00:00',0), # other user single time block in the group
-        (911,1009,'2013-03-26 18:00:00','2013-03-26 19:00:00',0),  # single time block in the group, 2 items reserved
-        (912,1010,'2013-04-18 13:00:00','2013-04-18 17:00:00',0)   # single time block in the not-managed group, 1 item reserved
+        (911,1009,'2013-03-26 18:00:00','2013-03-26 19:00:00',0), # single time block in the group, 2 items reserved
+        (912,1010,'2013-04-18 13:00:00','2013-04-18 17:00:00',0)  # single time block in the not-managed group, 1 item reserved
 
     ";
 		$addTestTimeBlockStmt = $dbConn->prepare($addTestTimeBlockSql);
@@ -255,16 +255,16 @@
 		// 1000 series ids
 		// schedule: schedule_id, type, user_id, notes, frequency_type, repeat_interval, which_days, timeblock_start_time, timeblock_duration, start_on_date, end_on_date, summary, flag_delete
 		$addTestScheduleSql  = "INSERT INTO " . Schedule::$dbTable . " VALUES
-        (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,NULL,'10:00:00','15M','2013-03-22','2013-03-22','Once 1 time',0),         # single time block in the schedule, 1 item
-        (1002,'consumer',1101,'notes2 normal with 3 blocks','no_repeat',1,NULL,'10:00:00','30M','2013-03-26','2013-04-09','Once 1 time',0), # three time blocks in the schedule, 1 item
-        (1003,'consumer',1101,'notes3','no_repeat',1,NULL,'2013-03-25 19:00:00','60M','20:00:00','2013-03-25','Once 1 time',0),             # single deleted time block in the schedule
-        (1004,'consumer',1101,'notes4 deleted','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',1),              # schedule is deleted
-        (1005,'consumer',1101,'notes5 reservation deleted','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),  # reservations is deleted
-        (1006,'manager', 1101,'notes6 manager','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),              # manager reservation, 1 item
-        (1007,'consumer',1102,'notes7 other user','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),           # other user single time block in the schedule
-        (1008,'manager', 1102,'notes8 other user manager','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),   # other user single time block in the schedule
-        (1009,'consumer',1103,'notes9 2 items','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),              # single time block in the schedule, 2 items reserved
-        (1010,'consumer',1101,'notes10 2 items not managed eq group','no_repeat',1,NULL,'19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0)  # single time block in the schedule, 1 items reserved, eq group not managed
+        (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,'none','10:00:00','15M','2013-03-22','2013-03-22','Once 1 time',0),         # single time block in the schedule, 1 item
+        (1002,'consumer',1101,'notes2 normal with 3 blocks','no_repeat',1,'none','10:00:00','30M','2013-03-26','2013-04-09','Once 1 time',0), # three time blocks in the schedule, 1 item
+        (1003,'consumer',1101,'notes3','no_repeat',1,'none','2013-03-25 19:00:00','60M','20:00:00','2013-03-25','Once 1 time',0),             # single deleted time block in the schedule
+        (1004,'consumer',1101,'notes4 deleted','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',1),              # schedule is deleted
+        (1005,'consumer',1101,'notes5 reservation deleted','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),  # reservations is deleted
+        (1006,'manager', 1101,'notes6 manager','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),              # manager reservation, 1 item
+        (1007,'consumer',1102,'notes7 other user','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),           # other user single time block in the schedule
+        (1008,'manager', 1102,'notes8 other user manager','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),   # other user single time block in the schedule
+        (1009,'consumer',1103,'notes9 2 items','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),              # single time block in the schedule, 2 items reserved
+        (1010,'consumer',1101,'notes10 2 items not managed eq group','no_repeat',1,'none','19:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0)  # single time block in the schedule, 1 items reserved, eq group not managed
     ";
 		$addTestScheduleStmt = $dbConn->prepare($addTestScheduleSql);
 		$addTestScheduleStmt->execute();

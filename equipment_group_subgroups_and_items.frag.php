@@ -127,15 +127,15 @@
 			<option value="7H">7 hours</option>
 			<option value="8H">8 hours</option>
 			<option value="16H">16 hours</option>
-			<option value="1DT">24 hours</option>
-			<option value="2DT">2 days</option>
-			<option value="3DT">3 days</option>
-			<option value="4DT">4 days</option>
-			<option value="5DT">5 days</option>
-			<option value="6DT">6 days</option>
-			<option value="7DT">1 week (7 days)</option>
-			<option value="14DT">2 weeks</option>
-			<option value="28DT">4 weeks</option>
+			<option value="1D">24 hours</option>
+			<option value="2D">2 days</option>
+			<option value="3D">3 days</option>
+			<option value="4D">4 days</option>
+			<option value="5D">5 days</option>
+			<option value="6D">6 days</option>
+			<option value="7D">1 week (7 days)</option>
+			<option value="14D">2 weeks</option>
+			<option value="28D">4 weeks</option>
 		</select>
 		<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>
 	</div>
@@ -201,7 +201,7 @@
 
 		<div class="controls">
 			<div id="DoW">
-					<span class="pull-left row-fluid" style="padding: 4px">
+					<span class="pull-left">
 						<input type="hidden" name="repeat_dow_sun" id="repeat_dow_sun" value="0" />
 						<input type="hidden" name="repeat_dow_mon" id="repeat_dow_mon" value="0" />
 						<input type="hidden" name="repeat_dow_tue" id="repeat_dow_tue" value="0" />
@@ -215,7 +215,7 @@
 						<input type="button" id="btn_dow_thu" value="THU" class="btn-mini toggler_dow" title="Repeat on Thursday" />&nbsp;
 						<input type="button" id="btn_dow_fri" value="FRI" class="btn-mini toggler_dow" title="Repeat on Friday" />&nbsp;
 					</span>
-					<span class="pull-left row-fluid" style="padding: 4px">
+					<span style="padding-left: 16px">
 						<input type="button" id="btn_dow_sat" value="SAT" class="btn-mini toggler_dow" title="Repeat on Saturday" />&nbsp;
 						<input type="button" id="btn_dow_sun" value="SUN" class="btn-mini toggler_dow" title="Repeat on Sunday" />&nbsp;
 					</span>
@@ -293,7 +293,10 @@
 						<input type="hidden" name="repeat_dom_28" id="repeat_dom_28" value="0" />
 						<input type="button" id="btn_dom_28" value="28" class="btn-mini toggler_dom" title="Repeat on 28th day of month" />&nbsp;
 					</span>
-					<span class="pull-left row-fluid" style="padding: 4px">
+				<?php
+					# TODO: Display the correct number of days in this month; include valid leap day check for February
+				?>
+				<span class="pull-left row-fluid" style="padding: 4px">
 						<input type="hidden" name="repeat_dom_29" id="repeat_dom_29" value="0" />
 						<input type="button" id="btn_dom_29" value="29" class="btn-mini toggler_dom" title="Repeat on 29th day of month" />&nbsp;
 						<input type="hidden" name="repeat_dom_30" id="repeat_dom_30" value="0" />
@@ -312,7 +315,7 @@
 		<div class="controls">
 			<label for="scheduleEndOnDate" title="Ends on a specified date">
 				<div class="input-append">
-					<input type="text" id="scheduleEndOnDate" name="scheduleEndOnDate" class="input-small" maxlength="12" class="input-small" required="required" />
+					<input type="text" id="scheduleEndOnDate" name="scheduleEndOnDate" class="input-small" maxlength="12" required="required" />
 					<span id="iconHackScheduleEndOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 				</div>
 				(inclusive of this date)
@@ -341,6 +344,17 @@
 	<?php
 	}
 ?>
+<div class="control-group">
+	<label class="control-label" for="">Notes:</label>
+
+	<div class="controls">
+		<label for="scheduleNotes" title="Notes for this schedule">
+			<div class="input-append">
+				<textarea id="scheduleNotes" name="scheduleNotes" class="input-large"></textarea>
+			</div>
+		</label>
+	</div>
+</div>
 <div class="control-group">
 	<label class="control-label" for="btnReservationSubmit"></label>
 

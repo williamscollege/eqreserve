@@ -242,6 +242,25 @@
 				return -1;
 			}, $this->eq_groups));
 		}
+
+		public function canUseEqGroup($g){
+			if ($this->flag_is_system_admin) {
+				return TRUE;
+			}
+			if (is_object($g)) {
+				$g = $g->eq_group_id;
+			}
+			if (!$this->eq_groups) {
+				$this->loadEqGroups();
+			}
+			return in_array($g, array_map(function ($eqg) {
+				if ($eqg->permission->role_id) {
+					return $eqg->eq_group_id;
+				}
+				return -1;
+			}, $this->eq_groups));
+		}
+
 	}
 
 
