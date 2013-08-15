@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `queued_messages` (
 
 
 #####################
-# The Absolute Minimalist Approach to Initial Data Population
+# Required: The Absolute Minimalist Approach to Initial Data Population
 #####################
 
 # Required constant values for roles table

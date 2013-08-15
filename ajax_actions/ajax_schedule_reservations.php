@@ -11,7 +11,6 @@
 	print_r($_REQUEST);
 	echo "</pre>";
 
-
 	# TODO Problem: Caching Problem results if user hits browser back button, then re-submits form: a new schedule is created, but the old schedule_id is entered for reservations.
 	# TODO Solution: Generate unique id key on schedule php page; on server side, check for existence of that key in [db table];
 	#   if not exists, proceed. if exists, then pull values from db, refresh page in edit mode (or clear page), create new unique key, and post confirmation dialog to continue; update db record with new key
@@ -72,7 +71,7 @@
 	# check for existence of eqGroupID
 	$eq_group = EqGroup::getOneFromDb(['eq_group_id' => $intEqGroupID], $DB);
 	if (!$eq_group->matchesDb) {
-		$results['note'] = 'equipment group does not exist';
+		$results['note'] = 'equipment group does not exist or was deleted';
 		echo json_encode($results);
 		exit;
 	}
@@ -108,8 +107,10 @@
 		exit;
 	}
 
+	# TODO: NOTE this is obsolete as the EqGroup::getOneFromDb above returns false if eq_group.flag_delete = true
 	# check that eq_group is active
 	if ($eq_group->flag_delete) {
+		# Note: In actual practice, the action has already redirected to homepage before reaching this point [util_redirectToAppHome('failure', 50)]
 		$results['note'] = 'unable to create reservation for deleted group';
 		echo json_encode($results);
 		exit;
