@@ -49,7 +49,7 @@ function getReservationUserInfo($rsv) {
 # 1. get all the upcoming time blocks (cur time to cur time + 48 hours); for each time block, get the schedule, reservations, extended item info, and user info
 # TODO: incorporate info about comm_prefs.flag_alert_on_upcoming_reservation - link on user_id and eq_group_id
 $eq_reservation_sql =
-"SELECT
+"SELECT DISTINCT
     u.user_id AS user_id
    ,u.username AS username
    ,u.fname AS user_fname
@@ -70,6 +70,7 @@ $eq_reservation_sql =
    reservations AS r,
    schedules AS s,
    users AS u,
+   comm_prefs AS cp,
    eq_items AS i,
    eq_subgroups AS sg,
    eq_groups AS g
@@ -80,6 +81,9 @@ $eq_reservation_sql =
    AND sg.eq_subgroup_id = i.eq_subgroup_id
    AND g.eq_group_id = sg.eq_group_id
    AND u.user_id = s.user_id
+   AND cp.user_id = u.user_id
+   AND cp.flag_alert_on_upcoming_reservation = 1
+   AND cp.eq_group_id = g.eq_group_id
    AND t.flag_delete = 0
    AND r.flag_delete = 0
    AND s.flag_delete = 0
