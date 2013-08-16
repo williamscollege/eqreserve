@@ -67,14 +67,13 @@
 		# EqSubgroup: eq_subgroup_id', 'eq_group_id', 'name','descr','ordering','flag_delete'
 		$addTestEqSubgroupsSql  = "INSERT INTO " . EqSubgroup::$dbTable . " VALUES
         (301,201,'testSubgroup1','normal',1,0,0),
-        (302,201,'testSubgroup2','normal',2,0,1),
-        (303,201,'testSubgroup3','same priority as prev',2,0,0),
-        (304,201,'testSubgroup4','normal',3,0,1),
-        (305,201,'testSubgroup5','deleted',4,1,0),
-        (306,202,'testSubgroup1','same name, different group',1,0,0),
+        (302,201,'testSubgroup2','normal',2,1,0),
+        (303,201,'testSubgroup3','normal and same priority as prev',2,0,0),
+        (304,201,'testSubgroup4','normal',3,1,0),
+        (305,201,'testSubgroup5','deleted',4,0,1),
+        (306,202,'testSubgroup1','normal and same name, different group',1,0,0),
         (307,205,'testSubgroup6','group is deleted',1,0,0),
         (308,207,'testSubgroup7','normal',50,0,0)
-
     ";
 		$addTestEqSubgroupsStmt = $dbConn->prepare($addTestEqSubgroupsSql);
 		$addTestEqSubgroupsStmt->execute();

@@ -216,15 +216,53 @@
 			$par              = $this->getBaseUrlParamsArray();
 			$par['eqGroupID'] = '228'; // set group to one which the user has NO access
 
-			//		echo $this->urlbase."?".$this->urlParamsArrayToString($par);
-			//		exit;
-
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
 			$this->assertPattern('/failure/i');
 			$this->assertPattern('/equipment group does not exist or was deleted/i');
 		}
 
+		function testFailOnEqSubgroupNotExists() {
+			$this->signIn();
+
+			$par                 = $this->getBaseUrlParamsArray();
+			$par['subgroup-305'] = '407'; // deleted sub-group (305)
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment sub-group does not exist or was deleted/i');
+		}
+
+		function testFailOnEqSubgroupParamMissing() {
+			$this->signIn();
+
+			$par              = $this->getBaseUrlParamsArray();
+			$par['subgroup-'] = 'BOO!'; // deleted sub-group (305)
+
+			//		echo $this->urlbase."?".$this->urlParamsArrayToString($par);
+			//		exit;
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment sub-group parameter empty/i');
+		}
+
+		function testFailOnEqItemNotExists() {
+			$this->signIn();
+
+			$par                 = $this->getBaseUrlParamsArray();
+			$par['subgroup-301'] = '405'; // deleted item (405)
+
+			//		echo $this->urlbase."?".$this->urlParamsArrayToString($par);
+			//		exit;
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment item does not exist or was deleted/i');
+		}
 
 		function testConflictOverrideOnlyOnScheduleOfTypeManager() {
 			# if override set, type==manager
@@ -254,52 +292,100 @@
 			$this->assertNoPattern('/success/i');
 		}
 
-		function testCannotCreateReservationOnDeletedItems() {
-			$this->signIn();
-
-			$par = $this->getBaseUrlParamsArray();
-
-			# try to create reservation for deleted item
-			$par['subgroup-301'] = '405'; // deleted item (405)
-
-			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-
-			$this->assertPattern('/unable to create reservation for deleted item/i');
-			$this->assertPattern('/failure/i');
-			$this->assertNoPattern('/success/i');
-
-
-			# try to create reservation for deleted group
-			$par['eqGroupID']    = '205'; // deleted group (205)
-			$par['subgroup-307'] = '408'; // deleted group (205)
-
-			unset($par['subgroup-301']); // remove unnecessary array elements
-			unset($par['subgroup-302-406']);
-			unset($par['subgroup-302-412']);
-
-			# TODO Note - this redirects to home page, thus missing the expected failure output, below:
-			$this->assertPattern('/unable to create reservation for deleted group/i');
-			$this->assertPattern('/failure/i');
-			$this->assertNoPattern('/success/i');
-
-
-			# TODO: try to create reservation for deleted subgroup (305)?
-			//		$this->assertNoPattern('/unable to create reservation for deleted subgroup/i');
-			//		$this->assertNoPattern('/failure/i');
-			//		$this->assertPattern('/success/i');
-		}
 
 		//############################################################
 		// action tests
-		function testCreateShortNoRepeat() {
+
+		function testCreateShorterThan1DayNoRepeat() {
 			$this->signIn();
 			$this->get($this->urlbase);
 
-			$this->fail("to be implemented");
+			$user_cp = CommPref::getOneFromDb(['user_id'=>1101,'eq_group_id'=>201],$this->DB);
+			$user_cp->flag_contact_on_reserve_create = true;
+			$user_cp->updateDb();
 
-			//        $this->assertResponse(200);
-			//        $this->assertNoPattern('/FAILED/i');
-			//        $this->assertPattern('/SUCCESS/i');
+			$blocks_in_db        = TimeBlock::getAllFromDb(['time_block_id !='=>0], $this->DB);
+			$initial_block_count = count($blocks_in_db);
+
+			$par = $this->getBaseUrlParamsArray();
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->dump($this->getBrowser()->getContent());
+
+			$blocks_in_db        = TimeBlock::getAllFromDb(['time_block_id !='=>0], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count+1);
+
+			exit;
 		}
+
+		function testCreateNoRepeatSingleItemTimingConflictFailsIsManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
+
+
+
+			$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
+			$initial_block_count = count($blocks_in_db);
+
+			$par                               = $this->getBaseUrlParamsArray();
+			$par['scheduleStartOnDate']        = '2013-03-26';
+			$par['scheduleStartTimeConverted'] = '10:00:00';
+			$par['scheduleDuration']           = '30M';
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			//			$this->dump($this->getBrowser()->getContent());
+
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+
+			//			$this->dump($results);
+
+			$this->assertEqual('scheduling-conflict', $results['status']);
+
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertTrue(array_key_exists('2013-03-26 10:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-26 10:00:00'][0], 'testItem2');
+
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
+			$this->assertTrue(array_key_exists('testItem2', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem2'][0], '2013-03-26 10:00:00');
+
+			$blocks_in_db = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count);
+		}
+
+		function testCreateNoRepeatSingleItemTimingConflictFailsIsNotManager() {
+		}
+
+
+		function testCreateRepeatingSingleItemTimingConflictFailsIsManager() {
+		}
+
+		function testCreateRepeatingSingleItemTimingConflictFailsIsNotManager() {
+		}
+
+		function testCreateRepeatingMultipleItemsTimingConflictFailsIsManager() {
+		}
+
+		function testCreateRepeatingMultipleItemsTimingConflictFailsIsNotManager() {
+		}
+
+		function testCreateRepeatingSingleItemTimingConflictOverrideIsManager() {
+
+//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+		}
+
+		function testCreateRepeatingMultipleItemsTimingConflictOverrideIsManager() {
+
+//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+		}
+
+		function testCreateRepeatingMultipleItemsSuccessIsNotManager() {
+			# do specific tests for both weekly and monthly cases
+
+//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+		}
+
+
 
 	}

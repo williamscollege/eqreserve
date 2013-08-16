@@ -2,6 +2,7 @@
 <input type="hidden" id="scheduleEqGroupID" name="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
+<input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="0" />
 <legend class="pull-left row-fluid">Reserve Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
 

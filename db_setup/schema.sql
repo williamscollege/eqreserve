@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `eq_subgroups` (
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
     `ordering` SMALLINT NOT NULL,
-    `flag_delete` BIT(1) NOT NULL DEFAULT 0,
-    `flag_is_multi_select` BIT(1) NOT NULL DEFAULT 0
+    `flag_is_multi_select` BIT(1) NOT NULL DEFAULT 0,
+    `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: eq_groups.eq_group_id */
 
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `schedules` (
 	`timeblock_duration` VARCHAR(255) NULL, /* supports standard PHP DateInterval formats */
 	`start_on_date` DATE NULL, /*  */
     `end_on_date` DATE NULL, /*  */
-	`summary` TEXT NULL, /*  */
+	`summary` TEXT NULL, /* Every 1 months at 09:30 AM for 5 minutes on days (18, 19), until 2013-08-16 */
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='collects multiple time blocks into a related group';
 /* type: consumer, manager */
