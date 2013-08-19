@@ -19,9 +19,9 @@
         function testScheduleCmp() {
             $tg1 = Schedule::getOneFromDb(['schedule_id'=>1001],$this->DB); // u 1101, c, 2013-03-22 10:00
             $tg2 = Schedule::getOneFromDb(['schedule_id'=>1002],$this->DB); // u 1101, c, 2013-03-26 10:00
-            $tg3 = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB); // u 1101, m, 2013-03-25 19:00
-            $tg4 = Schedule::getOneFromDb(['schedule_id'=>1008],$this->DB); // u 1102, m, 2013-03-25 19:00
-            $tg5 = Schedule::getOneFromDb(['schedule_id'=>1009],$this->DB); // u 1103, c, 2013-03-26 19:00
+            $tg3 = Schedule::getOneFromDb(['schedule_id'=>1006],$this->DB); // u 1101, m, 2013-03-25 18:00
+            $tg4 = Schedule::getOneFromDb(['schedule_id'=>1008],$this->DB); // u 1102, m, 2013-03-25 18:00
+            $tg5 = Schedule::getOneFromDb(['schedule_id'=>1009],$this->DB); // u 1103, c, 2013-03-26 18:00
 
             $this->assertEqual(Schedule::cmp($tg1,$tg1),0);
 

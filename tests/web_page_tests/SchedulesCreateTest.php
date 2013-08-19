@@ -95,7 +95,7 @@
 
 		//############################################################
 		// access tests
-
+///*DKC
 		function testManagerAccessForManagerSchedule() {
 			$this->signIn();
 			$par = $this->getBaseUrlParamsArray();
@@ -135,6 +135,7 @@
 		function testConsumerAccessForConsumerSchedule() {
 			$this->signIn();
 			$par = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
@@ -296,7 +297,7 @@
 		//############################################################
 		// action tests
 
-		function testCreateShorterThan1DayNoRepeat() {
+		function testSuccessOnCreateShorterThan1DayNoRepeat() {
 			$this->signIn();
 			$this->get($this->urlbase);
 
@@ -315,14 +316,13 @@
 			$blocks_in_db        = TimeBlock::getAllFromDb(['time_block_id !='=>0], $this->DB);
 			$this->assertEqual(count($blocks_in_db), $initial_block_count+1);
 
-			exit;
+//			# TODO - Fix loadCommPrefs() to include InstGroup managers too
+//			exit;
 		}
 
-		function testCreateNoRepeatSingleItemTimingConflictFailsIsManager() {
+		function testFailOnCreateNoRepeatSingleItemTimingConflictIsManager() {
 			$this->signIn();
 			$this->get($this->urlbase);
-
-
 
 			$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
 			$initial_block_count = count($blocks_in_db);
@@ -333,12 +333,10 @@
 			$par['scheduleDuration']           = '30M';
 
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-
-			//			$this->dump($this->getBrowser()->getContent());
+			// $this->dump($this->getBrowser()->getContent());
 
 			$results = json_decode($this->getBrowser()->getContent(), TRUE);
-
-			//			$this->dump($results);
+			// $this->dump($results);
 
 			$this->assertEqual('scheduling-conflict', $results['status']);
 
@@ -354,33 +352,139 @@
 			$this->assertEqual(count($blocks_in_db), $initial_block_count);
 		}
 
-		function testCreateNoRepeatSingleItemTimingConflictFailsIsNotManager() {
+		function testFailOnCreateNoRepeatSingleItemTimingConflictIsNotManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
+
+			$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$initial_block_count = count($blocks_in_db);
+
+			$par                               = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+
+			$par['eqGroupID']    = '207'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-308'] = '410'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleStartOnDate']        = '2013-03-25';
+			$par['scheduleStartTimeConverted'] = '18:00:00';
+			$par['scheduleDuration']           = '60M';
+
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+
+
+			$this->assertEqual('scheduling-conflict', $results['status']);
+
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
+			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
+
+			$blocks_in_db = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count);
 		}
 
+//DKC */
+		function testFailOnCreateRepeatingSingleItemTimingConflictIsManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-		function testCreateRepeatingSingleItemTimingConflictFailsIsManager() {
+			$blocks_in_db_1        = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
+			$blocks_in_db_2        = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
+			$blocks_in_db_3        = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
+
+			$initial_block_count = count($blocks_in_db_1) + count($blocks_in_db_2) + count($blocks_in_db_3);
+
+			$par                               = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+
+			$par['eqGroupID']    = '203'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-309'] = '413'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleStartOnDate']        = '2013-07-01';
+			$par['scheduleEndOnDate']          = '2013-07-17';
+			$par['scheduleStartTimeConverted'] = '11:00:00';
+			$par['scheduleDuration']  		    = '15M';
+			$par['repeat_dow_tue']             = TRUE;
+			$par['scheduleFrequencyType']      = 'weekly';
+			$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2011:00%20AM%20for%2015%20minutes%20on%20(Tuesday),%20until%202013-07-17';
+
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+//$this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+//$this->dump($this->getBrowser()->getContent());
+//			exit;
+
+
+			$this->assertEqual('scheduling-conflict', $results['status']);
+
+			# count of conflicts encountered
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
+
+			# week 1
+			# TODO - Okay to not test this?
+//			$this->assertFalse(array_key_exists('2013-07-02 11:00:00', $results['conflicts_by_datetime']));
+//			$this->assertNotEqual($results['conflicts_by_datetime']['2013-07-02 11:00:00'][0], 'testItem12');
+//
+//			$this->assertFalse(array_key_exists('testItem12', $results['conflicts_by_item']));
+//			$this->assertNotEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-02 11:00:00');
+
+			# week 2 (this is conflicting reservation)
+			$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
+
+			$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
+
+			# week 3
+			# TODO - Okay to not test this?
+//			$this->assertTrue(array_key_exists('2013-07-16 11:00:00', $results['conflicts_by_datetime']));
+//			$this->assertEqual($results['conflicts_by_datetime']['2013-07-16 11:00:00'][0], 'testItem12');
+//
+//			$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
+//			$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-16 11:00:00');
+
+
+			$blocks_in_db_1        = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
+			$blocks_in_db_2        = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
+			$blocks_in_db_3        = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
+
+			$this->assertNotEqual(count($blocks_in_db_1), $initial_block_count);
+			$this->assertEqual(count($blocks_in_db_2), $initial_block_count);
+			$this->assertNotEqual(count($blocks_in_db_3), $initial_block_count);
 		}
 
-		function testCreateRepeatingSingleItemTimingConflictFailsIsNotManager() {
+		function testFailOnCreateRepeatingSingleItemTimingConflictIsNotManager() {
 		}
 
-		function testCreateRepeatingMultipleItemsTimingConflictFailsIsManager() {
+		function testFailOnCreateRepeatingMultipleItemsTimingConflictIsManager() {
 		}
 
-		function testCreateRepeatingMultipleItemsTimingConflictFailsIsNotManager() {
+		function testFailOnCreateRepeatingMultipleItemsTimingConflictIsNotManager() {
 		}
 
-		function testCreateRepeatingSingleItemTimingConflictOverrideIsManager() {
+		function testSuccessOnCreateRepeatingSingleItemTimingConflictOverrideIsManager() {
 
 //			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
 		}
 
-		function testCreateRepeatingMultipleItemsTimingConflictOverrideIsManager() {
+		function testSuccessOnCreateRepeatingMultipleItemsTimingConflictOverrideIsManager() {
 
 //			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
 		}
 
-		function testCreateRepeatingMultipleItemsSuccessIsNotManager() {
+		function testSuccessOnCreateRepeatingMultipleItemsIsNotManager() {
 			# do specific tests for both weekly and monthly cases
 
 //			QueuedMessage::getOneFromDb(['target'=>],$this->DB);

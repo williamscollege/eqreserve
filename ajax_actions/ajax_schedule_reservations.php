@@ -318,7 +318,9 @@
 
 	$conflicting_time_block_data = Reservation::findTimingConflicts($DB,$all_eq_item_ids);
 
+//	echo "<pre>";
 //	print_r($conflicting_time_block_data);
+//	echo "</pre>";
 
 	#   if conflict
 	if (count($conflicting_time_block_data) > 0) {
@@ -366,6 +368,7 @@
 	#     commit
 	#     success
 		$DB->commit();
+		# Output
 		$results['status'] = 'success';
 	}
 

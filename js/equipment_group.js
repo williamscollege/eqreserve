@@ -59,7 +59,7 @@ $(document).ready(function () {
 	// Reserve Equipment: calendar
 	$("#scheduleStartOnDate").datepicker({
 		dateFormat: 'yy-mm-dd',
-		minDate: -0,
+		minDate: -730,
 		maxDate: +730
 	}).val($.datepicker.formatDate('yy-mm-dd', new Date()));
 	// Hack to make calendar icon functional
@@ -672,7 +672,7 @@ $(document).ready(function () {
 	// Easily set reservation for entire 24-hour period
 	$("#btnAllDayEvent").click(function () {
 		$("#scheduleStartTimeRaw").timepicker('setTime', '12:00 AM');
-		$("#scheduleDuration").val('1440');
+		$("#scheduleDuration").val('1D');
 	});
 
 	// Repeats Frequency: update visible fields based on user selection
@@ -706,7 +706,7 @@ $(document).ready(function () {
 	// Repeat Ends: wire-up calendar widget
 	$("#scheduleEndOnDate").datepicker({
 		dateFormat: 'yy-mm-dd',
-		minDate: -0,
+		minDate: -730,
 		maxDate: +730
 	}).val($.datepicker.formatDate('yy-mm-dd', new Date()));
 	// Hack to make calendar icon functional
