@@ -78,12 +78,12 @@
                   AND (
                        (t1.start_datetime < t2.start_datetime AND t1.end_datetime > t2.start_datetime)
                     OR (t2.start_datetime < t1.start_datetime AND t2.end_datetime > t1.start_datetime)
-                    OR (t2.start_datetime = t1.start_datetime AND t2.end_datetime = t1.end_datetime)
+                    OR (t2.start_datetime = t1.start_datetime OR t2.end_datetime = t1.end_datetime)
                   )
                   AND i.eq_item_id = r1.eq_item_id";
             if ($item_id_list) {
                 $ids = implode(',',$item_id_list);
-                $checkSql .= " AND r1.eq_item_id IN ($ids) AND r1.eq_item_id IN ($ids)";
+                $checkSql .= " AND r1.eq_item_id IN ($ids) AND r2.eq_item_id IN ($ids)";
             }
             $checkSql .= "
             ORDER BY

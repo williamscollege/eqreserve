@@ -236,6 +236,10 @@
             $this->assertTrue(is_array($eg->managers));
             $this->assertEqual(count($eg->managers), 2);
             $this->assertEqual('testInstGroup1',$eg->managers[1]->name);
+
+			$this->assertTrue(is_array($eg->manager_users_direct_and_indirect));
+			$this->assertEqual(count($eg->manager_users_direct_and_indirect), 1); // expecting user=>1106 (inst_group=>1101 is a CONSUMER and 1103 is DELETED)
+			$this->assertEqual('testUser6',$eg->manager_users_direct_and_indirect[0]->username);
         }
 
         public function TestOfLoadConsumers() {
@@ -248,7 +252,13 @@
             $this->assertTrue(is_array($eg->consumers));
             $this->assertEqual(count($eg->consumers), 3);
             $this->assertEqual('Violet',$eg->consumers[0]->fname);
+            $this->assertEqual('tu2F',$eg->consumers[1]->fname);
             $this->assertEqual('testInstGroup2',$eg->consumers[2]->name);
+
+			$this->assertTrue(is_array($eg->consumer_users_direct_and_indirect));
+			$this->assertEqual(count($eg->consumer_users_direct_and_indirect), 2); // expecting user=>1101,1102 (inst_group=>1103 is DELETED)
+			$this->assertEqual('Violet',$eg->consumer_users_direct_and_indirect[0]->fname);
+			$this->assertEqual('tu2F',$eg->consumer_users_direct_and_indirect[1]->fname);
         }
 
         public function TestOfLoadSchedules(){

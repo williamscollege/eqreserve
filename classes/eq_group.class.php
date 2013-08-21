@@ -20,7 +20,9 @@
 		public $reservations;
 		public $schedules;
 		public $managers; // mixed array of users and inst groups
+		public $manager_users_direct_and_indirect; // associative hash of user_ids and user objects (including direct user managers and indirect inst_group user managers)
 		public $consumers; // mixed array of users and inst groups
+		public $consumer_users_direct_and_indirect; // associative hash of user_ids and user objects (including direct user consumers and indirect inst_group user consumers)
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -202,6 +204,7 @@
 				$this->loadPermissions();
 			}
 			$this->managers         = [];
+			$this->manager_users_direct_and_indirect         = [];
 			$manager_user_ids       = [];
 			$manager_inst_group_ids = [];
 			foreach ($this->permissions as $perm) {
@@ -217,11 +220,21 @@
 			if (count($manager_user_ids) > 0) {
 				$manager_users  = User::getAllFromDb(['user_id' => $manager_user_ids], $this->dbConnection);
 				$this->managers = array_merge($this->managers, $manager_users);
+				$this->manager_users_direct_and_indirect = array_merge($this->manager_users_direct_and_indirect, $manager_users);
 			}
 			if (count($manager_inst_group_ids) > 0) {
 				$manager_inst_groups = InstGroup::getAllFromDb(['inst_group_id' => $manager_inst_group_ids], $this->dbConnection);
 				$this->managers      = array_merge($this->managers, $manager_inst_groups);
+				foreach ($manager_inst_groups as $mgr_ig_id=>$mgr_ig) {
+					$mgr_ig_users = $mgr_ig->getAllUsers();
+					foreach ($mgr_ig_users as $mgr_ig_user_id=>$mgr_ig_user) {
+						if (! array_key_exists($mgr_ig_user_id,$this->manager_users_direct_and_indirect)) {
+							$this->manager_users_direct_and_indirect[$mgr_ig_user_id] = $mgr_ig_user;
+						}
+					}
+				}
 			}
+
 		}
 
 		public function loadConsumers() {
@@ -229,6 +242,7 @@
 				$this->loadPermissions();
 			}
 			$this->consumers         = [];
+			$this->consumer_users_direct_and_indirect  = [];
 			$consumer_user_ids       = [];
 			$consumer_inst_group_ids = [];
 			foreach ($this->permissions as $perm) {
@@ -244,10 +258,19 @@
 			if (count($consumer_user_ids) > 0) {
 				$consumer_users  = User::getAllFromDb(['user_id' => $consumer_user_ids], $this->dbConnection);
 				$this->consumers = array_merge($this->consumers, $consumer_users);
+				$this->consumer_users_direct_and_indirect = array_merge($this->consumer_users_direct_and_indirect, $consumer_users);
 			}
 			if (count($consumer_inst_group_ids) > 0) {
 				$consumer_inst_groups = InstGroup::getAllFromDb(['inst_group_id' => $consumer_inst_group_ids], $this->dbConnection);
 				$this->consumers      = array_merge($this->consumers, $consumer_inst_groups);
+				foreach ($consumer_inst_groups as $con_ig_id=>$con_ig) {
+					$con_ig_users = $con_ig->getAllUsers();
+					foreach ($con_ig_users as $con_ig_user_id=>$con_ig_user) {
+						if (! array_key_exists($con_ig_user_id,$this->consumer_users_direct_and_indirect)) {
+							$this->consumer_users_direct_and_indirect[$con_ig_user_id] = $con_ig_user;
+						}
+					}
+				}
 			}
 		}
 

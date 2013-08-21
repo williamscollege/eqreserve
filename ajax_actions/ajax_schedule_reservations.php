@@ -321,6 +321,7 @@
 //	echo "<pre>";
 //	print_r($conflicting_time_block_data);
 //	echo "</pre>";
+//exit;
 
 	#   if conflict
 	if (count($conflicting_time_block_data) > 0) {
@@ -365,8 +366,7 @@
 		}
 	} else
 	{
-	#     commit
-	#     success
+		# Commit
 		$DB->commit();
 		# Output
 		$results['status'] = 'success';
@@ -392,6 +392,8 @@
 	#			itemY ->
 	#				datetimeA
 
+//	echo "hello";
+
 	echo json_encode($results);
 
 
@@ -415,6 +417,12 @@
 	If you no longer wish to receive these alerts you can change your communication preferences at ".APP_FOLDER."/account_management.php in the Equipment Groups section.
 	";
 		$itmCountStr = count($alertMessageData['item_names']).' Item'.((count($alertMessageData['item_names'])>1)?'s':'');
+
+//		echo "hello2<pre>";
+//		print_r($eq_group->managers);
+////		print_r($eq_group->manager_users_direct_and_indirect);
+//		exit;
+
 		foreach ($eq_group->managers as $mgr) {
 			$mgr->loadCommPrefs();
 			if($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create){
