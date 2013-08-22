@@ -74,7 +74,8 @@
         (306,202,'testSubgroup1','normal and same name, different group',1,0,0),
         (307,205,'testSubgroup6','group is deleted',1,0,0),
         (308,207,'testSubgroup7','normal',50,0,0),
-        (309,203,'testSubgroup1','normal and same name, different group',1,0,0)
+        (309,203,'testSubgroup1','normal and same name, different group',1,1,0),
+        (310,207,'testSubgroup8','normal',51,1,0)
     ";
 		$addTestEqSubgroupsStmt = $dbConn->prepare($addTestEqSubgroupsSql);
 		$addTestEqSubgroupsStmt->execute();
@@ -101,7 +102,9 @@
         (410,308,'testItem9','normal',20,0),
         (411,306,'testItem10','normal',12,0),
         (412,302,'testItem11','another item, different subgroup',25,0),
-        (413,309,'testItem12','another item, different subgroup',1,0)
+        (413,309,'testItem12','another item, different subgroup',1,0),
+        (414,310,'testItem13','normal',21,0),
+        (415,309,'testItem14','another item, same subgroup',2,0)
     ";
 		$addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
 		$addTestEqItemsStmt->execute();
@@ -195,6 +198,32 @@
 		}
 	}
 
+	function createTestData_Schedules($dbConn) {
+		// 1000 series ids
+		// schedule: schedule_id, type, user_id, notes, frequency_type, repeat_interval, which_days, timeblock_start_time, timeblock_duration, start_on_date, end_on_date, summary, flag_delete
+		$addTestScheduleSql  = "INSERT INTO " . Schedule::$dbTable . " VALUES
+        (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,'none','10:00:00','15M','2013-03-22','2013-03-22','Once 1 time',0),         # single time block in the schedule, 1 item
+        (1002,'consumer',1101,'notes2 normal with 3 blocks','weekly',1,'tue','10:00:00','30M','2013-03-26','2013-04-09','Every 1 weeks at 10:00 AM for 30 minutes on (Tuesday), until 2013-04-09',0), # three time blocks in the schedule, 1 item
+        (1003,'consumer',1101,'notes3 deleted time block','no_repeat',1,'none','2013-03-22 19:00:00','60M','2013-03-22','2013-03-22','Once 1 time',0),           # single deleted time block in the schedule
+        (1004,'consumer',1101,'notes4 deleted schedule','no_repeat',1,'none','18:00:00','60M','2013-03-22','2013-03-22','Once 1 time',1),              # schedule is deleted
+        (1005,'consumer',1101,'notes5 deleted reservation','no_repeat',1,'none','16:00:00','60M','2013-03-22','2013-03-22','Once 1 time',0),  # reservations is deleted
+        (1006,'manager', 1101,'notes6 manager','no_repeat',1,'none','18:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),              # manager reservation, 1 item
+        (1007,'consumer',1102,'notes7 other user','no_repeat',1,'none','18:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),           # other user single time block in the schedule
+        (1008,'manager', 1102,'notes8 other user manager','no_repeat',1,'none','18:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),   # other user single time block in the schedule
+        (1009,'consumer',1103,'notes9 2 items','no_repeat',1,'none','18:00:00','60M','2013-03-26','2013-03-26','Once 1 time',0),              # single time block in the schedule, 2 items reserved
+        (1010,'consumer',1101,'notes10 2 items not managed eq group','no_repeat',1,'none','13:00:00','60M','2013-04-18','2013-04-18','Once 1 time',0),  # single time block in the schedule, 1 items reserved, eq group not managed
+    	(1011,'manager', 1101,'notes11 1 item managed eq group','no_repeat',1,'none','11:00:00','15M','2013-07-09','2013-07-09','Once 1 time',0)  # manager reservation, 1 item
+    ";
+		$addTestScheduleStmt = $dbConn->prepare($addTestScheduleSql);
+		$addTestScheduleStmt->execute();
+		if ($addTestScheduleStmt->errorInfo()[0] != '0000') {
+			echo "<pre>error adding test Schedules data to the DB\n";
+			print_r($addTestScheduleStmt->errorInfo());
+			debug_print_backtrace();
+			exit;
+		}
+	}
+
 	function createTestData_Reservations($dbConn) {
 		// 800 series ids
 		// reservation: reservation_id, eq_item_id, schedule_id, flag_delete
@@ -249,32 +278,6 @@
 		if ($addTestTimeBlockStmt->errorInfo()[0] != '0000') {
 			echo "<pre>error adding test TimeBlocks data to the DB\n";
 			print_r($addTestTimeBlockStmt->errorInfo());
-			debug_print_backtrace();
-			exit;
-		}
-	}
-
-	function createTestData_Schedules($dbConn) {
-		// 1000 series ids
-		// schedule: schedule_id, type, user_id, notes, frequency_type, repeat_interval, which_days, timeblock_start_time, timeblock_duration, start_on_date, end_on_date, summary, flag_delete
-		$addTestScheduleSql  = "INSERT INTO " . Schedule::$dbTable . " VALUES
-        (1001,'consumer',1101,'notes1 with 1 block','no_repeat',1,'none','10:00:00','15M','2013-03-22','2013-03-22','Once 1 time',0),         # single time block in the schedule, 1 item
-        (1002,'consumer',1101,'notes2 normal with 3 blocks','weekly',1,'tue','10:00:00','30M','2013-03-26','2013-04-09','Every 1 weeks at 10:00 AM for 30 minutes on (Tuesday), until 2013-04-09',0), # three time blocks in the schedule, 1 item
-        (1003,'consumer',1101,'notes3','no_repeat',1,'none','2013-03-22 19:00:00','60M','2013-03-22','2013-03-22','Once 1 time',0),           # single deleted time block in the schedule
-        (1004,'consumer',1101,'notes4 deleted','no_repeat',1,'none','18:00:00','60M','2013-03-22','2013-03-22','Once 1 time',1),              # schedule is deleted
-        (1005,'consumer',1101,'notes5 reservation deleted','no_repeat',1,'none','16:00:00','60M','2013-03-22','2013-03-22','Once 1 time',0),  # reservations is deleted
-        (1006,'manager', 1101,'notes6 manager','no_repeat',1,'none','18:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),              # manager reservation, 1 item
-        (1007,'consumer',1102,'notes7 other user','no_repeat',1,'none','18:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),           # other user single time block in the schedule
-        (1008,'manager', 1102,'notes8 other user manager','no_repeat',1,'none','18:00:00','60M','2013-03-25','2013-03-25','Once 1 time',0),   # other user single time block in the schedule
-        (1009,'consumer',1103,'notes9 2 items','no_repeat',1,'none','18:00:00','60M','2013-03-26','2013-03-26','Once 1 time',0),              # single time block in the schedule, 2 items reserved
-        (1010,'consumer',1101,'notes10 2 items not managed eq group','no_repeat',1,'none','13:00:00','60M','2013-04-18','2013-04-18','Once 1 time',0),  # single time block in the schedule, 1 items reserved, eq group not managed
-    	(1011,'manager', 1101,'notes11 1 item managed eq group','no_repeat',1,'none','11:00:00','15M','2013-07-09','2013-07-09','Once 1 time',0)  # manager reservation, 1 item
-    ";
-		$addTestScheduleStmt = $dbConn->prepare($addTestScheduleSql);
-		$addTestScheduleStmt->execute();
-		if ($addTestScheduleStmt->errorInfo()[0] != '0000') {
-			echo "<pre>error adding test Schedules data to the DB\n";
-			print_r($addTestScheduleStmt->errorInfo());
 			debug_print_backtrace();
 			exit;
 		}

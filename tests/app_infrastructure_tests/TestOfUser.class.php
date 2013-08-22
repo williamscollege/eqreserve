@@ -132,7 +132,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $u->loadReservations();
 
         $this->assertTrue(is_array($u->reservations));
-        $this->assertEqual(count($u->reservations),5);
+        $this->assertEqual(count($u->reservations),6);
     }
 
     public function testUserLoadCommPrefs(){
@@ -169,7 +169,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $u->loadSchedules();
 
         $this->assertTrue(is_array($u->schedules));
-        $this->assertEqual(count($u->schedules),4);
+        $this->assertEqual(count($u->schedules),5);
     }
 
     function testUserCanManageEqGroup() {
