@@ -29,7 +29,8 @@
         (102,1101,202,1,0,0),
         (103,1101,203,0,1,0),
         (105,1101,207,0,0,1),
-        (106,1102,207,1,0,0)
+        (106,1102,207,1,0,0),
+        (107,1106,201,1,1,1)
      ";
 		$addTestCommPrefsStmt = $dbConn->prepare($addTestCommPrefsSql);
 		$addTestCommPrefsStmt->execute();
@@ -292,7 +293,8 @@
         (1103,'testUser3deleted','tu3F','tu3L','tu3L, tu3F','tu3@inst.edu','tu3Advisor','tu3 notes',0,0,1),
         (1104,'testUser4banned','tu4F','tu4L','tu4L, tu4F','tu4@inst.edu','tu4Advisor','tu4 notes',0,1,0),
         (1105,'testUser5SystemAdmin','tu5F','tu5L','tu5L, tu5F','tu5@inst.edu','tu5Advisor','tu5 notes',1,0,0),
-        (1106,'testUser6','tu6F','tu6L','tu6L, tu6F','tu6@inst.edu','tu6Advisor','tu6 notes',0,0,0)
+        (1106,'testUser6','tu6F','tu6L','tu6L, tu6F','tu6@inst.edu','tu6Advisor','tu6 notes',0,0,0),
+        (1107,'testUser7','tu7F','tu7L','tu7L, tu7F','tu7@inst.edu','tu7Advisor','tu7 notes',0,0,0)
     ";
 		$addTestUserStmt = $dbConn->prepare($addTestUserSql);
 		$addTestUserStmt->execute();

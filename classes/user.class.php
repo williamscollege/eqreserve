@@ -114,7 +114,11 @@
 				return;
 			}
 			$this->comm_prefs = array();
-			$comm_prefs_ar    = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			$comm_prefs_ar = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			if (!$comm_prefs_ar) {
+				trigger_error('there are NO existing comm_pref records for user_id=' . $this->user_id);
+				return;
+			}
 			foreach ($comm_prefs_ar as $cp) {
 				$this->comm_prefs[$cp->eq_group_id] = $cp;
 			}
@@ -243,7 +247,7 @@
 			}, $this->eq_groups));
 		}
 
-		public function canUseEqGroup($g){
+		public function canUseEqGroup($g) {
 			if ($this->flag_is_system_admin) {
 				return TRUE;
 			}

@@ -5,11 +5,12 @@
 	require_once('../classes/eq_group.class.php');
 	require_once('../classes/eq_subgroup.class.php');
 	require_once('../classes/eq_item.class.php');
+	require_once('../classes/queued_message.class.php');
 
 	# SCRAP THIS OUTPUT
-//	echo "<pre>";
-//	print_r($_REQUEST);
-//	echo "</pre>";
+	//	echo "<pre>";
+	//	print_r($_REQUEST);
+	//	echo "</pre>";
 
 	# TODO Problem: Caching Problem results if user hits browser back button, then re-submits form: a new schedule is created, but the old schedule_id is entered for reservations.
 	# TODO Solution: Generate unique id key on schedule php page; on server side, check for existence of that key in [db table];
@@ -23,22 +24,22 @@
 		'status' => 'failure'
 	];
 
-	$alertMessageData = array('item_names'=>[],'time_ranges'=>[]); // containing: items and times
+	$alertMessageData = array('item_names' => [], 'time_ranges' => []); // containing: items and times
 
 	#------------------------------------------------#
 	# Fetch values
 	#------------------------------------------------#
 	# form values
-	$intEqGroupID               = isset($_REQUEST["eqGroupID"]) ? $_REQUEST["eqGroupID"] : 0;
-	$strScheduleType            = htmlentities((isset($_REQUEST["scheduleIsTypeManager"])) ? 'manager' : 'consumer');
-	$strScheduleFrequencyType   = htmlentities((isset($_REQUEST["scheduleFrequencyType"])) ? util_quoteSmart($_REQUEST["scheduleFrequencyType"]) : 0);
-	$intScheduleRepeatInterval  = isset($_REQUEST["scheduleRepeatInterval"]) ? $_REQUEST["scheduleRepeatInterval"] : 0;
-	$dateScheduleTimeBlockStart = htmlentities((isset($_REQUEST["scheduleStartTimeConverted"])) ? $_REQUEST["scheduleStartTimeConverted"] : 0);
-	$strScheduleDuration        = htmlentities((isset($_REQUEST["scheduleDuration"])) ? $_REQUEST["scheduleDuration"] : 0);
-	$dateScheduleStartOnDate    = htmlentities((isset($_REQUEST["scheduleStartOnDate"])) ? $_REQUEST["scheduleStartOnDate"] : 0);
-	$dateScheduleEndOnDate      = htmlentities((isset($_REQUEST["scheduleEndOnDate"])) ? $_REQUEST["scheduleEndOnDate"] : 0);
-	$strScheduleSummaryText     = htmlentities((isset($_REQUEST["scheduleSummaryText"])) ? util_quoteSmart($_REQUEST["scheduleSummaryText"]) : 0);
-	$strScheduleNotes           = htmlentities((isset($_REQUEST["scheduleNotes"])) ? util_quoteSmart($_REQUEST["scheduleNotes"]) : 0);
+	$intEqGroupID                = isset($_REQUEST["eqGroupID"]) ? $_REQUEST["eqGroupID"] : 0;
+	$strScheduleType             = htmlentities((isset($_REQUEST["scheduleIsTypeManager"])) ? 'manager' : 'consumer');
+	$strScheduleFrequencyType    = htmlentities((isset($_REQUEST["scheduleFrequencyType"])) ? util_quoteSmart($_REQUEST["scheduleFrequencyType"]) : 0);
+	$intScheduleRepeatInterval   = isset($_REQUEST["scheduleRepeatInterval"]) ? $_REQUEST["scheduleRepeatInterval"] : 0;
+	$dateScheduleTimeBlockStart  = htmlentities((isset($_REQUEST["scheduleStartTimeConverted"])) ? $_REQUEST["scheduleStartTimeConverted"] : 0);
+	$strScheduleDuration         = htmlentities((isset($_REQUEST["scheduleDuration"])) ? $_REQUEST["scheduleDuration"] : 0);
+	$dateScheduleStartOnDate     = htmlentities((isset($_REQUEST["scheduleStartOnDate"])) ? $_REQUEST["scheduleStartOnDate"] : 0);
+	$dateScheduleEndOnDate       = htmlentities((isset($_REQUEST["scheduleEndOnDate"])) ? $_REQUEST["scheduleEndOnDate"] : 0);
+	$strScheduleSummaryText      = htmlentities((isset($_REQUEST["scheduleSummaryText"])) ? util_quoteSmart($_REQUEST["scheduleSummaryText"]) : 0);
+	$strScheduleNotes            = htmlentities((isset($_REQUEST["scheduleNotes"])) ? util_quoteSmart($_REQUEST["scheduleNotes"]) : 0);
 	$confirmConflictOverrideFlag = isset($_REQUEST["scheduleConflictOverrideFlag"]) ? $_REQUEST["scheduleConflictOverrideFlag"] : 0;
 
 
@@ -123,38 +124,38 @@
 	foreach ($_REQUEST as $key => $val) {
 		if (substr($key, 0, 9) == 'subgroup-') {
 			$eq_subgroup_id = '';
-			if (preg_match('/subgroup-(\\d+)/',$key,$matches)) {
+			if (preg_match('/subgroup-(\\d+)/', $key, $matches)) {
 				$eq_subgroup_id = $matches[1];
-			} else
-			{
+			}
+			else {
 				$results['note'] = 'equipment sub-group parameter empty';
 				echo json_encode($results);
 				exit;
 			}
 
 			$eq_subgroup = EqSubgroup::getOneFromDb(['eq_subgroup_id' => $eq_subgroup_id], $DB);
-			if (! $eq_subgroup->matchesDb) {
+			if (!$eq_subgroup->matchesDb) {
 				$results['note'] = 'equipment sub-group does not exist or was deleted';
 				echo json_encode($results);
 				exit;
 			}
 			$eq_item = EqItem::getOneFromDb(['eq_item_id' => $val], $DB);
-			if (! $eq_item->matchesDb) {
+			if (!$eq_item->matchesDb) {
 				$results['note'] = 'equipment item does not exist or was deleted';
 				echo json_encode($results);
 				exit;
-			} else
-			{
-				array_push($alertMessageData['item_names'],$eq_item->name);
 			}
-			array_push($all_eq_item_ids,$val);
+			else {
+				array_push($alertMessageData['item_names'], $eq_item->name);
+			}
+			array_push($all_eq_item_ids, $val);
 		}
 	}
 
 	#------------------------------------------------#
 	# Start/open a transaction
 	#------------------------------------------------#
-	if (! $DB->beginTransaction()) {
+	if (!$DB->beginTransaction()) {
 		$results['note'] = 'system error - could not begin a DB transaction';
 		echo json_encode($results);
 		exit;
@@ -235,7 +236,7 @@
 		if (!$flag_initial_day) {
 			# increment week counter iff appropriate (each time $cur_date passes sunday)
 			# D	= a textual representation of a day, three letters (Mon through Sun)
-			if ($cur_date->format('D') == 'Mon') {
+			if ($cur_date->format('D') == 'Sun') {
 				# determine Mon through Sun
 				$count_weeks += 1;
 				//				echo "week_counter=" . $count_weeks . "<br>";
@@ -243,6 +244,7 @@
 
 			# increment month_counter iff appropriate (each time $cur_date passes 1st of month)
 			# j = day of the month without leading zeros (1 to 31)
+			// TODO - this may be problematic. May need to reconfigure this to accept the last day of this particular month. Needs a lookup fxn, yes?
 			if ($cur_date->format('j') == '1') {
 				$count_months += 1;
 				//				echo "month_counter=" . $count_months . "<br>";
@@ -280,7 +282,7 @@
 			# Update
 			$timeblock->updateDb();
 
-			array_push($alertMessageData['time_ranges'],$dateTimeBlockStartDateTime->format('Y-m-d H:i A').' to '.$dateTimeBlockEndDateTime->format('Y-m-d H:i A'));
+			array_push($alertMessageData['time_ranges'], $dateTimeBlockStartDateTime->format('Y-m-d H:i A') . ' to ' . $dateTimeBlockEndDateTime->format('Y-m-d H:i A'));
 		}
 	}
 
@@ -316,56 +318,56 @@
 	#------------------------------------------------#
 	# TODO: conflict checks in function for single, weekly, monthly inserts:
 
-	$conflicting_time_block_data = Reservation::findTimingConflicts($DB,$all_eq_item_ids);
+	$conflicting_time_block_data = Reservation::findTimingConflicts($DB, $all_eq_item_ids);
 
-//	echo "<pre>";
-//	print_r($conflicting_time_block_data);
-//	echo "</pre>";
-//exit;
+	//	echo "<pre>";
+	//	print_r($conflicting_time_block_data);
+	//	echo "</pre>";
+	//exit;
 
 	#   if conflict
 	if (count($conflicting_time_block_data) > 0) {
-	#      if override flag set
+		#      if override flag set
 		if ($confirmConflictOverrideFlag) {
-	#         delete existing conflicts
-	#         for each one so deleted, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
-	#         commit
-	#         results status = success
-		} else
-		{
+			#         delete existing conflicts
+			#         for each one so deleted, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
+			#         commit
+			#         results status = success
+		}
+		else {
 			# TODO - Version 1.0: ajax note for implementation: show results integrated in main page; rename submit button value to 'Re-Submit'
 			# TODO - Version 1.1: Offer user option to make reservation on all available days, while simply avoiding any conflicts
-	#         store the list of conflicts in the result object (include the type of the conflicting reservation/time-block/schedule)
+			#         store the list of conflicts in the result object (include the type of the conflicting reservation/time-block/schedule)
 
-			$results['status'] = 'scheduling-conflict';
+			$results['status']                = 'scheduling-conflict';
 			$results['conflicts_by_datetime'] = [];
-			$results['conflicts_by_item'] = [];
+			$results['conflicts_by_item']     = [];
 			foreach ($conflicting_time_block_data as $conflict_data) {
 
 				// initialize the array for the datetime if need be
-				if (! array_key_exists($conflict_data['t1_start'],$results['conflicts_by_datetime'])) {
+				if (!array_key_exists($conflict_data['t1_start'], $results['conflicts_by_datetime'])) {
 					$results['conflicts_by_datetime'][$conflict_data['t1_start']] = [];
 				}
 				// add the item if it isn't already there
-				if (! array_key_exists($conflict_data['item_name'],$results['conflicts_by_datetime'][$conflict_data['t1_start']])) {
-					array_push($results['conflicts_by_datetime'][$conflict_data['t1_start']],$conflict_data['item_name']);
+				if (!array_key_exists($conflict_data['item_name'], $results['conflicts_by_datetime'][$conflict_data['t1_start']])) {
+					array_push($results['conflicts_by_datetime'][$conflict_data['t1_start']], $conflict_data['item_name']);
 				}
 
 				// initialize the array for the item if need be
-				if (! array_key_exists($conflict_data['item_name'],$results['conflicts_by_item'])) {
+				if (!array_key_exists($conflict_data['item_name'], $results['conflicts_by_item'])) {
 					$results['conflicts_by_item'][$conflict_data['item_name']] = [];
 				}
 				// add the datetime if it isn't already there
-				if (! array_key_exists($conflict_data['t1_start'],$results['conflicts_by_item'][$conflict_data['item_name']])) {
-					array_push($results['conflicts_by_item'][$conflict_data['item_name']],$conflict_data['t1_start']);
+				if (!array_key_exists($conflict_data['t1_start'], $results['conflicts_by_item'][$conflict_data['item_name']])) {
+					array_push($results['conflicts_by_item'][$conflict_data['item_name']], $conflict_data['t1_start']);
 				}
 
 			}
 
 			$DB->rollBack();
 		}
-	} else
-	{
+	}
+	else {
 		# Commit
 		$DB->commit();
 		# Output
@@ -392,8 +394,6 @@
 	#			itemY ->
 	#				datetimeA
 
-//	echo "hello";
-
 	echo json_encode($results);
 
 
@@ -401,35 +401,35 @@
 	# Queue Email Alerts
 	#------------------------------------------------#
 
-	# get all managers of the group
+	# get all managers of the group, using method 'manager_users_direct_and_indirect()'
 	# for each manager:
 	#   get their comm prefs for the group
 	#   if flag_contact_on_reserve_create, queue an email alert to that manager about these reservations
 	if ($results['status'] == 'success') {
 		$eq_group->loadManagers();
 		$msgBody = "The following items have been reserved:\n\t";
-		$msgBody .= implode("\n\t",$alertMessageData['item_names'])."\n";
-		$msgBody .= "for ".$sched->summary.":\n\t";
-		$msgBody .= implode("\n\t",$alertMessageData['time_ranges'])."\n";
+		$msgBody .= implode("\n\t", $alertMessageData['item_names']) . "\n";
+		$msgBody .= "for " . $sched->summary . ":\n\t";
+		$msgBody .= implode("\n\t", $alertMessageData['time_ranges']) . "\n";
 		$msgBody .= "\n
 	If you have any questions contact eqreserve-help@williams.edu.
 
-	If you no longer wish to receive these alerts you can change your communication preferences at ".APP_FOLDER."/account_management.php in the Equipment Groups section.
+	If you no longer wish to receive these alerts you can change your communication preferences at " . APP_FOLDER . "/account_management.php in the Equipment Groups section.
 	";
-		$itmCountStr = count($alertMessageData['item_names']).' Item'.((count($alertMessageData['item_names'])>1)?'s':'');
+		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
 
 //		echo "hello2<pre>";
-//		print_r($eq_group->managers);
-////		print_r($eq_group->manager_users_direct_and_indirect);
-//		exit;
+//		print_r($eq_group->manager_users_direct_and_indirect);
 
-		foreach ($eq_group->managers as $mgr) {
+		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
 			$mgr->loadCommPrefs();
-			if($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create){
-				$msgBody = "";
-				QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in ".$eq_group->name, "Hello ".$mgr->fname.",\n\n".$msgBody);
+//			if ($mgr->comm_prefs) {
+				if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
+					$msgBody = "";
+					QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
+				}
 			}
-		}
+//		}
 	}
 
 ?>

@@ -162,7 +162,6 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual($u->comm_prefs['207']->flag_contact_on_reserve_cancel,1);
     }
 
-
     function testUserSchedulesLoaded() {
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
 
