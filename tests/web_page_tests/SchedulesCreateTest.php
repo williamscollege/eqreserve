@@ -599,15 +599,12 @@
 			$this->assertEqual(count($blocks_in_db_9), 1);
 			$this->assertEqual(count($blocks_in_db_10), 1);
 
-			# TODO: SameTest but IsNotManager
-
-			$qm = QueuedMessage::getOneFromDb(['target'=>'tu7@inst.edu'],$this->DB);
-			print_r($qm);
+			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
-			$this->assertEqual($qm->target, 'tu7@inst.edu');
+			$this->assertEqual($qm->target, 'tu6@inst.edu');
 
-//			exit;
-
+			# TODO: SameTest but IsNotManager
 			$this->fail("to be implemented");
 		}
 
@@ -655,9 +652,12 @@
 			$this->assertEqual(count($blocks_in_db_9), 1);
 			$this->assertEqual(count($blocks_in_db_10), 1);
 
-			# TODO: SameTest but IsNotManager
+			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'tu6@inst.edu');
 
-			// TODO:	QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+			# TODO: SameTest but IsNotManager
 			$this->fail("to be implemented");
 		}
 
@@ -713,9 +713,12 @@
 			$this->assertEqual(count($blocks_in_db_13), 1);
 			$this->assertEqual(count($blocks_in_db_14), 1);
 
-			# TODO: SameTest but IsNotManager
+			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'tu6@inst.edu');
 
-			// TODO:	QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+			# TODO: SameTest but IsNotManager
 			$this->fail("to be implemented");
 		}
 
@@ -770,10 +773,13 @@
 			$this->assertEqual(count($blocks_in_db_12), 0);
 			$this->assertEqual(count($blocks_in_db_13), 1);
 			$this->assertEqual(count($blocks_in_db_14), 1);
-//exit;
-			# TODO: SameTest but IsNotManager
 
-			// TODO:	QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'tu6@inst.edu');
+
+			# TODO: SameTest but IsNotManager
 			$this->fail("to be implemented");
 		}
 
@@ -789,5 +795,6 @@
 			$this->fail("to be implemented");
 		}
 
+		# TODO - need to test creating multiple QueuedMessage's
 		# TODO - Do we need to do testSuccessOnCreate...SystemAdmin tests?
 	}
