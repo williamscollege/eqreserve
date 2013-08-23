@@ -419,19 +419,19 @@ If you no longer wish to receive these alerts you can change your communication 
 	";
 		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
 
-//		echo "hello2<pre>";
+		//		echo "hello2<pre>";
+		//		print_r($eq_group->manager_users_direct_and_indirect);
 //		print_r($eq_group->manager_users_direct_and_indirect);
-
 		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
 			$mgr->loadCommPrefs();
 			if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
 
-//echo "INSIDE-1<pre>";
-//print_r($mgr->comm_prefs);
-//echo "</pre>";
-//echo "INSIDE-2 IF mgr->comm_prefs statement:</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
+				//echo "INSIDE-1<pre>";
+				//print_r($mgr->comm_prefs);
+				//echo "</pre>";
+				//echo "INSIDE-2 IF mgr->comm_prefs statement:</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
 
-				$qm =	QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
+				$qm = QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
 				$qm->updateDb();
 			}
 		}

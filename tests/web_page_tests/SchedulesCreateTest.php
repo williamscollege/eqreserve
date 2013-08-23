@@ -95,7 +95,7 @@
 
 		//############################################################
 		// access tests
-
+/*
 				function testManagerAccessForManagerSchedule() {
 					$this->signIn();
 					$par = $this->getBaseUrlParamsArray();
@@ -603,9 +603,6 @@
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
-
-			# TODO: SameTest but IsNotManager
-			$this->fail("to be implemented");
 		}
 
 		function testSuccessOnCreateRepeatingMultipleItemsIsManagerBiWeekly() {
@@ -656,9 +653,6 @@
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
-
-			# TODO: SameTest but IsNotManager
-			$this->fail("to be implemented");
 		}
 
 		function testSuccessOnCreateRepeatingMultipleItemsIsManagerMonthly() {
@@ -717,9 +711,6 @@
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
-
-			# TODO: SameTest but IsNotManager
-			$this->fail("to be implemented");
 		}
 
 		function testSuccessOnCreateRepeatingMultipleItemsIsManagerBiMonthly() {
@@ -778,9 +769,258 @@
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
+		}
+*/
+		function testSuccessOnCreateRepeatingMultipleItemsIsNotManagerWeekly() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-			# TODO: SameTest but IsNotManager
-			$this->fail("to be implemented");
+			$par                               = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
+
+			$par['scheduleStartOnDate']        = '2013-09-01';
+			$par['scheduleEndOnDate']          = '2013-09-30';
+			$par['scheduleStartTimeConverted'] = '09:00:00';
+			$par['scheduleDuration']           = '4H';
+			$par['repeat_dow_sun']             = TRUE;
+			$par['repeat_dow_mon']             = TRUE;
+			$par['scheduleFrequencyType']      = 'weekly';
+			$par['scheduleRepeatInterval']     = '1';
+			$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2009:00%20AM%20for%204%20hours%20on%20(Sunday,%20Monday),%20until%202013-09-30';
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			// $this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertEqual('success', $results['status']);
+
+			$blocks_in_db_1  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-01 09:00:00', 'end_datetime' => '2013-09-01 13:00:00'], $this->DB);
+			$blocks_in_db_2  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-02 09:00:00', 'end_datetime' => '2013-09-02 13:00:00'], $this->DB);
+			$blocks_in_db_3  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-08 09:00:00', 'end_datetime' => '2013-09-08 13:00:00'], $this->DB);
+			$blocks_in_db_4  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-09 09:00:00', 'end_datetime' => '2013-09-09 13:00:00'], $this->DB);
+			$blocks_in_db_5  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-15 09:00:00', 'end_datetime' => '2013-09-15 13:00:00'], $this->DB);
+			$blocks_in_db_6  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-16 09:00:00', 'end_datetime' => '2013-09-16 13:00:00'], $this->DB);
+			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-22 09:00:00', 'end_datetime' => '2013-09-22 13:00:00'], $this->DB);
+			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-23 09:00:00', 'end_datetime' => '2013-09-23 13:00:00'], $this->DB);
+			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-29 09:00:00', 'end_datetime' => '2013-09-29 13:00:00'], $this->DB);
+			$blocks_in_db_10 = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-30 09:00:00', 'end_datetime' => '2013-09-30 13:00:00'], $this->DB);
+
+			// test scheduleRepeatInterval=1 (Weekly)
+			$this->assertEqual(count($blocks_in_db_1), 1);
+			$this->assertEqual(count($blocks_in_db_2), 1);
+			$this->assertEqual(count($blocks_in_db_3), 1);
+			$this->assertEqual(count($blocks_in_db_4), 1);
+			$this->assertEqual(count($blocks_in_db_5), 1);
+			$this->assertEqual(count($blocks_in_db_6), 1);
+			$this->assertEqual(count($blocks_in_db_7), 1);
+			$this->assertEqual(count($blocks_in_db_8), 1);
+			$this->assertEqual(count($blocks_in_db_9), 1);
+			$this->assertEqual(count($blocks_in_db_10), 1);
+
+			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'vbovine@institution.edu');
+		}
+
+		function testSuccessOnCreateRepeatingMultipleItemsIsNotManagerBiWeekly() {
+			$this->signIn();
+			$this->get($this->urlbase);
+
+			$par                               = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
+
+			$par['scheduleStartOnDate']        = '2013-09-01';
+			$par['scheduleEndOnDate']          = '2013-09-30';
+			$par['scheduleStartTimeConverted'] = '09:00:00';
+			$par['scheduleDuration']           = '4H';
+			$par['repeat_dow_sun']             = TRUE;
+			$par['repeat_dow_mon']             = TRUE;
+			$par['scheduleFrequencyType']      = 'weekly';
+			$par['scheduleRepeatInterval']     = '2';
+			$par['scheduleSummaryText']        = 'Every%202%20weeks%20at%2009:00%20AM%20for%204%20hours%20on%20(Sunday,%20Monday),%20until%202013-09-30';
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			// $this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertEqual('success', $results['status']);
+
+			$blocks_in_db_1  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-01 09:00:00', 'end_datetime' => '2013-09-01 13:00:00'], $this->DB);
+			$blocks_in_db_2  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-02 09:00:00', 'end_datetime' => '2013-09-02 13:00:00'], $this->DB);
+			$blocks_in_db_3  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-08 09:00:00', 'end_datetime' => '2013-09-08 13:00:00'], $this->DB);
+			$blocks_in_db_4  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-09 09:00:00', 'end_datetime' => '2013-09-09 13:00:00'], $this->DB);
+			$blocks_in_db_5  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-15 09:00:00', 'end_datetime' => '2013-09-15 13:00:00'], $this->DB);
+			$blocks_in_db_6  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-16 09:00:00', 'end_datetime' => '2013-09-16 13:00:00'], $this->DB);
+			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-22 09:00:00', 'end_datetime' => '2013-09-22 13:00:00'], $this->DB);
+			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-23 09:00:00', 'end_datetime' => '2013-09-23 13:00:00'], $this->DB);
+			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-29 09:00:00', 'end_datetime' => '2013-09-29 13:00:00'], $this->DB);
+			$blocks_in_db_10 = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-30 09:00:00', 'end_datetime' => '2013-09-30 13:00:00'], $this->DB);
+
+			// test scheduleRepeatInterval=2 (BiWeekly)
+			$this->assertEqual(count($blocks_in_db_1), 1);
+			$this->assertEqual(count($blocks_in_db_2), 1);
+			$this->assertEqual(count($blocks_in_db_3), 0);
+			$this->assertEqual(count($blocks_in_db_4), 0);
+			$this->assertEqual(count($blocks_in_db_5), 1);
+			$this->assertEqual(count($blocks_in_db_6), 1);
+			$this->assertEqual(count($blocks_in_db_7), 0);
+			$this->assertEqual(count($blocks_in_db_8), 0);
+			$this->assertEqual(count($blocks_in_db_9), 1);
+			$this->assertEqual(count($blocks_in_db_10), 1);
+
+			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'vbovine@institution.edu');
+		}
+
+		function testSuccessOnCreateRepeatingMultipleItemsIsNotManagerMonthly() {
+			$this->signIn();
+			$this->get($this->urlbase);
+
+			$par                               = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
+
+			$par['scheduleStartOnDate']        = '2013-09-01';
+			$par['scheduleEndOnDate']          = '2014-03-31';
+			$par['scheduleStartTimeConverted'] = '08:00:00';
+			$par['scheduleDuration']           = '2H';
+			$par['repeat_dom_1']               = TRUE;
+			$par['repeat_dom_30']              = TRUE;
+			$par['scheduleFrequencyType']      = 'monthly';
+			$par['scheduleRepeatInterval']     = '1';
+			$par['scheduleSummaryText']        = 'Every%201%20months%20at%2008:00%20AM%20for%202%20hours%20on%20days%20(1,%2030),%20until%202014-03-31';
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			// $this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertEqual('success', $results['status']);
+
+			$blocks_in_db_1  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-01 08:00:00', 'end_datetime' => '2013-09-01 10:00:00'], $this->DB);
+			$blocks_in_db_2  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-30 08:00:00', 'end_datetime' => '2013-09-30 10:00:00'], $this->DB);
+			$blocks_in_db_3  = TimeBlock::getAllFromDb(['start_datetime' => '2013-10-01 08:00:00', 'end_datetime' => '2013-10-01 10:00:00'], $this->DB);
+			$blocks_in_db_4  = TimeBlock::getAllFromDb(['start_datetime' => '2013-10-30 08:00:00', 'end_datetime' => '2013-10-30 10:00:00'], $this->DB);
+			$blocks_in_db_5  = TimeBlock::getAllFromDb(['start_datetime' => '2013-11-01 08:00:00', 'end_datetime' => '2013-11-01 10:00:00'], $this->DB);
+			$blocks_in_db_6  = TimeBlock::getAllFromDb(['start_datetime' => '2013-11-30 08:00:00', 'end_datetime' => '2013-11-30 10:00:00'], $this->DB);
+			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-01 08:00:00', 'end_datetime' => '2013-12-01 10:00:00'], $this->DB);
+			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-30 08:00:00', 'end_datetime' => '2013-12-30 10:00:00'], $this->DB);
+			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-01 08:00:00', 'end_datetime' => '2014-01-01 10:00:00'], $this->DB);
+			$blocks_in_db_10  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
+			$blocks_in_db_11 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-01 08:00:00', 'end_datetime' => '2014-02-01 10:00:00'], $this->DB);
+			$blocks_in_db_12 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-30 08:00:00', 'end_datetime' => '2014-02-30 10:00:00'], $this->DB);
+			$blocks_in_db_13  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
+			$blocks_in_db_14  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
+
+			// test scheduleRepeatInterval=1 (Monthly)
+			$this->assertEqual(count($blocks_in_db_1), 1);
+			$this->assertEqual(count($blocks_in_db_2), 1);
+			$this->assertEqual(count($blocks_in_db_3), 1);
+			$this->assertEqual(count($blocks_in_db_4), 1);
+			$this->assertEqual(count($blocks_in_db_5), 1);
+			$this->assertEqual(count($blocks_in_db_6), 1);
+			$this->assertEqual(count($blocks_in_db_7), 1);
+			$this->assertEqual(count($blocks_in_db_8), 1);
+			$this->assertEqual(count($blocks_in_db_9), 1);
+			$this->assertEqual(count($blocks_in_db_10), 1);
+			$this->assertEqual(count($blocks_in_db_11), 1);
+			$this->assertEqual(count($blocks_in_db_12), 0); // February!
+			$this->assertEqual(count($blocks_in_db_13), 1);
+			$this->assertEqual(count($blocks_in_db_14), 1);
+
+			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'vbovine@institution.edu');
+		}
+
+		function testSuccessOnCreateRepeatingMultipleItemsIsManagerBiMonthly() {
+			$this->signIn();
+			$this->get($this->urlbase);
+
+			$par                               = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
+
+			$par['scheduleStartOnDate']        = '2013-09-01';
+			$par['scheduleEndOnDate']          = '2014-03-31';
+			$par['scheduleStartTimeConverted'] = '08:00:00';
+			$par['scheduleDuration']           = '2H';
+			$par['repeat_dom_1']               = TRUE;
+			$par['repeat_dom_30']              = TRUE;
+			$par['scheduleFrequencyType']      = 'monthly';
+			$par['scheduleRepeatInterval']     = '2';
+			$par['scheduleSummaryText']        = 'Every%202%20months%20at%2008:00%20AM%20for%202%20hours%20on%20days%20(1,%2030),%20until%202014-03-31';
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			// $this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertEqual('success', $results['status']);
+
+			$blocks_in_db_1  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-01 08:00:00', 'end_datetime' => '2013-09-01 10:00:00'], $this->DB);
+			$blocks_in_db_2  = TimeBlock::getAllFromDb(['start_datetime' => '2013-09-30 08:00:00', 'end_datetime' => '2013-09-30 10:00:00'], $this->DB);
+			$blocks_in_db_3  = TimeBlock::getAllFromDb(['start_datetime' => '2013-10-01 08:00:00', 'end_datetime' => '2013-10-01 10:00:00'], $this->DB);
+			$blocks_in_db_4  = TimeBlock::getAllFromDb(['start_datetime' => '2013-10-30 08:00:00', 'end_datetime' => '2013-10-30 10:00:00'], $this->DB);
+			$blocks_in_db_5  = TimeBlock::getAllFromDb(['start_datetime' => '2013-11-01 08:00:00', 'end_datetime' => '2013-11-01 10:00:00'], $this->DB);
+			$blocks_in_db_6  = TimeBlock::getAllFromDb(['start_datetime' => '2013-11-30 08:00:00', 'end_datetime' => '2013-11-30 10:00:00'], $this->DB);
+			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-01 08:00:00', 'end_datetime' => '2013-12-01 10:00:00'], $this->DB);
+			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-30 08:00:00', 'end_datetime' => '2013-12-30 10:00:00'], $this->DB);
+			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-01 08:00:00', 'end_datetime' => '2014-01-01 10:00:00'], $this->DB);
+			$blocks_in_db_10  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
+			$blocks_in_db_11 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-01 08:00:00', 'end_datetime' => '2014-02-01 10:00:00'], $this->DB);
+			$blocks_in_db_12 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-30 08:00:00', 'end_datetime' => '2014-02-30 10:00:00'], $this->DB);
+			$blocks_in_db_13  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
+			$blocks_in_db_14  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
+
+			// test scheduleRepeatInterval=1 (Monthly)
+			$this->assertEqual(count($blocks_in_db_1), 1);
+			$this->assertEqual(count($blocks_in_db_2), 1);
+			$this->assertEqual(count($blocks_in_db_3), 0);
+			$this->assertEqual(count($blocks_in_db_4), 0);
+			$this->assertEqual(count($blocks_in_db_5), 1);
+			$this->assertEqual(count($blocks_in_db_6), 1);
+			$this->assertEqual(count($blocks_in_db_7), 0);
+			$this->assertEqual(count($blocks_in_db_8), 0);
+			$this->assertEqual(count($blocks_in_db_9), 1);
+			$this->assertEqual(count($blocks_in_db_10), 1);
+			$this->assertEqual(count($blocks_in_db_11), 0);
+			$this->assertEqual(count($blocks_in_db_12), 0);
+			$this->assertEqual(count($blocks_in_db_13), 1);
+			$this->assertEqual(count($blocks_in_db_14), 1);
+
+			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			//print_r($qm);
+			$this->assertEqual(count($qm), 1);
+			$this->assertEqual($qm->target, 'vbovine@institution.edu');
 		}
 
 		function testSuccessOnCreateRepeatingMultipleItemsIsManagerWeeklyAndGenerateMultipleQueuedMessages() {

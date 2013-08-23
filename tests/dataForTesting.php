@@ -30,7 +30,8 @@
         (103,1101,203,0,1,0),
         (105,1101,207,0,0,1),
         (106,1102,207,1,0,0),
-        (107,1106,201,1,1,1)
+        (107,1106,201,1,1,1),
+        (108,1102,202,1,0,0)
      ";
 		$addTestCommPrefsStmt = $dbConn->prepare($addTestCommPrefsSql);
 		$addTestCommPrefsStmt->execute();
@@ -72,7 +73,7 @@
         (303,201,'testSubgroup3','normal and same priority as prev',2,0,0),
         (304,201,'testSubgroup4','normal',3,1,0),
         (305,201,'testSubgroup5','deleted',4,0,1),
-        (306,202,'testSubgroup1','normal and same name, different group',1,0,0),
+        (306,202,'testSubgroup1','normal and same name, different group',1,1,0),
         (307,205,'testSubgroup6','group is deleted',1,0,0),
         (308,207,'testSubgroup7','normal',50,0,0),
         (309,203,'testSubgroup1','normal and same name, different group',1,1,0),
