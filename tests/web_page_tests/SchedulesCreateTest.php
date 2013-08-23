@@ -783,6 +783,12 @@
 			$this->fail("to be implemented");
 		}
 
+		function testSuccessOnCreateRepeatingMultipleItemsIsManagerWeeklyAndGenerateMultipleQueuedMessages() {
+
+			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+			$this->fail("to be implemented");
+		}
+
 		function testSuccessOnCreateRepeatingSingleItemTimingConflictOverrideIsManager() {
 
 			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
@@ -795,6 +801,5 @@
 			$this->fail("to be implemented");
 		}
 
-		# TODO - need to test creating multiple QueuedMessage's
-		# TODO - Do we need to do testSuccessOnCreate...SystemAdmin tests?
+		# TODO - Do we need to standardize our use of SystemAdmin using canManageEqGroup() or other fxns for SystemAdmin CRUD work
 	}
