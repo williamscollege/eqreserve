@@ -419,11 +419,24 @@ If you no longer wish to receive these alerts you can change your communication 
 	";
 		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
 
-		//		echo "hello2<pre>";
-		//		print_r($eq_group->manager_users_direct_and_indirect);
-//		print_r($eq_group->manager_users_direct_and_indirect);
+//echo "hello2<pre>";
+//echo $eq_group->eq_group_id . "hello2<pre>";
+//print_r($eq_group->managers);
+//print_r($eq_group->manager_users_direct_and_indirect);
+//echo "<hr>";
 		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
+
 			$mgr->loadCommPrefs();
+
+			//DKC TESTING: write test for this condition first
+//			if (array_key_exists('flag_contact_on_reserve_create', $mgr->comm_prefs[$eq_group->eq_group_id])){
+////			if (isset($mgr->comm_prefs)){
+//				echo 'DUDE -- ARRAY IS EMPTY, MAN!';
+//			}
+//			else {
+//				print_r($mgr->comm_prefs);
+//			}
+
 			if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
 
 				//echo "INSIDE-1<pre>";

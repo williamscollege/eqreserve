@@ -87,7 +87,8 @@
 			padding-bottom: 40px;
 		}
 	</style>
-	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_RESPONSIVE_CSS; ?>" type="text/css">
+	<!-- In our opinion, the BootStrap Responsive theme is optional; feel free to implement by uncommenting, below-->
+	<!-- <link rel="stylesheet" href="--><?php //echo PATH_BOOTSTRAP_RESPONSIVE_CSS; ?><!--" type="text/css"> -->
 	<!-- CSS: Plugins -->
 	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
 	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_TIMEPICKER_CSS; ?>" type="text/css" media="all">

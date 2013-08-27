@@ -238,8 +238,9 @@
             $this->assertEqual('testInstGroup1',$eg->managers[1]->name);
 
 			$this->assertTrue(is_array($eg->manager_users_direct_and_indirect));
-			$this->assertEqual(count($eg->manager_users_direct_and_indirect), 1); // expecting user=>1106 (inst_group=>1101 is a CONSUMER and 1103 is DELETED)
+			$this->assertEqual(count($eg->manager_users_direct_and_indirect), 2); // expecting user=>1106, inst_group=>501=>user_id=>1101 (inst_group=>1103 is DELETED)
 			$this->assertEqual('testUser6',$eg->manager_users_direct_and_indirect[0]->username);
+			$this->assertEqual('vbovine@institution.edu',$eg->manager_users_direct_and_indirect[1]->email);
         }
 
         public function TestOfLoadConsumers() {
@@ -256,7 +257,7 @@
             $this->assertEqual('testInstGroup2',$eg->consumers[2]->name);
 
 			$this->assertTrue(is_array($eg->consumer_users_direct_and_indirect));
-			$this->assertEqual(count($eg->consumer_users_direct_and_indirect), 2); // expecting user=>1101,1102 (inst_group=>1103 is DELETED)
+			$this->assertEqual(count($eg->consumer_users_direct_and_indirect), 2); // expecting user=>1101, 1102 (inst_group=>1103 is DELETED)
 			$this->assertEqual('Violet',$eg->consumer_users_direct_and_indirect[0]->fname);
 			$this->assertEqual('tu2F',$eg->consumer_users_direct_and_indirect[1]->fname);
         }
