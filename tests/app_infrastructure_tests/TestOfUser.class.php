@@ -135,6 +135,11 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual(count($u->reservations),6);
     }
 
+	public function testCreateDefaultCommPrefsForValidUserLackingCommPrefs() {
+		$u = User::getOneFromDb(['user_id'=>1107],$this->DB);
+		$this->assertNull($u->comm_prefs);
+	}
+
     public function testUserLoadCommPrefs(){
         $u = User::getOneFromDb(['user_id'=>1101],$this->DB);
         $this->assertNull($u->comm_prefs);

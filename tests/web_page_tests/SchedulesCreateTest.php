@@ -95,7 +95,7 @@
 
 		//############################################################
 		// access tests
-/*
+
 				function testManagerAccessForManagerSchedule() {
 					$this->signIn();
 					$par = $this->getBaseUrlParamsArray();
@@ -770,7 +770,7 @@
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
 		}
-*/
+
 		function testSuccessOnCreateRepeatingMultipleItemsIsNotManagerWeekly() {
 			$this->signIn();
 			$this->get($this->urlbase);
@@ -956,7 +956,7 @@
 			$this->assertEqual($qm->target, 'vbovine@institution.edu');
 		}
 
-		function testSuccessOnCreateRepeatingMultipleItemsIsManagerBiMonthly() {
+		function testSuccessOnCreateRepeatingMultipleItemsIsNotManagerBiMonthly() {
 			$this->signIn();
 			$this->get($this->urlbase);
 
@@ -1042,4 +1042,5 @@
 		}
 
 		# TODO - Do we need to standardize our use of SystemAdmin using canManageEqGroup() or other fxns for SystemAdmin CRUD work
+
 	}

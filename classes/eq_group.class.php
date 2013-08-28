@@ -218,27 +218,29 @@
 				}
 			}
 			if (count($manager_user_ids) > 0) {
-				$manager_users                           = User::getAllFromDb(['user_id' => $manager_user_ids], $this->dbConnection);
-				$this->managers                          = array_merge($this->managers, $manager_users);
-				$this->manager_users_direct_and_indirect = array_merge($this->manager_users_direct_and_indirect, $manager_users);
+				$manager_users = User::getAllFromDb(['user_id' => $manager_user_ids], $this->dbConnection);
+				foreach ($manager_users as $key => $val) {
+					array_push($this->managers, $val); // convert hash to simple array
+					array_push($this->manager_users_direct_and_indirect, $val); // convert hash to simple array
+				}
 			}
 			if (count($manager_inst_group_ids) > 0) {
 				$manager_inst_groups = InstGroup::getAllFromDb(['inst_group_id' => $manager_inst_group_ids], $this->dbConnection);
-				$this->managers      = array_merge($this->managers, $manager_inst_groups); // 'managers' is a heterogeneous group of users and inst_groups
-				foreach ($manager_inst_groups as $mgr_ig_id => $mgr_ig) {
-					$mgr_ig_users = $mgr_ig->getAllUsers();
+				foreach ($manager_inst_groups as $key => $val) {
+					array_push($this->managers, $val); // convert hash to simple array ('managers' is a heterogeneous mix of users and inst_groups)
+					$mgr_ig_users = $val->getAllUsers();
 					foreach ($mgr_ig_users as $mgr_ig_key => $mgr_ig_user) {
-						if (!array_key_exists($mgr_ig_user->user_id, $this->manager_users_direct_and_indirect)) {
-							// echo "Found: mgr_ig_user->user_id=". $mgr_ig_user->user_id . "</br>";
+
+						if (!in_array($mgr_ig_user->user_id, array_map(function ($e) {
+							return $e->user_id;
+						}, $this->manager_users_direct_and_indirect))
+						) {
 							array_push($this->manager_users_direct_and_indirect, $mgr_ig_user);
 						}
+
 					}
 				}
-//				echo "<pre>";
-//				print_r($this->manager_users_direct_and_indirect);
-//				print_r($this->managers);
 			}
-
 		}
 
 		public function loadConsumers() {
@@ -260,26 +262,46 @@
 				}
 			}
 			if (count($consumer_user_ids) > 0) {
-				$consumer_users                           = User::getAllFromDb(['user_id' => $consumer_user_ids], $this->dbConnection);
-				$this->consumers                          = array_merge($this->consumers, $consumer_users);
-				$this->consumer_users_direct_and_indirect = array_merge($this->consumer_users_direct_and_indirect, $consumer_users);
+				$consumer_users = User::getAllFromDb(['user_id' => $consumer_user_ids], $this->dbConnection);
+				foreach ($consumer_users as $key => $val) {
+					array_push($this->consumers, $val); // convert hash to simple array
+					array_push($this->consumer_users_direct_and_indirect, $val); // convert hash to simple array
+				}
 			}
 			if (count($consumer_inst_group_ids) > 0) {
 				$consumer_inst_groups = InstGroup::getAllFromDb(['inst_group_id' => $consumer_inst_group_ids], $this->dbConnection);
-				$this->consumers      = array_merge($this->consumers, $consumer_inst_groups); // 'consumers' is a heterogeneous group of users and inst_groups
-				foreach ($consumer_inst_groups as $con_ig_id => $con_ig) {
-					$con_ig_users = $con_ig->getAllUsers();
+				foreach ($consumer_inst_groups as $key => $val) {
+					array_push($this->consumers, $val); // convert hash to simple array ('consumers' is a heterogeneous mix of users and inst_groups)
+					$con_ig_users = $val->getAllUsers();
+
 					foreach ($con_ig_users as $con_ig_key => $con_ig_user) {
-						if (!array_key_exists($con_ig_user->user_id, $this->consumer_users_direct_and_indirect)) {
+
+						if (!in_array($con_ig_user->user_id, array_map("util_returnUserID", $this->consumer_users_direct_and_indirect))) {
 							array_push($this->consumer_users_direct_and_indirect, $con_ig_user);
-							$this->consumer_users_direct_and_indirect[$con_ig_key] = $con_ig_user;
 						}
+
+						# Same looping as above, but more code to accomplish is
+						//						$user_is_already_in_array = false;
+						//						foreach ($this->consumer_users_direct_and_indirect as $user_obj) {
+						//							if ($user_obj->user_id == $con_ig_user->user_id) {
+						//								$user_is_already_in_array = true;
+						//								break;
+						//							}
+						//						}
+						//						if (! $user_is_already_in_array) {
+						//							array_push($this->consumer_users_direct_and_indirect, $con_ig_user);
+						//						}
 					}
 				}
+				//				echo "<pre>";
+				//				print_r($this->consumers);
+				//				print_r($this->consumer_users_direct_and_indirect);
 			}
 		}
 
-		public function loadSchedules($beginCutoff = '', $endCutoff = '') {
+
+		public
+		function loadSchedules($beginCutoff = '', $endCutoff = '') {
 			if (!$this->eq_items) {
 				$this->loadEqItems();
 			}
@@ -312,14 +334,16 @@
 			return TRUE;
 		}
 
-		public function toListItemLinked($id = '', $class_ar = [], $other_attr_hash = []) {
+		public
+		function toListItemLinked($id = '', $class_ar = [], $other_attr_hash = []) {
 			$li = parent::listItemTag($id, $class_ar, $other_attr_hash);
 			$li .= $this->toHTML();
 			$li .= '</li>';
 			return $li;
 		}
 
-		public function toHTML() {
+		public
+		function toHTML() {
 			$ret = '<a href="equipment_group.php?eid=' . $this->eq_group_id . '" title="' . $this->name . '">' . $this->name . '</a>: ' . $this->descr;
 			if ($this->permission &&
 				$this->permission->role &&
