@@ -96,464 +96,464 @@
 		//############################################################
 		// access tests
 
-				function testManagerAccessForManagerSchedule() {
-					$this->signIn();
-					$par = $this->getBaseUrlParamsArray();
+		function testManagerAccessForManagerSchedule() {
+			$this->signIn();
+			$par = $this->getBaseUrlParamsArray();
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-
-					$this->assertNoPattern('/cannot create manager reservation  - not a manager of this group/i');
-					$this->assertNoPattern('/failure/i');
-					$this->assertPattern('/success/i');
-				}
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertNoPattern('/cannot create manager reservation  - not a manager of this group/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
+		}
 
-				function testManagerAccessForConsumerSchedule() {
-					$this->signIn();
-
-					$par = $this->getBaseUrlParamsArray();
-					unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+		function testManagerAccessForConsumerSchedule() {
+			$this->signIn();
+
+			$par = $this->getBaseUrlParamsArray();
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
-					$this->assertNoPattern('/failure/i');
-					$this->assertPattern('/success/i');
-				}
+			$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
+		}
 
-				function testConsumerNoAccessForManagerSchedule() {
-					$this->signIn();
-					$par              = $this->getBaseUrlParamsArray();
-					$par['eqGroupID'] = '207'; // set group to one which the user has consumer access and NOT manager access
+		function testConsumerNoAccessForManagerSchedule() {
+			$this->signIn();
+			$par              = $this->getBaseUrlParamsArray();
+			$par['eqGroupID'] = '207'; // set group to one which the user has consumer access and NOT manager access
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/cannot create manager reservation - not a manager of this group/i');
-					$this->assertPattern('/failure/i');
-					$this->assertNoPattern('/success/i');
-				}
+			$this->assertPattern('/cannot create manager reservation - not a manager of this group/i');
+			$this->assertPattern('/failure/i');
+			$this->assertNoPattern('/success/i');
+		}
 
-				function testConsumerAccessForConsumerSchedule() {
-					$this->signIn();
-					$par = $this->getBaseUrlParamsArray();
-					unset($par['eqGroupID']); // remove unnecessary array elements
-					unset($par['subgroup-301']); // remove unnecessary array elements
-					unset($par['subgroup-302-406']);
-					unset($par['subgroup-302-412']);
-					unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-					$par['eqGroupID']    = '207'; // set group to one which the user has consumer access and NOT manager access
-					$par['subgroup-308'] = '410'; // add necessary array element that corresponds to subgroup and subgroup item
+		function testConsumerAccessForConsumerSchedule() {
+			$this->signIn();
+			$par = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['eqGroupID']    = '207'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-308'] = '410'; // add necessary array element that corresponds to subgroup and subgroup item
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
-					$this->assertNoPattern('/failure/i');
-					$this->assertPattern('/success/i');
-				}
+			$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
+		}
 
-				function testAdminAccessForManagerSchedule() {
-					$this->signIn();
-					makeAuthedTestUserAdmin($this->DB);
-					$par              = $this->getBaseUrlParamsArray();
-					$par['eqGroupID'] = '208'; // set group to one which the user has NO access
+		function testAdminAccessForManagerSchedule() {
+			$this->signIn();
+			makeAuthedTestUserAdmin($this->DB);
+			$par              = $this->getBaseUrlParamsArray();
+			$par['eqGroupID'] = '208'; // set group to one which the user has NO access
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertNoPattern('/cannot create manager reservation - not a manager of this group/i');
-					$this->assertNoPattern('/failure/i');
-					$this->assertPattern('/success/i');
-				}
+			$this->assertNoPattern('/cannot create manager reservation - not a manager of this group/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
+		}
 
-				function testAdminAccessForConsumerSchedule() {
-					$this->signIn();
-					makeAuthedTestUserAdmin($this->DB);
-					$par              = $this->getBaseUrlParamsArray();
-					$par['eqGroupID'] = '208'; // set group to one which the user has NO access
-					unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+		function testAdminAccessForConsumerSchedule() {
+			$this->signIn();
+			makeAuthedTestUserAdmin($this->DB);
+			$par              = $this->getBaseUrlParamsArray();
+			$par['eqGroupID'] = '208'; // set group to one which the user has NO access
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
-					$this->assertNoPattern('/failure/i');
-					$this->assertPattern('/success/i');
-				}
+			$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
+		}
 
-				function testSignedInNoGroupAccessNoScheduling() {
-					$this->signIn();
+		function testSignedInNoGroupAccessNoScheduling() {
+			$this->signIn();
 
-					$par              = $this->getBaseUrlParamsArray();
-					$par['eqGroupID'] = '208'; // set group to one which the user has NO access
+			$par              = $this->getBaseUrlParamsArray();
+			$par['eqGroupID'] = '208'; // set group to one which the user has NO access
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/cannot create manager reservation - not a manager of this group/i');
-					$this->assertPattern('/failure/i');
-					$this->assertNoPattern('/success/i');
+			$this->assertPattern('/cannot create manager reservation - not a manager of this group/i');
+			$this->assertPattern('/failure/i');
+			$this->assertNoPattern('/success/i');
 
-					# ANOTHER TEST VARIATION:
-					unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			# ANOTHER TEST VARIATION:
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/cannot create user reservation - not a user of this group/i');
-					$this->assertPattern('/failure/i');
-					$this->assertNoPattern('/success/i');
-				}
+			$this->assertPattern('/cannot create user reservation - not a user of this group/i');
+			$this->assertPattern('/failure/i');
+			$this->assertNoPattern('/success/i');
+		}
 
-				function testNotSignedInNoScheduling() {
-					$this->get($this->urlbase);
+		function testNotSignedInNoScheduling() {
+			$this->get($this->urlbase);
 
-					$this->assertText("not authenticated");
-				}
+			$this->assertText("not authenticated");
+		}
 
-				//############################################################
-				// data validation tests
-				function testFailOnEqGroupNotExists() {
-					$this->signIn();
+		//############################################################
+		// data validation tests
+		function testFailOnEqGroupNotExists() {
+			$this->signIn();
 
-					$par              = $this->getBaseUrlParamsArray();
-					$par['eqGroupID'] = '228'; // set group to one which the user has NO access
+			$par              = $this->getBaseUrlParamsArray();
+			$par['eqGroupID'] = '228'; // set group to one which the user has NO access
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/failure/i');
-					$this->assertPattern('/equipment group does not exist or was deleted/i');
-				}
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment group does not exist or was deleted/i');
+		}
 
-				function testFailOnEqSubgroupNotExists() {
-					$this->signIn();
+		function testFailOnEqSubgroupNotExists() {
+			$this->signIn();
 
-					$par                 = $this->getBaseUrlParamsArray();
-					$par['subgroup-305'] = '407'; // deleted sub-group (305)
+			$par                 = $this->getBaseUrlParamsArray();
+			$par['subgroup-305'] = '407'; // deleted sub-group (305)
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/failure/i');
-					$this->assertPattern('/equipment sub-group does not exist or was deleted/i');
-				}
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment sub-group does not exist or was deleted/i');
+		}
 
-				function testFailOnEqSubgroupParamMissing() {
-					$this->signIn();
+		function testFailOnEqSubgroupParamMissing() {
+			$this->signIn();
 
-					$par              = $this->getBaseUrlParamsArray();
-					$par['subgroup-'] = 'BOO!'; // deleted sub-group (305)
+			$par              = $this->getBaseUrlParamsArray();
+			$par['subgroup-'] = 'BOO!'; // deleted sub-group (305)
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/failure/i');
-					$this->assertPattern('/equipment sub-group parameter empty/i');
-				}
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment sub-group parameter empty/i');
+		}
 
-				function testFailOnEqItemNotExists() {
-					$this->signIn();
+		function testFailOnEqItemNotExists() {
+			$this->signIn();
 
-					$par                 = $this->getBaseUrlParamsArray();
-					$par['subgroup-301'] = '405'; // deleted item (405)
+			$par                 = $this->getBaseUrlParamsArray();
+			$par['subgroup-301'] = '405'; // deleted item (405)
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/failure/i');
-					$this->assertPattern('/equipment item does not exist or was deleted/i');
-				}
+			$this->assertPattern('/failure/i');
+			$this->assertPattern('/equipment item does not exist or was deleted/i');
+		}
 
-				function testTimeBlockDurationIsValid() {
-					$this->signIn();
+		function testTimeBlockDurationIsValid() {
+			$this->signIn();
 
-					$par                     = $this->getBaseUrlParamsArray();
-					$par['scheduleDuration'] = '60M'; // try valid value (e.g. "60M")
+			$par                     = $this->getBaseUrlParamsArray();
+			$par['scheduleDuration'] = '60M'; // try valid value (e.g. "60M")
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertNoPattern('/invalid time format for duration value/i');
-					$this->assertNoPattern('/failure/i');
-					$this->assertPattern('/success/i');
+			$this->assertNoPattern('/invalid time format for duration value/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
 
 
-					# ANOTHER TEST VARIATION:
-					$par['scheduleDuration'] = 'delete all'; // try invalid value (e.g. "delete all")
+			# ANOTHER TEST VARIATION:
+			$par['scheduleDuration'] = 'delete all'; // try invalid value (e.g. "delete all")
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
-					$this->assertPattern('/invalid time format for duration value/i');
-					$this->assertPattern('/failure/i');
-					$this->assertNoPattern('/success/i');
-				}
+			$this->assertPattern('/invalid time format for duration value/i');
+			$this->assertPattern('/failure/i');
+			$this->assertNoPattern('/success/i');
+		}
 
-				function testConflictOverrideOnlyOnScheduleOfTypeManager() {
-					# if override set, type==manager
-					# if type!=manager, override not set
-					$this->fail("to be implemented");
-				}
+		function testConflictOverrideOnlyOnScheduleOfTypeManager() {
+			# if override set, type==manager
+			# if type!=manager, override not set
+			$this->fail("to be implemented");
+		}
 
 
-				//############################################################
-				// action tests
+		//############################################################
+		// action tests
 
-				function testFailOnCreateNoRepeatSingleItemTimingConflictIsManager() {
-					$this->signIn();
-					$this->get($this->urlbase);
+		function testFailOnCreateNoRepeatSingleItemTimingConflictIsManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-					$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
-					$initial_block_count = count($blocks_in_db);
+			$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
+			$initial_block_count = count($blocks_in_db);
 
-					$par                               = $this->getBaseUrlParamsArray();
-					$par['scheduleStartOnDate']        = '2013-03-26';
-					$par['scheduleStartTimeConverted'] = '10:00:00';
-					$par['scheduleDuration']           = '30M';
+			$par                               = $this->getBaseUrlParamsArray();
+			$par['scheduleStartOnDate']        = '2013-03-26';
+			$par['scheduleStartTimeConverted'] = '10:00:00';
+			$par['scheduleDuration']           = '30M';
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
 
-					$this->assertEqual('scheduling-conflict', $results['status']);
+			$this->assertEqual('scheduling-conflict', $results['status']);
 
-					$this->assertEqual(count($results['conflicts_by_datetime']), 1);
-					$this->assertTrue(array_key_exists('2013-03-26 10:00:00', $results['conflicts_by_datetime']));
-					$this->assertEqual($results['conflicts_by_datetime']['2013-03-26 10:00:00'][0], 'testItem2');
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertTrue(array_key_exists('2013-03-26 10:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-26 10:00:00'][0], 'testItem2');
 
-					$this->assertEqual(count($results['conflicts_by_item']), 1);
-					$this->assertTrue(array_key_exists('testItem2', $results['conflicts_by_item']));
-					$this->assertEqual($results['conflicts_by_item']['testItem2'][0], '2013-03-26 10:00:00');
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
+			$this->assertTrue(array_key_exists('testItem2', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem2'][0], '2013-03-26 10:00:00');
 
-					$blocks_in_db = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
-					$this->assertEqual(count($blocks_in_db), $initial_block_count);
-				}
+			$blocks_in_db = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00'], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count);
+		}
 
-				function testFailOnCreateNoRepeatSingleItemTimingConflictIsNotManager() {
-					$this->signIn();
-					$this->get($this->urlbase);
+		function testFailOnCreateNoRepeatSingleItemTimingConflictIsNotManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-					$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
-					$initial_block_count = count($blocks_in_db);
+			$blocks_in_db        = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$initial_block_count = count($blocks_in_db);
 
-					$par = $this->getBaseUrlParamsArray();
-					unset($par['eqGroupID']); // remove unnecessary array elements
-					unset($par['subgroup-301']); // remove unnecessary array elements
-					unset($par['subgroup-302-406']);
-					unset($par['subgroup-302-412']);
-					unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
 
-					$par['eqGroupID']                  = '207'; // set group to one which the user has consumer access and NOT manager access
-					$par['subgroup-308']               = '410'; // add necessary array element that corresponds to subgroup and subgroup item
-					$par['scheduleStartOnDate']        = '2013-03-25';
-					$par['scheduleStartTimeConverted'] = '18:00:00';
-					$par['scheduleDuration']           = '60M';
+			$par['eqGroupID']                  = '207'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-308']               = '410'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleStartOnDate']        = '2013-03-25';
+			$par['scheduleStartTimeConverted'] = '18:00:00';
+			$par['scheduleDuration']           = '60M';
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
 
-					$this->assertEqual('scheduling-conflict', $results['status']);
+			$this->assertEqual('scheduling-conflict', $results['status']);
 
-					$this->assertEqual(count($results['conflicts_by_datetime']), 1);
-					$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
-					$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
 
-					$this->assertEqual(count($results['conflicts_by_item']), 1);
-					$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
-					$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
+			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
 
-					$blocks_in_db = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
-					$this->assertEqual(count($blocks_in_db), $initial_block_count);
-				}
+			$blocks_in_db = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count);
+		}
 
-				function testFailOnCreateRepeatingSingleItemTimingConflictIsManager() {
-					$this->signIn();
-					$this->get($this->urlbase);
+		function testFailOnCreateRepeatingSingleItemTimingConflictIsManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-					$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
-					$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
-					$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
+			$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
+			$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
+			$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
 
-					$initial_block_count = count($blocks_in_db_1) + count($blocks_in_db_2) + count($blocks_in_db_3);
+			$initial_block_count = count($blocks_in_db_1) + count($blocks_in_db_2) + count($blocks_in_db_3);
 
-					$par = $this->getBaseUrlParamsArray();
-					unset($par['eqGroupID']); // remove unnecessary array elements
-					unset($par['subgroup-301']); // remove unnecessary array elements
-					unset($par['subgroup-302-406']);
-					unset($par['subgroup-302-412']);
+			$par = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
 
-					$par['eqGroupID']                  = '203'; // set group to one which the user has consumer access and NOT manager access
-					$par['subgroup-309-413']           = '413'; // add necessary array element that corresponds to subgroup and subgroup item
-					$par['scheduleStartOnDate']        = '2013-07-01';
-					$par['scheduleEndOnDate']          = '2013-07-17';
-					$par['scheduleStartTimeConverted'] = '11:00:00';
-					$par['scheduleDuration']           = '15M';
-					$par['repeat_dow_tue']             = TRUE;
-					$par['scheduleFrequencyType']      = 'weekly';
-					$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2011:00%20AM%20for%2015%20minutes%20on%20(Tuesday),%20until%202013-07-17';
+			$par['eqGroupID']                  = '203'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-309-413']           = '413'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleStartOnDate']        = '2013-07-01';
+			$par['scheduleEndOnDate']          = '2013-07-17';
+			$par['scheduleStartTimeConverted'] = '11:00:00';
+			$par['scheduleDuration']           = '15M';
+			$par['repeat_dow_tue']             = TRUE;
+			$par['scheduleFrequencyType']      = 'weekly';
+			$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2011:00%20AM%20for%2015%20minutes%20on%20(Tuesday),%20until%202013-07-17';
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
 
-					$this->assertEqual('scheduling-conflict', $results['status']);
+			$this->assertEqual('scheduling-conflict', $results['status']);
 
-					# count of conflicts encountered
-					$this->assertEqual(count($results['conflicts_by_datetime']), 1);
-					$this->assertEqual(count($results['conflicts_by_item']), 1);
+			# count of conflicts encountered
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
 
-					# week 2 (this is conflicting reservation)
-					$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
-					$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
+			# week 2 (this is conflicting reservation)
+			$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
 
-					$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
-					$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
+			$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
 
-					$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
-					$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
-					$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
+			$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
+			$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
+			$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
 
-					$this->assertNotEqual(count($blocks_in_db_1), $initial_block_count);
-					$this->assertEqual(count($blocks_in_db_2), $initial_block_count);
-					$this->assertNotEqual(count($blocks_in_db_3), $initial_block_count);
-				}
+			$this->assertNotEqual(count($blocks_in_db_1), $initial_block_count);
+			$this->assertEqual(count($blocks_in_db_2), $initial_block_count);
+			$this->assertNotEqual(count($blocks_in_db_3), $initial_block_count);
+		}
 
 
-				function testFailOnCreateRepeatingSingleItemTimingConflictIsNotManager() {
-					$this->signIn();
-					$this->get($this->urlbase);
+		function testFailOnCreateRepeatingSingleItemTimingConflictIsNotManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-					$blocks_in_db_30M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00'], $this->DB);
-					$blocks_in_db_60M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$blocks_in_db_30M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00'], $this->DB);
+			$blocks_in_db_60M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
 
-					$initial_block_count_30M = count($blocks_in_db_30M);
-					$initial_block_count_60M = count($blocks_in_db_60M);
+			$initial_block_count_30M = count($blocks_in_db_30M);
+			$initial_block_count_60M = count($blocks_in_db_60M);
 
-					$par = $this->getBaseUrlParamsArray();
-					unset($par['eqGroupID']); // remove unnecessary array elements
-					unset($par['subgroup-301']); // remove unnecessary array elements
-					unset($par['subgroup-302-406']);
-					unset($par['subgroup-302-412']);
-					unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
+			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
 
-					$par['eqGroupID']                  = '207'; // set group to one which the user has consumer access and NOT manager access
-					$par['subgroup-308']               = '410'; // add necessary array element that corresponds to subgroup and subgroup item
-					$par['scheduleStartOnDate']        = '2013-03-17';
-					$par['scheduleEndOnDate']          = '2013-04-02';
-					$par['scheduleStartTimeConverted'] = '18:00:00';
-					$par['scheduleDuration']           = '30M';
-					$par['repeat_dow_mon']             = TRUE;
-					$par['scheduleFrequencyType']      = 'weekly';
-					$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2006:00%20PM%20for%2030%20minutes%20on%20(Monday),%20until%202013-04-02';
+			$par['eqGroupID']                  = '207'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-308']               = '410'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleStartOnDate']        = '2013-03-17';
+			$par['scheduleEndOnDate']          = '2013-04-02';
+			$par['scheduleStartTimeConverted'] = '18:00:00';
+			$par['scheduleDuration']           = '30M';
+			$par['repeat_dow_mon']             = TRUE;
+			$par['scheduleFrequencyType']      = 'weekly';
+			$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2006:00%20PM%20for%2030%20minutes%20on%20(Monday),%20until%202013-04-02';
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
 
-					$this->assertEqual('scheduling-conflict', $results['status']);
+			$this->assertEqual('scheduling-conflict', $results['status']);
 
-					# count of conflicts encountered
-					$this->assertEqual(count($results['conflicts_by_datetime']), 1);
-					$this->assertEqual(count($results['conflicts_by_item']), 1);
+			# count of conflicts encountered
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
 
-					# week 2 (this is conflicting reservation)
-					$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
-					$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+			# week 2 (this is conflicting reservation)
+			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
 
-					$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
-					$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
+			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
 
-					$blocks_in_db_30M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00'], $this->DB);
-					$blocks_in_db_60M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$blocks_in_db_30M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00'], $this->DB);
+			$blocks_in_db_60M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
 
-					$this->assertEqual(count($blocks_in_db_30M), $initial_block_count_30M);
-					$this->assertEqual(count($blocks_in_db_60M), $initial_block_count_60M);
+			$this->assertEqual(count($blocks_in_db_30M), $initial_block_count_30M);
+			$this->assertEqual(count($blocks_in_db_60M), $initial_block_count_60M);
 
 
-					# ANOTHER TEST VARIATION: testFailOnCreateRepeatingMultipleItemsTimingConflictIsNotManager
-					$par['subgroup-310-414'] = '414'; // add necessary array element that corresponds to subgroup and subgroup item
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			# ANOTHER TEST VARIATION: testFailOnCreateRepeatingMultipleItemsTimingConflictIsNotManager
+			$par['subgroup-310-414'] = '414'; // add necessary array element that corresponds to subgroup and subgroup item
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
 
-					$this->assertEqual('scheduling-conflict', $results['status']);
+			$this->assertEqual('scheduling-conflict', $results['status']);
 
-					# count of conflicts encountered
-					$this->assertEqual(count($results['conflicts_by_datetime']), 1);
-					$this->assertEqual(count($results['conflicts_by_item']), 1);
+			# count of conflicts encountered
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
 
-					# week 2 (this is conflicting reservation)
-					$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
-					$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+			# week 2 (this is conflicting reservation)
+			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
 
-					$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
-					$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
+			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
 
-					$blocks_in_db_30M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00'], $this->DB);
-					$blocks_in_db_60M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
+			$blocks_in_db_30M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00'], $this->DB);
+			$blocks_in_db_60M = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00'], $this->DB);
 
-					$this->assertEqual(count($blocks_in_db_30M), $initial_block_count_30M);
-					$this->assertEqual(count($blocks_in_db_60M), $initial_block_count_60M);
-				}
+			$this->assertEqual(count($blocks_in_db_30M), $initial_block_count_30M);
+			$this->assertEqual(count($blocks_in_db_60M), $initial_block_count_60M);
+		}
 
-				function testFailOnCreateRepeatingMultipleItemsTimingConflictIsManager() {
-					$this->signIn();
-					$this->get($this->urlbase);
+		function testFailOnCreateRepeatingMultipleItemsTimingConflictIsManager() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-					$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
-					$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
-					$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
+			$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
+			$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
+			$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
 
-					$initial_block_count = count($blocks_in_db_1) + count($blocks_in_db_2) + count($blocks_in_db_3);
+			$initial_block_count = count($blocks_in_db_1) + count($blocks_in_db_2) + count($blocks_in_db_3);
 
-					$par = $this->getBaseUrlParamsArray();
-					unset($par['eqGroupID']); // remove unnecessary array elements
-					unset($par['subgroup-301']); // remove unnecessary array elements
-					unset($par['subgroup-302-406']);
-					unset($par['subgroup-302-412']);
+			$par = $this->getBaseUrlParamsArray();
+			unset($par['eqGroupID']); // remove unnecessary array elements
+			unset($par['subgroup-301']); // remove unnecessary array elements
+			unset($par['subgroup-302-406']);
+			unset($par['subgroup-302-412']);
 
-					$par['eqGroupID']                  = '203'; // set group to one which the user has consumer access and NOT manager access
-					$par['subgroup-309-413']           = '413'; // add necessary array element that corresponds to subgroup and subgroup item
-					$par['subgroup-309-415']           = '415'; // add necessary array element that corresponds to subgroup and subgroup item
-					$par['scheduleStartOnDate']        = '2013-07-01';
-					$par['scheduleEndOnDate']          = '2013-07-17';
-					$par['scheduleStartTimeConverted'] = '11:00:00';
-					$par['scheduleDuration']           = '15M';
-					$par['repeat_dow_tue']             = TRUE;
-					$par['scheduleFrequencyType']      = 'weekly';
-					$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2011:00%20AM%20for%2015%20minutes%20on%20(Tuesday),%20until%202013-07-17';
+			$par['eqGroupID']                  = '203'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-309-413']           = '413'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['subgroup-309-415']           = '415'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleStartOnDate']        = '2013-07-01';
+			$par['scheduleEndOnDate']          = '2013-07-17';
+			$par['scheduleStartTimeConverted'] = '11:00:00';
+			$par['scheduleDuration']           = '15M';
+			$par['repeat_dow_tue']             = TRUE;
+			$par['scheduleFrequencyType']      = 'weekly';
+			$par['scheduleSummaryText']        = 'Every%201%20weeks%20at%2011:00%20AM%20for%2015%20minutes%20on%20(Tuesday),%20until%202013-07-17';
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					$results = json_decode($this->getBrowser()->getContent(), TRUE);
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			$results = json_decode($this->getBrowser()->getContent(), TRUE);
 
-					$this->assertEqual('scheduling-conflict', $results['status']);
+			$this->assertEqual('scheduling-conflict', $results['status']);
 
-					# count of conflicts encountered
-					$this->assertEqual(count($results['conflicts_by_datetime']), 1);
-					$this->assertEqual(count($results['conflicts_by_item']), 1);
+			# count of conflicts encountered
+			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
+			$this->assertEqual(count($results['conflicts_by_item']), 1);
 
-					# week 2 (this is conflicting reservation)
-					$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
-					$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
+			# week 2 (this is conflicting reservation)
+			$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
+			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
 
-					$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
-					$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
+			$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
+			$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
 
-					$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
-					$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
-					$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
+			$blocks_in_db_1 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-02 11:00:00', 'end_datetime' => '2013-07-02 11:15:00'], $this->DB);
+			$blocks_in_db_2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-09 11:00:00', 'end_datetime' => '2013-07-09 11:15:00'], $this->DB);
+			$blocks_in_db_3 = TimeBlock::getAllFromDb(['start_datetime' => '2013-07-16 11:00:00', 'end_datetime' => '2013-07-16 11:15:00'], $this->DB);
 
-					$this->assertNotEqual(count($blocks_in_db_1), $initial_block_count);
-					$this->assertEqual(count($blocks_in_db_2), $initial_block_count);
-					$this->assertNotEqual(count($blocks_in_db_3), $initial_block_count);
-				}
+			$this->assertNotEqual(count($blocks_in_db_1), $initial_block_count);
+			$this->assertEqual(count($blocks_in_db_2), $initial_block_count);
+			$this->assertNotEqual(count($blocks_in_db_3), $initial_block_count);
+		}
 
-				function testSuccessOnCreateShorterThan1DayNoRepeat() {
-					$this->signIn();
-					$this->get($this->urlbase);
+		function testSuccessOnCreateShorterThan1DayNoRepeat() {
+			$this->signIn();
+			$this->get($this->urlbase);
 
-					$user_cp                                 = CommPref::getOneFromDb(['user_id' => 1101, 'eq_group_id' => 201], $this->DB);
-					$user_cp->flag_contact_on_reserve_create = TRUE;
-					$user_cp->updateDb();
+			$user_cp                                 = CommPref::getOneFromDb(['user_id' => 1101, 'eq_group_id' => 201], $this->DB);
+			$user_cp->flag_contact_on_reserve_create = TRUE;
+			$user_cp->updateDb();
 
-					$blocks_in_db        = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
-					$initial_block_count = count($blocks_in_db);
+			$blocks_in_db        = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
+			$initial_block_count = count($blocks_in_db);
 
-					$par = $this->getBaseUrlParamsArray();
+			$par = $this->getBaseUrlParamsArray();
 
-					$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					//$this->dump($this->getBrowser()->getContent());
-					//$this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
-					//exit;
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			//$this->dump($this->getBrowser()->getContent());
+			//$this->dump($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+			//exit;
 
-					$blocks_in_db = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
-					$this->assertEqual(count($blocks_in_db), $initial_block_count + 1);
-				}
+			$blocks_in_db = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count + 1);
+		}
 
 		function testSuccessOnCreateRepeatingMultipleItemsIsManagerWeekly() {
 			$this->signIn();
@@ -599,7 +599,7 @@
 			$this->assertEqual(count($blocks_in_db_9), 1);
 			$this->assertEqual(count($blocks_in_db_10), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'tu6@inst.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
@@ -649,7 +649,7 @@
 			$this->assertEqual(count($blocks_in_db_9), 1);
 			$this->assertEqual(count($blocks_in_db_10), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'tu6@inst.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
@@ -685,11 +685,11 @@
 			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-01 08:00:00', 'end_datetime' => '2013-12-01 10:00:00'], $this->DB);
 			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-30 08:00:00', 'end_datetime' => '2013-12-30 10:00:00'], $this->DB);
 			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-01 08:00:00', 'end_datetime' => '2014-01-01 10:00:00'], $this->DB);
-			$blocks_in_db_10  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
+			$blocks_in_db_10 = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
 			$blocks_in_db_11 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-01 08:00:00', 'end_datetime' => '2014-02-01 10:00:00'], $this->DB);
 			$blocks_in_db_12 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-30 08:00:00', 'end_datetime' => '2014-02-30 10:00:00'], $this->DB);
-			$blocks_in_db_13  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
-			$blocks_in_db_14  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
+			$blocks_in_db_13 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
+			$blocks_in_db_14 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
 
 			// test scheduleRepeatInterval=1 (Monthly)
 			$this->assertEqual(count($blocks_in_db_1), 1);
@@ -707,7 +707,7 @@
 			$this->assertEqual(count($blocks_in_db_13), 1);
 			$this->assertEqual(count($blocks_in_db_14), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'tu6@inst.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
@@ -743,11 +743,11 @@
 			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-01 08:00:00', 'end_datetime' => '2013-12-01 10:00:00'], $this->DB);
 			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-30 08:00:00', 'end_datetime' => '2013-12-30 10:00:00'], $this->DB);
 			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-01 08:00:00', 'end_datetime' => '2014-01-01 10:00:00'], $this->DB);
-			$blocks_in_db_10  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
+			$blocks_in_db_10 = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
 			$blocks_in_db_11 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-01 08:00:00', 'end_datetime' => '2014-02-01 10:00:00'], $this->DB);
 			$blocks_in_db_12 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-30 08:00:00', 'end_datetime' => '2014-02-30 10:00:00'], $this->DB);
-			$blocks_in_db_13  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
-			$blocks_in_db_14  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
+			$blocks_in_db_13 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
+			$blocks_in_db_14 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
 
 			// test scheduleRepeatInterval=1 (Monthly)
 			$this->assertEqual(count($blocks_in_db_1), 1);
@@ -765,7 +765,7 @@
 			$this->assertEqual(count($blocks_in_db_13), 1);
 			$this->assertEqual(count($blocks_in_db_14), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'tu6@inst.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'tu6@inst.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'tu6@inst.edu');
@@ -775,13 +775,13 @@
 			$this->signIn();
 			$this->get($this->urlbase);
 
-			$par                               = $this->getBaseUrlParamsArray();
+			$par = $this->getBaseUrlParamsArray();
 			unset($par['eqGroupID']); // remove unnecessary array elements
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
 			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
 
@@ -824,7 +824,7 @@
 			$this->assertEqual(count($blocks_in_db_9), 1);
 			$this->assertEqual(count($blocks_in_db_10), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'vbovine@institution.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'vbovine@institution.edu');
@@ -834,13 +834,13 @@
 			$this->signIn();
 			$this->get($this->urlbase);
 
-			$par                               = $this->getBaseUrlParamsArray();
+			$par = $this->getBaseUrlParamsArray();
 			unset($par['eqGroupID']); // remove unnecessary array elements
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
 			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
 
@@ -883,7 +883,7 @@
 			$this->assertEqual(count($blocks_in_db_9), 1);
 			$this->assertEqual(count($blocks_in_db_10), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'vbovine@institution.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'vbovine@institution.edu');
@@ -893,13 +893,13 @@
 			$this->signIn();
 			$this->get($this->urlbase);
 
-			$par                               = $this->getBaseUrlParamsArray();
+			$par = $this->getBaseUrlParamsArray();
 			unset($par['eqGroupID']); // remove unnecessary array elements
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
 			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
 
@@ -928,11 +928,11 @@
 			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-01 08:00:00', 'end_datetime' => '2013-12-01 10:00:00'], $this->DB);
 			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-30 08:00:00', 'end_datetime' => '2013-12-30 10:00:00'], $this->DB);
 			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-01 08:00:00', 'end_datetime' => '2014-01-01 10:00:00'], $this->DB);
-			$blocks_in_db_10  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
+			$blocks_in_db_10 = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
 			$blocks_in_db_11 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-01 08:00:00', 'end_datetime' => '2014-02-01 10:00:00'], $this->DB);
 			$blocks_in_db_12 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-30 08:00:00', 'end_datetime' => '2014-02-30 10:00:00'], $this->DB);
-			$blocks_in_db_13  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
-			$blocks_in_db_14  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
+			$blocks_in_db_13 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
+			$blocks_in_db_14 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
 
 			// test scheduleRepeatInterval=1 (Monthly)
 			$this->assertEqual(count($blocks_in_db_1), 1);
@@ -950,7 +950,7 @@
 			$this->assertEqual(count($blocks_in_db_13), 1);
 			$this->assertEqual(count($blocks_in_db_14), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'vbovine@institution.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'vbovine@institution.edu');
@@ -960,13 +960,13 @@
 			$this->signIn();
 			$this->get($this->urlbase);
 
-			$par                               = $this->getBaseUrlParamsArray();
+			$par = $this->getBaseUrlParamsArray();
 			unset($par['eqGroupID']); // remove unnecessary array elements
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
 			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-			$par['eqGroupID']    = '202'; // set group to one which the user has consumer access and NOT manager access
+			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
 
@@ -995,11 +995,11 @@
 			$blocks_in_db_7  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-01 08:00:00', 'end_datetime' => '2013-12-01 10:00:00'], $this->DB);
 			$blocks_in_db_8  = TimeBlock::getAllFromDb(['start_datetime' => '2013-12-30 08:00:00', 'end_datetime' => '2013-12-30 10:00:00'], $this->DB);
 			$blocks_in_db_9  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-01 08:00:00', 'end_datetime' => '2014-01-01 10:00:00'], $this->DB);
-			$blocks_in_db_10  = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
+			$blocks_in_db_10 = TimeBlock::getAllFromDb(['start_datetime' => '2014-01-30 08:00:00', 'end_datetime' => '2014-01-30 10:00:00'], $this->DB);
 			$blocks_in_db_11 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-01 08:00:00', 'end_datetime' => '2014-02-01 10:00:00'], $this->DB);
 			$blocks_in_db_12 = TimeBlock::getAllFromDb(['start_datetime' => '2014-02-30 08:00:00', 'end_datetime' => '2014-02-30 10:00:00'], $this->DB);
-			$blocks_in_db_13  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
-			$blocks_in_db_14  = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
+			$blocks_in_db_13 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-01 08:00:00', 'end_datetime' => '2014-03-01 10:00:00'], $this->DB);
+			$blocks_in_db_14 = TimeBlock::getAllFromDb(['start_datetime' => '2014-03-30 08:00:00', 'end_datetime' => '2014-03-30 10:00:00'], $this->DB);
 
 			// test scheduleRepeatInterval=1 (Monthly)
 			$this->assertEqual(count($blocks_in_db_1), 1);
@@ -1017,16 +1017,48 @@
 			$this->assertEqual(count($blocks_in_db_13), 1);
 			$this->assertEqual(count($blocks_in_db_14), 1);
 
-			$qm = QueuedMessage::getOneFromDb(['target'=>'vbovine@institution.edu'],$this->DB);
+			$qm = QueuedMessage::getOneFromDb(['target' => 'vbovine@institution.edu'], $this->DB);
 			//print_r($qm);
 			$this->assertEqual(count($qm), 1);
 			$this->assertEqual($qm->target, 'vbovine@institution.edu');
 		}
 
-		function testSuccessOnCreateRepeatingMultipleItemsIsManagerWeeklyAndGenerateMultipleQueuedMessages() {
+		public function testCreateDefaultCommPrefsForValidUserLackingCommPrefs() {
+			$u = User::getOneFromDb(['user_id' => 1107], $this->DB);
 
-			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
-			$this->fail("to be implemented");
+			# assert that user_id=1107 lacks permission to eq_group_id=201
+			$p = Permission::getAllFromDb(['entity_id' => '1107', 'entity_type' => 'user'], $this->DB);
+			$this->assertEqual(count($p), 0);
+
+			# assert that user_id=1107 lacks a comm_prefs record for eq_group_id=201
+			$c = CommPref::getAllFromDb(['user_id' => '1107', 'eq_group_id' => '201'], $this->DB);
+			$this->assertEqual(count($c), 0);
+
+			# create a permission for user_id=1107 to have manager access for eq_group_id=201
+			$p = new Permission(['permission_id'=>3000,'entity_id'=>'1107','entity_type'=>'user','role_id'=>'1','eq_group_id'=>'201','flag_delete'=>'0','DB'=>$this->DB]);
+			$p->updateDb();
+
+			# Test that a successful reservation will automatically create the missing comm_pref DB record for user_id=1107 and eq_group_id=201
+			$this->signIn();
+			$this->get($this->urlbase);
+
+			$blocks_in_db        = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
+			$initial_block_count = count($blocks_in_db);
+
+			$par = $this->getBaseUrlParamsArray();
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$blocks_in_db = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
+			$this->assertEqual(count($blocks_in_db), $initial_block_count + 1);
+
+
+			# assert that user_id=1107 now has one comm_pref with default values (0,0,0)
+			$c = CommPref::getOneFromDb(['user_id' => '1107', 'eq_group_id' => '201'], $this->DB);
+			$this->assertEqual(count($c), 1);
+			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 0);
+			$this->assertEqual($c->flag_contact_on_reserve_create, 0);
+			$this->assertEqual($c->flag_contact_on_reserve_cancel, 0);
 		}
 
 		function testSuccessOnCreateRepeatingSingleItemTimingConflictOverrideIsManager() {
@@ -1037,6 +1069,12 @@
 
 		function testSuccessOnCreateRepeatingMultipleItemsTimingConflictOverrideIsManager() {
 
+			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
+			$this->fail("to be implemented");
+		}
+
+		function testSuccessOnCreateRepeatingMultipleItemsIsManagerWeeklyAndGenerateMultipleQueuedMessages() {
+			// unnecessary test??
 			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
 			$this->fail("to be implemented");
 		}
