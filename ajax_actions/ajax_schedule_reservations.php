@@ -419,13 +419,10 @@ If you no longer wish to receive these alerts you can change your communication 
 	";
 		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
 
-//		util_prePrintR($eq_group->manager_users_direct_and_indirect);
-
 		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
-			$count_mgr_comm_prefs = CommPref::getAllFromDb(['user_id'=>$mgr->user_id, 'eq_group_id'=>$eq_group->eq_group_id], $DB);
-//			echo "</br>group=".$eq_group->eq_group_id.", user=".$mgr->user_id . ", count mgr_comm=".count($count_mgr_comm_prefs);
+			$mgr_comm_pref = CommPref::getOneFromDb(['user_id'=>$mgr->user_id, 'eq_group_id'=>$eq_group->eq_group_id], $DB);
 
-			if (count($count_mgr_comm_prefs) == 0){
+			if (! $mgr_comm_pref->matchesDb){
 				// create a comm_pref record for this mgr (flags receive default db values)
 				$cp = new CommPref(['DB' => $DB]);
 				$cp->user_id = $mgr->user_id;
@@ -435,10 +432,8 @@ If you no longer wish to receive these alerts you can change your communication 
 
 			$mgr->loadCommPrefs();
 
-//			util_prePrintR($mgr->comm_prefs[$eq_group->eq_group_id]);
-
 			if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
-				//echo "</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
+				// echo "</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
 				$qm = QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
 				$qm->updateDb();
 			}

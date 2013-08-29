@@ -1035,7 +1035,7 @@
 			$this->assertEqual(count($c), 0);
 
 			# create a permission for user_id=1107 to have manager access for eq_group_id=201
-			$p = new Permission(['permission_id'=>3000,'entity_id'=>'1107','entity_type'=>'user','role_id'=>'1','eq_group_id'=>'201','flag_delete'=>'0','DB'=>$this->DB]);
+			$p = new Permission(['entity_id'=>'1107','entity_type'=>'user','role_id'=>'1','eq_group_id'=>'201','flag_delete'=>'0','DB'=>$this->DB]);
 			$p->updateDb();
 
 			# Test that a successful reservation will automatically create the missing comm_pref DB record for user_id=1107 and eq_group_id=201
