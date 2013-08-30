@@ -14,6 +14,7 @@
 		<div class="modal-body">
 			<ol>
 				<li><p>To sign in, please use your Williams username and password.</p></li>
+				<li><p>Users must initially log in to the Equipment Reservation system one time, in order for this system to be "aware" of them and send them notifications, etc.</p></li>
 			</ol>
 
 			<p>&nbsp;</p>

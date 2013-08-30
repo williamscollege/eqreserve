@@ -1024,8 +1024,6 @@
 		}
 
 		public function testCreateDefaultCommPrefsForValidUserLackingCommPrefs() {
-			$u = User::getOneFromDb(['user_id' => 1107], $this->DB);
-
 			# assert that user_id=1107 lacks permission to eq_group_id=201
 			$p = Permission::getAllFromDb(['entity_id' => '1107', 'entity_type' => 'user'], $this->DB);
 			$this->assertEqual(count($p), 0);
@@ -1035,8 +1033,9 @@
 			$this->assertEqual(count($c), 0);
 
 			# create a permission for user_id=1107 to have manager access for eq_group_id=201
-			$p = new Permission(['entity_id'=>'1107','entity_type'=>'user','role_id'=>'1','eq_group_id'=>'201','flag_delete'=>'0','DB'=>$this->DB]);
+			$p = new Permission(['entity_id' => '1107', 'entity_type' => 'user', 'role_id' => '1', 'eq_group_id' => '201', 'flag_delete' => '0', 'DB' => $this->DB]);
 			$p->updateDb();
+
 
 			# Test that a successful reservation will automatically create the missing comm_pref DB record for user_id=1107 and eq_group_id=201
 			$this->signIn();
@@ -1052,10 +1051,16 @@
 			$blocks_in_db = TimeBlock::getAllFromDb(['time_block_id !=' => 0], $this->DB);
 			$this->assertEqual(count($blocks_in_db), $initial_block_count + 1);
 
-
 			# assert that user_id=1107 now has one comm_pref with default values (0,0,0)
 			$c = CommPref::getOneFromDb(['user_id' => '1107', 'eq_group_id' => '201'], $this->DB);
-			$this->assertEqual(count($c), 1);
+			$this->assertTrue($c->matchesDb);
+			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 0);
+			$this->assertEqual($c->flag_contact_on_reserve_create, 0);
+			$this->assertEqual($c->flag_contact_on_reserve_cancel, 0);
+
+			# assert that user_id=1101 now has a previously missing comm_pref with default values (0,0,0)
+			$c = CommPref::getOneFromDb(['user_id' => '1101', 'eq_group_id' => '206'], $this->DB);
+			$this->assertTrue($c->matchesDb);
 			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 0);
 			$this->assertEqual($c->flag_contact_on_reserve_create, 0);
 			$this->assertEqual($c->flag_contact_on_reserve_cancel, 0);

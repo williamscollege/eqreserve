@@ -188,7 +188,7 @@
         (716,1102,'user',     2,207,0), # user2 user access to eqg 7
         (717,1102,'user',     1,202,0), # user2 manager access to eqg 2
         (718,1102,'user',     2,201,0), # user2 user access to eqg 1
-        (719,1106,'user',     1,201,0) # user6 manager access to eqg 1
+        (719,1106,'user',     1,201,0)  # user6 manager access to eqg 1
     ";
 		$addTestPermissionStmt = $dbConn->prepare($addTestPermissionSql);
 		$addTestPermissionStmt->execute();

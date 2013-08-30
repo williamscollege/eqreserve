@@ -143,7 +143,7 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $u->loadCommPrefs();
 
         $this->assertTrue(is_array($u->comm_prefs));
-        $this->assertEqual(count($u->comm_prefs),4);
+        $this->assertEqual(count($u->comm_prefs),5); // expects 4 that exist in dataForTesting, plus 1 more that loadCommPrefs() will discover needs to be written
 
         $this->assertEqual($u->comm_prefs['201']->flag_alert_on_upcoming_reservation,0);
         $this->assertEqual($u->comm_prefs['201']->flag_contact_on_reserve_create,0);
@@ -160,6 +160,11 @@ class TestOfUser extends WMSUnitTestCaseDB {
         $this->assertEqual($u->comm_prefs['207']->flag_alert_on_upcoming_reservation,0);
         $this->assertEqual($u->comm_prefs['207']->flag_contact_on_reserve_create,0);
         $this->assertEqual($u->comm_prefs['207']->flag_contact_on_reserve_cancel,1);
+
+		# the function loadCommPrefs() will discover that this comm_pref is missing, and will create it
+		$this->assertEqual($u->comm_prefs['206']->flag_alert_on_upcoming_reservation,0);
+		$this->assertEqual($u->comm_prefs['206']->flag_contact_on_reserve_create,0);
+		$this->assertEqual($u->comm_prefs['206']->flag_contact_on_reserve_cancel,0);
     }
 
     function testUserSchedulesLoaded() {

@@ -113,6 +113,20 @@
 				trigger_error('cannot load schedules for a user with no user_id');
 				return;
 			}
+
+			# Ensure that a comm_pref exists for every group that this user has access to
+			$this->loadEqGroups();
+			foreach ($this->eq_groups as $grp) {
+				$exists_comm_pref = CommPref::getOneFromDb(['user_id'=>$this->user_id, 'eq_group_id'=>$grp->eq_group_id], $this->dbConnection);
+				if (! $exists_comm_pref->matchesDb){
+					// create a comm_pref record for this mgr (flags receive default db values)
+					$cp = new CommPref(['DB' => $this->dbConnection]);
+					$cp->user_id = $this->user_id;
+					$cp->eq_group_id = $grp->eq_group_id;
+					$cp->updateDb();
+				}
+			}
+
 			$this->comm_prefs = array();
 			$comm_prefs_ar = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
 			if (!$comm_prefs_ar) {

@@ -420,15 +420,6 @@ If you no longer wish to receive these alerts you can change your communication 
 		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
 
 		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
-			$mgr_comm_pref = CommPref::getOneFromDb(['user_id'=>$mgr->user_id, 'eq_group_id'=>$eq_group->eq_group_id], $DB);
-
-			if (! $mgr_comm_pref->matchesDb){
-				// create a comm_pref record for this mgr (flags receive default db values)
-				$cp = new CommPref(['DB' => $DB]);
-				$cp->user_id = $mgr->user_id;
-				$cp->eq_group_id = $eq_group->eq_group_id;
-				$cp->updateDb();
-			}
 
 			$mgr->loadCommPrefs();
 
