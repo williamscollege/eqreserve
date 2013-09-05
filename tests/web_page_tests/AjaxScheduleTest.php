@@ -136,7 +136,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertFalse($r->matchesDb);
     }
 
-    function testScheduleAjaxDeleteItem() {
+/*    function testScheduleAjaxDeleteItem() {
         $initialSchedule = Schedule::getOneFromDb(['schedule_id'=>1010],$this->DB);
         $this->assertTrue($initialSchedule->matchesDb);
         $this->getToSchedulePage(1010);
@@ -164,7 +164,7 @@ class AjaxScheduleTest extends WMSWebTestCase {
         $this->assertFalse($tb->matchesDb);
         $r = Reservation::getOneFromDb(['reservation_id'=>801],$this->DB);
         $this->assertFalse($r->matchesDb);
-    }
+    }*/
 
     function testScheduleAjaxDeleteReservation() {
         $initialSchedule = Schedule::getOneFromDb(['schedule_id'=>1010],$this->DB);

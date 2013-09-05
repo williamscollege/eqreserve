@@ -400,35 +400,37 @@
 	#------------------------------------------------#
 	# Queue Email Alerts
 	#------------------------------------------------#
-
-	# get all managers of the group, using method 'manager_users_direct_and_indirect()'
-	# for each manager:
-	#   get their comm prefs for the group
-	#   if flag_contact_on_reserve_create, queue an email alert to that manager about these reservations
 	if ($results['status'] == 'success') {
-		$eq_group->loadManagers();
-		$msgBody = "";
-		$msgBody = "The following items have been reserved:\n\t";
-		$msgBody .= implode("\n\t", $alertMessageData['item_names']) . "\n";
-		$msgBody .= "for " . $sched->summary . ":\n\t";
-		$msgBody .= implode("\n\t", $alertMessageData['time_ranges']) . "\n";
-		$msgBody .= "\n
-If you have any questions contact eqreserve-help@williams.edu.
-
-If you no longer wish to receive these alerts you can change your communication preferences at " . APP_FOLDER . "/account_management.php in the Equipment Groups section.
-	";
-		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
-
-		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
-
-			$mgr->loadCommPrefs();
-
-			if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
-				// echo "</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
-				$qm = QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
-				$qm->updateDb();
-			}
-		}
+		$sched->doCreateQueuedMessages($eq_group, $alertMessageData, 'flag_contact_on_reserve_create');
 	}
+
+//	# get all managers of the group, using method 'manager_users_direct_and_indirect()'
+//	# for each manager:
+//	#   get their comm prefs for the group
+//	#   if flag_contact_on_reserve_create, queue an email alert to that manager about these reservations
+//
+//		$eq_group->loadManagers();
+//		$msgBody = "The following items have been reserved:\n\t";
+//		$msgBody .= implode("\n\t", $alertMessageData['item_names']) . "\n";
+//		$msgBody .= "for " . $sched->summary . ":\n\t";
+//		$msgBody .= implode("\n\t", $alertMessageData['time_ranges']) . "\n";
+//		$msgBody .= "\n
+//If you have any questions contact eqreserve-help@williams.edu.
+//
+//If you no longer wish to receive these alerts you can change your communication preferences at " . APP_FOLDER . "/account_management.php in the Equipment Groups section.
+//	";
+//		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
+//
+//		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
+//
+//			$mgr->loadCommPrefs();
+//
+//			if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
+//				// echo "</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
+//				$qm = QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
+//				$qm->updateDb();
+//			}
+//		}
+
 
 ?>

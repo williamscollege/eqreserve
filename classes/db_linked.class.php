@@ -201,12 +201,12 @@
 		}
 
 		public static function getAllFromDb($searchHash, $usingDb) {
-            if ((in_array('flag_delete',static::$fields)) && (! array_key_exists('flag_delete',$searchHash))) {
-                $searchHash['flag_delete'] = false;
-            }
+			if ((in_array('flag_delete', static::$fields)) && (!array_key_exists('flag_delete', $searchHash))) {
+				$searchHash['flag_delete'] = FALSE;
+			}
 			$whichClass = get_called_class();
 			$fetchStmt  = self::_buildFetchStatement($searchHash, $usingDb);
-//echo '<pre>';print_r($searchHash);echo'</pre>';
+			//echo '<pre>';print_r($searchHash);echo'</pre>';
 			$fetchStmt->execute($searchHash);
 			$res = $fetchStmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $whichClass, [['DB' => $usingDb]]);
 			self::checkStmtError($fetchStmt);
@@ -221,10 +221,10 @@
 		// NOTE: in the case of multiple rows found, only the first is used
 		// NOTE: in the case of no rows found the recipient->matchesDB is false
 		public static function getOneFromDb($searchHash, $usingDb) {
-            if ((in_array('flag_delete',static::$fields)) && (! array_key_exists('flag_delete',$searchHash))) {
-               $searchHash['flag_delete'] = false;
-            }
-            $fetchStmt = self::_buildFetchStatement($searchHash, $usingDb);
+			if ((in_array('flag_delete', static::$fields)) && (!array_key_exists('flag_delete', $searchHash))) {
+				$searchHash['flag_delete'] = FALSE;
+			}
+			$fetchStmt = self::_buildFetchStatement($searchHash, $usingDb);
 			$fetchStmt->execute($searchHash);
 
 			$whichClass = get_called_class();
@@ -251,12 +251,12 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
-//            echo '<pre>';
-//            print_r($identHash);
-//		    echo "\n$fetchSql\n";
-//            echo'</pre>';
+			//            echo '<pre>';
+			//            print_r($identHash);
+			//		    echo "\n$fetchSql\n";
+			//            echo'</pre>';
 
-            $fetchStmt = $usingDb->prepare($fetchSql);
+			$fetchStmt = $usingDb->prepare($fetchSql);
 
 			return $fetchStmt;
 		}
@@ -267,10 +267,10 @@
 		public static function buildFetchSql(&$identHash) {
 			//echo "build sql start\n";
 			//		print_r($identHash);
-			$fetchSql        = 'SELECT ' . implode(',', static::$fields) . ' FROM ' . static::$dbTable . ' WHERE 1=1';
-			$keys_to_remove  = [];
-			$key_vals_to_add = [];
-            $param_keys_counters = [];
+			$fetchSql            = 'SELECT ' . implode(',', static::$fields) . ' FROM ' . static::$dbTable . ' WHERE 1=1';
+			$keys_to_remove      = [];
+			$key_vals_to_add     = [];
+			$param_keys_counters = [];
 			foreach ($identHash as $k => $v) {
 				if (is_array($v)) {
 					if (count($v) <= 0) {
@@ -280,14 +280,14 @@
 					array_push($keys_to_remove, $k);
 					$fetchSql .= ' AND ' . $k . ' IN (';
 					for ($i = 0, $numElts = count($v); $i < $numElts; $i++) {
-						$newKey = "__$k$i";
-                        $key_use_counter = 1;
-                        if (array_key_exists($newKey,$param_keys_counters)) {
-                            $key_use_counter = $param_keys_counters[$newKey]+1;
-                            $newKey = $newKey.'__'.$key_use_counter;
-                        }
-                        $param_keys_counters["__$k$i"] = $key_use_counter;
-						$key_vals_to_add[$newKey] = $v[$i];
+						$newKey          = "__$k$i";
+						$key_use_counter = 1;
+						if (array_key_exists($newKey, $param_keys_counters)) {
+							$key_use_counter = $param_keys_counters[$newKey] + 1;
+							$newKey          = $newKey . '__' . $key_use_counter;
+						}
+						$param_keys_counters["__$k$i"] = $key_use_counter;
+						$key_vals_to_add[$newKey]      = $v[$i];
 						if ($i > 0) {
 							$fetchSql .= ',';
 						}
@@ -296,50 +296,50 @@
 					$fetchSql .= ')';
 				}
 				else {
-                    $k_parts = preg_split('/\s+/',$k);
-                    $num_k_parts = count($k_parts);
-                    if ($num_k_parts == 1) {
+					$k_parts     = preg_split('/\s+/', $k);
+					$num_k_parts = count($k_parts);
+					if ($num_k_parts == 1) {
 
-                        # handle repeated use of same field in the query
-                        $newKey = $k;
-                        $key_use_counter = 1;
-                        if (array_key_exists($newKey,$param_keys_counters)) {
-                            $key_use_counter = $param_keys_counters[$newKey]+1;
-                            $newKey = $newKey.'__'.$key_use_counter;
-                            $key_vals_to_add[$newKey] = $v;
-                            array_push($keys_to_remove, $k);
-                        }
-                        $param_keys_counters[$k] = $key_use_counter;
+						# handle repeated use of same field in the query
+						$newKey          = $k;
+						$key_use_counter = 1;
+						if (array_key_exists($newKey, $param_keys_counters)) {
+							$key_use_counter          = $param_keys_counters[$newKey] + 1;
+							$newKey                   = $newKey . '__' . $key_use_counter;
+							$key_vals_to_add[$newKey] = $v;
+							array_push($keys_to_remove, $k);
+						}
+						$param_keys_counters[$k] = $key_use_counter;
 
-    					$fetchSql .= ' AND ' . $k . ' = :' . $newKey;
-                    }
-                    else {
-                        $k_comp = strtoupper(implode(' ',array_slice($k_parts,1,$num_k_parts-1)));
-                        $valid_comps = ['<','<=','>','>=','!=','LIKE','NOT LIKE','IS NULL','IS NOT NULL'];
-                        if (in_array($k_comp,$valid_comps)) {
-                            array_push($keys_to_remove, $k);
-                            if (($k_comp == 'IS NULL') || ($k_comp == 'IS NOT NULL')) {
-                                $fetchSql .= ' AND ' . $k_parts[0] . ' '. $k_comp;
-                            } else
-                            {
-                                $k_field = $k_parts[0];
-                                $newKey = $k_field;
+						$fetchSql .= ' AND ' . $k . ' = :' . $newKey;
+					}
+					else {
+						$k_comp      = strtoupper(implode(' ', array_slice($k_parts, 1, $num_k_parts - 1)));
+						$valid_comps = ['<', '<=', '>', '>=', '!=', 'LIKE', 'NOT LIKE', 'IS NULL', 'IS NOT NULL'];
+						if (in_array($k_comp, $valid_comps)) {
+							array_push($keys_to_remove, $k);
+							if (($k_comp == 'IS NULL') || ($k_comp == 'IS NOT NULL')) {
+								$fetchSql .= ' AND ' . $k_parts[0] . ' ' . $k_comp;
+							}
+							else {
+								$k_field = $k_parts[0];
+								$newKey  = $k_field;
 
-                                # handle repeated use of same field in the query
-                                $key_use_counter = 1;
-                                if (array_key_exists($newKey,$param_keys_counters)) {
-                                    $key_use_counter = $param_keys_counters[$newKey]+1;
-                                    $newKey = $newKey.'__'.$key_use_counter;
-                                    $key_vals_to_add[$newKey] = $v;
-                                    array_push($keys_to_remove, $k);
-                                }
-                                $param_keys_counters[$k_field] = $key_use_counter;
+								# handle repeated use of same field in the query
+								$key_use_counter = 1;
+								if (array_key_exists($newKey, $param_keys_counters)) {
+									$key_use_counter          = $param_keys_counters[$newKey] + 1;
+									$newKey                   = $newKey . '__' . $key_use_counter;
+									$key_vals_to_add[$newKey] = $v;
+									array_push($keys_to_remove, $k);
+								}
+								$param_keys_counters[$k_field] = $key_use_counter;
 
-                                $key_vals_to_add[$newKey]=$v;
-                                $fetchSql .= ' AND ' . $k_field . ' '. $k_comp .' :' . $newKey;
-                            }
-                        }
-                    }
+								$key_vals_to_add[$newKey] = $v;
+								$fetchSql .= ' AND ' . $k_field . ' ' . $k_comp . ' :' . $newKey;
+							}
+						}
+					}
 				}
 			}
 			foreach ($keys_to_remove as $k) {
@@ -415,6 +415,25 @@
 			$this->matchesDb = TRUE;
 		}
 
+		public function doDelete($debug = 0) {
+			if ($debug) {
+				echo "PRE-ACTION of doDelete() on the object:\n";
+				util_prePrintR($this);
+			}
+
+			$this->flag_delete = TRUE;
+			$this->updateDb();
+
+			if ($debug) {
+				echo "POST-ACTION of doDelete() on the object:\n";
+				util_prePrintR($this);
+			}
+
+			if ($this->matchesDb) {
+				return TRUE;
+			}
+		}
+
 		public function updateDb($debug = 0) {
 			if ($debug) {
 				echo "<pre>\n";
@@ -476,7 +495,7 @@
 					print_r($insertStmt->errorInfo());
 				}
 				$this->fieldValues[static::$primaryKeyField] = $this->dbConnection->lastInsertId(static::$primaryKeyField);
-                $this->matchesDb = true;
+				$this->matchesDb                             = TRUE;
 				//$this->refreshFromDb();
 			}
 			else {
@@ -511,20 +530,21 @@
 			}
 		}
 
-        public static function listItemTag($id='',$class_ar=[],$other_attr_hash=[]) {
-            $li = '<li';
-            if ($id) {
-                $li .= " id=\"$id\"";
-            }
-            if ($class_ar) {
-                $li .= " class=\"".implode(' ',$class_ar) .'"';
-            }
-            foreach ($other_attr_hash as $k=>$v) {
-                $li .= " $k=\"$v\"";
-            }
-            $li .= '>';
-            return $li;
-        }
+		public static function listItemTag($id = '', $class_ar = [], $other_attr_hash = []) {
+			$li = '<li';
+			if ($id) {
+				$li .= " id=\"$id\"";
+			}
+			if ($class_ar) {
+				$li .= " class=\"" . implode(' ', $class_ar) . '"';
+			}
+			foreach ($other_attr_hash as $k => $v) {
+				$li .= " $k=\"$v\"";
+			}
+			$li .= '>';
+			return $li;
+		}
+
 	}
 
 ?>

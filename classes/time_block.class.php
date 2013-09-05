@@ -13,6 +13,7 @@
 		public $schedule = '';
 		public $user = '';
 		public $reservations = '';
+		public $eq_group = '';
 
 		public static function cmp($a, $b) {
 			if ($a->start_datetime == $b->start_datetime) {
@@ -49,6 +50,27 @@
 		public function toString() {
 			return util_timeRangeString($this->start_datetime, $this->end_datetime);
 		}
+
+		public function getEqGroup($debug = 0) {
+			if ($debug) {
+				echo "PRE-ACTION of getEqGroup() on the object:\n";
+				util_prePrintR($this);
+			}
+
+			$this->loadReservations();
+			$eq_item = EqItem::getOneFromDb(['eq_item_id' => $this->reservations[0]->eq_item_id], $this->dbConnection);
+			$eq_item->loadEqGroup();
+			$this->eq_group = $eq_item->eq_group;
+			if ($this->eq_group) {
+				return TRUE;
+			}
+
+			if ($debug) {
+				echo "POST-ACTION of getEqGroup() on the object:\n" . $eq_item->eq_item_id;
+				util_prePrintR($this->eq_group);
+			}
+		}
+
 	}
 
 ?>
