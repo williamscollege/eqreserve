@@ -162,8 +162,7 @@
 			$msgBody .= "for " . $this->summary . ":\n\t";
 			$msgBody .= implode("\n\t", $alertMessageData['time_ranges']) . "\n";
 			$msgBody .= "\n
-If you have any questions contact eqreserve-help@williams.edu.
-
+If you have any questions contact eqreserve-help@williams.edu.\n\n
 If you no longer wish to receive these alerts you can change your communication preferences at " . APP_FOLDER . "/account_management.php in the Equipment Groups section.
 		";
 

@@ -24,7 +24,6 @@
 		'note'   => ''
 	];
 
-
 	#------------------------------------------------#
 	# Identify and process requested action
 	#------------------------------------------------#
@@ -167,6 +166,7 @@
 		}
 		//###############################################################
 		elseif ($strAction == 'addPermission') {
+
 			$permission_type = isset($_REQUEST["permission_type"]) ? $_REQUEST["permission_type"] : FALSE;
 			if (!$permission_type) {
 				$results['note'] = 'no permission type';
@@ -324,8 +324,13 @@
 				$results['entity_type']   = $p->entity_type;
 				$results['entity_id']     = $p->entity_id;
 				if ($p->entity_type == 'user') {
+
 					$u = User::getOneFromDb(['user_id' => $p->entity_id], $DB);
+
 					if ($u->matchesDb) {
+						// Ensure that a comm_pref exists for every group for which this user has access
+						$u->updateCommPrefs();
+
 						$results['name']     = $u->fname . ' ' . $u->lname;
 						$results['username'] = $u->username;
 						$results['email']    = $u->email;
@@ -337,6 +342,13 @@
 				else {
 					$ig = InstGroup::getOneFromDb(['inst_group_id' => $p->entity_id], $DB);
 					if ($ig->matchesDb) {
+
+						$im = InstMembership::getAllFromDb(['inst_group_id' => $ig->inst_group_id], $DB);
+						foreach ($im as $user) {
+							// Ensure that a comm_pref exists for every group for which this user has access
+							$user->updateCommPrefs();
+						}
+
 						$results['name'] = $ig->name;
 					}
 					else {

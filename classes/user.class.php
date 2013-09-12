@@ -114,27 +114,39 @@
 				return;
 			}
 
-			# Ensure that a comm_pref exists for every group that this user has access to
-			$this->loadEqGroups();
-			foreach ($this->eq_groups as $grp) {
-				$exists_comm_pref = CommPref::getOneFromDb(['user_id'=>$this->user_id, 'eq_group_id'=>$grp->eq_group_id], $this->dbConnection);
-				if (! $exists_comm_pref->matchesDb){
-					// create a comm_pref record for this mgr (flags receive default db values)
-					$cp = new CommPref(['DB' => $this->dbConnection]);
-					$cp->user_id = $this->user_id;
-					$cp->eq_group_id = $grp->eq_group_id;
-					$cp->updateDb();
-				}
-			}
+			$this->updateCommPrefs();
 
 			$this->comm_prefs = array();
-			$comm_prefs_ar = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
+			$comm_prefs_ar    = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
 			if (!$comm_prefs_ar) {
 				trigger_error('there are NO existing comm_pref records for user_id=' . $this->user_id);
 				return;
 			}
 			foreach ($comm_prefs_ar as $cp) {
 				$this->comm_prefs[$cp->eq_group_id] = $cp;
+			}
+		}
+
+		public function updateCommPrefs() {
+			// Ensure that a comm_pref exists for every group for which this user has access
+			$this->loadEqGroups();
+
+			foreach ($this->eq_groups as $grp) {
+				$exists_comm_pref = CommPref::getOneFromDb(['user_id' => $this->user_id, 'eq_group_id' => $grp->eq_group_id], $this->dbConnection);
+
+				if (!$exists_comm_pref->matchesDb) {
+					// create a comm_pref record to this group for this user (flags receive default db values)
+					$cp = new CommPref([
+						'user_id'                            => $this->user_id,
+						'eq_group_id'                        => $grp->eq_group_id,
+						'flag_alert_on_upcoming_reservation' => 1,
+						'flag_contact_on_reserve_create'     => 1,
+						'flag_contact_on_reserve_cancel'     => 1,
+						'DB'                                 => $this->dbConnection
+					]);
+
+					$cp->updateDb();
+				}
 			}
 		}
 
@@ -238,6 +250,8 @@
 			else { //...otherwise the current groups are OK, so assign them to this user object
 				$this->inst_groups = $initialInstGroups;
 			}
+
+			$this->updateCommPrefs();
 
 			return TRUE;
 

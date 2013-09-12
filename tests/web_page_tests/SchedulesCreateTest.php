@@ -1054,16 +1054,16 @@
 			# assert that user_id=1107 now has one comm_pref with default values (0,0,0)
 			$c = CommPref::getOneFromDb(['user_id' => '1107', 'eq_group_id' => '201'], $this->DB);
 			$this->assertTrue($c->matchesDb);
-			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 0);
-			$this->assertEqual($c->flag_contact_on_reserve_create, 0);
-			$this->assertEqual($c->flag_contact_on_reserve_cancel, 0);
+			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 1);
+			$this->assertEqual($c->flag_contact_on_reserve_create, 1);
+			$this->assertEqual($c->flag_contact_on_reserve_cancel, 1);
 
 			# assert that user_id=1101 now has a previously missing comm_pref with default values (0,0,0)
 			$c = CommPref::getOneFromDb(['user_id' => '1101', 'eq_group_id' => '206'], $this->DB);
 			$this->assertTrue($c->matchesDb);
-			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 0);
-			$this->assertEqual($c->flag_contact_on_reserve_create, 0);
-			$this->assertEqual($c->flag_contact_on_reserve_cancel, 0);
+			$this->assertEqual($c->flag_alert_on_upcoming_reservation, 1);
+			$this->assertEqual($c->flag_contact_on_reserve_create, 1);
+			$this->assertEqual($c->flag_contact_on_reserve_cancel, 1);
 		}
 
 		function testSuccessOnCreateRepeatingSingleItemTimingConflictOverrideIsManager() {

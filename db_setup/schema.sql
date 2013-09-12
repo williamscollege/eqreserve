@@ -107,9 +107,9 @@ CREATE TABLE IF NOT EXISTS `comm_prefs` (
     `comm_pref_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
     `eq_group_id` INT NOT NULL,
-    `flag_alert_on_upcoming_reservation` BIT(1) NOT NULL DEFAULT 0,
-    `flag_contact_on_reserve_create` BIT(1) NOT NULL DEFAULT 0,
-    `flag_contact_on_reserve_cancel` BIT(1) NOT NULL DEFAULT 0
+    `flag_alert_on_upcoming_reservation` BIT(1) NOT NULL DEFAULT 1,
+    `flag_contact_on_reserve_create` BIT(1) NOT NULL DEFAULT 1,
+    `flag_contact_on_reserve_cancel` BIT(1) NOT NULL DEFAULT 1
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='allows a user to set their communication preferences with respect to a group';
 /* FK: users.user_id */
 
