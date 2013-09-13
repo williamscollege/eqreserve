@@ -139,9 +139,9 @@
 					$cp = new CommPref([
 						'user_id'                            => $this->user_id,
 						'eq_group_id'                        => $grp->eq_group_id,
-						'flag_alert_on_upcoming_reservation' => 1,
-						'flag_contact_on_reserve_create'     => 1,
-						'flag_contact_on_reserve_cancel'     => 1,
+						'flag_alert_on_upcoming_reservation' => TRUE,
+						'flag_contact_on_reserve_create'     => TRUE,
+						'flag_contact_on_reserve_cancel'     => TRUE,
 						'DB'                                 => $this->dbConnection
 					]);
 

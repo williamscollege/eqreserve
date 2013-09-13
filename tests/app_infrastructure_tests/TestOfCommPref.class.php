@@ -52,13 +52,13 @@
 			);
 		}
 
-		public function testFailOnNoCommPrefRecordsFoundForValidUserID() {
+		public function testValidCommPrefRecordsFoundForValidUserID() {
 			$cp_group        = CommPref::getAllFromDb(['eq_group_id' => 201], $this->DB);
 			$cp_user_valid   = CommPref::getAllFromDb(['user_id' => 1101], $this->DB);
 			$cp_user_invalid = CommPref::getAllFromDb(['user_id' => 1107], $this->DB);
 
-			$this->assertEqual(count($cp_group), 2, 'there are 1 comm_pref records for eq_group_id=201');
-			$this->assertEqual(count($cp_user_valid), 4, 'there are 4 comm_pref records for user_id=1101');
+			$this->assertEqual(count($cp_group), 4, 'there are 4 comm_pref records for eq_group_id=201');
+			$this->assertEqual(count($cp_user_valid), 5, 'there are 5 comm_pref records for user_id=1101');
 			$this->assertEqual(count($cp_user_invalid), 0, 'there are NO comm_pref records for user_id=1107');
 		}
 

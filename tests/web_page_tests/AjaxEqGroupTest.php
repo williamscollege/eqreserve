@@ -210,12 +210,12 @@
 			$this->signIn();
 
 			$cp = CommPref::getAllFromDb(['eq_group_id' => 201], $this->DB);
-			$this->assertEqual(count($cp), 2);
+			$this->assertEqual(count($cp), 4);
 
 			$this->get('http://localhost/eqreserve/ajax_actions/ajax_eq_group.php?eq_group=201&ajaxVal_Action=addPermission&permission_type=consumer&entity_type=user&entity_id=1107&username=testUser7');
 
 			$cp = CommPref::getAllFromDb(['eq_group_id' => 201], $this->DB);
-			$this->assertEqual(count($cp), 3);
+			$this->assertEqual(count($cp), 5);
 		}
 
 		function testEqGroupAjaxAddConsumerPermissionForInstGroup() {

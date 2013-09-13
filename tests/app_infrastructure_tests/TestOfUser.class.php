@@ -133,7 +133,7 @@
 			$u = User::getOneFromDb(['user_id' => 1101], $this->DB);
 			$this->assertNull($u->comm_prefs);
 
-			$u->loadCommPrefs();
+			$u->loadCommPrefs(1);
 
 			$this->assertTrue(is_array($u->comm_prefs));
 			$this->assertEqual(count($u->comm_prefs), 5); // expects 4 that exist in dataForTesting, plus 1 more that loadCommPrefs() will discover needs to be written
@@ -164,10 +164,19 @@
 			$u = User::getOneFromDb(['user_id' => 1102], $this->DB);
 			$this->assertNull($u->comm_prefs);
 
-			# Prior to running updateCommPrefs, there are missing records
 			$cp = CommPref::getAllFromDb(['user_id' => $u->user_id], $this->DB);
-			$this->assertEqual(count($cp), 2);
+			$this->assertEqual(count($cp), 4);
 
+			// delete entire comm_prefs table data
+			$sql = "DELETE FROM comm_prefs";
+			// echo "<pre>" . $sql . "\n</pre>";
+			$stmt = $this->DB->prepare($sql);
+			$stmt->execute();
+
+			$cp = CommPref::getAllFromDb(['user_id' => $u->user_id], $this->DB);
+			$this->assertEqual(count($cp), 0);
+
+			// test the process to restore any missing comm_prefs records for this user
 			$u->updateCommPrefs();
 
 			# After running updateCommPrefs, any missing records have been created
@@ -366,6 +375,39 @@
 			// should let caller/program know there's a problem
 			$this->assertFalse($status);
 		}
+
+
+		// DKC TESTING: SAVE TEMPORARILY
+//		public function testDBCommPrefCleanup() {
+//			$u = User::getAllFromDb([],$this->DB);
+//			$this->dump($u);
+//			foreach ($u as $key=>$val) {
+//				$val->updateCommPrefs();
+//				$this->dump($val->comm_prefs);
+//			}
+//		}
+
+
+		// DKC TESTING: SAVE TEMPORARILY
+/*
+		public function testTEMP(){
+			// create default condition for testing
+			$ig1 = new InstGroup(['name'=>'testInstGroupX', 'flag_delete'=>0], $this->DB);
+			$ig2 = new InstGroup(['name'=>'testInstGroupY', 'flag_delete'=>0], $this->DB);
+			$ig3 = new InstGroup(['name'=>'testInstGroupZ', 'flag_delete'=>0], $this->DB);
+			$eqg1 = new EqGroup(['name'=>'testEqGroupI', 'flag_delete'=>0], $this->DB);
+			$eqg2 = new EqGroup(['name'=>'testEqGroupJ', 'flag_delete'=>0], $this->DB);
+			$eqg3 = new EqGroup(['name'=>'testEqGroupK', 'flag_delete'=>0], $this->DB);
+			$u1 = new User(['name'=>'testUserA', 'flag_delete'=>0], $this->DB);
+			$ig1->updateDb();
+			$ig2->updateDb();
+			$ig3->updateDb();
+			$eqg1->updateDb();
+			$eqg2->updateDb();
+			$eqg3->updateDb();
+			$u1->updateDb();
+
+		}*/
 
 	}
 
