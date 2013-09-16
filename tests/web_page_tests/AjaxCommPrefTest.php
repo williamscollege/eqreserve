@@ -149,9 +149,10 @@
 
 
 			// Action Test #1
+			// condition: create eq_group E
 			$eqgE = new EqGroup(['eq_group_id' => 223, 'name' => 'testEqGroupE', 'flag_delete' => 0, 'DB' => $this->DB]);
 			$eqgE->updateDb();
-			// inst_group X given access to eq_group E
+			// condition: inst_group X given access to eq_group E
 			$p6 = new Permission(['entity_id' => $igX->inst_group_id, 'entity_type' => 'inst_group', 'role_id' => 2, 'eq_group_id' => $eqgE->eq_group_id, 'flag_delete' => 0, 'DB' => $this->DB]);
 			$p6->updateDb();
 			// test: user A has new comm_pref record for eq_group E
@@ -161,7 +162,7 @@
 
 
 			// Action Test #2
-			// user A joins inst_group Y
+			// condition: user A joins inst_group Y
 			$im2 = new InstMembership(['user_id' => $uA->user_id, 'inst_group_id' => $igY->inst_group_id, 'flag_delete' => 0, 'DB' => $this->DB]);
 			$im2->updateDb();
 			// test: user A has new comm_pref record for eq_group K
@@ -171,13 +172,13 @@
 
 
 			// Action Test #3
-			// preset user A's comm_pref for inst_group J to non-default
+			// condition: preset user A's comm_pref for inst_group J to non-default
 			$cp3                                     = CommPref::getOneFromDb(['user_id' => $uA->user_id, 'eq_group_id' => $eqgJ->eq_group_id], $this->DB);
 			$cp3->flag_alert_on_upcoming_reservation = FALSE;
 			$cp3->flag_contact_on_reserve_create     = FALSE;
 			$cp3->flag_contact_on_reserve_cancel     = FALSE;
 			$cp3->updateDb();
-			// user A joins inst_group Z
+			// condition: user A joins inst_group Z
 			$im3 = new InstMembership(['user_id' => $uA->user_id, 'inst_group_id' => $igZ->inst_group_id, 'flag_delete' => 0, 'DB' => $this->DB]);
 			$im3->updateDb();
 			// test: user A's existing comm_pref for inst_group J does NOT change
@@ -189,10 +190,10 @@
 
 
 			// Action Test #4
-			// create new testUserB
+			// condition: create new testUserB
 			$uB = new User(['username' => 'testUserB', 'email' => 'tuB@inst.edu', 'flag_delete' => 0, 'DB' => $this->DB]);
 			$uB->updateDb();
-			// new user B member of inst_group X
+			// condition: new user B member of inst_group X
 			$im4 = new InstMembership(['user_id' => $uB->user_id, 'inst_group_id' => $igX->inst_group_id, 'flag_delete' => 0, 'DB' => $this->DB]);
 			$im4->updateDb();
 			// test: user B has comm_pref for eq_group I

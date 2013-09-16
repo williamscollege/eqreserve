@@ -301,8 +301,6 @@
 							$results['name'] = 'database error';
 						}
 					}
-					//                $results[''] = ;
-					//                $results[''] = ;
 				}
 				else {
 					$results['note'] = 'problem updating the database to un-delete an existing record';
@@ -344,8 +342,9 @@
 					if ($ig->matchesDb) {
 
 						$im = InstMembership::getAllFromDb(['inst_group_id' => $ig->inst_group_id], $DB);
-						foreach ($im as $user) {
+						foreach ($im as $u) {
 							// Ensure that a comm_pref exists for every group for which this user has access
+							$user = User::getOneFromDb(['user_id' => $u->user_id], $DB);
 							$user->updateCommPrefs();
 						}
 
