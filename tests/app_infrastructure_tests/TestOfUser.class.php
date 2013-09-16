@@ -376,39 +376,6 @@
 			$this->assertFalse($status);
 		}
 
-
-		// DKC TESTING: SAVE TEMPORARILY
-//		public function testDBCommPrefCleanup() {
-//			$u = User::getAllFromDb([],$this->DB);
-//			$this->dump($u);
-//			foreach ($u as $key=>$val) {
-//				$val->updateCommPrefs();
-//				$this->dump($val->comm_prefs);
-//			}
-//		}
-
-
-		// DKC TESTING: SAVE TEMPORARILY
-/*
-		public function testTEMP(){
-			// create default condition for testing
-			$ig1 = new InstGroup(['name'=>'testInstGroupX', 'flag_delete'=>0], $this->DB);
-			$ig2 = new InstGroup(['name'=>'testInstGroupY', 'flag_delete'=>0], $this->DB);
-			$ig3 = new InstGroup(['name'=>'testInstGroupZ', 'flag_delete'=>0], $this->DB);
-			$eqg1 = new EqGroup(['name'=>'testEqGroupI', 'flag_delete'=>0], $this->DB);
-			$eqg2 = new EqGroup(['name'=>'testEqGroupJ', 'flag_delete'=>0], $this->DB);
-			$eqg3 = new EqGroup(['name'=>'testEqGroupK', 'flag_delete'=>0], $this->DB);
-			$u1 = new User(['name'=>'testUserA', 'flag_delete'=>0], $this->DB);
-			$ig1->updateDb();
-			$ig2->updateDb();
-			$ig3->updateDb();
-			$eqg1->updateDb();
-			$eqg2->updateDb();
-			$eqg3->updateDb();
-			$u1->updateDb();
-
-		}*/
-
 	}
 
 ?>
