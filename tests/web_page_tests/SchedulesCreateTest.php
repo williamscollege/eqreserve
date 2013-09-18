@@ -24,61 +24,62 @@
 
 		function getBaseUrlParamsArray() {
 			return array(
-				'eqGroupID'                => '201'
-			, 'subgroup-301'               => '402'
-			, 'subgroup-302-406'           => '406'
-			, 'subgroup-302-412'           => '412'
-			, 'scheduleStartTimeConverted' => '14:30:00'
-			, 'scheduleSummaryText'        => 'Once%20at%2002:30%20PM%20for%2060%20minutes%20until%202013-08-15'
-			, 'scheduleNotes'              => 'A%20sample%20note%20for%20this%20schedule'
-			, 'scheduleStartOnDate'        => '2013-08-15'
-			, 'scheduleEndOnDate'          => '2013-08-15'
-			, 'hour'                       => '02'
-			, 'minute'                     => '30'
-			, 'meridian'                   => 'PM'
-			, 'scheduleDuration'           => '30M'
-			, 'scheduleFrequencyType'      => 'no_repeat'
-			, 'scheduleRepeatInterval'     => '1'
-			, 'scheduleIsTypeManager'      => 'on'
-			, 'repeat_dow_sun'             => '0'
-			, 'repeat_dow_mon'             => '0'
-			, 'repeat_dow_tue'             => '0'
-			, 'repeat_dow_wed'             => '0'
-			, 'repeat_dow_thu'             => '0'
-			, 'repeat_dow_fri'             => '0'
-			, 'repeat_dow_sat'             => '0'
-			, 'repeat_dom_1'               => '0'
-			, 'repeat_dom_2'               => '0'
-			, 'repeat_dom_3'               => '0'
-			, 'repeat_dom_4'               => '0'
-			, 'repeat_dom_5'               => '0'
-			, 'repeat_dom_6'               => '0'
-			, 'repeat_dom_7'               => '0'
-			, 'repeat_dom_8'               => '0'
-			, 'repeat_dom_9'               => '0'
-			, 'repeat_dom_10'              => '0'
-			, 'repeat_dom_11'              => '0'
-			, 'repeat_dom_12'              => '0'
-			, 'repeat_dom_13'              => '0'
-			, 'repeat_dom_14'              => '0'
-			, 'repeat_dom_15'              => '0'
-			, 'repeat_dom_16'              => '0'
-			, 'repeat_dom_17'              => '0'
-			, 'repeat_dom_18'              => '0'
-			, 'repeat_dom_19'              => '0'
-			, 'repeat_dom_20'              => '0'
-			, 'repeat_dom_21'              => '0'
-			, 'repeat_dom_22'              => '0'
-			, 'repeat_dom_23'              => '0'
-			, 'repeat_dom_24'              => '0'
-			, 'repeat_dom_25'              => '0'
-			, 'repeat_dom_26'              => '0'
-			, 'repeat_dom_27'              => '0'
-			, 'repeat_dom_28'              => '0'
-			, 'repeat_dom_29'              => '0'
-			, 'repeat_dom_30'              => '0'
-			, 'repeat_dom_31'              => '0'
-			, 'btnReservationSubmit'       => ''
+				'eqGroupID'                  => '201'
+			, 'subgroup-301'                 => '402'
+			, 'subgroup-302-406'             => '406'
+			, 'subgroup-302-412'             => '412'
+			, 'scheduleStartTimeConverted'   => '14:30:00'
+			, 'scheduleSummaryText'          => 'Once%20at%2002:30%20PM%20for%2060%20minutes%20until%202013-08-15'
+			, 'scheduleConflictOverrideFlag' => '0'
+			, 'scheduleNotes'                => 'A%20sample%20note%20for%20this%20schedule'
+			, 'scheduleStartOnDate'          => '2013-08-15'
+			, 'scheduleEndOnDate'            => '2013-08-15'
+			, 'hour'                         => '02'
+			, 'minute'                       => '30'
+			, 'meridian'                     => 'PM'
+			, 'scheduleDuration'             => '30M'
+			, 'scheduleFrequencyType'        => 'no_repeat'
+			, 'scheduleRepeatInterval'       => '1'
+			, 'scheduleIsTypeManager'        => 'on'
+			, 'repeat_dow_sun'               => '0'
+			, 'repeat_dow_mon'               => '0'
+			, 'repeat_dow_tue'               => '0'
+			, 'repeat_dow_wed'               => '0'
+			, 'repeat_dow_thu'               => '0'
+			, 'repeat_dow_fri'               => '0'
+			, 'repeat_dow_sat'               => '0'
+			, 'repeat_dom_1'                 => '0'
+			, 'repeat_dom_2'                 => '0'
+			, 'repeat_dom_3'                 => '0'
+			, 'repeat_dom_4'                 => '0'
+			, 'repeat_dom_5'                 => '0'
+			, 'repeat_dom_6'                 => '0'
+			, 'repeat_dom_7'                 => '0'
+			, 'repeat_dom_8'                 => '0'
+			, 'repeat_dom_9'                 => '0'
+			, 'repeat_dom_10'                => '0'
+			, 'repeat_dom_11'                => '0'
+			, 'repeat_dom_12'                => '0'
+			, 'repeat_dom_13'                => '0'
+			, 'repeat_dom_14'                => '0'
+			, 'repeat_dom_15'                => '0'
+			, 'repeat_dom_16'                => '0'
+			, 'repeat_dom_17'                => '0'
+			, 'repeat_dom_18'                => '0'
+			, 'repeat_dom_19'                => '0'
+			, 'repeat_dom_20'                => '0'
+			, 'repeat_dom_21'                => '0'
+			, 'repeat_dom_22'                => '0'
+			, 'repeat_dom_23'                => '0'
+			, 'repeat_dom_24'                => '0'
+			, 'repeat_dom_25'                => '0'
+			, 'repeat_dom_26'                => '0'
+			, 'repeat_dom_27'                => '0'
+			, 'repeat_dom_28'                => '0'
+			, 'repeat_dom_29'                => '0'
+			, 'repeat_dom_30'                => '0'
+			, 'repeat_dom_31'                => '0'
+			, 'btnReservationSubmit'         => ''
 			);
 		}
 
@@ -278,10 +279,110 @@
 			$this->assertNoPattern('/success/i');
 		}
 
-		function testConflictOverrideOnlyOnScheduleOfTypeManager() {
-			# if override set, type==manager
-			# if type!=manager, override not set
-			$this->fail("to be implemented");
+		function testConflictOverrideOnScheduleOfTypeConsumerByManager() {
+			$this->signIn();
+
+			$par                                 = $this->getBaseUrlParamsArray();
+			$par['scheduleFrequencyType']        = 'weekly';
+			$par['scheduleStartTimeConverted']   = '10:00:00';
+			$par['scheduleStartOnDate']          = '2013-03-26';
+			$par['scheduleEndOnDate']            = '2013-04-02';
+			$par['repeat_dow_tue']               = TRUE;
+			$par['scheduleConflictOverrideFlag'] = '1';
+
+			# Test: if override is set, type==manager
+			$sched_preexisting = Schedule::getOneFromDb(['schedule_id' => 1002], $this->DB);
+			$sched_preexisting->loadTimeBlocks();
+			$this->assertEqual(count(($sched_preexisting->time_blocks)), 3);
+
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$sched_preexisting = Schedule::getOneFromDb(['schedule_id' => 1002], $this->DB);
+			$sched_preexisting->loadTimeBlocks();
+
+			$this->assertEqual(count(($sched_preexisting->time_blocks)), 1);
+
+			$tb1 = TimeBlock::getOneFromDb(['schedule_id' => 1002, 'start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00', 'flag_delete' => TRUE], $this->DB);
+			$tb2 = TimeBlock::getOneFromDb(['schedule_id' => 1002, 'start_datetime' => '2013-04-02 10:00:00', 'end_datetime' => '2013-04-02 10:30:00', 'flag_delete' => TRUE], $this->DB);
+			$tb3 = TimeBlock::getOneFromDb(['schedule_id' => 1002, 'start_datetime' => '2013-04-09 10:00:00', 'end_datetime' => '2013-04-09 10:30:00', 'flag_delete' => FALSE], $this->DB);
+
+			$this->assertEqual(($tb1->flag_delete), TRUE);
+			$this->assertEqual(($tb2->flag_delete), TRUE);
+			$this->assertEqual(($tb3->flag_delete), FALSE);
+
+			$tb4 = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-26 10:00:00', 'end_datetime' => '2013-03-26 10:30:00', 'flag_delete' => FALSE], $this->DB);
+			$tb5 = TimeBlock::getAllFromDb(['start_datetime' => '2013-04-02 10:00:00', 'end_datetime' => '2013-04-02 10:30:00', 'flag_delete' => FALSE], $this->DB);
+			$tb6 = TimeBlock::getAllFromDb(['start_datetime' => '2013-04-09 10:00:00', 'end_datetime' => '2013-04-09 10:30:00', 'flag_delete' => FALSE], $this->DB);
+
+			$this->assertEqual(count($tb4), 1);
+			$this->assertEqual(count($tb5), 1);
+			$this->assertEqual(count($tb6), 1);
+
+			$this->assertNoPattern('/scheduling-conflict/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
+		}
+
+		function testConflictOverrideOnScheduleOfTypeConsumerByNonManager() {
+			$this->signIn();
+
+			$par                                 = $this->getBaseUrlParamsArray();
+			$par['scheduleFrequencyType']        = 'weekly';
+			$par['scheduleStartTimeConverted']   = '10:00:00';
+			$par['scheduleStartOnDate']          = '2013-03-26';
+			$par['scheduleEndOnDate']            = '2013-04-02';
+			$par['repeat_dow_tue']               = TRUE;
+			$par['scheduleConflictOverrideFlag'] = '1';
+
+			#remove manager permission for this user
+			$p          = Permission::getOneFromDb(['permission_id' => 707, 'entity_id' => 501, 'eq_group_id' => 201], $this->DB);
+			$p->role_id = 2;
+			$p->updateDb();
+
+
+			# Test if type!=manager, override is not set
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$this->assertPattern('/cannot create manager reservation - not a manager of this group/i');
+			$this->assertPattern('/failure/i');
+			$this->assertNoPattern('/success/i');
+		}
+
+		function testConflictOverrideOnScheduleOfTypeManagerByManager() {
+			$this->signIn();
+
+			$par                                 = $this->getBaseUrlParamsArray();
+			$par['subgroup-301']                 = '401';
+			$par['scheduleStartTimeConverted']   = '18:00:00';
+			$par['scheduleStartOnDate']          = '2013-03-25';
+			$par['scheduleEndOnDate']            = '2013-03-25';
+			$par['scheduleConflictOverrideFlag'] = '1';
+
+			# Test #1: if override is set, type==manager
+			$sched_preexisting = Schedule::getOneFromDb(['schedule_id' => 1006], $this->DB);
+			$sched_preexisting->loadTimeBlocks();
+
+			$this->assertEqual(count(($sched_preexisting->time_blocks)), 1);
+
+
+			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+
+			$sched_preexisting = Schedule::getOneFromDb(['schedule_id' => 1006], $this->DB);
+			$sched_preexisting->loadTimeBlocks();
+
+			$this->assertEqual(count(($sched_preexisting->time_blocks)), 0);
+
+			$tb1 = TimeBlock::getOneFromDb(['schedule_id' => 1006, 'start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 19:00:00', 'flag_delete' => TRUE], $this->DB);
+			$this->assertEqual(($tb1->flag_delete), TRUE);
+
+			$tb2 = TimeBlock::getAllFromDb(['start_datetime' => '2013-03-25 18:00:00', 'end_datetime' => '2013-03-25 18:30:00', 'flag_delete' => FALSE], $this->DB);
+
+			$this->assertEqual(count($tb2), 1);
+
+			$this->assertNoPattern('/scheduling-conflict/i');
+			$this->assertNoPattern('/failure/i');
+			$this->assertPattern('/success/i');
 		}
 
 
@@ -299,6 +400,7 @@
 			$par['scheduleStartOnDate']        = '2013-03-26';
 			$par['scheduleStartTimeConverted'] = '10:00:00';
 			$par['scheduleDuration']           = '30M';
+
 
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 			$results = json_decode($this->getBrowser()->getContent(), TRUE);

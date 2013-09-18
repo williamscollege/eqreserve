@@ -7,10 +7,8 @@
 	require_once('../classes/eq_item.class.php');
 	require_once('../classes/queued_message.class.php');
 
-	# SCRAP THIS OUTPUT
-	//	echo "<pre>";
-	//	print_r($_REQUEST);
-	//	echo "</pre>";
+	# Testing Form output (scrap later)
+	//	util_prePrintR($_REQUEST);
 
 	# TODO Problem: Caching Problem results if user hits browser back button, then re-submits form: a new schedule is created, but the old schedule_id is entered for reservations.
 	# TODO Solution: Generate unique id key on schedule php page; on server side, check for existence of that key in [db table];
@@ -316,23 +314,46 @@
 	#------------------------------------------------#
 	# Conflict checks
 	#------------------------------------------------#
-	# TODO: conflict checks in function for single, weekly, monthly inserts:
-
 	$conflicting_time_block_data = Reservation::findTimingConflicts($DB, $all_eq_item_ids);
 
-	//	echo "<pre>";
-	//	print_r($conflicting_time_block_data);
-	//	echo "</pre>";
-	//exit;
+	//	util_prePrintR($all_eq_item_ids);
+	//	util_prePrintR($conflicting_time_block_data);
+	//	exit;
 
-	#   if conflict
+	# if conflict
 	if (count($conflicting_time_block_data) > 0) {
-		#      if override flag set
+		# if override flag set
 		if ($confirmConflictOverrideFlag) {
-			#         delete existing conflicts
-			#         for each one so deleted, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
-			#         commit
-			#         results status = success
+
+			# delete existing conflicts
+			$sched->loadTimeBlocks();
+
+			# convert complex array of time_blocks to simple array of time_block ids
+			$array_of_current_timeblock_ids = array_map(function ($e) {
+				return $e->time_block_id;
+			}, $sched->time_blocks);
+
+			foreach ($conflicting_time_block_data as $index_number => $conflict_data_hash) {
+				$id_of_timeblock_to_delete = $conflict_data_hash['t1_id'];
+				if (in_array($id_of_timeblock_to_delete, $array_of_current_timeblock_ids)) {
+					$id_of_timeblock_to_delete = $conflict_data_hash['t2_id'];
+				}
+				$timeblock_to_delete = TimeBlock::getOneFromDb(['time_block_id' => $id_of_timeblock_to_delete], $DB);
+
+				# for each one deleted, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
+				$sched->doCreateQueuedMessages($eq_group, $alertMessageData, 'flag_contact_on_reserve_cancel');
+
+				# now delete it
+				$timeblock_to_delete->doDelete();
+			}
+
+			# Commit
+			$DB->commit();
+			# Output
+			$results['status'] = 'success';
+
+			echo json_encode($results);
+			exit;
 		}
 		else {
 			# TODO - Version 1.0: ajax note for implementation: show results integrated in main page; rename submit button value to 'Re-Submit'
@@ -365,6 +386,9 @@
 			}
 
 			$DB->rollBack();
+
+			echo json_encode($results);
+			exit;
 		}
 	}
 	else {
@@ -379,15 +403,15 @@
 	#------------------------------------------------#
 	# results object looks like:
 	#  results ->
-	#     status -> failure/success/scheduling-conflicts
+	#     status -> failure/success/scheduling-conflict
 	#     notes -> explanation, only present on failure status
-	#     conflicts_by_datetime -> only present on scheduling-conflicts status
+	#     conflicts_by_datetime -> only present on scheduling-conflict(s) status
 	#			datetimeA ->
 	#				itemX
 	#				itemY
 	#			datetimeB ->
 	#				itemX
-	#     conflicts_by_item -> only present on scheduling-conflicts status
+	#     conflicts_by_item -> only present on scheduling-conflict(s) status
 	#			itemX ->
 	#				datetimeA
 	#				datetimeB
@@ -403,34 +427,6 @@
 	if ($results['status'] == 'success') {
 		$sched->doCreateQueuedMessages($eq_group, $alertMessageData, 'flag_contact_on_reserve_create');
 	}
-
-//	# get all managers of the group, using method 'manager_users_direct_and_indirect()'
-//	# for each manager:
-//	#   get their comm prefs for the group
-//	#   if flag_contact_on_reserve_create, queue an email alert to that manager about these reservations
-//
-//		$eq_group->loadManagers();
-//		$msgBody = "The following items have been reserved:\n\t";
-//		$msgBody .= implode("\n\t", $alertMessageData['item_names']) . "\n";
-//		$msgBody .= "for " . $sched->summary . ":\n\t";
-//		$msgBody .= implode("\n\t", $alertMessageData['time_ranges']) . "\n";
-//		$msgBody .= "\n
-//If you have any questions contact eqreserve-help@williams.edu.
-//
-//If you no longer wish to receive these alerts you can change your communication preferences at " . APP_FOLDER . "/account_management.php in the Equipment Groups section.
-//	";
-//		$itmCountStr = count($alertMessageData['item_names']) . ' Item' . ((count($alertMessageData['item_names']) > 1) ? 's' : '');
-//
-//		foreach ($eq_group->manager_users_direct_and_indirect as $mgr) {
-//
-//			$mgr->loadCommPrefs();
-//
-//			if ($mgr->comm_prefs[$eq_group->eq_group_id]->flag_contact_on_reserve_create) {
-//				// echo "</br>mgr->email=" . $mgr->email . ', itmCountStr=' . $itmCountStr .', eq_group->name=' . $eq_group->name . ', mgr->fname=' . $mgr->fname . '.</br><pre>msgBody=' . $msgBody;
-//				$qm = QueuedMessage::factory($DB, $mgr->email, "$itmCountStr reserved in " . $eq_group->name, "Hello " . $mgr->fname . ",\n\n" . $msgBody);
-//				$qm->updateDb();
-//			}
-//		}
 
 
 ?>

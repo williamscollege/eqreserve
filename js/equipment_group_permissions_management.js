@@ -65,14 +65,14 @@ $(document).ready(function () {
             }
         })
             .done(function (data, status, xhr) {
-console.log(data);
+//console.log(data);
                 if (data.timingTag == searchTimingTag) {  // make sure only the latest search results actually update the DOM
                     if (data.status == 'success') {
                         $('#addUserSearchResultsPreview ul').empty();
                         if (data.searchResults.length > 0) {
                             for (var i = 0; i < data.searchResults.length; i++) {
                                 var item;
-console.log(data.searchResults[i]);
+//console.log(data.searchResults[i]);
                                 if (data.searchResults[i].hasOwnProperty('user_id')) {
                                     item = makeSearchResItemForUser(data.searchResults[i]);
                                 }
@@ -159,7 +159,7 @@ console.log(data.searchResults[i]);
             }
         })
             .done(function (data, status, xhr) {
-                console.log(data);
+//                console.log(data);
                 if (data.status == 'success') {
                     // on success, update DOM: add to text list of managers, add button to remove manager controls if approp, add option to consumers select list if approp
                     //    expecting back in ajax results: status, permission_id, text/info needed for creation of above DOM elements
@@ -194,7 +194,7 @@ console.log(data.searchResults[i]);
                 }
             })
             .fail(function (data, status, xhr) {
-                console.log(data);
+//                console.log(data);
                 eqrUtil_setTransientAlert('error', 'ERROR - not saved!',$('#addUserSearchData'));
             })
         ;
@@ -239,7 +239,7 @@ console.log(data.searchResults[i]);
 			}
 		})
 			.done(function (data, status, xhr) {
-console.log(data);
+//console.log(data);
 				if (data.status == 'success') {
 					eqrUtil_setTransientAlert('success', '...done');
                     if (GLOBAL_confirmHandlerData.perm_type == 'manager') {
