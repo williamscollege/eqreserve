@@ -155,11 +155,11 @@ $(document).ready(function () {
 		highlight: function (element) {
 			$(element).closest('.control-group').removeClass('success').addClass('error');
 		},
-//					success: function (element) {
-//						element
-//							.text('OK!').addClass('valid')
-//							.closest('.control-group').removeClass('error').addClass('success');
-//					},
+//		success: function (element) {
+//			element
+//				.text('OK!').addClass('valid')
+//				.closest('.control-group').removeClass('error').addClass('success');
+//		},
 		submitHandler: function (form) {
 			// show loading text (button)
 			$("#btnSubmitEditGroup").button('loading');
@@ -370,6 +370,91 @@ $(document).ready(function () {
 
 		}
 	});
+
+
+	var validator4 = $('#frmAjaxScheduleReservations').validate({
+		rules: {
+			scheduleStartOnDate: {
+				required: true,
+				date: true
+			},
+			scheduleEndOnDate: {
+				required: true,
+				date: true
+			},
+			scheduleDuration: {
+				required: true
+			}
+		},
+		highlight: function (element) {
+			$(element).closest('.control-group').removeClass('success').addClass('error');
+		},
+//		success: function (element) {
+//			element
+//				.text('OK!').addClass('valid')
+//				.closest('.control-group').removeClass('error').addClass('success');
+//		},
+		submitHandler: function (form) {
+			// show loading text (button)
+			$("#btnReservationSubmit").button('loading');
+			$.ajax({
+				type: 'GET',
+				url: $("#frmAjaxScheduleReservations").attr('action'),
+				data: $('#frmAjaxScheduleReservations').serialize(),
+				dataType: 'json',
+				success: function (data) {
+					if (data.status == 'success') {
+						// show message
+						eqrUtil_setTransientAlert("success", "Successfully scheduled your reservation(s).");
+						// reload page (and thereby clear form values)
+						window.location.reload();
+					}
+					else {
+						// reset buttons and error message display
+						$("#btnReservationSubmit").button('reset');
+						$("#show_any_conflicts").text("");
+						// error message
+						$("#show_any_conflicts").show().append(parseConflicts(data));
+					}
+				}
+			});
+		}
+	});
+
+
+	function parseConflicts(data) {
+		var t = "";
+		$.each(data, function (id, val) {
+			if (id == "status" && val == "scheduling-conflict") {
+				t = t + "<strong>Scheduling conflicts exist!</strong><br /><br />";
+			}
+			else {
+				if (id == "conflicts_by_datetime") {
+					t = t + "<strong>Sorted by datetime:</strong>";
+				}
+				else if (id == "conflicts_by_item") {
+					t = t + "<strong>Sorted by item:</strong>";
+				}
+
+				// now loop through object
+				var lastGroup = "";
+				$.each(this, function (group, members) {
+//					t = t + "group=" + group + ",members=" + members + '<br />';
+					if (group != lastGroup && lastGroup != ""){
+						// multiple group listings require additional HTML closures
+						t = t + "</ul></li></ul>";
+					}
+					if (typeof(data) == 'object') {
+						t = t + "<ul><li>" + group + "<ul>";
+					}
+					t = t + "<li>" + members + '</li>';
+					lastGroup = group;
+				});
+				t = t + "</ul></li></ul>";
+			}
+		});
+		return t;
+	}
 
 
 	$(".delete-schedule-btn").click(function () {
@@ -632,7 +717,7 @@ $(document).ready(function () {
 	});
 
 	$("#btnReservationCancel").click(function () {
-		cleanUpForm("formScheduleReservations")
+		cleanUpForm("frmAjaxScheduleReservations")
 		// hide form fields, restore button label
 		$(".reservationForm").addClass("hide");
 		$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');

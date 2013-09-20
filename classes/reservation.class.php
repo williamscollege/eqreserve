@@ -91,7 +91,7 @@
             ORDER BY
                   t1.start_datetime, i.ordering";
 
-			//print"<pre>\n$checkSql\n</pre>";
+//			print"<pre>\n$checkSql\n</pre>";
 
 			$checkStmt = $db_connection->prepare($checkSql);
 			$res       = $checkStmt->execute();
@@ -101,13 +101,14 @@
 			//            $conflict_times = [];
 			$conflict_blocks = [];
 			while ($row = $checkStmt->fetch(PDO::FETCH_ASSOC)) {
-				if (!array_key_exists($row['t1_id'], $conflict_blocks)) {
+//				util_prePrintR($row); //debugging line
+				if (!array_key_exists($row['t1_id'].'.'.$row['item_id'], $conflict_blocks)) {
 					array_push($conflicts, $row);
-					$conflict_blocks[$row['t1_id']] = 1;
-					$conflict_blocks[$row['t2_id']] = 1;
+					$conflict_blocks[$row['t1_id'].'.'.$row['item_id']] = 1;
+					$conflict_blocks[$row['t2_id'].'.'.$row['item_id']] = 1;
 				}
 			}
-
+//			util_prePrintR($conflicts); //debugging line
 			return $conflicts;
 		}
 

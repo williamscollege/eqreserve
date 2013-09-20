@@ -1,10 +1,13 @@
-<form action="ajax_actions/ajax_schedule_reservations.php" class="form-horizontal" id="formScheduleReservations" name="formScheduleReservations" method="post">
+<form action="ajax_actions/ajax_schedule_reservations.php" class="form-horizontal" id="frmAjaxScheduleReservations" name="frmAjaxScheduleReservations" method="post">
 <input type="hidden" id="scheduleEqGroupID" name="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="0" />
 <legend class="pull-left row-fluid">Reserve Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
+
+<!--show any conflicts as list-->
+<div id="show_any_conflicts" class="pull-left row-fluid error_alert hide"></div>
 
 <?php
 	# Load EQSubgroups
@@ -111,7 +114,7 @@
 			<span class="add-on"><i class="icon-time"></i></span>
 		</div>
 		<select id="scheduleDuration" name="scheduleDuration" class="input-large">
-			<option value="0" title="Please select duration">Select duration</option>
+			<option value="" title="Please select duration">Select duration</option>
 			<option value="5M">5 minutes</option>
 			<option value="10M">10 minutes</option>
 			<option value="15M">15 minutes</option>
