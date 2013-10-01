@@ -11,14 +11,14 @@ $(document).ready(function () {
 		$("#managerView, #managerEdit, .editing-control, .view-control").toggleClass("hide");
 		// toggle button label
 		if ($("#managerView").hasClass('hide')) {
-			$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View');
+			$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View Equipment Group');
 			// hide the other form
 			$("#btnReservationCancel").click();
 			// show special manager actions
 			$(".manager-action").removeClass("hide");
 		}
 		else {
-			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
 			// hide special manager actions
 			$(".manager-action").addClass("hide");
 		}
@@ -47,13 +47,19 @@ $(document).ready(function () {
 	});
 	$("#goMinDurationMinutes").change(function () {
 		$("#minDurationMinutes").val($("#goMinDurationMinutes").val());
-
 	});
 	$("#goMaxDurationMinutes").change(function () {
 		$("#maxDurationMinutes").val($("#goMaxDurationMinutes").val());
 	});
 	$("#goDurationIntervalMinutes").change(function () {
 		$("#durationIntervalMinutes").val($("#goDurationIntervalMinutes").val());
+	});
+
+	// any changes to form should hide the override button (if it exists)
+	$("#frmAjaxScheduleReservations input[type=checkbox], #frmAjaxScheduleReservations input[type=radio]").change(function () {
+		if (!$("#btnReservationOverrideConflicts").hasClass("hide")) {
+			$("#btnReservationOverrideConflicts").addClass("hide");
+		}
 	});
 
 	// Reserve Equipment: calendar
@@ -122,7 +128,7 @@ $(document).ready(function () {
 	// Form validation
 	// ***************************
 
-	var validator1 = $('#frmAjaxGroup').validate({
+	var validateAjaxGroup = $('#frmAjaxGroup').validate({
 		rules: {
 			groupName: {
 				minlength: 2,
@@ -208,7 +214,7 @@ $(document).ready(function () {
 	});
 
 
-	var validator2 = $('#frmAjaxSubgroup').validate({
+	var validateAjaxSubgroup = $('#frmAjaxSubgroup').validate({
 		rules: {
 			ajaxSubgroupName: {
 				minlength: 2,
@@ -289,7 +295,7 @@ $(document).ready(function () {
 	});
 
 
-	var validator3 = $('#frmAjaxItem').validate({
+	var validateAjaxItem = $('#frmAjaxItem').validate({
 		rules: {
 			ajaxItemName: {
 				minlength: 2,
@@ -372,7 +378,7 @@ $(document).ready(function () {
 	});
 
 
-	var validator4 = $('#frmAjaxScheduleReservations').validate({
+	var validateAjaxScheduleReservations = $('#frmAjaxScheduleReservations').validate({
 		rules: {
 			scheduleStartOnDate: {
 				required: true,
@@ -395,14 +401,19 @@ $(document).ready(function () {
 //				.closest('.control-group').removeClass('error').addClass('success');
 //		},
 		submitHandler: function (form) {
-			// show loading text (button)
-			$("#btnReservationSubmit").button('loading');
+			if ($("#btnReservationSubmit").val() == 'just_clicked') {
+				$("#btnReservationSubmit").button('loading');
+			}
+			else if ($("#btnReservationOverrideConflicts").val() == 'just_clicked') {
+				$("#btnReservationOverrideConflicts").button('loading');
+			}
 			$.ajax({
 				type: 'GET',
 				url: $("#frmAjaxScheduleReservations").attr('action'),
 				data: $('#frmAjaxScheduleReservations').serialize(),
 				dataType: 'json',
 				success: function (data) {
+					console.log(data);
 					if (data.status == 'success') {
 						// show message
 						eqrUtil_setTransientAlert("success", "Successfully scheduled your reservation(s).");
@@ -410,11 +421,11 @@ $(document).ready(function () {
 						window.location.reload();
 					}
 					else {
-						// reset buttons and error message display
-						$("#btnReservationSubmit").button('reset');
-						$("#show_any_conflicts").text("");
-						// error message
-						$("#show_any_conflicts").show().append(parseConflicts(data));
+						// conflicts exist: reset buttons
+						$("#btnReservationSubmit").button('reset').text('Re-Submit');
+						$("#btnReservationOverrideConflicts").button('reset').removeClass("hide");
+						// display error message
+						$("#show_any_conflicts").text("").show().append(parseConflicts(data));
 					}
 				}
 			});
@@ -426,7 +437,7 @@ $(document).ready(function () {
 		var t = "";
 		$.each(data, function (id, val) {
 			if (id == "status" && val == "scheduling-conflict") {
-				t = t + "<strong>Scheduling conflicts exist!</strong><br /><br />";
+				t = t + "<strong>Scheduling conflicts exist!</strong><br />Managers may override existing reservations (the former are deleted and a message is sent to the original creator).<br /><br />";
 			}
 			else {
 				if (id == "conflicts_by_datetime") {
@@ -440,7 +451,7 @@ $(document).ready(function () {
 				var lastGroup = "";
 				$.each(this, function (group, members) {
 //					t = t + "group=" + group + ",members=" + members + '<br />';
-					if (group != lastGroup && lastGroup != ""){
+					if (group != lastGroup && lastGroup != "") {
 						// multiple group listings require additional HTML closures
 						t = t + "</ul></li></ul>";
 					}
@@ -697,19 +708,20 @@ $(document).ready(function () {
 
 	function cleanUpForm(formName) {
 		// reset form
-		validator1.resetForm(this);
-		validator2.resetForm(this);
-		validator3.resetForm(this);
+		validateAjaxGroup.resetForm();
+		validateAjaxSubgroup.resetForm();
+		validateAjaxItem.resetForm();
+		validateAjaxScheduleReservations.resetForm();
 		// manually remove input highlights
 		$(".control-group").removeClass('success').removeClass('error');
 	}
 
 	$("#btnCancelEditGroup").click(function () {
-		cleanUpForm("frmAjaxGroup")
+		cleanUpForm("frmAjaxGroup");
 		// hide form fields
 		$("#managerEdit").addClass("hide");
 		$("#managerView").removeClass("hide");
-		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit');
+		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
 		// hide special manager actions
 		$(".manager-action").addClass("hide");
 		// reset the submit button (avoid disabled state)
@@ -717,14 +729,20 @@ $(document).ready(function () {
 	});
 
 	$("#btnReservationCancel").click(function () {
-		cleanUpForm("frmAjaxScheduleReservations")
+		cleanUpForm("frmAjaxScheduleReservations");
 		// hide form fields, restore button label
 		$(".reservationForm").addClass("hide");
 		$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+		// strip out stored conflicts (if any exist)
+		$("#show_any_conflicts").text("").hide();
+		// any changes to form should hide the override button (if it exists)
+		if (!$("#btnReservationOverrideConflicts").hasClass("hide")) {
+			$("#btnReservationOverrideConflicts").addClass("hide");
+		}
 	});
 
 	$('#btnAjaxItemCancel').click(function () {
-		cleanUpForm("frmAjaxItem")
+		cleanUpForm("frmAjaxItem");
 		// clear and reset form
 		$("#frmAjaxItem input[type=text]").val('');
 		// reset submit button (avoid disabled state)
@@ -732,7 +750,7 @@ $(document).ready(function () {
 	});
 
 	$('#btnAjaxSubgroupCancel').click(function () {
-		cleanUpForm("frmAjaxSubgroup")
+		cleanUpForm("frmAjaxSubgroup");
 		// clear and reset form
 		$("#frmAjaxSubgroup input[type=text]").val('');
 		$("#frmAjaxSubgroup input[type=radio]").attr("checked", false);
@@ -936,9 +954,21 @@ $(document).ready(function () {
 		getListofDates();
 	});
 
-	// Listener: reservation submit button
+	// Listener: reservation submit button (normal)
 	$("#btnReservationSubmit").click(function () {
 		getListofDates();
+		// display correct button loading message
+		$("#btnReservationSubmit").val('just_clicked');
+		$("#btnReservationOverrideConflicts").val("");
+	});
+	// Listener: reservation submit button (override)
+	$("#btnReservationOverrideConflicts").click(function () {
+		getListofDates();
+		// update form value
+		$("#scheduleConflictOverrideFlag").val(1);
+		// display correct button loading message
+		$("#btnReservationSubmit").val("");
+		$("#btnReservationOverrideConflicts").val('just_clicked');
 	});
 
 });

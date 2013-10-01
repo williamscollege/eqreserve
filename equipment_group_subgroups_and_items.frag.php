@@ -2,7 +2,19 @@
 <input type="hidden" id="scheduleEqGroupID" name="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
-<input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="0" />
+<input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="" />
+<?php
+	if ($USER->flag_is_system_admin || $is_group_manager) {
+		?>
+		<input type="hidden" id="scheduleUserType" name="scheduleUserType" value="manager" />
+	<?php
+	}
+	else {
+		?>
+		<input type="hidden" id="scheduleUserType" name="scheduleUserType" value="consumer" />
+	<?php
+	}
+?>
 <legend class="pull-left row-fluid">Reserve Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
 
@@ -103,7 +115,7 @@
 <div class="control-group reservationForm hide">
 	<br />
 	<h4>Schedule Reservation</h4>
-	<!--	<legend class="pull-left row-fluid">Schedule Reservation</legend>-->
+
 	<div class="">
 		<div class="input-append" title="Start date">
 			<input type="text" id="scheduleStartOnDate" name="scheduleStartOnDate" class="input-small" maxlength="12" />
@@ -334,20 +346,6 @@
 		<span id="reservationSummary">Once.</span>
 	</div>
 </div>
-<?php
-	if ($USER->flag_is_system_admin || $is_group_manager) {
-		?>
-		<div class="control-group">
-			<label class="control-label" for="scheduleIsTypeManager">Admin Override?</label>
-
-			<div class="controls">
-				<input type="checkbox" id="scheduleIsTypeManager" name="scheduleIsTypeManager"> Check box to reserve this time block for maintenance or non-use
-				period
-			</div>
-		</div>
-	<?php
-	}
-?>
 <div class="control-group">
 	<label class="control-label" for="">Notes:</label>
 
@@ -363,7 +361,16 @@
 	<label class="control-label" for="btnReservationSubmit"></label>
 
 	<div class="controls">
-		<button type="submit" id="btnReservationSubmit" name="btnReservationSubmit" class="btn btn-success" data-loading-text="Saving...">Save</button>
+		<button type="submit" id="btnReservationSubmit" name="btnReservationSubmit" class="btn btn-success" data-loading-text="Submitting...">Submit</button>
+		<?php
+			if ($USER->flag_is_system_admin || $is_group_manager) {
+				?>
+				<button type="submit" id="btnReservationOverrideConflicts" name="btnReservationOverrideConflicts" class="btn btn-success hide" data-loading-text="Submitting Override...">
+					Submit and Override Conflicts
+				</button>
+			<?php
+			}
+		?>
 		<button type="button" id="btnReservationCancel" name="btnReservationCancel" class="btn btn-link btn-cancel">Cancel</button>
 	</div>
 </div>

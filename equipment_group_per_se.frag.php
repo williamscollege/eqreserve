@@ -30,8 +30,8 @@
 		}
 
 		?>
-		<legend class="pull-left row-fluid"><?php echo $Requested_EqGroup->name; ?>
-			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit</a></legend>
+		<legend class="pull-left row-fluid">Equipment Group
+			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit Equipment Group</a></legend>
 
 		<div id="managerEdit" class="hide">
 			<form action="ajax_actions/ajax_eq_group.php" class="form-horizontal" id="frmAjaxGroup" name="frmAjaxGroup" method="post">
@@ -223,13 +223,16 @@
 			</div>
 		</div>
 	<?php
+	} else {
+		# Show this to ordinary consumers (not-admin, not-manager)
+		echo "<legend class=\"pull-left row-fluid\">Equipment Group</legend>";
 	}
 
 	# Show this to all authenticated users
 	echo "<div id=\"managerView\">\n";
-	//	echo "Group: <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
-	echo "<span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br /><br />\n";
-	echo "Managed by: <ul id=\"displayListOfManagers\" class=\"inline\">";
+	echo "<strong>Name:</strong> <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
+	echo "<strong>Description:</strong> <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
+	echo "<strong>Managed by:</strong> <ul id=\"displayListOfManagers\" class=\"inline\">";
 	echo join("\n",
 		array_map(function ($m) {
 				if (get_class($m) == 'User') {

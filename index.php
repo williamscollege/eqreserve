@@ -24,7 +24,7 @@
 
 				// custom form cleanup
 				$("#btnCancelAddEqGroup").click(function () {
-					cleanUpForm("frmAddGroup")
+					cleanUpForm("frmAddGroup");
 				});
 
 
@@ -32,7 +32,7 @@
 				// Form validation
 				// ***************************
 
-				var validator = $('#frmAddGroup').validate({
+				var validateAddGroup = $('#frmAddGroup').validate({
 					rules: {
 						groupName: {
 							minlength: 2,
@@ -72,7 +72,7 @@
 							dataType: 'json',
 							success: function (data) {
 								// reset form
-								cleanUpForm("frmAddGroup")
+								cleanUpForm("frmAddGroup");
 
 								if (data.status == 'success') {
 									// remove error messages
@@ -99,7 +99,7 @@
 				function cleanUpForm(formName) {
 					// reset form
 					$("#" + formName).trigger("reset");
-					validator.resetForm();
+					validateAddGroup.resetForm();
 					// hide form, show button to activate form
 					$("#eqGroupFields").addClass('hide');
 					$("#btnDisplayAddEqGroup").removeClass('hide');

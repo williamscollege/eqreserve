@@ -40,7 +40,7 @@
 			, 'scheduleDuration'             => '30M'
 			, 'scheduleFrequencyType'        => 'no_repeat'
 			, 'scheduleRepeatInterval'       => '1'
-			, 'scheduleIsTypeManager'        => 'on'
+			, 'scheduleUserType'             => 'manager'
 			, 'repeat_dow_sun'               => '0'
 			, 'repeat_dow_mon'               => '0'
 			, 'repeat_dow_tue'               => '0'
@@ -111,8 +111,8 @@
 		function testManagerAccessForConsumerSchedule() {
 			$this->signIn();
 
-			$par = $this->getBaseUrlParamsArray();
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par                     = $this->getBaseUrlParamsArray();
+			$par['scheduleUserType'] = 'consumer';
 
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
@@ -140,9 +140,9 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-			$par['eqGroupID']    = '207'; // set group to one which the user has consumer access and NOT manager access
-			$par['subgroup-308'] = '410'; // add necessary array element that corresponds to subgroup and subgroup item
+			$par['scheduleUserType'] = 'consumer';
+			$par['eqGroupID']        = '207'; // set group to one which the user has consumer access and NOT manager access
+			$par['subgroup-308']     = '410'; // add necessary array element that corresponds to subgroup and subgroup item
 
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
@@ -167,9 +167,9 @@
 		function testAdminAccessForConsumerSchedule() {
 			$this->signIn();
 			makeAuthedTestUserAdmin($this->DB);
-			$par              = $this->getBaseUrlParamsArray();
-			$par['eqGroupID'] = '208'; // set group to one which the user has NO access
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par                     = $this->getBaseUrlParamsArray();
+			$par['eqGroupID']        = '208'; // set group to one which the user has NO access
+			$par['scheduleUserType'] = 'consumer';
 
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
@@ -191,7 +191,7 @@
 			$this->assertNoPattern('/success/i');
 
 			# ANOTHER TEST VARIATION:
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['scheduleUserType'] = 'consumer';
 
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
@@ -409,7 +409,7 @@
 
 			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
 			$this->assertTrue(array_key_exists('2013-03-26 10:00:00', $results['conflicts_by_datetime']));
-			$this->assertEqual($results['conflicts_by_datetime']['2013-03-26 10:00:00'][0], 'testItem2');
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-26 10:00:00'][0], '<span class="label label-important">testItem2</span>');
 
 			$this->assertEqual(count($results['conflicts_by_item']), 1);
 			$this->assertTrue(array_key_exists('testItem2', $results['conflicts_by_item']));
@@ -431,7 +431,7 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['scheduleUserType'] = 'consumer';
 
 			$par['eqGroupID']                  = '207'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-308']               = '410'; // add necessary array element that corresponds to subgroup and subgroup item
@@ -446,7 +446,7 @@
 
 			$this->assertEqual(count($results['conflicts_by_datetime']), 1);
 			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
-			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], '<span class="label label-important">testItem9</span>');
 
 			$this->assertEqual(count($results['conflicts_by_item']), 1);
 			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
@@ -493,7 +493,7 @@
 
 			# week 2 (this is conflicting reservation)
 			$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
-			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
+			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], '<span class="label label-important">testItem12</span>');
 
 			$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
 			$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
@@ -523,8 +523,7 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
-
+			$par['scheduleUserType']           = 'consumer';
 			$par['eqGroupID']                  = '207'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-308']               = '410'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['scheduleStartOnDate']        = '2013-03-17';
@@ -546,7 +545,7 @@
 
 			# week 2 (this is conflicting reservation)
 			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
-			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], '<span class="label label-important">testItem9</span>');
 
 			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
 			$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
@@ -571,7 +570,7 @@
 
 			# week 2 (this is conflicting reservation)
 			$this->assertTrue(array_key_exists('2013-03-25 18:00:00', $results['conflicts_by_datetime']));
-			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], 'testItem9');
+			$this->assertEqual($results['conflicts_by_datetime']['2013-03-25 18:00:00'][0], '<span class="label label-important">testItem9</span>');
 
 			$this->assertTrue(array_key_exists('testItem9', $results['conflicts_by_item']));
 			$this->assertEqual($results['conflicts_by_item']['testItem9'][0], '2013-03-25 18:00:00');
@@ -621,7 +620,7 @@
 
 			# week 2 (this is conflicting reservation)
 			$this->assertTrue(array_key_exists('2013-07-09 11:00:00', $results['conflicts_by_datetime']));
-			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], 'testItem12');
+			$this->assertEqual($results['conflicts_by_datetime']['2013-07-09 11:00:00'][0], '<span class="label label-important">testItem12</span>');
 
 			$this->assertTrue(array_key_exists('testItem12', $results['conflicts_by_item']));
 			$this->assertEqual($results['conflicts_by_item']['testItem12'][0], '2013-07-09 11:00:00');
@@ -882,7 +881,7 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['scheduleUserType'] = 'consumer';
 			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
@@ -941,7 +940,7 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['scheduleUserType'] = 'consumer';
 			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
@@ -1000,7 +999,7 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['scheduleUserType'] = 'consumer';
 			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item
@@ -1067,7 +1066,7 @@
 			unset($par['subgroup-301']); // remove unnecessary array elements
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
-			unset($par['scheduleIsTypeManager']); // set type to consumer (i.e. not manager); NOTE: this is a checkbox: if not checked, it should not exist in this array
+			$par['scheduleUserType'] = 'consumer';
 			$par['eqGroupID']        = '202'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-306-409'] = '409'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['subgroup-306-411'] = '411'; // add necessary array element that corresponds to subgroup and subgroup item

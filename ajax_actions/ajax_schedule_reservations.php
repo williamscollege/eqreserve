@@ -29,7 +29,7 @@
 	#------------------------------------------------#
 	# form values
 	$intEqGroupID                = isset($_REQUEST["eqGroupID"]) ? $_REQUEST["eqGroupID"] : 0;
-	$strScheduleType             = htmlentities((isset($_REQUEST["scheduleIsTypeManager"])) ? 'manager' : 'consumer');
+	$strScheduleType             = htmlentities((isset($_REQUEST["scheduleUserType"])) ? $_REQUEST["scheduleUserType"] : 0);
 	$strScheduleFrequencyType    = htmlentities((isset($_REQUEST["scheduleFrequencyType"])) ? util_quoteSmart($_REQUEST["scheduleFrequencyType"]) : 0);
 	$intScheduleRepeatInterval   = isset($_REQUEST["scheduleRepeatInterval"]) ? $_REQUEST["scheduleRepeatInterval"] : 0;
 	$dateScheduleTimeBlockStart  = htmlentities((isset($_REQUEST["scheduleStartTimeConverted"])) ? $_REQUEST["scheduleStartTimeConverted"] : 0);
@@ -340,11 +340,16 @@
 				}
 				$timeblock_to_delete = TimeBlock::getOneFromDb(['time_block_id' => $id_of_timeblock_to_delete], $DB);
 
-				# for each one deleted, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
-				$sched->doCreateQueuedMessages($eq_group, $alertMessageData, 'flag_contact_on_reserve_cancel');
+				// work-around to ensure that we only delete valid time_block objects (and not empty objects)
+				if ($timeblock_to_delete->schedule_id) {
+					//					util_prePrintR($id_of_timeblock_to_delete);
+					//					util_prePrintR($timeblock_to_delete);
+					# for each deleted time_block, add alert to the email queue for that user saying their reservation has been overridden (incl info about this schedule (notes, user, ?))
+					$sched->doCreateQueuedMessages($eq_group, $alertMessageData, 'flag_contact_on_reserve_cancel');
 
-				# now delete it
-				$timeblock_to_delete->doDelete();
+					# now delete it
+					$timeblock_to_delete->doDelete();
+				}
 			}
 
 			# Commit
@@ -356,10 +361,8 @@
 			exit;
 		}
 		else {
-			# TODO - Version 1.0: ajax note for implementation: show results integrated in main page; rename submit button value to 'Re-Submit'
 			# TODO - Version 1.1: Offer user option to make reservation on all available days, while simply avoiding any conflicts
-			#         store the list of conflicts in the result object (include the type of the conflicting reservation/time-block/schedule)
-
+			# Conflicts exist: store the list of conflicts in the result object (include the type of the conflicting reservation/time-block/schedule)
 			$results['status']                = 'scheduling-conflict';
 			$results['conflicts_by_datetime'] = [];
 			$results['conflicts_by_item']     = [];
@@ -369,6 +372,7 @@
 				if (!array_key_exists($conflict_data['t1_start'], $results['conflicts_by_datetime'])) {
 					$results['conflicts_by_datetime'][$conflict_data['t1_start']] = [];
 				}
+
 				// add the item if it isn't already there
 				if (!array_key_exists($conflict_data['item_name'], $results['conflicts_by_datetime'][$conflict_data['t1_start']])) {
 					array_push($results['conflicts_by_datetime'][$conflict_data['t1_start']], $conflict_data['item_name']);
@@ -383,6 +387,27 @@
 					array_push($results['conflicts_by_item'][$conflict_data['item_name']], $conflict_data['t1_start']);
 				}
 
+			}
+
+			# Conflicts exist: loop through entire eq_group list of all items, and highlight conflicted items
+			$eq_group->loadEqItems();
+			foreach ($results['conflicts_by_datetime'] as $conflicts_index => $conflicts_array) {
+				//echo "OUTER: conflicts_index=$conflicts_index, conflicts_array=<br />";
+				//util_prePrintR($conflicts_array);
+
+				foreach ($eq_group->eq_items as $eq_index => $eq_object) {
+					//echo "INNER: eq_index=$eq_index, item_value=<br />";
+					//util_prePrintR($eq_object);
+					if (in_array($eq_object->name, $conflicts_array)) {
+						$key = array_search($eq_object->name, $conflicts_array);
+						// bold it
+						$results['conflicts_by_datetime'][$conflicts_index][$key] = '<span class="label label-important">' . $eq_object->name . '</span>';
+					}
+					else {
+						//push it on
+						array_push($results['conflicts_by_datetime'][$conflicts_index], $eq_object->name);
+					}
+				}
 			}
 
 			$DB->rollBack();
