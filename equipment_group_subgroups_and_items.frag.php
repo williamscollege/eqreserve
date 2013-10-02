@@ -58,6 +58,17 @@
 				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 			}
 			echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "</span>\n";
+
+
+			if ($key->flag_is_multi_select == 0) {
+				# Make easy to un-check a subgroup's items
+				echo "[<a class=\"uncheckSubgroupRadios cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]";
+			}
+			elseif ($key->flag_is_multi_select == 1) {
+				# Make easy to select a subgroup's checkbox items
+				echo "[<a class=\"checkSubgroupCheckboxes cursorPointer\" title=\"Select all items within this subgroup\">select all</a> | <a class=\"uncheckSubgroupCheckboxes cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]";
+			}
+
 			foreach ($key->eq_items as $item) {
 				?>
 				<li id="list-of-item-<?php echo $item->eq_item_id; ?>" data-for-item-order="<?php echo $item->ordering; ?>">

@@ -279,7 +279,8 @@
 			$this->assertNoPattern('/success/i');
 		}
 
-		function testConflictOverrideOnScheduleOfTypeConsumerByManager() {
+
+		function testOverrideConflictWithRepeatingSingleItemOnScheduleOfTypeConsumerByManager() {
 			$this->signIn();
 
 			$par                                 = $this->getBaseUrlParamsArray();
@@ -324,7 +325,12 @@
 			$this->assertPattern('/success/i');
 		}
 
-		function testConflictOverrideOnScheduleOfTypeConsumerByNonManager() {
+		function testOverrideConflictWithRepeatingMultipleItemOnScheduleOfTypeConsumerByManager() {
+			// TODO -- is this a redundant test??
+			$this->fail("to be implemented");
+		}
+
+		function testOverrideConflictWithRepeatingSingleItemOnScheduleOfTypeConsumerByNonManager() {
 			$this->signIn();
 
 			$par                                 = $this->getBaseUrlParamsArray();
@@ -349,7 +355,7 @@
 			$this->assertNoPattern('/success/i');
 		}
 
-		function testConflictOverrideOnScheduleOfTypeManagerByManager() {
+		function testOverrideConflictWithSingleItemOnScheduleOfTypeManagerByManager() {
 			$this->signIn();
 
 			$par                                 = $this->getBaseUrlParamsArray();
@@ -1167,23 +1173,6 @@
 			$this->assertEqual($c->flag_contact_on_reserve_cancel, 1);
 		}
 
-		function testSuccessOnCreateRepeatingSingleItemTimingConflictOverrideIsManager() {
-
-			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
-			$this->fail("to be implemented");
-		}
-
-		function testSuccessOnCreateRepeatingMultipleItemsTimingConflictOverrideIsManager() {
-
-			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
-			$this->fail("to be implemented");
-		}
-
-		function testSuccessOnCreateRepeatingMultipleItemsIsManagerWeeklyAndGenerateMultipleQueuedMessages() {
-			// unnecessary test??
-			//			QueuedMessage::getOneFromDb(['target'=>],$this->DB);
-			$this->fail("to be implemented");
-		}
 
 		# TODO - Do we need to standardize our use of SystemAdmin using canManageEqGroup() or other fxns for SystemAdmin CRUD work
 

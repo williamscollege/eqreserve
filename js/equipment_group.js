@@ -41,6 +41,14 @@ $(document).ready(function () {
 		}
 	});
 
+	// Make easy to check or un-check a subgroup's items
+	$(".uncheckSubgroupRadios, .uncheckSubgroupCheckboxes").click(function () {
+		$(this).parent('UL').find("input[type='radio'], input[type='checkbox']").prop("checked", false);
+	});
+	$(".checkSubgroupCheckboxes").click(function () {
+		$(this).parent('UL').find("input[type='checkbox']").prop("checked", true);
+	});
+
 	// Update form values
 	$("#goStartMinute").change(function () {
 		$("#startMinute").val($("#goStartMinute").val());
@@ -377,6 +385,11 @@ $(document).ready(function () {
 		}
 	});
 
+	$.validator.addMethod("avoidEmptyReservation", function (value, element) {
+		//var count_checked = $("#" + formID + " input[type='radio']:checked, #" + formID + " input[type='checkbox']:checked").length;
+		var count_checked = $("#frmAjaxScheduleReservations input[type='radio']:checked, #frmAjaxScheduleReservations input[type='checkbox']:checked").length;
+		return this.optional(element) || (count_checked > 0);
+	}, "You must select at least one item for your reservation.");
 
 	var validateAjaxScheduleReservations = $('#frmAjaxScheduleReservations').validate({
 		rules: {
@@ -389,7 +402,8 @@ $(document).ready(function () {
 				date: true
 			},
 			scheduleDuration: {
-				required: true
+				required: true,
+				avoidEmptyReservation: true // custom validation tied to dynamic form elements (it must be tied to a form element in the DOM)
 			}
 		},
 		highlight: function (element) {
