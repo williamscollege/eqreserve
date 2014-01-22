@@ -62,11 +62,11 @@
 
 			if ($key->flag_is_multi_select == 0) {
 				# Make easy to un-check a subgroup's items
-				echo "[<a class=\"uncheckSubgroupRadios cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]";
+				echo "<span class=\"subgroupRadiosControls hide\">[<a class=\"uncheckSubgroupRadios cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]</span>";
 			}
 			elseif ($key->flag_is_multi_select == 1) {
 				# Make easy to select a subgroup's checkbox items
-				echo "[<a class=\"checkSubgroupCheckboxes cursorPointer\" title=\"Select all items within this subgroup\">select all</a> | <a class=\"uncheckSubgroupCheckboxes cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]";
+				echo "<span class=\"subgroupCheckboxesControls hide\">[<a class=\"checkSubgroupCheckboxes cursorPointer\" title=\"Select all items within this subgroup\">select all</a> | <a class=\"uncheckSubgroupCheckboxes cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]</span>";
 			}
 
 			foreach ($key->eq_items as $item) {

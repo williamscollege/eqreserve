@@ -58,4 +58,5 @@
 
 		}
 
-	}
+        // NOTE: can't figure out how to check that a given text is hidden / not visible
+    }

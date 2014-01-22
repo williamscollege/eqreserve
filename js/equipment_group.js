@@ -31,6 +31,8 @@ $(document).ready(function () {
 		// toggle button label
 		if ($(".reservationForm").hasClass('hide')) {
 			$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+            $(".subgroupRadiosControls").addClass("hide");
+            $(".subgroupCheckboxesControls").addClass("hide");
 		}
 		else {
 			$("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
@@ -38,15 +40,17 @@ $(document).ready(function () {
 			$("#btnCancelEditGroup").click();
 			// hide special manager actions
 			$(".manager-action").addClass("hide");
+            $(".subgroupRadiosControls").removeClass("hide");
+            $(".subgroupCheckboxesControls").removeClass("hide");
 		}
 	});
 
 	// Make easy to check or un-check a subgroup's items
 	$(".uncheckSubgroupRadios, .uncheckSubgroupCheckboxes").click(function () {
-		$(this).parent('UL').find("input[type='radio'], input[type='checkbox']").prop("checked", false);
+		$(this).parent().parent('UL').find("input[type='radio'], input[type='checkbox']").prop("checked", false);
 	});
 	$(".checkSubgroupCheckboxes").click(function () {
-		$(this).parent('UL').find("input[type='checkbox']").prop("checked", true);
+		$(this).parent().parent('UL').find("input[type='checkbox']").prop("checked", true);
 	});
 
 	// Update form values
