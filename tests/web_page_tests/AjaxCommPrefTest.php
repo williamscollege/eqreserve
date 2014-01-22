@@ -125,7 +125,7 @@
 			$eqgJ = new EqGroup(['eq_group_id' => 221, 'name' => 'testEqGroupJ', 'flag_delete' => 0, 'DB' => $this->DB]);
 			$eqgK = new EqGroup(['eq_group_id' => 222, 'name' => 'testEqGroupK', 'flag_delete' => 0, 'DB' => $this->DB]);
 
-			$uA = User::getOneFromDb(['username' => 'mockUser', 'flag_delete' => 0], $this->DB);
+			$uA = User::getOneFromDb(['username' => Auth_Base::$TEST_USERNAME, 'flag_delete' => 0], $this->DB);
 
 			$igX->updateDb();
 			$igY->updateDb();
@@ -187,7 +187,6 @@
 			$this->assertEqual($cp4->flag_alert_on_upcoming_reservation, FALSE);
 			$this->assertEqual($cp4->flag_contact_on_reserve_create, FALSE);
 			$this->assertEqual($cp4->flag_contact_on_reserve_cancel, FALSE);
-
 
 			// Action Test #4
 			// condition: create new testUserB
