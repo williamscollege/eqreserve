@@ -16,11 +16,16 @@ $(document).ready(function () {
 			$("#btnReservationCancel").click();
 			// show special manager actions
 			$(".manager-action").removeClass("hide");
+
+            $(".subgroup-ul").removeClass("hide");
 		}
 		else {
 			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
 			// hide special manager actions
 			$(".manager-action").addClass("hide");
+            $(".subgroup-ul").addClass("hide");
+            $(".subgroup-ul").has("li.item-in-a-subgroup").removeClass("hide");
+
 		}
 	});
 
@@ -576,6 +581,7 @@ $(document).ready(function () {
 				// show status
 				eqrUtil_setTransientAlert('success', 'saved');
 				// removed last remaining item? then show message
+                alert('TODO- fix problem where this message is shown even when there are still items in the list');
 				if ($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length = 2) { // LI item to be removed + LI button
 					// show message: 'No items exist.'
 					$('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('span.noItemsExist').removeClass("hide");

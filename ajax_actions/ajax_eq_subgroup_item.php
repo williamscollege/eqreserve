@@ -57,7 +57,7 @@
 		$results['html_output']  = '';
 
 		# Omit class="hide" as this is injected into the DOM
-		$results['html_output'] .= "<li id=\"list-of-item-" . $output->eq_item_id . "\" data-for-item-order=\"" . $output->ordering . "\">";
+		$results['html_output'] .= "<li id=\"list-of-item-" . $output->eq_item_id . "\"  class=\"item-in-a-subgroup\" data-for-item-order=\"" . $output->ordering . "\">";
 		$results['html_output'] .= "<label class=\"\" for=\"item-" . $output->eq_item_id . "\">";
 		$results['html_output'] .= "<a id=\"btn-edit-item-id-" . $output->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $intSubgroupName . "\" data-for-item-id=\"" . $output->eq_item_id . "\" data-for-item-name=\"" . $output->name . "\" data-for-item-descr=\"" . $output->descr . "\" class=\"manager-action btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 		$results['html_output'] .= "<a id=\"delete-item-" . $output->eq_item_id . "\" class=\"manager-action btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $output->eq_item_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";

@@ -33,8 +33,8 @@
 		$key->loadEqItems();
 
 		# Items
-		echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"unstyled\">\n";
 		if (count($key->eq_items) == 0) {
+            echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"subgroup-ul hide unstyled\">\n";
 			# Subgroup Title
 			if ($USER->flag_is_system_admin || $is_group_manager) {
 				# button: edit subgroup
@@ -50,6 +50,7 @@
 			}
 		}
 		else {
+            echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"subgroup-ul unstyled\">\n";
 			# Subgroup Title
 			if ($USER->flag_is_system_admin || $is_group_manager) {
 				# button: edit subgroup
@@ -71,7 +72,7 @@
 
 			foreach ($key->eq_items as $item) {
 				?>
-				<li id="list-of-item-<?php echo $item->eq_item_id; ?>" data-for-item-order="<?php echo $item->ordering; ?>">
+				<li id="list-of-item-<?php echo $item->eq_item_id; ?>" class="item-in-a-subgroup" data-for-item-order="<?php echo $item->ordering; ?>">
 
 					<label class="" for="item-<?php echo $item->eq_item_id; ?>">
 						<?php
