@@ -16,10 +16,12 @@
 			else {
 				$g = InstGroup::getOneFromDb(['inst_group_id' => $p->entity_id], $DB);
 				if ($g->matchesDb) {
-					$display_text = '[' . $g->name . ']';
+                    //echo "group ". $g->name;
+					$display_text = '[users in ' . $g->name . ']';
 				}
 			}
 			if ($display_text) {
+                //echo "display text is $display_text";
 				if ($p->role_id == 1) {
 					array_push($manager_permission_data, ['perm_id' => $p->permission_id, 'ent_type' => $p->entity_type, 'ent_id' => $p->entity_id, 'display_text' => $display_text]);
 				}
@@ -238,7 +240,7 @@
 				if (get_class($m) == 'User') {
 					return "<li id=\"display-manager-user-" . $m->user_id . "\"><i class=\"icon-user\"></i> $m->fname $m->lname</li>";
 				}
-				return "<li id=\"display-manager-inst_group-" . $m->inst_group_id . "\">[$m->name]</li>";
+				return "<li id=\"display-manager-inst_group-" . $m->inst_group_id . "\">[users in $m->name]</li>";
 			},
 			$Requested_EqGroup->managers)
 	);
