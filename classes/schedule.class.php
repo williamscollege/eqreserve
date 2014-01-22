@@ -123,7 +123,7 @@
 				. $this->reservations[0]->eq_item->eq_group->eq_group_id
 				. '">' . $this->reservations[0]->eq_item->eq_group->name . '</a>:';
 
-			$li .= "<ul>\n";
+			$li .= "<ul class=\"unstyled\">\n";
 			foreach ($this->reservations as $r) {
 				$li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
 			}

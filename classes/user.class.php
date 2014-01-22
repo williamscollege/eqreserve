@@ -119,7 +119,8 @@
 			$this->comm_prefs = array();
 			$comm_prefs_ar    = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
 			if (!$comm_prefs_ar) {
-				trigger_error('there are NO existing comm_pref records for user_id=' . $this->user_id);
+				// trigger_error('there are NO existing comm_pref records for user_id=' . $this->user_id);
+                // CSW NOTE: I don't think this is an error situation at this point - the comm prefs array will simply be empty
 				return;
 			}
 			foreach ($comm_prefs_ar as $cp) {

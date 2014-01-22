@@ -41,6 +41,12 @@ UL.unstyled LI, OL.unstyled LI
 {
 	margin-left: 50px;
 }
+
+.form-horizontal .control-group .display-only-controls {
+    padding-top: 5px;
+}
+
+
 /*=======================================
 Williams Custom CSS
 Purpose: CSS that's not an extension / modification of the bootstrap framework
@@ -63,6 +69,19 @@ Purpose: CSS that's not an extension / modification of the bootstrap framework
 	margin: 1px;
 	padding: 1px;
 }
+
+#displayEqGroups > li {
+    padding-bottom: 5px;
+}
+
+input[type="checkbox"].comm_pref-checkbox {
+    margin: -1px 0 0;
+}
+
+#reservationSchedules > li {
+    padding-bottom: 7px;
+}
+
 /*-------------------------
 transient alert*/
 .transient_alert

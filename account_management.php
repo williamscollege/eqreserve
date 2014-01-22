@@ -64,21 +64,21 @@
 		<div class="control-group">
 			<label class="control-label" for="accountName">Name</label>
 
-			<div class="controls">
+			<div class="controls display-only-controls">
 				<?php echo $for_user->fname . ' ' . $for_user->lname; ?>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="accountUsername">Username</label>
 
-			<div class="controls">
+			<div class="controls display-only-controls">
 				<?php echo $for_user->username; ?>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="accountEmail">Email</label>
 
-			<div class="controls">
+			<div class="controls display-only-controls">
 				<a href="mailto:<?php echo $for_user->email; ?>"><?php echo $for_user->email; ?></a>
 			</div>
 		</div>
@@ -99,7 +99,7 @@
 		<div class="control-group">
 			<label class="control-label" for="institutionInfo">Institution Membership</label>
 
-			<div class="controls">
+			<div class="controls display-only-controls">
 				<ul class="unstyled" id="institutionInfo">
 					<?php
 						foreach ($for_user->inst_groups as $ig) {
@@ -113,8 +113,8 @@
 		<div class="control-group">
 			<label class="control-label" for="equipmentGroups">Equipment Groups</label>
 
-			<div class="controls">
-				<ul class="unstyled" id="equipmentGroups">
+			<div class="controls display-only-controls">
+				<ul class="unstyled" id="displayEqGroups">
 					<?php
 						$USER->loadCommPrefs();
 						if (count($for_user->eq_groups) > 0) {
@@ -157,8 +157,8 @@
 		<div class="control-group">
 			<label class="control-label" for="reservations">Reservations</label>
 
-			<div class="controls">
-				<ul id="equipmentGroups">
+			<div class="controls display-only-controls">
+				<ul class="unstyled" id="reservationSchedules">
 					<?php
 						$for_user->loadSchedules();
 						if (count($for_user->schedules) > 0) {

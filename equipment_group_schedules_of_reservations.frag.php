@@ -31,7 +31,7 @@
 						$li .= $sched->user->fname . ' ' . $sched->user->lname . '(TODO: add link/hover stuff)<br/>';
 					}
 				}
-				$li .= "<ul class=\"\">\n";
+				$li .= "<ul class=\"unstyled\">\n";
 				foreach ($sched->reservations as $r) {
 					$li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
 				}
