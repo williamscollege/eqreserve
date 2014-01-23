@@ -70,16 +70,31 @@ Purpose: CSS that's not an extension / modification of the bootstrap framework
 	padding: 1px;
 }
 
-#displayEqGroups > li {
-    padding-bottom: 5px;
-}
+/* account page */
 
 input[type="checkbox"].comm_pref-checkbox {
     margin: -1px 0 0;
 }
 
+/* account page & eq group page */
+
+#displayEqGroups > li {
+    padding-bottom: 5px;
+}
+
 #reservationSchedules > li {
     padding-bottom: 7px;
+}
+
+/* eq group page */
+
+li.item-in-a-subgroup,
+ul.subgroup-ul {
+  margin-top: 1px;
+}
+
+.eq-add-item {
+    margin-bottom: 5px;
 }
 
 /*-------------------------

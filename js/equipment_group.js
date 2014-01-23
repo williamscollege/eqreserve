@@ -581,8 +581,7 @@ $(document).ready(function () {
 				// show status
 				eqrUtil_setTransientAlert('success', 'saved');
 				// removed last remaining item? then show message
-                alert('TODO- fix problem where this message is shown even when there are still items in the list');
-				if ($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length = 2) { // LI item to be removed + LI button
+                if ($('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('LI').length == 2) { // LI item to be removed + LI button
 					// show message: 'No items exist.'
 					$('#list-of-item-' + GLOBAL_confirmHandlerData).parent('UL').find('span.noItemsExist').removeClass("hide");
 				}
