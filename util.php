@@ -11,6 +11,14 @@
 		return $id;
 	}
 
+    function util_genRandomAlphNumString($len = 128) {
+    $pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    $id   = '';
+    for ($i = 0; $i < $len; $i++) {
+        $id .= substr($pool, rand(0, strlen($pool) - 1), 1);
+    }
+    return $id;
+}
 	function util_wipeSession() {
 		unset($_SESSION['isAuthenticated']);
 		unset($_SESSION['fingerprint']);

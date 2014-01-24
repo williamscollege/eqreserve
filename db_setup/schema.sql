@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS `eq_items` (
     `eq_subgroup_id` INT NOT NULL,
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
+    `image_file_name` VARCHAR(255) NULL,
+    `flag_image_to_be_uploaded` BIT(1) NOT NULL DEFAULT 0,
     `ordering` SMALLINT NOT NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
