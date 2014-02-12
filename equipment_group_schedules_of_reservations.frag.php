@@ -23,9 +23,13 @@
 					$sched->loadUser();
 					$li .= '<strong>' . $sched->toString() . '</strong> by ';
 
-					if (!$sched->user->matchedDb) {
+					if (!$sched->user->matchesDb) {
 						$del_user = User::getOneFromDb(['user_id' => $sched->user_id, 'flag_delete' => true], $DB);
-						$li .= '<i>user removed from system: ' . $del_user->fname . ' ' . $del_user->lname . '</i> ';
+                        if (!$del_user->matchesDb) {
+                            $li .= '<i>could not determine the user</i> ';
+                        } else {
+    						$li .= '<i>user removed from system: ' . $del_user->fname . ' ' . $del_user->lname . '</i> ';
+                        }
 					}
 					else {
 						$li .= $sched->user->fname . ' ' . $sched->user->lname . '(TODO: add link/hover stuff)<br/>';

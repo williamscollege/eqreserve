@@ -78,7 +78,42 @@
 			$this->assertEqual($u->username, Auth_Base::$TEST_USERNAME);
 		}
 
-		//// instance methods
+        //// instance methods - object itself
+
+        function testUserRenderMinimal() {
+            $u = User::getOneFromDb(['user_id' => 1101], $this->DB);
+
+            $info = '<span class="user-render user-render-minimal user-render-1101" data-for-user="1101">'.Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME.'</span>';
+
+            $this->assertEqual($u->renderMinimal(),$info);
+        }
+
+        function testUserRender() {
+            $u = User::getOneFromDb(['user_id' => 1101], $this->DB);
+
+            $info = '<span class="user-render user-render-normal user-render-1101" data-for-user="1101" title="'.Auth_Base::$TEST_USERNAME.'">'.Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME.'</span>';
+
+            $this->assertEqual($u->render(),$info);
+        }
+
+        function testUserRenderRich() {
+            $u = User::getOneFromDb(['user_id' => 1101], $this->DB);
+
+            $info = '<span class="user-render user-render-rich user-render-1101" data-for-user="1101">'.Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME
+                .'<div class="user-render-rich-details hidden"><h4>'.Auth_Base::$TEST_FNAME.' '.Auth_Base::$TEST_LNAME.'</h4>';
+            $info .= '<i>'.Auth_Base::$TEST_USERNAME.'</i><br/>';
+            $info .= Auth_Base::$TEST_EMAIL.'<br/>';
+            $info .= 'Advised by: David Keiser-Clark<br/>';
+            $info .= 'Member of: testInstGroup1<br/>';
+            $info .= '<div class="user-notes">some important notes</div>';
+            $info .= '</div></span>';
+
+            $rendered = $u->renderRich();
+
+            $this->assertEqual($rendered,$info);
+        }
+
+        //// instance methods - related data
 
 		function testUserInstGroupsLoaded() {
 			$u = User::getOneFromDb(['user_id' => 1101], $this->DB);
