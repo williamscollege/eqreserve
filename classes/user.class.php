@@ -52,18 +52,19 @@
 
         // returns: a very basic HTML representation of the user
         public function renderMinimal() {
-            return '<span class="user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->fname.' '.$this->lname.'</span>';
+            return '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->fname.' '.$this->lname.'</div>';
+//            return '<span class="user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->fname.' '.$this->lname.'</span>';
         }
 
         // returns: an HTML representation of the user with a little extra info available as a mouse-over
         public function render() {
-            return '<span class="user-render user-render-normal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'" title="'.$this->username.'">'.$this->fname.' '.$this->lname.'</span>';
+            return '<div class="rendered-object user-render user-render-normal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'" title="'.$this->username.'"><span class="render-main-info">'.$this->fname.' '.$this->lname.'</span></div>';
         }
 
         // returns: an HTML representation of the user with detailed extra info available in a subsidiary div (so it can be controlled via css
         public function renderRich() {
-            $info = '<span class="user-render user-render-rich user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->fname.' '.$this->lname
-                .'<div class="user-render-rich-details hidden"><h4>'.$this->fname.' '.$this->lname.'</h4>';
+            $info = '<div class="rendered-object user-render user-render-rich user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'"><span class="render-main-info">'.$this->fname.' '.$this->lname.'</span>'
+                .'<div class="render-hover-info user-render-rich-details"><h4>'.$this->fname.' '.$this->lname.'</h4>';
 
             $info .= '<i>'.$this->username.'</i><br/>';
 
@@ -92,7 +93,7 @@
                 $info .= '<div class="user-notes">'.$this->notes.'</div>';
             }
 
-            $info .= '</div></span>';
+            $info .= '</div></div>';
 
             return $info;
         }

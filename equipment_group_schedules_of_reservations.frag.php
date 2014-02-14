@@ -32,7 +32,8 @@
                         }
 					}
 					else {
-						$li .= $sched->user->fname . ' ' . $sched->user->lname . '(TODO: add link/hover stuff)<br/>';
+//                        $li .= $sched->user->fname . ' ' . $sched->user->lname . '(TODO: add link/hover stuff)<br/>';
+                        $li .= $sched->user->renderRich();
 					}
 				}
 				$li .= "<ul class=\"unstyled\">\n";

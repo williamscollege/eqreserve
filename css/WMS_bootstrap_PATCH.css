@@ -70,6 +70,32 @@ Purpose: CSS that's not an extension / modification of the bootstrap framework
 	padding: 1px;
 }
 
+/* details on hover/click */
+
+.rendered-object {
+    display: inline-block;
+    height:0px;
+}
+
+.rendered-object > .render-main-info {
+    border-bottom: 1px black dashed;
+}
+
+.rendered-object > .render-hover-info {
+    position: fixed;
+    border: 1px solid #000000;
+    background-color: #ddd;
+    max-width: 300px;
+    margin: 0;
+    padding: 8px;
+    visibility: hidden;
+}
+
+.rendered-object:hover > .render-hover-info {
+    visibility: visible;
+    z-index: 200;
+}
+
 /* account page */
 
 input[type="checkbox"].comm_pref-checkbox {

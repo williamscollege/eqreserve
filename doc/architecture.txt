@@ -36,7 +36,7 @@ Within each functional grouping individual functions are implemented as ajax cal
 
 The classes fall into 2 general categories: data objects, and application infrastructure.
 
-The data object classes are all based on a root db_linked class which handles all basic MySQL DB IO and also has some static methods that handle some basic library-like DB methods (e.g. automatically correctly quote a constant, build pre-set sections of queries, etc.).
+The data object classes are all based on a root db_linked class which handles all basic MySQL DB IO and also has some static methods that handle some basic library-like DB methods (e.g. automatically correctly quote a constant, build pre-set sections of queries, etc.). Data objects also usually implement a simple rendering pattern. Data objects have renderMinimal, render, and renderRich methods for use in displaying objects of that type. NOTE: these render methods are for relatively short, display-only presentations of the objects; the rendering methods are NOT used to create editing forms or other, more extended displays.
 
 The app infrastructure classes are:
     Session - a basic session handling wrapper, with sugar methods to make other code easier to read (e.g. session.isAuthenticated)
