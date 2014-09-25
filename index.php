@@ -115,8 +115,8 @@
 
 		<?php
 		echo "<hr />";
-		echo "<h3>Equipment Groups</h3>";
-		echo "<ul id=\"displayEqGroups\">";
+		echo "<h3>Your Equipment Groups</h3>";
+		echo "<ul class=\"unstyled\" id=\"displayEqGroups\">";
 
 		# is system admin?
 		if ($USER->flag_is_system_admin) {

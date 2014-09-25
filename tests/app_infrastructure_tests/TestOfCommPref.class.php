@@ -36,18 +36,18 @@
 			$html = $cp->toHTMLForm(TRUE);
 
 			$this->assertEqual($html,
-				'<ul class="inline">' .
-				'<li>Reminder on upcoming reservations: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="reminder" id="reminder_comm_pref_102" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/></li>' .
-				'<li>Alert on reservation created: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="alert_create" id="alert_create_comm_pref_102" name="alert_create_comm_pref_102" data-for-comm-pref="102"/></li>' .
-				'<li>Alert on reservation cancelled: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="alert_cancel" id="alert_cancel_comm_pref_102" name="alert_cancel_comm_pref_102" data-for-comm-pref="102"/></li>' .
+				'<ul class="unstyled">' .
+				'<li><input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="reminder" id="reminder_comm_pref_102" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/> Reminder on upcoming reservations</li>' .
+				'<li><input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="alert_create" id="alert_create_comm_pref_102" name="alert_create_comm_pref_102" data-for-comm-pref="102"/> Alert on reservation created</li>' .
+				'<li><input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="alert_cancel" id="alert_cancel_comm_pref_102" name="alert_cancel_comm_pref_102" data-for-comm-pref="102"/> Alert on reservation cancelled</li>' .
 				'</ul>'
 			);
 
 			$html = $cp->toHTMLForm(FALSE);
 
 			$this->assertEqual($html,
-				'<ul class="inline">' .
-				'<li>Reminder on upcoming reservations: <input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="reminder" id="reminder_comm_pref_102" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/></li>' .
+				'<ul class="unstyled">' .
+				'<li><input type="checkbox" class="comm_pref-checkbox" data-comm-pref-type="reminder" id="reminder_comm_pref_102" name="reminder_comm_pref_102" data-for-comm-pref="102" checked="checked"/> Reminder on upcoming reservations</li>' .
 				'</ul>'
 			);
 		}

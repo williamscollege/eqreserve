@@ -50,6 +50,54 @@
 			return ($a->sortname < $b->sortname) ? -1 : 1;
 		}
 
+        // returns: a very basic HTML representation of the user
+        public function renderMinimal() {
+            return '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->fname.' '.$this->lname.'</div>';
+//            return '<span class="user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->fname.' '.$this->lname.'</span>';
+        }
+
+        // returns: an HTML representation of the user with a little extra info available as a mouse-over
+        public function render() {
+            return '<div class="rendered-object user-render user-render-normal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'" title="'.$this->username.'"><span class="render-main-info">'.$this->fname.' '.$this->lname.'</span></div>';
+        }
+
+        // returns: an HTML representation of the user with detailed extra info available in a subsidiary div (so it can be controlled via css
+        public function renderRich() {
+            $info = '<div class="rendered-object user-render user-render-rich user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'"><span class="render-main-info">'.$this->fname.' '.$this->lname.'</span>'
+                .'<div class="render-hover-info user-render-rich-details"><h4>'.$this->fname.' '.$this->lname.'</h4>';
+
+            $info .= '<i>'.$this->username.'</i><br/>';
+
+            $info .= $this->email.'<br/>';
+
+            if ($this->advisor) {
+                $info .= 'Advised by: '.$this->advisor.'<br/>';
+            }
+
+            if (! $this->inst_groups) {
+                $this->loadInstGroups();
+            }
+            if ($this->inst_groups) {
+                $info .= 'Member of: ';
+                $grouplist = '';
+                foreach ($this->inst_groups as $ig) {
+                    if ($grouplist) {
+                        $grouplist .= ', ';
+                    }
+                    $grouplist .= $ig->name;
+                }
+                $info .= $grouplist.'<br/>';
+            }
+
+            if ($this->notes) {
+                $info .= '<div class="user-notes">'.$this->notes.'</div>';
+            }
+
+            $info .= '</div></div>';
+
+            return $info;
+        }
+
 		public function loadInstGroups() {
 			//		echo "myuser_id=".$this->user_id;
 			//		if ($this->user_id == 1) {trigger_error('cannot load inst groups for a user where user_id=1');}
@@ -119,7 +167,8 @@
 			$this->comm_prefs = array();
 			$comm_prefs_ar    = CommPref::getAllFromDb(['user_id' => $this->user_id], $this->dbConnection);
 			if (!$comm_prefs_ar) {
-				trigger_error('there are NO existing comm_pref records for user_id=' . $this->user_id);
+				// trigger_error('there are NO existing comm_pref records for user_id=' . $this->user_id);
+                // CSW NOTE: I don't think this is an error situation at this point - the comm prefs array will simply be empty
 				return;
 			}
 			foreach ($comm_prefs_ar as $cp) {

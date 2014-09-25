@@ -29,9 +29,9 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
         $this->assertPattern('/"status":"success"/');
 
         $res_data_structure = json_decode($this->getBrowser()->getContent());
-        $this->assertEqual(count($res_data_structure->searchResults),9);
+        $this->assertEqual(count($res_data_structure->searchResults),10);
 
-//        $this->dump($res_data_structure);
+        //$this->dump($res_data_structure);
     }
 
 

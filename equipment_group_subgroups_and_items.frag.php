@@ -33,8 +33,8 @@
 		$key->loadEqItems();
 
 		# Items
-		echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"unstyled\">\n";
 		if (count($key->eq_items) == 0) {
+            echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"subgroup-ul hide unstyled\">\n";
 			# Subgroup Title
 			if ($USER->flag_is_system_admin || $is_group_manager) {
 				# button: edit subgroup
@@ -50,28 +50,29 @@
 			}
 		}
 		else {
+            echo "<ul id=\"ul-of-subgroup-" . $key->eq_subgroup_id . "\" class=\"subgroup-ul unstyled\">\n";
 			# Subgroup Title
 			if ($USER->flag_is_system_admin || $is_group_manager) {
 				# button: edit subgroup
 				echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 				# button: delete subgroup
-				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
+				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-subgroup-name=\"" . $key->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 			}
 			echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "</span>\n";
 
 
 			if ($key->flag_is_multi_select == 0) {
 				# Make easy to un-check a subgroup's items
-				echo "[<a class=\"uncheckSubgroupRadios cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]";
+				echo "<span class=\"subgroupRadiosControls hide\">[<a class=\"uncheckSubgroupRadios cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]</span>";
 			}
 			elseif ($key->flag_is_multi_select == 1) {
 				# Make easy to select a subgroup's checkbox items
-				echo "[<a class=\"checkSubgroupCheckboxes cursorPointer\" title=\"Select all items within this subgroup\">select all</a> | <a class=\"uncheckSubgroupCheckboxes cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]";
+				echo "<span class=\"subgroupCheckboxesControls hide\">[<a class=\"checkSubgroupCheckboxes cursorPointer\" title=\"Select all items within this subgroup\">select all</a> | <a class=\"uncheckSubgroupCheckboxes cursorPointer\" title=\"Clear selected items within this subgroup\">select none</a>]</span>";
 			}
 
 			foreach ($key->eq_items as $item) {
 				?>
-				<li id="list-of-item-<?php echo $item->eq_item_id; ?>" data-for-item-order="<?php echo $item->ordering; ?>">
+				<li id="list-of-item-<?php echo $item->eq_item_id; ?>" class="item-in-a-subgroup" data-for-item-order="<?php echo $item->ordering; ?>">
 
 					<label class="" for="item-<?php echo $item->eq_item_id; ?>">
 						<?php
@@ -79,7 +80,7 @@
 								# button: edit item
 								echo "<a id=\"btn-edit-item-id-" . $item->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $key->name . "\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" data-for-item-descr=\"" . $item->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 								# button: delete item
-								echo "<a id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $item->eq_item_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
+								echo "<a id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 							}
 							if ($key->flag_is_multi_select == 0) {
 								# radio: single select
@@ -90,6 +91,13 @@
 								echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"subgroup-" . $key->eq_subgroup_id . "-" . $item->eq_item_id . "\" value=\"" . $item->eq_item_id . "\"  class=\"reservationForm hide\" /> ";
 							}
 							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . "</span>\n";
+                            echo "<span id=\"itemImageSpanFor" . $item->eq_item_id . "\">";
+                            if ($item->image_file_name && ! $item->flag_image_to_be_uploaded) {
+                                echo "<br/><img src=\"item_image/".$item->image_file_name."\" id=\"itemImageFor" . $item->eq_item_id . "\" class=\"item-image\"  data-for-item-id=\"" . $item->eq_item_id . "\" />";
+                            } else {
+                                echo "<i>[no image available]</i>";
+                            }
+                            echo "</span>";
 						?>
 					</label>
 					<!--Placeholder: Save For Later Use: maybe utilize HighCharts bar graph?
@@ -464,6 +472,16 @@
 					<input type="text" id="ajaxItemDescription" class="input-xlarge" name="ajaxItemDescription" value="" placeholder="Description of Item" maxlength="200" />
 				</div>
 			</div>
+            <div class="control-group">
+                <label class="control-label" for="ajaxItemImage">Image (40K size limit)</label>
+
+                <div class="controls">
+                    <input type="file" id="ajaxItemImage" class="input-xlarge" name="ajaxItemImage" value="" placeholder="Image of Item" maxlength="200" />
+<!--                    <input type="text" id="ajaxItemImage" class="input-xlarge" name="ajaxItemImage" value="" placeholder="Image of Item" maxlength="200" /> -->
+                    <input type="button" class="btn btn-danger pull-right" name="remove-item-image" id="remove-item-image" value="Remove Image" />
+                </div>
+            </div>
+            <div id="item-image-preview-area"></div>
 		</div>
 		<div class="modal-footer">
 			<button type="submit" id="btnAjaxItemSubmit" name="btnAjaxItemSubmit" class="btn btn-success pull-left" data-loading-text="Saving...">

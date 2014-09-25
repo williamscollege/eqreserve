@@ -279,7 +279,6 @@
 			$this->assertNoPattern('/success/i');
 		}
 
-
 		function testOverrideConflictWithRepeatingSingleItemOnScheduleOfTypeConsumerByManager() {
 			$this->signIn();
 
@@ -325,10 +324,9 @@
 			$this->assertPattern('/success/i');
 		}
 
-		function testOverrideConflictWithRepeatingMultipleItemOnScheduleOfTypeConsumerByManager() {
-			// TODO -- is this a redundant test??
-			$this->fail("to be implemented");
-		}
+//		function testOverrideConflictWithRepeatingMultipleItemOnScheduleOfTypeConsumerByManager() {
+//            // I don't think that this tests anything different than the test above, though I could be wrong so I'm leaving this placeholder here...
+//		}
 
 		function testOverrideConflictWithRepeatingSingleItemOnScheduleOfTypeConsumerByNonManager() {
 			$this->signIn();

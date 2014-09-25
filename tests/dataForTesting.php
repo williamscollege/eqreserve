@@ -108,29 +108,30 @@
 	}
 
 	function createTestData_EqItems($dbConn) {
-		# EqItem: 'eq_item_id', 'eq_subgroup_id', 'name','descr','ordering','flag_delete'
+		# EqItem: 'eq_item_id', 'eq_subgroup_id', 'name','descr','image_file_name','flag_image_to_be_uploaded','ordering','flag_delete'
 		$addTestEqItemsSql  = "INSERT INTO " . EqItem::$dbTable . " VALUES
-        (401,301,'testItem1','normal',1,0),
-        (402,301,'testItem2','normal',2,0),
-        (403,301,'testItem3','same priority as prev',2,0),
-        (404,301,'testItem4','normal',3,0),
-        (405,301,'testItem5','deleted',4,1),
-        (406,302,'testItem1','same name, different subgroup',1,0),
-        (407,305,'testItem6','subgroup is deleted',1,0),
-        (408,307,'testItem7','group is deleted',1,0),
-        (409,306,'testItem8','normal',10,0),
-        (410,308,'testItem9','normal',20,0),
-        (411,306,'testItem10','normal',12,0),
-        (412,302,'testItem11','another item, different subgroup',25,0),
-        (413,309,'testItem12','another item, different subgroup',1,0),
-        (414,310,'testItem13','normal',21,0),
-        (415,309,'testItem14','another item, same subgroup',2,0)
+        (401,301,'testItem1','normal','',0,1,0),
+        (402,301,'testItem2','normal','',0,2,0),
+        (403,301,'testItem3','same priority as prev','',0,2,0),
+        (404,301,'testItem4','normal','',0,3,0),
+        (405,301,'testItem5','deleted','',0,4,1),
+        (406,302,'testItem1','same name, different subgroup','',0,1,0),
+        (407,305,'testItem6','subgroup is deleted','',0,1,0),
+        (408,307,'testItem7','group is deleted','',0,1,0),
+        (409,306,'testItem8','normal','',0,10,0),
+        (410,308,'testItem9','normal','',0,20,0),
+        (411,306,'testItem10','normal','',0,12,0),
+        (412,302,'testItem11','another item, different subgroup','',0,25,0),
+        (413,309,'testItem12','another item, different subgroup','',0,1,0),
+        (414,310,'testItem13','normal','',0,21,0),
+        (415,309,'testItem14','another item, same subgroup','',0,2,0)
     ";
 		$addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
 		$addTestEqItemsStmt->execute();
 		if ($addTestEqItemsStmt->errorInfo()[0] != '0000') {
 			echo "<pre>error adding test EqItems data to the DB\n";
-			print_r($addTestEqItemsStmt->errorInfo());
+            print_r($addTestEqItemsStmt->errorInfo());
+            echo "\n".$addTestEqItemsSql."\n";
 			debug_print_backtrace();
 			exit;
 		}
