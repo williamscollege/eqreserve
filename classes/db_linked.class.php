@@ -502,6 +502,7 @@
 				$updateSql = 'UPDATE ' . static::$dbTable . ' SET ' . static::$primaryKeyField . '=' . $this->fieldValues[static::$primaryKeyField];
 				foreach (static::$fields as $k) {
 					if ($k != static::$primaryKeyField) {
+						// TODO - Add sanitizeFieldName fxn to db_linked.class.php (or, simply, replace this db_linked class with the newer class version from Scheduler or DigitalFieldNotesbooks; should work fine :)
 						$updateSql .= ', ' . $k . ' = :' . $k;
 					}
 				}
