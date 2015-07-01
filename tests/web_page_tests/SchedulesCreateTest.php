@@ -3,7 +3,8 @@
 
 	class SchedulesCreateTest extends WMSWebTestCase {
 
-		private $urlbase = 'http://localhost/eqreserve/ajax_actions/ajax_schedule_reservations.php';
+        //private $urlbase = 'http://localhost'.LOCAL_WEBSERVER_PORT_SPEC'/eqreserve/ajax_actions/ajax_schedule_reservations.php';
+		private $urlbase = 'http://localhost:8888/eqreserve/ajax_actions/ajax_schedule_reservations.php';
 
 		function setUp() {
 			createAllTestData($this->DB);
@@ -16,7 +17,7 @@
 		//############################################################
 
 		function signIn() {
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
 			$this->click('Sign in');

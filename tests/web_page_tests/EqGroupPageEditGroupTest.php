@@ -17,7 +17,7 @@
 			# update test user to have system admin role
 			makeAuthedTestUserAdmin($this->DB);
 
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -26,7 +26,7 @@
 
 		public function _loginUser() {
 			# user is a regular user (not admin!)
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -37,7 +37,8 @@
 			$this->_loginAdmin();
 			$this->assertResponse(200);
 
-			$this->get('http://localhost/eqreserve/equipment_group.php');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php');
+
 			$this->assertPattern('/Equipment Group/', 'Indicates redirect to home page.');
 		}
 
@@ -46,7 +47,7 @@
 			$this->_loginAdmin();
 			$this->assertResponse(200);
 
-			$this->get('http://localhost/eqreserve/equipment_group.php?eid=201');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
 
 //			$this->dump($this->getBrowser()->getContent());
 //            exit;
@@ -67,7 +68,7 @@
 			$this->_loginUser();
 			$this->assertResponse(200);
 
-			$this->get('http://localhost/eqreserve/equipment_group.php?eid=201');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
 
 			$this->assertText("Equipment Group");
 			$this->assertText("Description");
@@ -93,15 +94,20 @@
 		}
 
 		function TestNonAdminNoAccessToGroup() {
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
 			$this->click('Sign in');
 			$this->assertResponse(200);
 
-			$this->get('http://localhost/eqreserve/equipment_group.php?eid=208');
+            //exit;
 
-			$this->assertPattern("/FAILED/i");
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=208');
+
+//            util_prePrintR($this);
+
+
+            $this->assertPattern("/FAILED/i");
 		}
 
 	}

@@ -20,7 +20,7 @@ class IndexPageDBTest extends WMSWebTestCase {
 	}
 
     function testInstGroupMembershipCreatedOnLogIn() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->assertCookie('PHPSESSID');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);

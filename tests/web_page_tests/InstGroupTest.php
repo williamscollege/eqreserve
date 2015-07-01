@@ -14,11 +14,11 @@ class InstGroupTest extends WMSWebTestCase {
     //############################################################
 
 	function getToInstGroupPage() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         $this->click('Sign in');
-        $this->get('http://localhost/eqreserve/inst_group.php?inst_group=501');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/inst_group.php?inst_group=501');
 	}
 
     function testAccessInstGroup() {
@@ -31,7 +31,7 @@ class InstGroupTest extends WMSWebTestCase {
 
     function testBlockAccessInstGroup() {
         $this->getToInstGroupPage();
-        $this->get('http://localhost/eqreserve/inst_group.php?inst_group=502');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/inst_group.php?inst_group=502');
 
         $this->assertResponse(200);
         $this->assertNoText('testInstGroup1');

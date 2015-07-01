@@ -25,7 +25,8 @@ class TestOfUtil extends UnitTestCase {
         $_SESSION['fingerprint'] = 'bar';
         $_SESSION['userdata'] = array('baz');
 
-		$this->expectError("Cannot modify header information - headers already sent");
+//		$this->expectError("Cannot modify header information - headers already sent");
+		$this->expectError(new PatternExpectation("/^Cannot modify header information - headers already sent/"));
 
         util_wipeSession();
 
@@ -98,3 +99,4 @@ class TestOfUtil extends UnitTestCase {
     }
 
 }
+?>

@@ -1,0 +1,33 @@
+1. fclose() error
+    Had to enable apache, specifically on a Mac, to be used for MAMP.
+    Enabled using command sudo apachectl -start in terminal.
+
+2. Errors regarding port
+    Error with IndexPageLoadTest.php
+    localhost/eqreserve was not being recognized. It had to be fixed to be localhost:8888/eqreserve.
+    Recursively replaced all of these instances in the files to be port :8888 instead of port :80 by creating
+    LOCAL_WEBSERVER_PORT_SPEC defined as :8888 in institution.cfg.php.
+    After that, rather than localhost:8888/eqreserve/index.php, was being redirected to localhost/eqreserve/index.php
+    and thus was getting 404 error. Inserted :8888 for APP_FOLDER path in institution.cfg.php file.
+
+    Error in /tests/web_page_tests/SchedulesCreateTest.php
+    Insertion of LOCAL_WEBSERVER_PORT_SPEC variable in $urlbase not allowed ("expression not allowed as default field value")
+    resulting in a 500 error so manually inserted localhost:8888 into $urlbase.
+
+3. Header modification error
+    PHP error messages similar to : "Cannot modify header information - headers already sent by
+    (output started at /Applications/MAMP/htdocs/eqreserve/head.php:77) in /Applications/MAMP/htdocs/eqreserve/util.php on line 46"
+
+    Made a TestOfNarrowSuite.php to check for specific errors. Tested one file at a time rather than all at once.
+
+    Split into head_pre_output.php and head_output.php. Problem was being redirected at points while data was being outputted.
+    Thus split head.php so that head_pre_output.php has the necessary functions to run basically for set up and then
+    head_output.php starts the output. This way, redirects do not have to both with interfering with header output.
+    Refactored head.php to be head_pre_output.php and added head_output.php to files that required head_pre_output.php
+    (made use of grep command in terminal). Place head_output.php after any redirects.
+
+4. Database errors
+    Several errors connected to AjaxUserAndGroupSearchTest.php (specifically testSearchUserAndGroupAccess)
+    related to database and SQL. Expected 10 test users but returned 11 because testing user that we have used to sign in
+    also has the string "test" in it. Changed to check the testing user for the string and if the testing user contains
+    "test" then expect 11 users.

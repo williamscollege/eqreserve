@@ -14,7 +14,7 @@ class CommandLineBlockedTest extends WMSWebTestCase {
     //############################################################
 
     function testNoAccessToCommandLineScripts() {
-        $this->get('http://localhost/eqreserve/command_line_scripts/cl_head.php');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/command_line_scripts/cl_head.php');
         $this->assertEqual('no web access to this script',$this->getBrowser()->getContent());
 
 

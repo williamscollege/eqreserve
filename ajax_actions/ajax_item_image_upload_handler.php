@@ -1,7 +1,7 @@
 <?php
 require_once('../classes/eq_item.class.php');
 
-require_once('/head_ajax.php');
+require_once('head_ajax.php');
 
 /**
  * Created by JetBrains PhpStorm.

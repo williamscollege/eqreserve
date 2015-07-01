@@ -17,7 +17,7 @@
 			# update test user to have system admin role
 			makeAuthedTestUserAdmin($this->DB);
 
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -26,7 +26,7 @@
 
 		public function _loginUser() {
 			# user is a regular user (not admin!)
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
@@ -37,7 +37,7 @@
 			$this->_loginUser();
 			$this->assertResponse(200);
 
-			$this->get('http://localhost/eqreserve/equipment_group.php?eid=201');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
 			$this->assertResponse(200);
 
 //			$this->assertText("testEqGroup1");
@@ -62,7 +62,7 @@
             $this->assertText('(MANAGEMENT) 2013/3/25 6:00-7:00 PM by you');
             $this->assertText('2013/3/26 6:00-7:00 PM by user removed from system: tu3F tu3L');
 
-            $this->get('http://localhost/eqreserve/equipment_group.php?eid=202');
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=202');
             $this->assertResponse(200);
 
             $this->assertText('Existing Reservations');

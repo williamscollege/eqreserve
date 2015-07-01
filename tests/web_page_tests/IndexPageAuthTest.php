@@ -12,14 +12,14 @@ class IndexPageAuthTest extends WMSWebTestCase {
 	}
 
 	function testIndexNotLoggedIn() {
-		$this->get('http://localhost/eqreserve/');
+		$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->assertCookie('PHPSESSID');
 		$this->assertField('username'); //$value
 		$this->assertField('password'); //$value
 	}
 
     function testIndexLoggingIn() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->assertCookie('PHPSESSID');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
@@ -35,7 +35,7 @@ class IndexPageAuthTest extends WMSWebTestCase {
     }
 
     function testIndexFailLoggingIn() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->assertCookie('PHPSESSID');
         $this->setField('username', TESTINGUSER.'foo');
         $this->setField('password', TESTINGPASSWORD.'foo');
@@ -46,7 +46,7 @@ class IndexPageAuthTest extends WMSWebTestCase {
     }
 
     function testIndexLoggingOut() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         $this->click('Sign in');
@@ -68,7 +68,7 @@ class IndexPageAuthTest extends WMSWebTestCase {
 
 /*    
     function testGetEQGroups() {
-    	$this->get('http://localhost/eqreserve/');
+    	$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
     	$this->setField('username', TESTINGUSER);
     	$this->setField('password', TESTINGPASSWORD);
     	$this->click('Sign in');

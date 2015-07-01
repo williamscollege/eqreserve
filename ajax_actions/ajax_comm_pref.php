@@ -3,7 +3,7 @@
 	require_once('../classes/reservation.class.php');
 	require_once('../classes/time_block.class.php');
 
-	require_once('/head_ajax.php');
+	require_once('head_ajax.php');
 
 	#------------------------------------------------#
     $comm_pref      = (isset($_REQUEST["comm_pref"])) ? $_REQUEST["comm_pref"] : 0;

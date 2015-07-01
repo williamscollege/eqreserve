@@ -15,6 +15,7 @@ temp
 .htaccess
 .htpasswd
 tests/TestNarrowSuite.php
+tests/TestOfNarrowSuite.php
 item_image/*.jpg
 item_image/*.png
 item_image/*.gif
