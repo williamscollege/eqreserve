@@ -27,7 +27,7 @@
 			$u1->flag_is_system_admin = TRUE;
 			$u1->updateDb();
 
-			$this->get('http://localhost/eqreserve/');
+			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
 			$this->setField('username', TESTINGUSER);
 			$this->setField('password', TESTINGPASSWORD);
 			$this->click('Sign in');

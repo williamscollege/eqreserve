@@ -14,7 +14,7 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
     //############################################################
 
     function signIn() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         $this->click('Sign in');
@@ -24,12 +24,18 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
     function testSearchUserAndGroupAccess() {
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=test');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=test');
 
         $this->assertPattern('/"status":"success"/');
 
         $res_data_structure = json_decode($this->getBrowser()->getContent());
-        $this->assertEqual(count($res_data_structure->searchResults),10);
+        $expected_number = 10;
+
+        if (strpos(TESTINGUSER,'test')) {
+            $expected_number++;
+        }
+
+        $this->assertEqual(count($res_data_structure->searchResults),$expected_number);
 
         //$this->dump($res_data_structure);
     }
@@ -39,7 +45,7 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
     function testSearchUserAndGroupLDAPFindOne() {
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=cwarren');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=cwarren');
 
         $this->assertPattern('/"status":"success"/');
 
@@ -53,7 +59,7 @@ class AjaxUserAndGroupSearchTest extends WMSWebTestCase {
     function testSearchUserAndGroupLDAPFindSeveral() {
         $this->signIn();
 
-        $this->get('http://localhost/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=warren');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/ajax_actions/ajax_user_and_group_search.php?action=find&searchTerm=warren');
 
         $this->assertPattern('/"status":"success"/');
 

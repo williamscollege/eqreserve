@@ -1,6 +1,6 @@
 <?php
 	$pageTitle = 'Account Management';
-	require_once('head.php');
+	require_once('head_pre_output.php');
 
 	$for_user = $USER;
 	if ((isset($_REQUEST['user'])) && ($_REQUEST['user'] != $USER->user_id)) {
@@ -13,6 +13,8 @@
 			util_redirectToAppHome('failure', 53);
 		}
 	}
+
+require_once('head_output.php');
 ?>
 	<script type="text/javascript">
 		$(document).ready(function () {

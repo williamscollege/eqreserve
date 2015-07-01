@@ -1,6 +1,6 @@
 <?php
 	$pageTitle = 'Institution Group';
-	require_once('head.php');
+	require_once('head_pre_output.php');
 
     $ig_ids = array_map(function($ig){return $ig->inst_group_id;},$USER->inst_groups);
     if ((! $USER->flag_is_system_admin) && (! in_array($_REQUEST['inst_group'],$ig_ids))) {
@@ -10,6 +10,7 @@
     $INST_GROUP = InstGroup::getOneFromDb(['inst_group_id' => $_REQUEST['inst_group']],$DB);
     $INST_GROUP->loadEqGroups();
 
+    require_once('head_output.php');
 ?>
 
     <legend><?php echo $INST_GROUP->name; ?></legend>

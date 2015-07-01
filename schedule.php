@@ -1,6 +1,6 @@
 <?php
 	$pageTitle = 'Schedule and Reservations';
-	require_once('head.php');
+	require_once('head_pre_output.php');
 
 	$SCHED = Schedule::getOneFromDb(['schedule_id' => $_REQUEST['schedule']], $DB);
 	if ((!$USER->flag_is_system_admin) && ($SCHED->user_id != $USER->user_id)) {
@@ -8,6 +8,8 @@
 	}
 
 	$SCHED->loadReservationsDeeply();
+
+    require_once('head_output.php');
 ?>
 	<script type="text/javascript">
 		var headToOnScheduleGone = '<?php echo (isset($_REQUEST["returnToEqGroup"]))?('equipment_group.php?eid='.$SCHED->reservations[0]->eq_item->eq_group->eq_group_id):'account_management.php'; ?>';

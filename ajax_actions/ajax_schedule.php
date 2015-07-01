@@ -4,7 +4,7 @@
 	require_once('../classes/time_block.class.php');
 	require_once('../classes/queued_message.class.php');
 
-	require_once('/head_ajax.php');
+	require_once('head_ajax.php');
 
 	#------------------------------------------------#
 	$schedule  = (isset($_REQUEST["schedule"])) ? $_REQUEST["schedule"] : 0;

@@ -1,6 +1,7 @@
 <?php
 	$pageTitle = 'Manage Groups and Users';
-	require_once('head.php');
+	require_once('head_pre_output.php');
+    require_once('head_output.php');
 ?>
 
 

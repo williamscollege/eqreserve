@@ -14,7 +14,7 @@ class AcctMgtTest extends WMSWebTestCase {
     //############################################################
 
 	function getToAcctMgtPage() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         $this->click('Sign in');

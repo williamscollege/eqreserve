@@ -14,7 +14,7 @@ class ScheduleTest extends WMSWebTestCase {
     //############################################################
 
     function signIn() {
-        $this->get('http://localhost/eqreserve/');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/');
         $this->setField('username', TESTINGUSER);
         $this->setField('password', TESTINGPASSWORD);
         $this->click('Sign in');
@@ -22,7 +22,7 @@ class ScheduleTest extends WMSWebTestCase {
 
 	function getToSchedulePage() {
         $this->signIn();
-        $this->get('http://localhost/eqreserve/schedule.php?schedule=1001');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/schedule.php?schedule=1001');
 	}
 
     function testAccessSchedule() {
@@ -39,7 +39,7 @@ class ScheduleTest extends WMSWebTestCase {
 
     function testManagerSchedule() {
         $this->signIn();
-        $this->get('http://localhost/eqreserve/schedule.php?schedule=1006');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/schedule.php?schedule=1006');
 
         $this->assertResponse(200);
         $this->assertNoPattern('/FAILED/i');
@@ -48,7 +48,7 @@ class ScheduleTest extends WMSWebTestCase {
 
     function testBlockAccessSchedule() {
         $this->signIn();
-        $this->get('http://localhost/eqreserve/schedule.php?schedule=1009');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/schedule.php?schedule=1009');
 
         $this->assertResponse(200);
         $this->assertNoText('2013/3/22 3:00-3:45 PM');
@@ -60,12 +60,12 @@ class ScheduleTest extends WMSWebTestCase {
         $this->signIn();
 
         // indirect manager
-        $this->get('http://localhost/eqreserve/schedule.php?schedule=1006');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/schedule.php?schedule=1006');
         $this->assertNoPattern('/FAILED/i');
         $this->assertPattern('/id=\"sched-is-manager-btn\"/i');
 
         // not a manager
-        $this->get('http://localhost/eqreserve/schedule.php?schedule=1010');
+        $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/schedule.php?schedule=1010');
         $this->assertNoPattern('/FAILED/i');
         $this->assertNoPattern('/id=\"sched-is-manager-btn\"/i');
     }

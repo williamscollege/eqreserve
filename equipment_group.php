@@ -1,9 +1,10 @@
 <?php
 	$pageTitle = 'Edit Equipment Group';
-	require_once('head.php');
-	require_once('/classes/eq_group.class.php');
+    require_once('head_pre_output.php');
+	require_once('classes/eq_group.class.php');
 
-	if (!$IS_AUTHENTICATED) { // this may be redundant w/ the checking in head.php
+
+	if (!$IS_AUTHENTICATED) { // this may be redundant w/ the checking in head_pre_output.php
 		exit;
 	}
 
@@ -27,8 +28,7 @@
 			$is_group_manager = TRUE;
 			//			echo "<pre>Requested_EqGroup:"; print_r($Requested_EqGroup); echo "</pre>";
 		}
-	}
-	else {
+	} else {
 		// does user have permission to access this group?
 		$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
 		foreach ($UserEqGroups as $ueg) {
@@ -100,6 +100,7 @@
 	//        $consumers = array_merge($consumers,$consumer_inst_groups);
 	//    }
 
+require_once('head_output.php');
 ?>
 	<script type="text/javascript" src="js/equipment_group.js"></script>
 	<script type="text/javascript" src="js/equipment_group_permissions_management.js"></script>

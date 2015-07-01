@@ -1,7 +1,8 @@
 <?php
 	$pageTitle = 'Home';
-	require_once('head.php');
-	require_once('/classes/eq_group.class.php');
+	require_once('head_pre_output.php');
+    require_once('head_output.php');
+    require_once('classes/eq_group.class.php');
 
 
 	if ($IS_AUTHENTICATED) {
@@ -89,7 +90,7 @@
 						});
 
 					}
-				})
+				});
 
 
 				// ***************************
@@ -109,7 +110,7 @@
 					$("#btnSubmitAddEqGroup").button('reset');
 				}
 
-			});
+			})
 		</script>
 
 
