@@ -1,33 +1,83 @@
+Setting Up
+1. Save all .sample files with the same name without .sample. (ex: institution.cfg.php.sample --> institution.cfg.php)
+
+2. Get auth.cfg.php and institution.cfg.php info from Chris and replace corresponding information.
+
+3. Information in institution.cfg.php
+    --INSTITUTION_DOMAIN: williams.edu
+    --FINGERPRINT_SALT: used for security measure so just hit the keyboard for 50 random characters and use that as the
+    string
+    --DB_SERVER and TESTING_DB_SERVER: localhost (or whatever is being used for MAMP/XAMPP)
+    --TESTINGPASSWORD: similar to FINGERPRINT_SALT so hit the keyboard for a while
+
+4. Create a database (this will create the info for DB_NAME, DB_USER, DB_PASS in institution.cfg.php) in phpMyAdmin (MAMP/XAMPP).
+    --Make a database called eqreserve (or the DB_NAME in institution.cfg.php)
+    --Create a new user called eqreserveweb (or the DB_USER in institution.cfg.php).
+    --Make a random password and use that as the DB_PASS. Don't use anything personal.
+    --Add that user to the eqreserve database and only give it basic SELECT, INSERT, UPDATE, DELETE privileges.
+
+    Add information to the database using information in db_setup.
+    --Copy all the queries in schema.sql and paste into SQL tab in the database.
+    --Use eqreserve database instead of eqreservetest database in schema.sql.
+    --Copy all the queries in testing_schema.sql and paste into SQL tab in the database.
+    --Now testing data is added to eqreserve!
+
+5. Run localhost:8888/eqreserve/tests/TestOfAllSuite.php to see the errors.
+
+==================================================================================================================================
+
+Errors Encountered
+--To take closer look at errors, open the apache and php error logs.
+--Handy terminal command to look for keywords is grep.
+--Handy function to print within the code is util_prePrintR(obj); which prints the behind the scenes code in a nice format.
+--Dump is also handy (ex: $this->dump($this->getBrowser()->getContent()); if getting info that is printed into browser or
+just dump(obj) if it is related to infrastructure) to view what is happening behind the scenes.
+
 1. fclose() error
     Had to enable apache, specifically on a Mac, to be used for MAMP.
     Enabled using command sudo apachectl -start in terminal.
 
-2. Errors regarding port
-    Error with IndexPageLoadTest.php
-    localhost/eqreserve was not being recognized. It had to be fixed to be localhost:8888/eqreserve.
-    Recursively replaced all of these instances in the files to be port :8888 instead of port :80 by creating
+2. Port Errors
+    Error with /tests/web_page_tests/IndexPageLoadTest.php
+    --localhost/eqreserve not being recognized because it is using port 80. It has to be fixed to be localhost:8888/eqreserve.
+    To solve, recursively replace all of these instances in the files to be port :8888 instead of port :80 by creating
     LOCAL_WEBSERVER_PORT_SPEC defined as :8888 in institution.cfg.php.
-    After that, rather than localhost:8888/eqreserve/index.php, was being redirected to localhost/eqreserve/index.php
-    and thus was getting 404 error. Inserted :8888 for APP_FOLDER path in institution.cfg.php file.
+    Can easily recursively replace all instances of localhost with localhost:8888 with Chris' program (gsr).
+    --localhost:8888/eqreserve/index.php redirects to localhost/eqreserve/index.php and thus creates 404 error.
+    To solve, replace localhost with localhost:8888 for APP_FOLDER path in institution.cfg.php file.
 
-    Error in /tests/web_page_tests/SchedulesCreateTest.php
-    Insertion of LOCAL_WEBSERVER_PORT_SPEC variable in $urlbase not allowed ("expression not allowed as default field value")
-    resulting in a 500 error so manually inserted localhost:8888 into $urlbase.
+    Error with /tests/web_page_tests/SchedulesCreateTest.php
+    --Insertion of LOCAL_WEBSERVER_PORT_SPEC variable in $urlbase not allowed ("expression not allowed as default field value")
+    resulting in a 500 error.
+    To solve, manually insert localhost:8888 into $urlbase.
 
-3. Header modification error
+3. require_once errors
+    --require_once('/head_ajax.php') not recognized in the ajax_action files.
+    To solve, change to require_once('head_ajax.php').
+    --Same with require_once('/classes/eq_group.class.php') in equipment_group.php.
+
+4. Header modification error
     PHP error messages similar to : "Cannot modify header information - headers already sent by
     (output started at /Applications/MAMP/htdocs/eqreserve/head.php:77) in /Applications/MAMP/htdocs/eqreserve/util.php on line 46"
+    This is saying that output was already being given starting in the head.php but util.php is trying to output due
+    to a redirect command while head.php still has more output.
 
-    Made a TestOfNarrowSuite.php to check for specific errors. Tested one file at a time rather than all at once.
+    To debug this error, make a TestOfNarrowSuite.php to check for specific errors to narrow down where the error is.
+    Tests one file at a time rather than all at once. Add to .gitignore before committing changes.
 
-    Split into head_pre_output.php and head_output.php. Problem was being redirected at points while data was being outputted.
-    Thus split head.php so that head_pre_output.php has the necessary functions to run basically for set up and then
-    head_output.php starts the output. This way, redirects do not have to both with interfering with header output.
-    Refactored head.php to be head_pre_output.php and added head_output.php to files that required head_pre_output.php
-    (made use of grep command in terminal). Place head_output.php after any redirects.
+    To solve, split head.php so that head_pre_output.php has the necessary functions to run basically for set up (such as authentication)
+    and then head_output.php starts the output. This way, redirects will not interfere with header output.
 
-4. Database errors
-    Several errors connected to AjaxUserAndGroupSearchTest.php (specifically testSearchUserAndGroupAccess)
-    related to database and SQL. Expected 10 test users but returned 11 because testing user that we have used to sign in
-    also has the string "test" in it. Changed to check the testing user for the string and if the testing user contains
-    "test" then expect 11 users.
+    Copy head.php to make head_output.php. Should include only output.
+    Refactor head.php to be head_pre_output.php (right click, choose refactor, and rename). This will replace all instances
+    of head.php with head_pre_output.php in all files. Change the file so that head_pre_output.php only includes pre output
+    commands. Then add head_output.php to files that require head_pre_output.php (make use of grep command in terminal) or
+    else the file doesn't have the complete head.php file.
+    ***Make sure to place head_output.php after redirects in the code.***
+
+5. Database errors
+    Several errors connected to AjaxUserAndGroupSearchTest.php (specifically testSearchUserAndGroupAccess function)
+    related to database and SQL
+    --Expects 10 test users but returns 11 because testing user that we have used to sign in also has the string "test"
+    in it (TESTINGUSER defined as thetestinguser in institution.cfg.php). Write code to check the testing user for
+    "test" and if the testing user contains the string then expect 11 users.
