@@ -12,8 +12,9 @@ Setting Up
 
 4. Create a database (this will create the info for DB_NAME, DB_USER, DB_PASS in institution.cfg.php) in phpMyAdmin (MAMP/XAMPP).
     --Make a database called eqreserve (or the DB_NAME in institution.cfg.php)
-    --Create a new user called eqreserveweb (or the DB_USER in institution.cfg.php).
+    --Create a new user called eqreserveweb (or the DB_USER in institution.cfg.php). Host should be localhost, not any host.
     --Make a random password and use that as the DB_PASS. Don't use anything personal.
+    --Do not grant all privileges (uncheck it!)
     --Add that user to the eqreserve database and only give it basic SELECT, INSERT, UPDATE, DELETE privileges.
 
     Add information to the database using information in db_setup.
