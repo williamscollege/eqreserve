@@ -33,6 +33,17 @@
 			$this->click('Sign in');
 		}
 
+        function TestOfReservationRulesDisplayed(){
+            $this->_loginUser();
+            $this->assertResponse(200);
+
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+            $this->assertResponse(200);
+
+            $this->assertText('Reservation Time Restrictions');
+            $this->assertText('Can be reserved for 15 minutes min., 60 minutes max., starting on the 0,15,30,45 hour for 15 minute intervals');
+        }
+
 		function TestOfDataExpectedForReservations() {
 			$this->_loginUser();
 			$this->assertResponse(200);
