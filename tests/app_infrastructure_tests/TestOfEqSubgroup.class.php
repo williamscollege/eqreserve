@@ -17,6 +17,21 @@
             removeTestData_EqItems($this->DB);
 		}
 
+        //###################################
+        // class structure tests
+
+        function testEqSubgroupFieldPresenceAndOrder(){
+            $this->assertEqual(7,count(EqSubgroup::$fields));
+
+            $this->assertEqual('eq_subgroup_id',EqSubgroup::$fields[0]);
+            $this->assertEqual('eq_group_id',EqSubgroup::$fields[1]);
+            $this->assertEqual('name',EqSubgroup::$fields[2]);
+            $this->assertEqual('descr',EqSubgroup::$fields[3]);
+            $this->assertEqual('ordering',EqSubgroup::$fields[4]);
+            $this->assertEqual('flag_is_multi_select',EqSubgroup::$fields[5]);
+            $this->assertEqual('flag_delete',EqSubgroup::$fields[6]);
+        }
+
 		//###################################
 		// basic db interaction
 

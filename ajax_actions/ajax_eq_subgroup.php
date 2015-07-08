@@ -31,6 +31,7 @@
 	#------------------------------------------------#
 	//###############################################################
 	if ($strAction == 'add-subgroup') {
+
 		$esg = EqSubgroup::getOneFromDb(['name' => $strName], $DB);
 
 		if ($esg->matchesDb) {

@@ -251,10 +251,10 @@
 			//		print_r($identHash);
 
 			$fetchSql = static::buildFetchSql($identHash);
-			//            echo '<pre>';
-			//            print_r($identHash);
-			//		    echo "\n$fetchSql\n";
-			//            echo'</pre>';
+//			            echo '<pre>';
+//			            print_r($identHash);
+//					    echo "\n$fetchSql\n";
+//			            echo'</pre>';
 
 			$fetchStmt = $usingDb->prepare($fetchSql);
 

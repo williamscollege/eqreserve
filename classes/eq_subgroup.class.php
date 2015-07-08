@@ -4,7 +4,7 @@
 	require_once dirname(__FILE__) . '/eq_item.class.php';
 
 	class EqSubgroup extends Db_Linked {
-		public static $fields = array('eq_subgroup_id', 'eq_group_id', 'name', 'descr', 'ordering', 'flag_delete', 'flag_is_multi_select');
+		public static $fields = array('eq_subgroup_id', 'eq_group_id', 'name', 'descr', 'ordering', 'flag_is_multi_select', 'flag_delete');
 		public static $primaryKeyField = 'eq_subgroup_id';
 		public static $dbTable = 'eq_subgroups';
 

@@ -8,7 +8,6 @@ Setting Up
     --FINGERPRINT_SALT: used for security measure so just hit the keyboard for 50 random characters and use that as the
     string
     --DB_SERVER and TESTING_DB_SERVER: localhost (or whatever is being used for MAMP/XAMPP)
-    --TESTINGPASSWORD: similar to FINGERPRINT_SALT so hit the keyboard for a while
 
 4. Create a database (this will create the info for DB_NAME, DB_USER, DB_PASS in institution.cfg.php) in phpMyAdmin (MAMP/XAMPP).
     --Make a database called eqreserve (or the DB_NAME in institution.cfg.php)
@@ -58,7 +57,10 @@ just dump(obj) if it is related to infrastructure) to view what is happening beh
     --Same with require_once('/classes/eq_group.class.php') in equipment_group.php.
 
 4. Header modification error
-    PHP error messages similar to : "Cannot modify header information - headers already sent by
+    --"Equal expectation fails" even though the string is part of the string you are comparing to.
+    To solve, insert a PatternExpectation.
+
+    --PHP error messages similar to : "Cannot modify header information - headers already sent by
     (output started at /Applications/MAMP/htdocs/eqreserve/head.php:77) in /Applications/MAMP/htdocs/eqreserve/util.php on line 46"
     This is saying that output was already being given starting in the head.php but util.php is trying to output due
     to a redirect command while head.php still has more output.
