@@ -50,5 +50,19 @@
 		}
 	?>
 </ul>
-
 </div>
+
+<div>
+    <?php
+    echo draw_MonthlyCalendar(7,2015);
+    ?>
+</div>
+<div>
+    <?php
+    $items = array("things","other things","more things");
+    echo draw_SingleDayCalendar(7,2015,10,$items);
+    ?>
+</div>
+
+//calendar for displaying schedule
+

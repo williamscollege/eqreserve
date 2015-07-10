@@ -142,6 +142,14 @@
 //			exit;
 		}
 
+        public function TestOfGetAllItems() {
+            $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
+
+            $eg->getAllItems();
+            util_prePrintR($eg) ;
+
+        }
+
 
         //############################################################################
         // instance method tests
@@ -155,6 +163,7 @@
 
             // testing this
             $eg->loadEqSubgroups();
+
 
 //exit;
 

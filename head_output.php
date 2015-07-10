@@ -20,6 +20,7 @@
 	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
 	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_TIMEPICKER_CSS; ?>" type="text/css" media="all">
 	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css/calendar.css" type="text/css">
 	<!-- jQuery: Framework -->
 	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
 	<script src="<?php echo PATH_JQUERYUI_JS; ?>"></script>

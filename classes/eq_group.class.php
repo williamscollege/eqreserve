@@ -168,6 +168,11 @@
 			return self::getAllEqGroupsForNonAdminUser($user);
 		}
 
+        public function getAllItems(){
+            $this->loadEqItems();
+            return $this->eq_items;
+        }
+
 		//##################################################
 		// instance functions
 

@@ -6,6 +6,7 @@
 	require_once('classes/user.class.php');
 	require_once('auth.cfg.php');
 	require_once('util.php');
+    require_once('calendar_util.php');
 
 	$FINGERPRINT = util_generateRequestFingerprint(); // used to prevent/complicate session hijacking ands XSS attacks
 

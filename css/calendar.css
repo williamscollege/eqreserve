@@ -1,0 +1,9 @@
+table.calendar { border-left:1px solid #999; }
+tr.calendar-row {}
+td.calendar-day { min-height:200px; font-size:16px; position:relative; } * html div.calendar-day { height:200px; }
+td.calendar-day-np { background:#eeeeee; min-height:200px; } * html div.calendar-day-np { height:200px; }
+td.calendar-day-head { background:#0000FF; font-weight:bold; text-align:center; width:240px; padding:10px; border-bottom:1px solid #999; border-top:1px solid #999; border-right:1px solid #999; }
+div.day-number		{ background:#0000FF; padding:10px; color:#fff; font-weight:bold; float:right; margin:-10px -10px 0 0; width:40px; text-align:center; }
+td.calendar-day, td.calendar-day-np { width:240px; padding:10px; border-bottom:1px solid #0000FF; border-right:1px solid #0000FF; }
+td.calendar-time { min-height:200px; border:1px solid; }
+td.calendar-item { background:#0099FF; font-weight:bold; text-align:center; width:300px; border:2px solid #345 }
