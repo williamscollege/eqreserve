@@ -44,6 +44,22 @@
             $this->assertText('Can be reserved for 15 minutes min., 60 minutes max., starting on the 0,15,30,45 hour for 15 minute intervals');
         }
 
+        //To test application of reservation rules
+        //STILL WORKING ON IT.
+        function TestOfCheckReservationRules(){
+            $this->_loginUser();
+            $this->assertResponse(200);
+
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+            $this->assertResponse(200);
+
+            // asserts should check for programmatically accessible (by javascript) data about reservation rules
+            //CHECK THIS
+            $this->assertText("var reservationInfo = document.getElementById('print_ReservationTimeRestrictions');");
+
+            //check this info somehow with the information we need
+        }
+
 		function TestOfDataExpectedForReservations() {
 			$this->_loginUser();
 			$this->assertResponse(200);
