@@ -1121,4 +1121,57 @@ $(document).ready(function () {
 		$("#btnReservationOverrideConflicts").val('just_clicked');
 	});
 
+
+    //**********************************
+    // Calendar related
+
+    //show daily on cell click from monthly
+    $(document).on("click", "#monthly_calendar_view .calendar-day", function () {
+        // create an ajax call to fetch the data for the day which was clicked, then use the results to populate the daily view, then toggle the display to show it
+
+        //data contains resulting data from request
+        //$.get("ajax_actions/ajax_calendar.php",function(data){
+        //    //populate daily
+        //});
+
+
+        $("#monthly_calendar_view").hide();
+        $("#daily_calendar_view").show();
+    });
+
+    //show prev month
+    $(document).on("click", "#monthly_calendar_view .nav_elt_month_prev", function () {
+
+        $.get("ajax_actions/ajax_calendar.php",function(data){
+            //Decrease month #
+        });
+        $("#monthly_calendar_view").html(Math.random());
+        //
+        //GLOBAL_confirmHandlerData = $(this).attr('data-for-item-id');
+        //
+        //var params = {
+        //    url: "ajax_actions/ajax_calendar.php",
+        //    ajax_action: "prev-month",
+        //    ajax_id: GLOBAL_confirmHandlerData
+        //};
+        //
+        //showConfirmBox(params);
+        //$("#daily_calendar_view .calendar_header_text").html(Math.random());
+    });
+
+    //show next month
+    $(document).on("click", "#monthly_calendar_view .nav_elt_month_next", function () {
+
+        //Increase the month # to keep track of current month
+        //month++;
+        $("#monthly_calendar_view").html(Math.random());
+        //$("#daily_calendar_view .calendar_header_text").html(Math.random());
+    });
+
+    //show month on button click from daily
+    $(document).on("click", "#daily_calendar_view #show_month_button", function () {
+        $("#monthly_calendar_view").show();
+        $("#daily_calendar_view").hide();
+    });
+
 });

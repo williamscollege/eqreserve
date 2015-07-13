@@ -21,7 +21,7 @@ function draw_SingleDayCalendar($month,$year,$day,$items) {
 
     /* draw the calendar for all pieces of equipment in each subgroup */
     foreach($items as $item) {
-        $calendar .= '<td class="calendar-item">$item</td>';
+        $calendar .= '<td class="calendar-item">'.$item.'</td>';
         /* draw all the time cells for a given piece of equipment */
         for ($x = 1; $x < count($headings); $x++):
             $calendar .= '<td class="calendar-time"></td>';
@@ -33,16 +33,64 @@ function draw_SingleDayCalendar($month,$year,$day,$items) {
 
     return $calendar;
 }
+
 /* a method to get all the items that can be reserved */
-function getUsers($eqg) {
-    return $eqg->eq_item->name;
-}
+//function getUsers($eqg) {
+//    return $eqg->eq_item->name;
+//}
 
 function draw_MonthlyCalendar($month,$year) {
     /* draw table */
     $calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
 
+    /* actual month name */
+    switch($month){
+        case '1':
+            $month = 'January';
+            break;
+        case '2':
+            $month = 'February';
+            break;
+        case '3':
+            $month = 'March';
+            break;
+        case '4':
+            $month = 'April';
+            break;
+        case '5':
+            $month = 'May';
+            break;
+        case '6':
+            $month = 'June';
+            break;
+        case '7':
+            $month = 'July';
+            break;
+        case '8':
+            $month = 'August';
+            break;
+        case '9':
+            $month = 'September';
+            break;
+        case '10':
+            $month = 'October';
+            break;
+        case '11':
+            $month = 'November';
+            break;
+        case '12':
+            $month = 'December';
+            break;
+        default:
+            $month = 'whoops';
+
+    }
     /* table headings */
+    $calendar .=  '<tr class = "calendar-row">
+                <td class="nav_elt_month_prev">&lt;</td>
+                <td class="month-name" colspan="5" style = "text-align: center">'.$month.' '.$year.'</td>
+                <td class="nav_elt_month_next">&gt;</td>
+                </tr>';
     $headings = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
     $calendar .= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
 

@@ -52,17 +52,51 @@
 </ul>
 </div>
 
+<!--calendar for displaying schedule-->
 <div>
-    <?php
-    echo draw_MonthlyCalendar(7,2015);
-    ?>
-</div>
-<div>
-    <?php
-    $items = array("things","other things","more things");
-    echo draw_SingleDayCalendar(7,2015,10,$items);
-    ?>
-</div>
+    <div id="monthly_calendar_view">
+        <?php
+            $month = '7';
+            $year = '2015';
+            echo draw_MonthlyCalendar($month, $year);
+        ?>
+    </div>
+    <div id="daily_calendar_view" style = "display:none">
+        <?php
+            $items = array("things","other things","more things");
+            echo draw_SingleDayCalendar(7,2015,5,$items);
+        ?>
+    </div>
 
-//calendar for displaying schedule
 
+    <?php
+
+//    <div id="daily_view_header">
+//            <div id="show_month_button"  style="width: 50px; height; 50px; border: 2px solid red">show month</div>
+//            <div class="calendar_header_text">The Current Day</div>
+//            <div class="daily_nav_elements">
+//                <div class="nav_elt_day_prev">&lt;</div>
+//                <div class="nav_elt_day_next">&gt;</div>
+//            </div>
+//        </div>
+////</div>
+//<br>
+//<div>
+//<!--    should draw only when someone clicks-->
+//<!--    -->
+//<!--//    $items = array("things","other things","more things");-->
+//<!--//    echo draw_SingleDayCalendar(7,2015,10,$items);-->
+//<!--//    -->
+//</div>
+
+//    echo "<script>";
+//    echo "$(document).ready(function(){";
+//    echo "$('calendar-day').click(function(){";
+//    echo "$items = array('things','other things','more things');";
+//    echo "draw_SingleDayCalendar(7,2015,5,$items);";
+//    echo "$('monthly-calendar').hide();";
+//    echo "});";
+//    echo "});";
+?>
+
+</div>
