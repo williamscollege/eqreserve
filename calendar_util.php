@@ -1,10 +1,58 @@
 <?php
 function draw_SingleDayCalendar($month,$year,$day,$items) {
     /* draw table */
-    $calendar = '<table cellpadding="0" cellspacing="2" class="calendar">';
+    $month_name = $month;
+
+    /* actual month name */
+    switch($month){
+        case '1':
+            $month_name = 'January';
+            break;
+        case '2':
+            $month_name = 'February';
+            break;
+        case '3':
+            $month_name = 'March';
+            break;
+        case '4':
+            $month_name = 'April';
+            break;
+        case '5':
+            $month_name = 'May';
+            break;
+        case '6':
+            $month_name = 'June';
+            break;
+        case '7':
+            $month_name = 'July';
+            break;
+        case '8':
+            $month_name = 'August';
+            break;
+        case '9':
+            $month_name = 'September';
+            break;
+        case '10':
+            $month_name = 'October';
+            break;
+        case '11':
+            $month_name = 'November';
+            break;
+        case '12':
+            $month_name = 'December';
+            break;
+        default:
+            $month_name = 'whoops';
+
+    }
+    /* date header */
+    $header = '<h3>'.$month_name. ' ' . $day.'</h3>';
 
     /* table headings */
-    $headings = array('12:00 AM', '12:15 AM', '12:30 AM', '12:45 AM', '1:00 AM','1:15 AM', '1:30 AM', '1:45 AM', '2:00 AM', '2:15 AM', '2:30 AM', '2:45 AM', '3:00 AM',
+    $calendar = '<div style="overflow-x:scroll; width:925px"><table cellpadding="0" cellspacing="2" class="header">';
+
+
+    $headings = array('','12:00 AM', '12:15 AM', '12:30 AM', '12:45 AM', '1:00 AM','1:15 AM', '1:30 AM', '1:45 AM', '2:00 AM', '2:15 AM', '2:30 AM', '2:45 AM', '3:00 AM',
             '3:15 AM', '3:30 AM', '3:45 AM', '4:00 AM', '4:15 AM', '4:30 AM', '4:45 AM', '5:00 AM', '5:15 AM', '5:30 AM', '5:45 AM', '6:00 AM', '6:15 AM', '6:30 AM',
             '6:45 AM', '7:00 AM', '7:15 AM', '7:30 AM', '7:45 AM', '8:00 AM', '8:15 AM', '8:30 AM', '8:45 AM', '9:00 AM', '9:15 AM', '9:30 AM', '9:45 AM', '10:00 AM',
             '10:15 AM', '10:30 AM', '10:45 AM', '11:00 AM', '11:15 AM', '11:30 AM', '11:45 AM', '12:00 PM', '12:15 PM', '12:30 PM', '12:45 PM', '1:00 PM', '1:15 PM',
@@ -29,9 +77,11 @@ function draw_SingleDayCalendar($month,$year,$day,$items) {
         $calendar .= '</tr>';
     }
 
-    $calendar .= '</table>';
+    $calendar .= '</table></div>';
 
-    return $calendar;
+    $calendar .= '<button class="show_month_button">Go Back To Monthly View</button>';
+
+    return $header.$calendar;
 }
 
 /* a method to get all the items that can be reserved */
@@ -39,57 +89,63 @@ function draw_SingleDayCalendar($month,$year,$day,$items) {
 //    return $eqg->eq_item->name;
 //}
 
+//**********************************************************
+//**********************************************************
+// MONTHLY CALENDAR
+
 function draw_MonthlyCalendar($month,$year) {
     /* draw table */
     $calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
 
+    $month_name = $month;
+
     /* actual month name */
     switch($month){
         case '1':
-            $month = 'January';
+            $month_name = 'January';
             break;
         case '2':
-            $month = 'February';
+            $month_name = 'February';
             break;
         case '3':
-            $month = 'March';
+            $month_name = 'March';
             break;
         case '4':
-            $month = 'April';
+            $month_name = 'April';
             break;
         case '5':
-            $month = 'May';
+            $month_name = 'May';
             break;
         case '6':
-            $month = 'June';
+            $month_name = 'June';
             break;
         case '7':
-            $month = 'July';
+            $month_name = 'July';
             break;
         case '8':
-            $month = 'August';
+            $month_name = 'August';
             break;
         case '9':
-            $month = 'September';
+            $month_name = 'September';
             break;
         case '10':
-            $month = 'October';
+            $month_name = 'October';
             break;
         case '11':
-            $month = 'November';
+            $month_name = 'November';
             break;
         case '12':
-            $month = 'December';
+            $month_name = 'December';
             break;
         default:
-            $month = 'whoops';
+            $month_name = 'whoops';
 
     }
     /* table headings */
     $calendar .=  '<tr class = "calendar-row">
                 <td class="nav_elt_month_prev">&lt;</td>
-                <td class="month-name" colspan="5" style = "text-align: center">'.$month.' '.$year.'</td>
-                <td class="nav_elt_month_next">&gt;</td>
+                <td class="month-name" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
+                <td class="nav_elt_month_next" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
     $headings = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
     $calendar .= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
@@ -110,7 +166,7 @@ function draw_MonthlyCalendar($month,$year) {
 
     /* fill in the rest of the days */
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-        $calendar .= '<td class="calendar-day">';
+        $calendar .= '<td class="calendar-day" data-caldate = "'.$list_day.'">';
             /* add in the day number */
 			$calendar.= '<div class="day-number">'.$list_day.'</div>';
 

@@ -54,20 +54,20 @@
 
 <!--calendar for displaying schedule-->
 <div>
-    <div id="monthly_calendar_view">
+    <div id="monthly_calendar_view" >
         <?php
             $month = '7';
             $year = '2015';
             echo draw_MonthlyCalendar($month, $year);
         ?>
     </div>
+
     <div id="daily_calendar_view" style = "display:none">
         <?php
             $items = array("things","other things","more things");
             echo draw_SingleDayCalendar(7,2015,5,$items);
         ?>
     </div>
-
 
     <?php
 
