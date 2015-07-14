@@ -68,7 +68,6 @@
             echo draw_SingleDayCalendar(7,2015,5,$items);
         ?>
     </div>
-
     <?php
 
 //    <div id="daily_view_header">

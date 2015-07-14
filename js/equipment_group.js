@@ -1144,32 +1144,46 @@ $(document).ready(function () {
             });
     });
 
-    //show prev month
+    //Show the previous month, getting the month, year from calendar elements
     $(document).on("click", "#monthly_calendar_view .nav_elt_month_prev", function () {
-
-        $("#monthly_calendar_view").html(Math.random());
-
-    });
-
-    //show next month
-    $(document).on("click", "#monthly_calendar_view .nav_elt_month_next", function () {
-        //console.dir(this);
-
-        //Increase the month # to keep track of current month
-        //month++;
-        $("#monthly_calendar_view").html(Math.random());
 
         $.ajax({
             url: 'ajax_actions/ajax_calendar_handler.php',
             dataType: 'html',
             data: {
-                'month_num': $(this).attr('data-monthnum')
+                'prev': $(this).attr('data-prev'),
+                'month_num': $(this).attr('data-monthnum'),
+                'year_num': $(this).attr('data-yearnum')
             }
         })
 
-            //toggle between months
-            //change the value of a variable
-            .success(function(){
+            //replaces the current monthly view
+            .success(function(html){
+                console.log(html);
+                $("#monthly_calendar_view").html(html);
+            })
+
+    });
+
+    //Show the next month, getting the month, year from calendar elements
+    $(document).on("click", "#monthly_calendar_view .nav_elt_month_next", function () {
+
+        //console.log('clicked calendar NEXT'); // DEBUG
+
+        $.ajax({
+            url: 'ajax_actions/ajax_calendar_handler.php',
+            dataType: 'html',
+            data: {
+                'next': $(this).attr('data-next'),
+                'month_num': $(this).attr('data-monthnum'),
+                'year_num': $(this).attr('data-yearnum')
+            }
+        })
+
+            //replaces the current monthly view
+            .success(function(html){
+                console.log(html);
+                $("#monthly_calendar_view").html(html);
             })
     });
 

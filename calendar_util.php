@@ -142,10 +142,15 @@ function draw_MonthlyCalendar($month,$year) {
 
     }
     /* table headings */
+    /* AJAX data: */
+    /* data-yearnum = current year */
+    /* data-prev = tells calendar to decrease month */
+    /* data-next = tells calendar to increase month */
+    /* data-monthnum = current month */
     $calendar .=  '<tr class = "calendar-row">
-                <td class="nav_elt_month_prev">&lt;</td>
+                <td class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
                 <td class="month-name" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
-                <td class="nav_elt_month_next" data-monthnum ="'.$month.'">&gt;</td>
+                <td class="nav_elt_month_next" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
     $headings = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
     $calendar .= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
