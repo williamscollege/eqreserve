@@ -62,11 +62,7 @@
         ?>
     </div>
 
-    <div id="daily_calendar_view" style = "display:none">
-        <?php
-            $items = array("things","other things","more things");
-            echo draw_SingleDayCalendar(7,2015,5,$items);
-        ?>
+    <div id="daily_calendar_view">
     </div>
     <?php
 

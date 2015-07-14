@@ -1,5 +1,5 @@
 <?php
-function draw_SingleDayCalendar($month,$year,$day,$items) {
+function draw_SingleDayCalendar($month,$day,$items) {
     /* draw table */
     $month_name = $month;
 
@@ -46,7 +46,12 @@ function draw_SingleDayCalendar($month,$year,$day,$items) {
 
     }
     /* date header */
-    $header = '<h3>'.$month_name. ' ' . $day.'</h3>';
+    $header = '<table cellpadding="0" cellspacing="0" class="calendar">
+                <tr class = "calendar-row">
+                <td class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
+                <td class="day-name" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
+                <td class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
+                </tr></table>';
 
     /* table headings */
     $calendar = '<div style="overflow-x:scroll; width:925px"><table cellpadding="0" cellspacing="2" class="header">';
@@ -61,7 +66,7 @@ function draw_SingleDayCalendar($month,$year,$day,$items) {
             '8:30 PM', '8:45 PM', '9:00 PM', '9:15 PM', '9:30 PM', '9:45 PM', '10:00 PM', '10:15 PM', '10:30 PM', '10:45 PM', '11:00 PM', '11:15 PM', '11:30 PM', '11:45 PM');
     $calendar .= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
 
-    $time_slot = date('w',mktime(0,0,0,$month,1,$year));
+//    $time_slot = date('w',mktime(0,0,0,$month,1,$year));
 
 
     /* row for 1st piece of equipment */
@@ -159,7 +164,6 @@ function draw_MonthlyCalendar($month,$year) {
     $days_in_month = date('t',mktime(0,0,0,$month,1,$year));
     $days_in_this_week = 1;
     $day_counter = 0;
-    $dates_array = array();
 
     $calendar .='<tr class="calendar-row">';
 
@@ -171,7 +175,7 @@ function draw_MonthlyCalendar($month,$year) {
 
     /* fill in the rest of the days */
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-        $calendar .= '<td class="calendar-day" data-caldate = "'.$list_day.'">';
+        $calendar .= '<td class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'">';
             /* add in the day number */
 			$calendar.= '<div class="day-number">'.$list_day.'</div>';
 

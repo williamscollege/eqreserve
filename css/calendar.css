@@ -4,7 +4,29 @@ table.calendar {
 
 tr.calendar-row {}
 
+td.nav_elt_day_prev{
+    text-align: center;
+    background:purple;
+    font-weight:bold;
+    color: #ffffff;
+    padding:10px;
+    border-bottom:1px solid #999;
+    border-top:1px solid #999;
+    border-right:1px solid #999;
+}
+
 td.day-name{
+    text-align: center;
+    background:purple;
+    font-weight:bold;
+    color: #ffffff;
+    padding:10px;
+    border-bottom:1px solid #999;
+    border-top:1px solid #999;
+    border-right:1px solid #999;
+}
+
+td.nav_elt_day_next{
     text-align: center;
     background:purple;
     font-weight:bold;
