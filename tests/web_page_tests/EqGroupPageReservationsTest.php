@@ -46,19 +46,19 @@
 
         //To test application of reservation rules
         //STILL WORKING ON IT.
-        function TestOfCheckReservationRules(){
-            $this->_loginUser();
-            $this->assertResponse(200);
-
-            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
-            $this->assertResponse(200);
-
-            // asserts should check for programmatically accessible (by javascript) data about reservation rules
-            //CHECK THIS
-            $this->assertText("var reservationInfo = document.getElementById('print_ReservationTimeRestrictions');");
-
-            //check this info somehow with the information we need
-        }
+//        function TestOfCheckReservationRules(){
+//            $this->_loginUser();
+//            $this->assertResponse(200);
+//
+//            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+//            $this->assertResponse(200);
+//
+//            // asserts should check for programmatically accessible (by javascript) data about reservation rules
+//            //CHECK THIS
+//            $this->assertText("var reservationInfo = document.getElementById('print_ReservationTimeRestrictions');");
+//
+//            //check this info somehow with the information we need
+        //}
 
 		function TestOfDataExpectedForReservations() {
 			$this->_loginUser();
@@ -100,6 +100,22 @@
             $this->assertText('Member of: testInstGroup2');
             $this->assertText('tu2 notes');
 		}
+
+        function TestOfCalendarHeaders(){
+            $this->_loginUser();
+            $this->assertResponse(200);
+
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+            $this->assertResponse(200);
+
+            $this->assertText('Sunday');
+            $this->assertText('Monday');
+            $this->assertText('Tuesday');
+            $this->assertText('Wednesday');
+            $this->assertText('Thursday');
+            $this->assertText('Friday');
+            $this->assertText('Saturday');
+        }
 
         // NOTE: can't figure out how to check that a given text is hidden / not visible
     }

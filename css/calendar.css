@@ -4,7 +4,8 @@ table.calendar {
 
 tr.calendar-row {}
 
-td.nav_elt_day_prev{
+/* information for daily view */
+td.nav_elt_day_prev, td.nav_elt_day_next{
     text-align: center;
     background:purple;
     font-weight:bold;
@@ -16,6 +17,7 @@ td.nav_elt_day_prev{
 }
 
 td.day-name{
+    width:843px;
     text-align: center;
     background:purple;
     font-weight:bold;
@@ -26,18 +28,8 @@ td.day-name{
     border-right:1px solid #999;
 }
 
-td.nav_elt_day_next{
-    text-align: center;
-    background:purple;
-    font-weight:bold;
-    color: #ffffff;
-    padding:10px;
-    border-bottom:1px solid #999;
-    border-top:1px solid #999;
-    border-right:1px solid #999;
-}
-
-td.nav_elt_month_prev{
+/* information for monthly view */
+td.nav_elt_month_prev, td.nav_elt_month_next{
     text-align: center;
     background:purple;
     font-weight:bold;
@@ -58,27 +50,19 @@ td.month-name{
     border-right:1px solid #999;
 }
 
-td.nav_elt_month_next{
-    text-align: center;
-    background:purple;
-    font-weight:bold;
-    color: #ffffff;
-    padding:10px;
-    border-bottom:1px solid #999;
-    border-top:1px solid #999;
-    border-right:1px solid #999;
-}
-
+/*actual calendar days*/
+/*height should actually be relative to the amount of items...*/
 td.calendar-day {
-    min-height:200px;
+    height:200px;
     font-size:16px;
     position:relative;
-} * html div.calendar-day { height:200px; }
+}
 
+  /*blank days*/
 td.calendar-day-np {
     background:#eeeeee;
-    min-height:200px;
-} * html div.calendar-day-np { height:200px; }
+    height:200px;
+}
 
 td.calendar-day-head {
     background:purple;
@@ -92,19 +76,23 @@ td.calendar-day-head {
     border-right:1px solid #999;
 }
 
+/* is there a better way to position these things? */
 div.day-number	{
     background:purple;
     padding:10px;
     color:#fff;
     font-weight:bold;
-    float:right;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /*float:right;*/
     margin:-10px -10px 0 0;
     width:40px;
     text-align:center;
 }
 
 td.calendar-day, td.calendar-day-np {
-    width:240px;
+    width:500px;
     padding:10px;
     border-bottom:1px solid #999;
     border-right:1px solid #999;
@@ -115,7 +103,7 @@ td.calendar-time {
     border:1px solid;
 }
 
-td.calendar-item {
+td.daily-items {
     background: #0099FF;
     min-height: 200px;
     padding: 10px;
@@ -123,4 +111,12 @@ td.calendar-item {
     text-align:center;
     width:300px;
     border:2px solid #345;
+}
+
+p.monthly-items{
+    background: #0099FF;
+    /*font-weight:bold;*/
+    text-align:center;
+    width: auto;
+    border:1px solid #345;
 }

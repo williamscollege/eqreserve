@@ -1,4 +1,7 @@
 <?php
+//**********************************************************
+//**********************************************************
+// DAILY CALENDAR
 function draw_SingleDayCalendar($month,$day,$items) {
     /* draw table */
     $month_name = $month;
@@ -74,7 +77,7 @@ function draw_SingleDayCalendar($month,$day,$items) {
 
     /* draw the calendar for all pieces of equipment in each subgroup */
     foreach($items as $item) {
-        $calendar .= '<td class="calendar-item">'.$item.'</td>';
+        $calendar .= '<td class="daily-items">'.$item.'</td>';
         /* draw all the time cells for a given piece of equipment */
         for ($x = 1; $x < count($headings); $x++):
             $calendar .= '<td class="calendar-time"></td>';
@@ -97,8 +100,7 @@ function draw_SingleDayCalendar($month,$day,$items) {
 //**********************************************************
 //**********************************************************
 // MONTHLY CALENDAR
-
-function draw_MonthlyCalendar($month,$year) {
+function draw_MonthlyCalendar($month,$year,$items) {
     /* draw table */
     $calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
 
@@ -173,14 +175,29 @@ function draw_MonthlyCalendar($month,$year) {
         $days_in_this_week++;
     endfor;
 
+    /* find the items: for each reservation in the subgroup, find each item and put it into an array */
+//    $items = array();
+//
+//    foreach ($all_schedules->reservations as $r) {
+//        //not entering the loop
+////        util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
+//        $items[] = $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name;
+//    }
+
     /* fill in the rest of the days */
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-        $calendar .= '<td class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'">';
+        $calendar .= '<td class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'" data-items = "'.$items.'">';
             /* add in the day number */
 			$calendar.= '<div class="day-number">'.$list_day.'</div>';
 
-			/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
-			$calendar.= str_repeat('<p> </p>',2);
+		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
+        /** add in items here */
+        foreach($items as $item){
+            $calendar .= '<p class="monthly-items">'.$item.'</p>';
+        }
+//			$calendar.= str_repeat('<p></p>',2);
+
+//        $schedule->toString();
 
 		$calendar.= '</td>';
 		if($running_day == 6):

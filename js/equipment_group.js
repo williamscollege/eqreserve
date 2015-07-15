@@ -1129,8 +1129,6 @@ $(document).ready(function () {
     $(document).on("click", "#monthly_calendar_view .calendar-day", function () {
         // create an ajax call to fetch the data for the day which was clicked, then use the results to populate the daily view, then toggle the display to show it
 
-        console.log('clicked calendar NEXT'); // DEBUG
-
         //Successfully gets the calendar day
         $.ajax({
             url: 'ajax_actions/ajax_calendar_handler.php',
@@ -1138,13 +1136,15 @@ $(document).ready(function () {
             data: {
                 //day clicked on in the month
                 'caldate': $(this).attr('data-caldate'),
-                'calmonth': $(this).attr('data-monthnum')
-
+                'calmonth': $(this).attr('data-monthnum'),
+                'items': $(this).attr('data-items') //this should be an array of the items
             }
         })
             .success(function(html){
                 console.log(html);
                 $("#monthly_calendar_view").hide();
+
+                //double call?
                 $("#daily_calendar_view").html(html);
                 $("#daily_calendar_view").show();
 
@@ -1170,6 +1170,8 @@ $(document).ready(function () {
             })
 
     });
+
+    //TO IMPLEMENT: DAY TO DAY VIEWS?
 
     //Show the next month, getting the month, year from calendar elements
     $(document).on("click", "#monthly_calendar_view .nav_elt_month_next", function () {

@@ -38,6 +38,7 @@
 				}
 				$li .= "<ul class=\"unstyled\">\n";
 				foreach ($sched->reservations as $r) {
+//                    util_prePrintR($r);
 					$li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
 				}
 				$li .= "</ul></li>\n";
@@ -56,13 +57,28 @@
 <div>
     <div id="monthly_calendar_view" >
         <?php
-            $month = '7';
+        //Get items only for that month (look at the dates)
+        //If start on date contains year-month then put it in the calendar
+
+            $all_items = array();
+            if (count($Requested_EqGroup->schedules) > 0) {
+                foreach ($Requested_EqGroup->schedules as $sched) {
+                    foreach ($sched->reservations as $r) {
+//                    util_prePrintR($r);
+                        $all_items[] = $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name;
+                    }
+                }
+            }
+
+//            util_prePrintR($all_schedules); //debugging purposes
+            $month = '7'; //find a way to use current day as start day
             $year = '2015';
-            echo draw_MonthlyCalendar($month, $year);
+            echo draw_MonthlyCalendar($month, $year,$all_items);
         ?>
     </div>
 
     <div id="daily_calendar_view">
+<!--        empty till called for the first time-->
     </div>
     <?php
 
