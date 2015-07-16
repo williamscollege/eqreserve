@@ -98,5 +98,59 @@ class TestOfUtil extends UnitTestCase {
         $this->assertEqual(util_timeRangeString('2013-03-09 15:00:00','2013-03-10 15:00:00'),'2013/3/9 3:00 PM-2013/3/10 3:00 PM');
     }
 
+    /******* functions need to be defined *********/
+    /******* put in calendar util? ****************/
+    function testGetMonthNumFromDate() {
+        $someDate = new DateTime('2015-04-19');
+
+        $this->assertEqual('04',util_getMonthNumFromDate($someDate));
+    }
+
+    function testGetCurrentMonthNum() {
+        $current_month_num = (new DateTime())->format('mm');
+
+        $this->assertEqual($current_month_num,util_getCurrentMonthNum());
+    }
+
+    function testGetPrevMonthNum()
+    {
+        $someDate = new DateTime('2015-04-19');
+        $prev_month_num = '03';
+
+        $this->assertEqual($prev_month_num, util_getPrevMonthNum($someDate));
+    }
+
+    function testGetNextMonthNum(){
+        $someDate = new DateTime('2015-04-19');
+        $next_month_num = '05';
+
+        $this->assertEqual($next_month_num, util_getNextMonthNum($someDate));
+    }
+
+    function testGetYearNumFromDate() {
+        $someDate = new DateTime('2015-04-19');
+
+        $this->assertEqual('2015',util_getYearNumFromDate($someDate));
+    }
+
+    function testGetCurrentYearNum(){
+        $current_year_num = (new DateTime())->format('YY');
+
+        $this->assertEqual($current_year_num,util_getCurrentYearNum());
+    }
+
+    function testGetPrevYearNum(){
+        $someDate = new DateTime('2015-04-19');
+        $prev_year_num = '2014';
+
+        $this->assertEqual($prev_year_num, util_getPrevYearNum($someDate));
+    }
+
+    function testGetNextYearNum(){
+        $someDate = new DateTime('2015-04-19');
+        $next_year_num = '2016';
+
+        $this->assertEqual($next_year_num, util_getNextYearNum($someDate));
+    }
 }
 ?>

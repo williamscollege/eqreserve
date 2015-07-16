@@ -315,3 +315,38 @@
 	function util_returnUserID($e) {
 		return $e->user_id;
 	}
+
+
+
+/******************************************/
+function util_getMonthNumFromDate($date){
+    return $date;
+}
+
+function util_getCurrentMonthNum(){
+    return '5';
+}
+
+function util_getPrevMonthNum($date){
+    return $date;
+}
+
+function util_getNextMonthNum($date){
+    return $date;
+}
+
+function util_getYearNumFromDate($someDate){
+    return $someDate;
+}
+
+function util_getCurrentYearNum(){
+    return '2012';
+}
+
+function util_getPrevYearNum($someDate){
+    return $someDate;
+}
+
+function util_getNextYearNum($someDate){
+    return $someDate;
+}

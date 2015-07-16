@@ -40,7 +40,7 @@ abstract class WMSWebTestCase extends WebTestCase {
 //        preg_match('/(\<[^\>]\s+id\s*=\s*"'.$eltId.'"\s+[^\>]*\>)/',$this->getBrowser()->getContent(),$matches);
         preg_match('/(\<[^\>]*\s+id\s*=\s*"'.$eltId.'"\s+[^\>]*\>)/',$haystack,$matches);
 
-        //echo $matches[1];
+//        echo $matches[1];
         
         if (! $this->assertTrue(isset($matches[1]),"Element with id [$eltId] should exist")) {
             return false;

@@ -78,7 +78,7 @@
     </div>
 
     <div id="daily_calendar_view">
-<!--        empty till called for the first time-->
+
     </div>
     <?php
 
