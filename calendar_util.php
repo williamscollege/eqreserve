@@ -3,58 +3,9 @@
 //**********************************************************
 // DAILY CALENDAR
 function draw_SingleDayCalendar($month,$day,$items) {
-    /* draw table */
-    $month_name = $month;
 
-    /* actual month name */
-    switch($month){
-        case '1':
-            $month_name = 'January';
-            break;
-        case '2':
-            $month_name = 'February';
-            break;
-        case '3':
-            $month_name = 'March';
-            break;
-        case '4':
-            $month_name = 'April';
-            break;
-        case '5':
-            $month_name = 'May';
-            break;
-        case '6':
-            $month_name = 'June';
-            break;
-        case '7':
-            $month_name = 'July';
-            break;
-        case '8':
-            $month_name = 'August';
-            break;
-        case '9':
-            $month_name = 'September';
-            break;
-        case '10':
-            $month_name = 'October';
-            break;
-        case '11':
-            $month_name = 'November';
-            break;
-        case '12':
-            $month_name = 'December';
-            break;
-        default:
-            $month_name = 'whoops';
-
-    }
     /* date header */
-    $header = '<table cellpadding="0" cellspacing="0" class="calendar">
-                <tr class = "calendar-row">
-                <td class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
-                <td class="day-name" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
-                <td class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
-                </tr></table>';
+    $header = renderDayHeader($month,$day);
 
     /* table headings */
     $calendar = '<div style="overflow-x:scroll; width:925px"><table cellpadding="0" cellspacing="2" class="header">';
@@ -76,14 +27,7 @@ function draw_SingleDayCalendar($month,$day,$items) {
     $calendar .= '<tr class="calendar-row">';
 
     /* draw the calendar for all pieces of equipment in each subgroup */
-    foreach($items as $item) {
-        $calendar .= '<td class="daily-items">'.$item.'</td>';
-        /* draw all the time cells for a given piece of equipment */
-        for ($x = 1; $x < count($headings); $x++):
-            $calendar .= '<td class="calendar-time"></td>';
-        endfor;
-        $calendar .= '</tr>';
-    }
+    $calendar .= renderItemRows($items,$headings);
 
     $calendar .= '</table></div>';
 
@@ -92,21 +36,32 @@ function draw_SingleDayCalendar($month,$day,$items) {
     return $header.$calendar;
 }
 
-/* a method to get all the items that can be reserved */
-//function getUsers($eqg) {
-//    return $eqg->eq_item->name;
-//}
+function renderItemRows($items,$headings) {
+    /* draw the calendar for all pieces of equipment in each subgroup */
+    $rows = "";
+    foreach($items as $item) {
+        $rows .= '<td class="daily-items">'.$item.'</td>';
+        /* draw all the time cells for a given piece of equipment */
+        for ($x = 1; $x < count($headings); $x++):
+            $rows .= '<td class="calendar-time"></td>';
+        endfor;
+        $rows .= '</tr>';
+    }
+    return $rows;
+}
 
-//**********************************************************
-//**********************************************************
-// MONTHLY CALENDAR
-function draw_MonthlyCalendar($month,$year,$items) {
-    /* draw table */
-    $calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+function renderDayHeader($month,$day) {
+    $month_name = monthIntToString($month);
+    $header = '<table cellpadding="0" cellspacing="0" class="calendar">
+            <tr class = "calendar-row">
+            <td class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
+            <td class="day-name" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
+            <td class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
+            </tr></table>';
+    return $header;
+}
 
-    $month_name = $month;
-
-    /* actual month name */
+function monthIntToString($month) {
     switch($month){
         case '1':
             $month_name = 'January';
@@ -148,6 +103,24 @@ function draw_MonthlyCalendar($month,$year,$items) {
             $month_name = 'whoops';
 
     }
+    return $month_name;
+}
+
+/* a method to get all the items that can be reserved */
+//function getUsers($eqg) {
+//    return $eqg->eq_item->name;
+//}
+
+//**********************************************************
+//**********************************************************
+// MONTHLY CALENDAR
+function draw_MonthlyCalendar($month,$year,$items) {
+    /* draw table */
+    $calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+
+    /* actual month name */
+    $month_name = monthIntToString($month);
+
     /* table headings */
     /* AJAX data: */
     /* data-yearnum = current year */
