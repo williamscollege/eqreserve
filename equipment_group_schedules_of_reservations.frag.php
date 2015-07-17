@@ -4,10 +4,8 @@
 <ul id="reservationSchedules" class="unstyled">
 	<?php
 		$show_del_control = ($USER->flag_is_system_admin || $is_group_manager);
-
-		if (count($Requested_EqGroup->schedules) > 0) {
+    if (count($Requested_EqGroup->schedules) > 0) {
 			foreach ($Requested_EqGroup->schedules as $sched) {
-
 				$li = Db_Linked::listItemTag('list-of-schedule-' . $sched->schedule_id);
 				if ($show_del_control) {
 					$li .= '<a id="delete-schedule-' . $sched->schedule_id . '" class="editing-control hide btn btn-mini btn-danger delete-schedule-btn" data-for-schedule="' . $sched->schedule_id . '"><i class="icon-trash icon-white"></i></a> ';
@@ -38,7 +36,7 @@
 				}
 				$li .= "<ul class=\"unstyled\">\n";
 				foreach ($sched->reservations as $r) {
-//                    util_prePrintR($r);
+//                    util_prePrintR($sched);
 					$li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
 				}
 				$li .= "</ul></li>\n";
@@ -56,24 +54,23 @@
 <!--calendar for displaying schedule-->
 <div>
     <div id="monthly_calendar_view" >
-        <?php
+		<script type="text/javascript">
+			var scheduleId = <?php echo $SCHED->schedule_id; ?>;
+		</script>
+		<?php
         //Get items only for that month (look at the dates)
         //If start on date contains year-month then put it in the calendar
 
-            $all_items = array();
-            if (count($Requested_EqGroup->schedules) > 0) {
-                foreach ($Requested_EqGroup->schedules as $sched) {
-                    foreach ($sched->reservations as $r) {
-//                    util_prePrintR($r);
-                        $all_items[] = $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name;
-                    }
-                }
+		//Redundant?
+        if (count($Requested_EqGroup->schedules) > 0) {
+            foreach ($Requested_EqGroup->schedules as $sched) {
+                $all_sched[] = $sched;
             }
+        }
 
-//            util_prePrintR($all_schedules); //debugging purposes
-            $month = '7'; //find a way to use current day as start day
-            $year = '2015';
-            echo draw_MonthlyCalendar($month, $year,$all_items);
+        $month = '7'; //find a way to use current day as start day
+        $year = '2015';
+        echo draw_MonthlyCalendar($month, $year,$all_sched);
         ?>
     </div>
 

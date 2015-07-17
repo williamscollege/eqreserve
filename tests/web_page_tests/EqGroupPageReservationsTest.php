@@ -148,11 +148,12 @@
             //But: How to get the right month for the reservations to check?
         }
 
-        function TestOfItemsInCalendar(){
-            $this->_loginUser();
-            $this->assertResponse(200);
-            $this->('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
-            $this->assertResponse(200);
-        }
+//          Do this in Ajax?
+//        function TestOfItemsInCalendar(){
+//            $this->_loginUser();
+//            $this->assertResponse(200);
+//            $this->('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+//            $this->assertResponse(200);
+//        }
         // NOTE: can't figure out how to check that a given text is hidden / not visible
     }

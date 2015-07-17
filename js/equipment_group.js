@@ -1152,16 +1152,18 @@ $(document).ready(function () {
     });
 
     //Show the previous month, getting the month, year from calendar elements
+	//ADD IN ITEMS: NEED TO SEND SCHEDULE
     $(document).on("click", "#monthly_calendar_view .nav_elt_month_prev", function () {
 
         $.ajax({
             url: 'ajax_actions/ajax_calendar_handler.php',
             dataType: 'html',
             data: {
+				//'schedule': scheduleId, //can get from schedule.php but needs to be defined
                 'prev': $(this).attr('data-prev'),
                 'month_num': $(this).attr('data-monthnum'),
                 'year_num': $(this).attr('data-yearnum')
-            }
+			}
         })
 
             //replaces the current monthly view
@@ -1174,6 +1176,7 @@ $(document).ready(function () {
     //TO IMPLEMENT: DAY TO DAY VIEWS?
 
     //Show the next month, getting the month, year from calendar elements
+	//ADD IN ITEMS: NEED TO SEND IN SCHEDULE
     $(document).on("click", "#monthly_calendar_view .nav_elt_month_next", function () {
 
         //console.log('clicked calendar NEXT'); // DEBUG
@@ -1182,10 +1185,11 @@ $(document).ready(function () {
             url: 'ajax_actions/ajax_calendar_handler.php',
             dataType: 'html',
             data: {
-                'next': $(this).attr('data-next'),
+				//'schedule': scheduleId, //can get it from schedule.php
+				'next': $(this).attr('data-next'),
                 'month_num': $(this).attr('data-monthnum'),
                 'year_num': $(this).attr('data-yearnum')
-            }
+			}
         })
 
             //replaces the current monthly view
