@@ -40,8 +40,8 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?next=1&month_num=7&year_num=2015');
 
         //Assert monthnum, year
-        $this->assertText('August');
-        $this->assertText('2015');
+        $this->assertPattern('/August/');
+        $this->assertPattern('/2015/');
     }
 
     function testAjaxPrevMonthlyView()
@@ -51,8 +51,8 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=7&year_num=2015');
 
         //Assert monthnum, year
-        $this->assertText('June');
-        $this->assertText('2015');
+        $this->assertPattern('/June/');
+        $this->assertPattern('/2015/');
 
     }
 
@@ -63,8 +63,8 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?next=1&month_num=12&year_num=2015');
 
         //Check for wrap around
-        $this->assertText('January');
-        $this->assertText('2016');
+        $this->assertPattern('/January/');
+        $this->assertPattern('/2016/');
 
     }
 
@@ -75,8 +75,8 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=1&year_num=2015');
 
         //Check for wrap around
-        $this->assertText('December');
-        $this->assertText('2014');
+        $this->assertPattern('/December/');
+        $this->assertPattern('/2014/');
 
     }
 
@@ -87,8 +87,8 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=1&calmonth=7&items=Array');
 
         //Assert prev, monthnum, year
-        $this->assertText('July 1');
-        $this->assertText('1:30 PM');
+        $this->assertPattern('/July 1/');
+        $this->assertPattern('/1:30 PM/');
 
     }
 
@@ -103,10 +103,16 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
 
         //Get a schedule from the database using the requested EqGroup
         $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => 201], $this->DB);
+<<<<<<< HEAD
         $Requested_EqGroup->loadSchedules();
         $this->assertTrue($Requested_EqGroup->matchesDb);
         $sched = $Requested_EqGroup->schedules;
         $this->assertTrue($sched->matchesDb);
+=======
+//        $this->assertTrue($Requested_EqGroup->matchesDb);
+        $sched = $Requested_EqGroup->schedules;
+//        $this->assertTrue($sched->matchesDb);
+>>>>>>> origin/summer_2015
 
         //Check schedule_id
         $r = $sched->reservations;
