@@ -1136,8 +1136,8 @@ $(document).ready(function () {
             data: {
                 //day clicked on in the month
                 'caldate': $(this).attr('data-caldate'),
-                'calmonth': $(this).attr('data-monthnum'),
-                'items': $(this).attr('data-items') //this should be an array of the items
+                'calmonth': $(this).attr('data-monthnum')
+                //'items': $(this).attr('data-items') //this should be an array of the items
             }
         })
             .success(function(html){
@@ -1159,7 +1159,6 @@ $(document).ready(function () {
             url: 'ajax_actions/ajax_calendar_handler.php',
             dataType: 'html',
             data: {
-				//'schedule': scheduleId, //can get from schedule.php but needs to be defined
                 'prev': $(this).attr('data-prev'),
                 'month_num': $(this).attr('data-monthnum'),
                 'year_num': $(this).attr('data-yearnum')

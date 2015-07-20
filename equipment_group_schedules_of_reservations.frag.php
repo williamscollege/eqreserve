@@ -54,23 +54,14 @@
 <!--calendar for displaying schedule-->
 <div>
     <div id="monthly_calendar_view" >
-		<script type="text/javascript">
-			var scheduleId = <?php echo $SCHED->schedule_id; ?>;
-		</script>
 		<?php
         //Get items only for that month (look at the dates)
         //If start on date contains year-month then put it in the calendar
 
-		//Redundant?
-        if (count($Requested_EqGroup->schedules) > 0) {
-            foreach ($Requested_EqGroup->schedules as $sched) {
-                $all_sched[] = $sched;
-            }
-        }
-
         $month = '7'; //find a way to use current day as start day
         $year = '2015';
-        echo draw_MonthlyCalendar($month, $year,$all_sched);
+
+        echo draw_MonthlyCalendar($month, $year,$Requested_EqGroup->schedules);
         ?>
     </div>
 

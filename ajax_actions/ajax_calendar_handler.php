@@ -1,6 +1,8 @@
 <?php
     require_once('head_ajax.php');
     require_once('../calendar_util.php');
+    require_once('../classes/eq_group.class.php');
+
 
     //Debugging purposes
     //util_prePrintR($_REQUEST);
@@ -9,6 +11,13 @@
     # Fetch AJAX values for month to month views
     # NOTE: condition ? when_true : when_false
     #------------------------------------------------#
+    $eq_group_id = htmlentities((isset($_REQUEST["eq_group_id"])) ? util_quoteSmart($_REQUEST["eq_group_id"]) : 0);
+// TO TEST: handler behavior when no eq group id given
+// TO TEST: when bad eq group id given (version 1: none given; veriosn 2 bad data (e.g. 'a') version 3 valid syntax (e.g. 435) but group doesn't exist)
+// TO TEST: when eq group has nothing scheduled
+// TO TEST: when eq group has somethign scheduled, but for a time range not covered by the params passed in
+// TO TEST: when eq group has something scheduled within the time range passed in
+
     //current month
     $baseMonth = htmlentities((isset($_REQUEST["month_num"])) ? util_quoteSmart($_REQUEST["month_num"]) : 0);
     //set at either -1 or 0
@@ -26,17 +35,19 @@
     #------------------------------------------------#
     $clickedDay = htmlentities((isset($_REQUEST["caldate"])) ? util_quoteSmart($_REQUEST["caldate"]) : 0);
     $clickedMonth = htmlentities((isset($_REQUEST["calmonth"])) ? util_quoteSmart($_REQUEST["calmonth"]) : 0);
+    //pass in schedules (array)
+
 
     #------------------------------------------------#
     # Carry out corresponding actions for views
     #------------------------------------------------#
 
     //fetched schedule should stay the same... do not have to find it every time we change months
-    if (count($Requested_EqGroup->schedules) > 0) {
-        foreach ($Requested_EqGroup->schedules as $sched) {
-            $all_sched[] = $sched;
-        }
-    }
+//    if (count($Requested_EqGroup->schedules) > 0) {
+//        foreach ($Requested_EqGroup->schedules as $sched) {
+//            $all_sched[] = $sched;
+//        }
+//    }
 
     if($clickedDay!=0){
         $items = array("things","other things","more things");
