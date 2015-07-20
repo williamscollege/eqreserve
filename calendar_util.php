@@ -147,7 +147,7 @@ function renderCalendarCells($month,$year,$schedule)
                 if ($year_bool && $month_bool) {
                     if (intval(substr($sched->start_on_date, 8, 2)) <= $list_day && $list_day <= intval(substr($sched->end_on_date, 8, 2))) {
 //                        util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
-                        $cells .= '<p class="monthly-items">' . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
+                        $cells .= '<p class="monthly-items">' . $sched->toString() . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
                     }else {
                         '<p class="monthly-items"></p>';
                     }
@@ -185,8 +185,6 @@ function renderCalendarCells($month,$year,$schedule)
 
     /* final row */
     $cells.= '</tr>';
-
-    util_prePrintR($cells);
 
     return $cells;
 }
