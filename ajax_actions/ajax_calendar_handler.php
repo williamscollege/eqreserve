@@ -23,6 +23,20 @@
     //set at either -1 or 0
     $prev = htmlentities((isset($_REQUEST["prev"])) ? util_quoteSmart($_REQUEST["prev"]) : 0);
     //set at either 1 or 0
+    $next = htmlentities((isset($_REQUEST["next"])) ? util_quoteSmart($_REQUEST["next"]) : 0);
+    $year = htmlentities((isset($_REQUEST["year_num"])) ? util_quoteSmart($_REQUEST["year_num"]) : 0);
+
+    //will have to fetch from the database here
+    //In order to get items, should send in the schedule to get the items
+    //******* working on it ******* //
+
+    #------------------------------------------------#
+    # Fetch AJAX values for month to day views
+    #------------------------------------------------#
+    $clickedDay = htmlentities((isset($_REQUEST["caldate"])) ? util_quoteSmart($_REQUEST["caldate"]) : 0);
+    $clickedMonth = htmlentities((isset($_REQUEST["calmonth"])) ? util_quoteSmart($_REQUEST["calmonth"]) : 0);
+    //pass in schedules (array)
+
 
     #------------------------------------------------#
     # Carry out corresponding actions for views
