@@ -57,7 +57,7 @@ function renderMonthHeader($month,$year){
     /* data-next = tells calendar to increase month */
     /* data-monthnum = current month */
     $header = '<table cellpadding="0" cellspacing="0" class="calendar"><tr class = "calendar-row">
-                <td id = "prev_nav" class="nav_elt_month_prev" "data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
+                <td id = "prev_nav" class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
                 <td id = "month_display" class="month-name" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
                 <td id = "next_nav" class="nav_elt_month_next" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
