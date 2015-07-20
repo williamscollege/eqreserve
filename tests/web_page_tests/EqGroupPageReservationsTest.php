@@ -127,9 +127,7 @@
         {
             $this->_loginUser();
 
-            $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/equipment_group.php?eid=201');
-
-            $this->doBasicPageLoadAsserts();
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
 
             $this->assertEltByIdHasAttrOfValue('monthly_calendar_view', 'id');
             $this->assertEltByIdHasAttrOfValue('daily_calendar_view', 'id');
@@ -138,8 +136,10 @@
             $this->assertEltByIdHasAttrOfValue('month_display', 'class', 'month-name');
             $this->assertEltByIdHasAttrOfValue('next_nav', 'class', 'nav_elt_month_next');
 
-            $this->assertEltByIdHasAttrOfValue('next_nav', 'data-monthnum', 'current-month'); //Need to find current month and year
-            $this->assertEltByIdHasAttrOfValue('next_nav', 'data-yearnum', 'current-year');
+            $currentyear = util_getCurrentYearNum();
+            $currentmonth = util_getCurrentMonthNum();
+            $this->assertEltByIdHasAttrOfValue('next_nav', 'data-monthnum', $currentmonth); //Need to find current month and year
+            $this->assertEltByIdHasAttrOfValue('next_nav', 'data-yearnum', $currentyear);
             $this->assertEltByIdHasAttrOfValue('prev_nav', 'data-prev', '-1');
             $this->assertEltByIdHasAttrOfValue('next_nav', 'data-next', '1');
             $this->assertEltByIdHasAttrOfValue('day_lists', 'data-caldate'); //All the days
@@ -151,7 +151,7 @@
         function TestOfItemsInCalendar(){
             $this->_loginUser();
             $this->assertResponse(200);
-            $this->('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
             $this->assertResponse(200);
         }
         // NOTE: can't figure out how to check that a given text is hidden / not visible

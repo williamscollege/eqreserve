@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
+
 class AjaxCalendarHandlerTest extends WMSWebTestCase
 {
 
@@ -101,9 +102,10 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=4&year_num=2013');
 
         //Get a schedule from the database using the requested EqGroup
-        $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => 201], $this->$DB);
+        $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => 201], $this->DB);
+        $Requested_EqGroup->loadSchedules();
         $this->assertTrue($Requested_EqGroup->matchesDb);
-        $sched = $Requested_EqGroup->$schedules;
+        $sched = $Requested_EqGroup->schedules;
         $this->assertTrue($sched->matchesDb);
 
         //Check schedule_id

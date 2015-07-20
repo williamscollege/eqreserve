@@ -71,8 +71,8 @@
             }
 
 //            util_prePrintR($all_schedules); //debugging purposes
-            $month = '7'; //find a way to use current day as start day
-            $year = '2015';
+            $month = util_getCurrentMonthNum();
+            $year = util_getCurrentYearNum();
             echo draw_MonthlyCalendar($month, $year,$all_items);
         ?>
     </div>

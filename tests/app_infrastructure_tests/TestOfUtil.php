@@ -107,7 +107,7 @@ class TestOfUtil extends UnitTestCase {
     }
 
     function testGetCurrentMonthNum() {
-        $current_month_num = (new DateTime())->format('mm');
+        $current_month_num = (new DateTime())->format('m');
 
         $this->assertEqual($current_month_num,util_getCurrentMonthNum());
     }
@@ -134,7 +134,7 @@ class TestOfUtil extends UnitTestCase {
     }
 
     function testGetCurrentYearNum(){
-        $current_year_num = (new DateTime())->format('YY');
+        $current_year_num = (new DateTime())->format('Y');
 
         $this->assertEqual($current_year_num,util_getCurrentYearNum());
     }
