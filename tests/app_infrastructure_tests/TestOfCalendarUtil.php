@@ -49,31 +49,41 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
         $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => 202], $this->DB);
         $this->assertTrue($Requested_EqGroup);
 
+        //schedules array is null
+        $this->assertNull($Requested_EqGroup->schedules);
+
         $Requested_EqGroup->loadSchedules();
 
         //gets the schedule of a given eq group
         $sched = $Requested_EqGroup->schedules;
+
+        //schedules array contains something
+        $this->assertTrue(is_array($sched));
+        $this->assertNotNull($sched);
         $this->assertEqual(2,count($sched));
 
         $month = 3;
         $year = 2013;
 
         //method should create the cells of the calendar and populate with appropriate reservations
-        //should be failing for now
         $cells = renderCalendarCells($month,$year,$sched);
 
-//        $this->assertPattern('/6:00-7:00 PM/',$cells);
+        //schedules valid but not overlapping with time
+        $this->assertNoPattern('/2015/', $cells);
+        $this->assertNoPattern('/05/', $cells);
+        $this->assertPattern('/'.$year.'/', $cells);
+        $this->assertPattern('/'.$month.'/', $cells);
+
+        $this->assertPattern('/6:00-7:00 PM/',$cells);
         $this->assertPattern('/testSubgroup1:testItem8/',$cells);
 
         $this->assertPattern('/="day-number">25/',$cells);
         $this->assertNoPattern('/="day-number">32/',$cells);
+        $this->assertNoPattern('/="day-number">0/',$cells);
+
     }
 
     // rendering tests:
-    // schedules array empty
-    // schedules array is non-existent / null / undefined
     // schedules contains bad data (e.g. non-schedule objects)
-    // month invalid
-    // year invalid
     // schedules valid but not overlapping w/ time given e.g. time is 2015/04, but scheduled things are all in 2013
 }

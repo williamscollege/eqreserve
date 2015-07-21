@@ -57,7 +57,7 @@ function renderMonthHeader($month,$year){
     /* data-next = tells calendar to increase month */
     /* data-monthnum = current month */
     $header = '<table cellpadding="0" cellspacing="0" class="calendar"><tr class = "calendar-row">
-                <td id = "prev_nav" class="nav_elt_month_prev" "data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
+                <td id = "prev_nav" class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
                 <td id = "month_display" class="month-name" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
                 <td id = "next_nav" class="nav_elt_month_next" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
@@ -147,7 +147,7 @@ function renderCalendarCells($month,$year,$schedule)
                 if ($year_bool && $month_bool) {
                     if (intval(substr($sched->start_on_date, 8, 2)) <= $list_day && $list_day <= intval(substr($sched->end_on_date, 8, 2))) {
 //                        util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
-                        $cells .= '<p class="monthly-items">' . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
+                        $cells .= '<p class="monthly-items">' . $sched->toString() . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
                     }else {
                         '<p class="monthly-items"></p>';
                     }
@@ -185,8 +185,6 @@ function renderCalendarCells($month,$year,$schedule)
 
     /* final row */
     $cells.= '</tr>';
-
-    util_prePrintR($cells);
 
     return $cells;
 }
