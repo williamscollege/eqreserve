@@ -15,7 +15,7 @@
 // TO TEST: handler behavior when no eq group id given
 // TO TEST: when bad eq group id given (version 1: none given; veriosn 2 bad data (e.g. 'a') version 3 valid syntax (e.g. 435) but group doesn't exist)
 // TO TEST: when eq group has nothing scheduled
-// TO TEST: when eq group has somethign scheduled, but for a time range not covered by the params passed in
+// TO TEST: when eq group has something scheduled, but for a time range not covered by the params passed in
 // TO TEST: when eq group has something scheduled within the time range passed in
 
     //current month
