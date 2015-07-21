@@ -101,7 +101,6 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->assertTrue($Requested_EqGroup->matchesDb);
         $this->assertEqual($Requested_EqGroup->name, 'testEqGroup1');
 
-<<<<<<< HEAD
         $this->assertEqual(count($Requested_EqGroup->schedules),0);
         $Requested_EqGroup->loadSchedules();
         $this->assertEqual(count($Requested_EqGroup->schedules),4);
@@ -114,16 +113,9 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
                 }
             }
         }
-=======
-        $Requested_EqGroup->loadSchedules();
-        $this->assertEqual(count($Requested_EqGroup->schedules),0);
->>>>>>> 9f991ff2deb92aec0a2f5016311f53b34def6844
 
         $this->signIn();
 
-        // This is what's being tested
-        //March 22, 2013: testSubgroup1: testItem1 is reserved
-<<<<<<< HEAD
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?month_num=3&year_num=2013&eq_group_id=201');
 
         $this->assertPattern('/March/');
@@ -159,29 +151,6 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->signIn();
 
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=4&year_num=2013&eq_group_id=201');
-=======
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?month_num=3&year_num=2013');
-
-        $this->assertPattern('/March/');
-        $this->assertEltByIdHasAttrOfValue('main-calendar-table','data-for-month',3);
-
-        //check that appropriate schedule elements are present
-
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','id','1003');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','id','1004');
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-date','2013-03-22');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-date','2013-03-22');
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-time','19:00:00');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-time','18:00:00');
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','duration','60M');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','duration','60M');
-
-        //check schedule display elements
-        $this->assertPattern('/6:00-7:00 PM/');
-        $this->assertPattern('/7:00-8:00 PM/');
-        $this->assertPattern('/testSubgroup1/');
-        $this->assertPattern('/testItem1/');
->>>>>>> 9f991ff2deb92aec0a2f5016311f53b34def6844
 
         $this->assertPattern('/March/');
         $this->assertEltByIdHasAttrOfValue('prev_nav','data-monthnum','3');
@@ -197,33 +166,6 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->assertEltByIdHasAttrOfValue('next_nav','data-monthnum','5');
     }
 
-<<<<<<< HEAD
-=======
-    function testAjaxPrevNav(){
-
-        $this->signIn();
-
-        // This is what's being tested
-        //March 22, 2013: testSubgroup1: testItem1 is reserved
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=4&year_num=2013');
-
-        $this->assertPattern('/March/');
-        $this->assertEltByIdHasAttrOfValue('main-calendar-table','data-for-month',3);
-    }
-
-    function testAjaxNextNav(){
-
-        $this->signIn();
-
-        // This is what's being tested
-        //March 22, 2013: testSubgroup1: testItem1 is reserved
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?next=1&month_num=4&year_num=2013');
-
-        $this->assertPattern('/May/');
-        $this->assertEltByIdHasAttrOfValue('main-calendar-table','data-for-month',5);
-    }
-
->>>>>>> 9f991ff2deb92aec0a2f5016311f53b34def6844
   function testNoEqGroupID() {
 
       $this->signIn();
