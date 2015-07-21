@@ -11,12 +11,36 @@
     # Fetch AJAX values for month to month views
     # NOTE: condition ? when_true : when_false
     #------------------------------------------------#
+    //Requested eqgroup id to use to get the schedule
     $eq_group_id = htmlentities((isset($_REQUEST["eq_group_id"])) ? util_quoteSmart($_REQUEST["eq_group_id"]) : 0);
+<<<<<<< HEAD
+
+    $Eq_Group = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
+
+    if(strval($eq_group_id)=='0'){
+        $result['notes'] = 'Missing equipment group ID';
+        echo json_encode($result);
+        exit;
+    }elseif(intval($eq_group_id)>0){
+        if(!($Eq_Group->matchesDb)){
+            $result['notes'] = 'Equipment group does not exist';
+            echo json_encode($result);
+            exit;
+        }
+    }else{
+        $result['notes'] = 'Invalid equipment group ID';
+        echo json_encode($result);
+        exit;
+    }
+
+    $Eq_Group->loadSchedules();
+=======
 // TO TEST: handler behavior when no eq group id given
 // TO TEST: when bad eq group id given (version 1: none given; veriosn 2 bad data (e.g. 'a') version 3 valid syntax (e.g. 435) but group doesn't exist)
 // TO TEST: when eq group has nothing scheduled
-// TO TEST: when eq group has somethign scheduled, but for a time range not covered by the params passed in
+// TO TEST: when eq group has something scheduled, but for a time range not covered by the params passed in
 // TO TEST: when eq group has something scheduled within the time range passed in
+>>>>>>> 9f991ff2deb92aec0a2f5016311f53b34def6844
 
     //current month
     $baseMonth = htmlentities((isset($_REQUEST["month_num"])) ? util_quoteSmart($_REQUEST["month_num"]) : 0);
@@ -26,28 +50,15 @@
     $next = htmlentities((isset($_REQUEST["next"])) ? util_quoteSmart($_REQUEST["next"]) : 0);
     $year = htmlentities((isset($_REQUEST["year_num"])) ? util_quoteSmart($_REQUEST["year_num"]) : 0);
 
-    //will have to fetch from the database here
-    //In order to get items, should send in the schedule to get the items
-    //******* working on it ******* //
-
     #------------------------------------------------#
     # Fetch AJAX values for month to day views
     #------------------------------------------------#
     $clickedDay = htmlentities((isset($_REQUEST["caldate"])) ? util_quoteSmart($_REQUEST["caldate"]) : 0);
     $clickedMonth = htmlentities((isset($_REQUEST["calmonth"])) ? util_quoteSmart($_REQUEST["calmonth"]) : 0);
-    //pass in schedules (array)
-
 
     #------------------------------------------------#
     # Carry out corresponding actions for views
     #------------------------------------------------#
-
-    //fetched schedule should stay the same... do not have to find it every time we change months
-//    if (count($Requested_EqGroup->schedules) > 0) {
-//        foreach ($Requested_EqGroup->schedules as $sched) {
-//            $all_sched[] = $sched;
-//        }
-//    }
 
     if($clickedDay!=0){
         $items = array("things","other things","more things");
@@ -55,12 +66,10 @@
         //draw appropriate calendar
         echo draw_SingleDayCalendar($clickedMonth, $clickedDay, $items);
     }elseif($baseMonth!=0){
-//        $items = array("things","other things","more things");
-
+        //use util functions to find prev or next month?
         //next or previous month
         $month = (int)$baseMonth + (int)$next + (int)$prev;
 
-        //find items again
         //skips to the next or previous year
         if($month<1){
             $year = $year - 1;
@@ -70,6 +79,6 @@
             $month = 1;
         }
         //draws appropriate calendar
-        echo draw_MonthlyCalendar($month, $year, $all_sched);
+        echo draw_MonthlyCalendar($month, $year, $Eq_Group->schedules);
     }
 ?>

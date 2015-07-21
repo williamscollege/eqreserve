@@ -56,9 +56,15 @@ function renderMonthHeader($month,$year){
     /* data-prev = tells calendar to decrease month */
     /* data-next = tells calendar to increase month */
     /* data-monthnum = current month */
+<<<<<<< HEAD
+    $header = '<tr class = "calendar-row">
+                <td id = "prev_nav" class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
+                <td id = "month_display" class="month-name" data-monthnum ="'.$month.'" data-yearnum = "'.$year.'" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
+=======
     $header = '<table cellpadding="0" cellspacing="0" class="calendar"><tr class = "calendar-row">
-                <td id = "prev_nav" class="nav_elt_month_prev" "data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
+                <td id = "prev_nav" class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
                 <td id = "month_display" class="month-name" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
+>>>>>>> 9f991ff2deb92aec0a2f5016311f53b34def6844
                 <td id = "next_nav" class="nav_elt_month_next" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
     return $header;
@@ -108,9 +114,6 @@ function renderCalendarCells($month,$year,$schedule)
         $days_in_this_week++;
     endfor;
 
-    //CAUSING AN ERROR CHECK THIS
-//    $items = array("this", "that", "those");
-
     $month_bool = FALSE;
     $year_bool = FALSE;
     //Extract month of the start on date and if it is not within the month then discard items
@@ -134,6 +137,8 @@ function renderCalendarCells($month,$year,$schedule)
 //
 //    util_prePrintR($items);
 
+    //*******TO IMPLEMENT: REPEATS FOR ITEM DAYS AND MULTIPLE ITEMS*******//
+
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
 
         $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'">';
@@ -147,22 +152,13 @@ function renderCalendarCells($month,$year,$schedule)
                 if ($year_bool && $month_bool) {
                     if (intval(substr($sched->start_on_date, 8, 2)) <= $list_day && $list_day <= intval(substr($sched->end_on_date, 8, 2))) {
 //                        util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
-                        $cells .= '<p class="monthly-items">' . $sched->toString() . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
-                    }else {
-                        '<p class="monthly-items"></p>';
+                        $cells .= '<p class="monthly-items" id="schedule-'.$sched->schedule_id.'" start-date="'.$sched->start_on_date.'"
+                        start-time="'.$sched->timeblock_start_time.'" duration="'.$sched->timeblock_duration.'">' . $sched->toString() .
+                            '<br>' . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
                     }
-                }else{
-                    '<p class="monthly-items"></p>';
                 }
             }
         }
-        //check this using schedule array
-//
-//        if (is_array($items) || is_object($items)) {
-//            foreach ($items as $item) {
-//                $cells .= '<p class="monthly-items">' . $item . '</p>';
-//            }
-//        }
 
         $cells.= '</td>';
         if($running_day == 6):
@@ -196,14 +192,14 @@ function renderCalendarCells($month,$year,$schedule)
 /*************** MONTHLY CALENDAR *********************/
 function draw_MonthlyCalendar($month,$year,$all_schedules) {
     /* render header for the monthly calendar */
-    $header = renderMonthHeader($month, $year);
+    $header = '<table cellpadding="0" cellspacing="0" class="calendar">';
+    $header .= renderMonthHeader($month, $year);
 
     /* draw table */
     $headings = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
     $calendar_days = '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
 
     /* make the cells with days and items */
-    //where should we decide which items are allowed in the calendar?
     $calendar_cells = renderCalendarCells($month, $year, $all_schedules);
 
 	/* end the table */

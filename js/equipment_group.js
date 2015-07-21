@@ -1161,7 +1161,8 @@ $(document).ready(function () {
             data: {
                 'prev': $(this).attr('data-prev'),
                 'month_num': $(this).attr('data-monthnum'),
-                'year_num': $(this).attr('data-yearnum')
+                'year_num': $(this).attr('data-yearnum'),
+                'eq_group_id': $("#managerView").attr('data-eid')
 			}
         })
 
@@ -1187,8 +1188,9 @@ $(document).ready(function () {
 				//'schedule': scheduleId, //can get it from schedule.php
 				'next': $(this).attr('data-next'),
                 'month_num': $(this).attr('data-monthnum'),
-                'year_num': $(this).attr('data-yearnum')
-			}
+                'year_num': $(this).attr('data-yearnum'),
+                'eq_group_id': $("#managerView").attr('data-eid')
+            }
         })
 
             //replaces the current monthly view

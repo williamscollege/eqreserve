@@ -320,33 +320,41 @@
 
 /******************************************/
 function util_getMonthNumFromDate($date){
-    return $date;
+    return $date->format('m');
 }
 
 function util_getCurrentMonthNum(){
-    return '5';
+    return date("m");
 }
 
 function util_getPrevMonthNum($date){
-    return $date;
+    $interval = new DateInterval('P1M');
+    $date->sub($interval);
+    return $date->format('m');
 }
 
 function util_getNextMonthNum($date){
-    return $date;
+    $interval = new DateInterval('P1M');
+    $date->add($interval);
+    return $date->format('m');
 }
 
 function util_getYearNumFromDate($someDate){
-    return $someDate;
+    return $someDate->format('Y');
 }
 
 function util_getCurrentYearNum(){
-    return '2012';
+    return date("Y");
 }
 
 function util_getPrevYearNum($someDate){
-    return $someDate;
+    $interval = new DateInterval('P1Y');
+    $someDate->sub($interval);
+    return $someDate->format('Y');
 }
 
 function util_getNextYearNum($someDate){
-    return $someDate;
+    $interval = new DateInterval('P1Y');
+    $someDate->add($interval);
+    return $someDate->format('Y');
 }

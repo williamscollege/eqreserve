@@ -55,13 +55,17 @@
 <div>
     <div id="monthly_calendar_view" >
 		<?php
-        //Get items only for that month (look at the dates)
-        //If start on date contains year-month then put it in the calendar
-
         $month = '7'; //find a way to use current day as start day
         $year = '2015';
 
+
+//            util_prePrintR($all_schedules); //debugging purposes
+            $month = util_getCurrentMonthNum();
+            $year = util_getCurrentYearNum();
+            echo draw_MonthlyCalendar($month, $year,$all_items);
+
         echo draw_MonthlyCalendar($month, $year,$Requested_EqGroup->schedules);
+
         ?>
     </div>
 
