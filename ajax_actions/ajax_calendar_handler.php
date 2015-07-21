@@ -13,8 +13,6 @@
     #------------------------------------------------#
     //Requested eqgroup id to use to get the schedule
     $eq_group_id = htmlentities((isset($_REQUEST["eq_group_id"])) ? util_quoteSmart($_REQUEST["eq_group_id"]) : 0);
-<<<<<<< HEAD
-
     $Eq_Group = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
 
     if(strval($eq_group_id)=='0'){
@@ -34,13 +32,6 @@
     }
 
     $Eq_Group->loadSchedules();
-=======
-// TO TEST: handler behavior when no eq group id given
-// TO TEST: when bad eq group id given (version 1: none given; veriosn 2 bad data (e.g. 'a') version 3 valid syntax (e.g. 435) but group doesn't exist)
-// TO TEST: when eq group has nothing scheduled
-// TO TEST: when eq group has something scheduled, but for a time range not covered by the params passed in
-// TO TEST: when eq group has something scheduled within the time range passed in
->>>>>>> 9f991ff2deb92aec0a2f5016311f53b34def6844
 
     //current month
     $baseMonth = htmlentities((isset($_REQUEST["month_num"])) ? util_quoteSmart($_REQUEST["month_num"]) : 0);
