@@ -108,31 +108,6 @@ function renderCalendarCells($month,$year,$schedule)
         $days_in_this_week++;
     endfor;
 
-    $month_bool = FALSE;
-    $year_bool = FALSE;
-    //Extract month of the start on date and if it is not within the month then discard items
-    //Extract year of the start on date and if it is not within the year then discard items
-    foreach ($schedule as $sched) {
-        if (intval(substr($sched->start_on_date, 0, 4)) == $year) {
-            $year_bool = TRUE;
-        }
-        if (intval(substr($sched->start_on_date, 5, 2)) == $month) {
-            $month_bool = TRUE;
-        }
-    }
-
-    //Requested_EqGroup gets the schedule which gets the reservations which gets the eq_items which gets the eq_subgroup
-    //Way to get the name of the item
-//    foreach ($schedule as $sched) {
-//        foreach ($sched->reservations as $r) {
-//            $items[] = $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name;
-//        }
-//    }
-//
-//    util_prePrintR($items);
-
-    //*******TO IMPLEMENT: REPEATS FOR ITEM DAYS AND MULTIPLE ITEMS*******//
-
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
 
         $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'">';
@@ -140,15 +115,17 @@ function renderCalendarCells($month,$year,$schedule)
         $cells.= '<div class="day-number">'.$list_day.'</div>';
 
         /** add in items here */
-        //if list day is equal to the start_on_date day of the item then add in the item and keep on adding in until the list day equals the end_on_date day
-        foreach ($schedule as $sched) {
-            foreach ($sched->reservations as $r) {
-                if ($year_bool && $month_bool) {
-                    if (intval(substr($sched->start_on_date, 8, 2)) <= $list_day && $list_day <= intval(substr($sched->end_on_date, 8, 2))) {
-//                        util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
-                        $cells .= '<p class="monthly-items" id="schedule-'.$sched->schedule_id.'" start-date="'.$sched->start_on_date.'"
-                        start-time="'.$sched->timeblock_start_time.'" duration="'.$sched->timeblock_duration.'">' . $sched->toString() .
+        foreach($schedule as $sched) {
+            foreach ($sched->time_blocks as $tb) {
+                foreach ($sched->reservations as $r) {
+                    if (intval(substr($tb->start_datetime, 0, 4)) == $year && intval(substr($tb->start_datetime, 5, 2)) == $month && intval(substr($tb->start_datetime, 8, 2)) == $list_day) {
+                        //                    util_prePrintR('hello');
+                        //                    $r = Reservation::getOneFromDb($tb->schedule_id, $this->db);
+                        //                    util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
+                        $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                        start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toString() .
                             '<br>' . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
+
                     }
                 }
             }

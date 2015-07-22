@@ -139,6 +139,7 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
 
         //check schedule display elements
         $this->assertPattern('/10:00-10:15 AM/');
+        $this->assertPattern('/10:00-10:30 AM/');
         $this->assertPattern('/6:00-7:00 PM/');
         $this->assertPattern('/testSubgroup1/');
         $this->assertPattern('/testItem1/');

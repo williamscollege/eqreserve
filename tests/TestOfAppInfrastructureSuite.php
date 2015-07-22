@@ -31,6 +31,7 @@
 //
 //			$this->addFile('app_infrastructure_tests/TestOfTimeBlock.class.php');
 //			$this->addFile('app_infrastructure_tests/TestOfSchedule.class.php');
+			$this->addFile('app_infrastructure_tests/TestOfCalendarUtil.php');
 
 
 			# Sound Effect
