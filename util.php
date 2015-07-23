@@ -307,6 +307,33 @@
 		return "$first_part-$second_part";
 	}
 
+    //Same as above without the date
+    function util_timeRangeStringShort($tstart, $tstop){
+        if (!is_array($tstart)) {
+            $tstart = util_processTimeString($tstart);
+        }
+        if (!is_array($tstop)) {
+            $tstop = util_processTimeString($tstop);
+        }
+
+        $first_part  = $tstart['hap'] . ':' . $tstart['mi'];
+        $second_part = '';
+
+        if ($tstart['date'] != $tstop['date']) {
+            $first_part .= ' ' . $tstart['ap'];
+            $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+        }
+        elseif ($tstart['ap'] != $tstop['ap']) {
+            $first_part .= ' ' . $tstart['ap'];
+            $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+        }
+        else {
+            $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+        }
+
+        return "$first_part-$second_part";
+    }
+
 
 	#####################################
 	# Array Map Object Queries

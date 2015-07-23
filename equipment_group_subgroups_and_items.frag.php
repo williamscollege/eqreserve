@@ -1,5 +1,7 @@
 <form action="ajax_actions/ajax_schedule_reservations.php" class="form-horizontal" id="frmAjaxScheduleReservations" name="frmAjaxScheduleReservations" method="post">
 <input type="hidden" id="scheduleEqGroupID" name="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
+<input type="hidden" id="reservRestrictionMin" name="restrictionMin" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" />
+<input type="hidden" id="reservRestrictionMax" name="restrictionMax" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="" />
@@ -140,11 +142,13 @@
 			<input type="text" id="scheduleStartOnDate" name="scheduleStartOnDate" class="input-small" maxlength="12" />
 			<span id="iconHackScheduleStartOnDate" class="add-on cursorPointer"><i class="icon-calendar"></i></span>
 		</div>
+<!--        timepicker division -->
 		<div id="wrapperScheduleStartTimeRaw" class="input-append bootstrap-timepicker" title="Start time">
 			<input type="text" id="scheduleStartTimeRaw" name="scheduleStartTimeRaw" class="input-small" value="" maxlength="8" />
 			<span class="add-on"><i class="icon-time"></i></span>
 		</div>
 		<select id="scheduleDuration" name="scheduleDuration" class="input-large">
+<!--            the duration here should be within the duration chunk, be at least minimum and not exceed maximum-->
 			<option value="" title="Please select duration">Select duration</option>
 			<option value="5M">5 minutes</option>
 			<option value="10M">10 minutes</option>

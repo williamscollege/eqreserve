@@ -91,10 +91,16 @@ $(document).ready(function () {
 	});
 	// Reserve Equipment: timepicker
 	$("#scheduleStartTimeRaw").timepicker({
-		minuteStep: 15,
+		minuteStep: util_durationToInt($("#managerView").attr("data-duration-chunk")), /* takes into account time restrictions */
 		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
 	});
+
+    // Convert duration (ex: '5M') to integer (ex: 5)
+    function util_durationToInt(dur){
+        var intDur = dur.substring(0,2);
+        return parseInt(intDur);
+    }
 
 	// Convert initial integer values to pretty text for standard output to screen
 	$('#print_minDurationMinutes').text(util_minutesToWords($('#print_minDurationMinutes').text()));

@@ -75,7 +75,7 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
         $this->assertPattern('/'.$month.'/', $cells);
 
         $this->assertPattern('/6:00-7:00 PM/',$cells);
-        $this->assertPattern('/testSubgroup1:testItem8/',$cells);
+        $this->assertPattern('/testSubgroup1:<br>testItem8/',$cells);
 
         $this->assertPattern('/="day-number">25/',$cells);
         $this->assertNoPattern('/="day-number">32/',$cells);

@@ -114,7 +114,9 @@ function renderCalendarCells($month,$year,$schedule)
         /* add in the day number */
         $cells.= '<div class="day-number">'.$list_day.'</div>';
 
+        $cells .= '<div class = "all-items">';
         /** add in items here */
+        //flag_delete: should display?
         foreach($schedule as $sched) {
             foreach ($sched->time_blocks as $tb) {
                 foreach ($sched->reservations as $r) {
@@ -123,13 +125,14 @@ function renderCalendarCells($month,$year,$schedule)
                         //                    $r = Reservation::getOneFromDb($tb->schedule_id, $this->db);
                         //                    util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
                         $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                        start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toString() .
-                            '<br>' . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
+                        start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
+                            '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
 
                     }
                 }
             }
         }
+        $cells .= '</div>';
 
         $cells.= '</td>';
         if($running_day == 6):

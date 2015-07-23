@@ -55,14 +55,13 @@
 <div>
     <div id="monthly_calendar_view" >
 		<?php
-        $month = '7'; //find a way to use current day as start day
-        $year = '2015';
+//        $month = '7'; //find a way to use current day as start day
+//        $year = '2015';
 
 
 //            util_prePrintR($all_schedules); //debugging purposes
-            $month = util_getCurrentMonthNum();
-            $year = util_getCurrentYearNum();
-            echo draw_MonthlyCalendar($month, $year,$all_items);
+        $month = util_getCurrentMonthNum();
+        $year = util_getCurrentYearNum();
 
         echo draw_MonthlyCalendar($month, $year,$Requested_EqGroup->schedules);
 

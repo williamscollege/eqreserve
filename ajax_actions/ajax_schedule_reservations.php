@@ -39,7 +39,10 @@
 	$strScheduleSummaryText      = htmlentities((isset($_REQUEST["scheduleSummaryText"])) ? util_quoteSmart($_REQUEST["scheduleSummaryText"]) : 0);
 	$strScheduleNotes            = htmlentities((isset($_REQUEST["scheduleNotes"])) ? util_quoteSmart($_REQUEST["scheduleNotes"]) : 0);
 	$confirmConflictOverrideFlag = isset($_REQUEST["scheduleConflictOverrideFlag"]) ? $_REQUEST["scheduleConflictOverrideFlag"] : 0;
+    $strReservRestrictionMin     = isset($_REQUEST["restrictionMin"]) ? $_REQUEST["restrictionMin"] : 0;
+    $strReservRestrictionMax     = isset($_REQUEST["restrictionMax"]) ? $_REQUEST["restrictionMax"] : 0;
 
+    # if duration < min or > max then cannot do
 
 	# fetch repeating days (if any)
 	$repeat_dow = array();
@@ -107,6 +110,26 @@
 		echo json_encode($results);
 		exit;
 	}
+//
+//    function util_durationToInt($dur){
+//        $intDur = substr($dur, 0, 2);
+//        return intval($intDur);
+//    }
+//
+//    $intSchedDur = util_durationToInt($strScheduleDuration);
+//    $intReservMin = util_durationToInt($strReservRestrictionMin);
+//    $intReservMax = util_durationToInt($strReservRestrictionMax);
+//
+//    util_prePrintR($intSchedDur);
+//    util_prePrintR($intReservMin);
+//    util_prePrintR($intReservMax);
+//
+//    # check if duration time matches reservation restrictions
+//    if(!($intSchedDur>$intReservMin && $intSchedDur<$intReservMax)){
+//        $results['note'] = 'not within reservation restrictions';
+//        echo json_encode($results);
+//        exit;
+//    }
 
 	# TODO: NOTE this is obsolete as the EqGroup::getOneFromDb above returns false if eq_group.flag_delete = true
 	# check that eq_group is active

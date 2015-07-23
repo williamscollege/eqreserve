@@ -47,6 +47,10 @@
 			$this->loadUser();
 		}
 
+        public function toStringShort(){
+            return util_timeRangeStringShort($this->start_datetime, $this->end_datetime);
+        }
+
 		public function toString() {
 			return util_timeRangeString($this->start_datetime, $this->end_datetime);
 		}
