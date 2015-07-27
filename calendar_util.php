@@ -91,7 +91,7 @@ function renderItemRows($items,$headings) {
     return $rows;
 }
 
-/******* Add in all the cells with the appropriate days and items ******/
+///******* Add in all the cells with the appropriate days and items ******/
 function renderCalendarCells($month,$year,$schedule)
 {
     /* fill in the days */

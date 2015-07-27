@@ -98,7 +98,7 @@ $(document).ready(function () {
 
     // Convert duration (ex: '5M') to integer (ex: 5)
     function util_durationToInt(dur){
-        var intDur = dur.substring(0,2);
+        var intDur = dur.substring(0,dur.length);
         return parseInt(intDur);
     }
 
@@ -1191,7 +1191,6 @@ $(document).ready(function () {
             url: 'ajax_actions/ajax_calendar_handler.php',
             dataType: 'html',
             data: {
-				//'schedule': scheduleId, //can get it from schedule.php
 				'next': $(this).attr('data-next'),
                 'month_num': $(this).attr('data-monthnum'),
                 'year_num': $(this).attr('data-yearnum'),
@@ -1212,5 +1211,55 @@ $(document).ready(function () {
         $("#daily_calendar_view").hide();
     });
 
+	$(document).on("click", "#show-reservations-buttons .show-this-year", function(){
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'show_this': $(this).attr('data-show-this'),
+				'year_num': $("#prev_nav").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid'),
+				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
+				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
+			}
+		})
+			.success(function(html){
+				$("#reservationList").html(html);
+		})
+	});
+
+	$(document).on("click", "#show-reservations-buttons .show-all", function(){
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'show_all': $(this).attr('data-show-all'),
+				'year_num': $("#prev_nav").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid'),
+				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
+				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
+			}
+		})
+			.success(function(html){
+				$("#reservationList").html(html);
+			})
+	});
+
+	$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'show_month': $(this).attr('data-show-month'),
+				'year_num': $("#prev_nav").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid'),
+				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
+				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
+			}
+		})
+			.success(function(html){
+				$("#reservationList").html(html);
+			})
+	});
 
 });

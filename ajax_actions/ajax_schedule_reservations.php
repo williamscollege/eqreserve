@@ -8,7 +8,7 @@
 	require_once('../classes/queued_message.class.php');
 
 	# Testing Form output (scrap later)
-	//	util_prePrintR($_REQUEST);
+//		util_prePrintR($_REQUEST);
 
 	# TODO Problem: Caching Problem results if user hits browser back button, then re-submits form: a new schedule is created, but the old schedule_id is entered for reservations.
 	# TODO Solution: Generate unique id key on schedule php page; on server side, check for existence of that key in [db table];
@@ -39,8 +39,10 @@
 	$strScheduleSummaryText      = htmlentities((isset($_REQUEST["scheduleSummaryText"])) ? util_quoteSmart($_REQUEST["scheduleSummaryText"]) : 0);
 	$strScheduleNotes            = htmlentities((isset($_REQUEST["scheduleNotes"])) ? util_quoteSmart($_REQUEST["scheduleNotes"]) : 0);
 	$confirmConflictOverrideFlag = isset($_REQUEST["scheduleConflictOverrideFlag"]) ? $_REQUEST["scheduleConflictOverrideFlag"] : 0;
-    $strReservRestrictionMin     = isset($_REQUEST["restrictionMin"]) ? $_REQUEST["restrictionMin"] : 0;
-    $strReservRestrictionMax     = isset($_REQUEST["restrictionMax"]) ? $_REQUEST["restrictionMax"] : 0;
+
+    //come as integers/in terms of hours (ex: 2 week is 20160)
+    $reservRestrictionMin     = isset($_REQUEST["restrictionMin"]) ? $_REQUEST["restrictionMin"] : 0;
+    $reservRestrictionMax     = isset($_REQUEST["restrictionMax"]) ? $_REQUEST["restrictionMax"] : 0;
 
     # if duration < min or > max then cannot do
 
@@ -110,22 +112,92 @@
 		echo json_encode($results);
 		exit;
 	}
-//
-//    function util_durationToInt($dur){
-//        $intDur = substr($dur, 0, 2);
-//        return intval($intDur);
+
+//    function util_durToInt($schedDur){
+//        switch($schedDur) {
+//            case '5M':
+//                $schedDur = 5;
+//                break;
+//            case '10M':
+//                $schedDur = 10;
+//                break;
+//            case '15M':
+//                $schedDur = 15;
+//                break;
+//            case '20M':
+//                $schedDur = 20;
+//                break;
+//            case '30M':
+//                $schedDur = 30;
+//                break;
+//            case '45M':
+//                $schedDur = 45;
+//                break;
+//            case '60M':
+//                $schedDur = 60;
+//                break;
+//            case '90M':
+//                $schedDur = 90;
+//                break;
+//            case '2H':
+//                $schedDur = 120;
+//                break;
+//            case '3H':
+//                $schedDur = 180;
+//                break;
+//            case '4H':
+//                $schedDur = 240;
+//                break;
+//            case '5H':
+//                $schedDur = 300;
+//                break;
+//            case '6H':
+//                $schedDur = 360;
+//                break;
+//            case '7H':
+//                $schedDur = 420;
+//                break;
+//            case '8H':
+//                $schedDur = 480;
+//                break;
+//            case '16H':
+//                $schedDur = 960;
+//                break;
+//            case '1D':
+//                $schedDur = 1440;
+//                break;
+//            case '2D':
+//                $schedDur = 2880;
+//                break;
+//            case '3D':
+//                $schedDur = 4320;
+//                break;
+//            case '4D':
+//                $schedDur = 5760;
+//                break;
+//            case '5D':
+//                $schedDur = 7200;
+//                break;
+//            case '6D':
+//                $schedDur = 8640;
+//                break;
+//            case '7D':
+//                $schedDur = 10080;
+//                break;
+//            case '14D':
+//                $schedDur = 20160;
+//                break;
+//            case '28D':
+//                $schedDur = 40320;
+//                break;
+//        }
+//        return $schedDur;
 //    }
-//
-//    $intSchedDur = util_durationToInt($strScheduleDuration);
-//    $intReservMin = util_durationToInt($strReservRestrictionMin);
-//    $intReservMax = util_durationToInt($strReservRestrictionMax);
-//
-//    util_prePrintR($intSchedDur);
-//    util_prePrintR($intReservMin);
-//    util_prePrintR($intReservMax);
+
+//    $intSchedDur = util_durToInt($strScheduleDuration);
 //
 //    # check if duration time matches reservation restrictions
-//    if(!($intSchedDur>$intReservMin && $intSchedDur<$intReservMax)){
+//    if(!($intSchedDur>$reservRestrictionMin && $intSchedDur<$reservRestrictionMax)){
 //        $results['note'] = 'not within reservation restrictions';
 //        echo json_encode($results);
 //        exit;
