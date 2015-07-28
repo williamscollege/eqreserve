@@ -234,6 +234,7 @@
 	echo "<div id=\"managerView\" data-show-del-isadmin =\"$USER->flag_is_system_admin\" data-show-del-ismanager=\"$is_group_manager\" data-eid =\"$Requested_EqGroup->eq_group_id\" data-duration-chunk=\"$Requested_EqGroup->duration_chunk_minutes\">\n";
 	echo "<strong>Name:</strong> <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
 	echo "<strong>Description:</strong> <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
+    //convert the minutes into prettier form
     echo "<strong>Reservation Time Restrictions:</strong> <span id=\"print_reservationTimeRestrictions\">" . "Can be reserved for ". $Requested_EqGroup->min_duration_minutes . " minutes min., " . $Requested_EqGroup->max_duration_minutes . " minutes max., starting on the ". $Requested_EqGroup->start_minute . " hour for " . $Requested_EqGroup->duration_chunk_minutes . " minute intervals." . "</span><br />\n";
 	echo "<strong>Managed by:</strong> <ul id=\"displayListOfManagers\" class=\"inline\">";
 	echo join("\n",

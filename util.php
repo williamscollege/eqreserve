@@ -344,8 +344,7 @@
 	}
 
 
-
-/******************************************/
+/***********FUNCTIONS TO FETCH DATE VALUES***********/
 function util_getMonthNumFromDate($date){
     return $date->format('m');
 }
@@ -387,173 +386,55 @@ function util_getNextYearNum($someDate){
 }
 
 
-/*************************/
+/***** convert durations types (5M, 2H, 3D) ******/
 function util_durToInt($schedDur)
 {
-    switch ($schedDur) {
-        case '5M':
-            $schedDur = 5;
-            break;
-        case '10M':
-            $schedDur = 10;
-            break;
-        case '15M':
-            $schedDur = 15;
-            break;
-        case '20M':
-            $schedDur = 20;
-            break;
-        case '30M':
-            $schedDur = 30;
-            break;
-        case '45M':
-            $schedDur = 45;
-            break;
-        case '60M':
-            $schedDur = 60;
-            break;
-        case '90M':
-            $schedDur = 90;
-            break;
-        case '2H':
-            $schedDur = 120;
-            break;
-        case '3H':
-            $schedDur = 180;
-            break;
-        case '4H':
-            $schedDur = 240;
-            break;
-        case '5H':
-            $schedDur = 300;
-            break;
-        case '6H':
-            $schedDur = 360;
-            break;
-        case '7H':
-            $schedDur = 420;
-            break;
-        case '8H':
-            $schedDur = 480;
-            break;
-        case '16H':
-            $schedDur = 960;
-            break;
-        case '1D':
-            $schedDur = 1440;
-            break;
-        case '2D':
-            $schedDur = 2880;
-            break;
-        case '3D':
-            $schedDur = 4320;
-            break;
-        case '4D':
-            $schedDur = 5760;
-            break;
-        case '5D':
-            $schedDur = 7200;
-            break;
-        case '6D':
-            $schedDur = 8640;
-            break;
-        case '7D':
-            $schedDur = 10080;
-            break;
-        case '14D':
-            $schedDur = 20160;
-            break;
-        case '28D':
-            $schedDur = 40320;
-            break;
-        case '56D':
-            $schedDur = 80640;
-            break;
+    $intReturn = 1;
+    $length = strlen($schedDur);
+
+    if(substr($schedDur, $length-1) == 'M'){
+        $intReturn = intval(substr($schedDur, 0, $length-1));
+    }elseif(substr($schedDur, $length-1) == 'H'){
+        $intReturn = intval(substr($schedDur, 0, $length-1));
+        $intReturn = $intReturn * 60;
+    }elseif(substr($schedDur, $length-1) == 'D'){
+        $intReturn = intval(substr($schedDur, 0, $length-1));
+        $intReturn = $intReturn * 60 * 24;
     }
-    return $schedDur;
+
+    return $intReturn;
 }
 
 function util_durToString($schedDur)
 {
-    switch ($schedDur) {
-        case '5M':
-            $schedDur = '5 minutes';
-            break;
-        case '10M':
-            $schedDur = '10 minutes';
-            break;
-        case '15M':
-            $schedDur = '15 minutes';
-            break;
-        case '20M':
-            $schedDur = '20 minutes';
-            break;
-        case '30M':
-            $schedDur = '30 minutes';
-            break;
-        case '45M':
-            $schedDur = '45 minutes';
-            break;
-        case '60M':
-            $schedDur = '60 minutes';
-            break;
-        case '90M':
-            $schedDur = '90 minutes';
-            break;
-        case '2H':
-            $schedDur = '2 hours';
-            break;
-        case '3H':
-            $schedDur = '3 hours';
-            break;
-        case '4H':
-            $schedDur = '4 hours';
-            break;
-        case '5H':
-            $schedDur = '5 hours';
-            break;
-        case '6H':
-            $schedDur = '6 hours';
-            break;
-        case '7H':
-            $schedDur = '7 hours';
-            break;
-        case '8H':
-            $schedDur = '8 hours';
-            break;
-        case '16H':
-            $schedDur = '16 hours';
-            break;
-        case '1D':
-            $schedDur = '24 hours';
-            break;
-        case '2D':
-            $schedDur = '2 days';
-            break;
-        case '3D':
-            $schedDur = '3 days';
-            break;
-        case '4D':
-            $schedDur = '4 days';
-            break;
-        case '5D':
-            $schedDur = '5 days';
-            break;
-        case '6D':
-            $schedDur = '6 days';
-            break;
-        case '7D':
-            $schedDur = '1 week (7 days)';
-            break;
-        case '14D':
-            $schedDur = '2 weeks';
-            break;
-        case '28D':
-            $schedDur = '4 weeks';
-            break;
-        case '56D':
-            $schedDur = '8 weeks';
-            break;
+    $strReturn = '';
+    $length = strlen($schedDur);
+
+    if(substr($schedDur, $length-1) == 'M'){
+        $strReturn = substr($schedDur, 0, $length-1);
+        $strReturn .= ' minutes';
+    }elseif(substr($schedDur, $length-1) == 'H'){
+        $strReturn = substr($schedDur, 0, $length-1);
+        $strReturn .= ' hours';
+    }elseif(substr($schedDur, $length-1) == 'D') {
+        if(intval(substr($schedDur,0,$length-1)) == 1){
+            $strReturn = '24 hours';
+        }elseif(intval(substr($schedDur,0,$length-1)) > 7){
+            $strReturn = intval(substr($schedDur, 0, $length - 1))/7;
+            $strReturn .= ' weeks';
+        }elseif(intval(substr($schedDur,0,$length-1)) == 7) {
+            $strReturn = '1 week (7 days)';
+        }else{
+            $strReturn = substr($schedDur, 0, $length - 1);
+            $strReturn .= ' days';
+        }
     }
-    return $schedDur;
+
+    return $strReturn;
+}
+
+/***** reduce hours into strings (48 = 2 days) ******/
+function util_hourToString($hour)
+{
+
 }

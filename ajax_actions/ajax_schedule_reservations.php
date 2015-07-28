@@ -43,6 +43,7 @@
     //come as integers/in terms of hours (ex: 2 week is 20160)
     $reservRestrictionMin     = isset($_REQUEST["restrictionMin"]) ? $_REQUEST["restrictionMin"] : 0;
     $reservRestrictionMax     = isset($_REQUEST["restrictionMax"]) ? $_REQUEST["restrictionMax"] : 0;
+    $reservRestrictionDur     = isset($_REQUEST["durationChunk"]) ? $_REQUEST["durationChunk"] : 0;
 
     # if duration < min or > max then cannot do
 
@@ -103,105 +104,33 @@
 
 	#------------------------------------------------#
 	# Data Validation checks
+    # results outputted in a weird column form
 	#------------------------------------------------#
 
-	# check if duration time matches expected format
+	# check if duration time selected during reservation matches expected format
 	$legalDurations = ['5M', '10M', '15M', '20M', '30M', '45M', '60M', '90M', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '16H', '1D', '2D', '3D', '4D', '5D', '6D', '7D', '14D', '28D'];
-	if (!in_array($strScheduleDuration, $legalDurations)) {
+    if (!in_array($strScheduleDuration, $legalDurations)) {
 		$results['note'] = 'invalid time format for duration value';
 		echo json_encode($results);
 		exit;
 	}
 
-//    function util_durToInt($schedDur){
-//        switch($schedDur) {
-//            case '5M':
-//                $schedDur = 5;
-//                break;
-//            case '10M':
-//                $schedDur = 10;
-//                break;
-//            case '15M':
-//                $schedDur = 15;
-//                break;
-//            case '20M':
-//                $schedDur = 20;
-//                break;
-//            case '30M':
-//                $schedDur = 30;
-//                break;
-//            case '45M':
-//                $schedDur = 45;
-//                break;
-//            case '60M':
-//                $schedDur = 60;
-//                break;
-//            case '90M':
-//                $schedDur = 90;
-//                break;
-//            case '2H':
-//                $schedDur = 120;
-//                break;
-//            case '3H':
-//                $schedDur = 180;
-//                break;
-//            case '4H':
-//                $schedDur = 240;
-//                break;
-//            case '5H':
-//                $schedDur = 300;
-//                break;
-//            case '6H':
-//                $schedDur = 360;
-//                break;
-//            case '7H':
-//                $schedDur = 420;
-//                break;
-//            case '8H':
-//                $schedDur = 480;
-//                break;
-//            case '16H':
-//                $schedDur = 960;
-//                break;
-//            case '1D':
-//                $schedDur = 1440;
-//                break;
-//            case '2D':
-//                $schedDur = 2880;
-//                break;
-//            case '3D':
-//                $schedDur = 4320;
-//                break;
-//            case '4D':
-//                $schedDur = 5760;
-//                break;
-//            case '5D':
-//                $schedDur = 7200;
-//                break;
-//            case '6D':
-//                $schedDur = 8640;
-//                break;
-//            case '7D':
-//                $schedDur = 10080;
-//                break;
-//            case '14D':
-//                $schedDur = 20160;
-//                break;
-//            case '28D':
-//                $schedDur = 40320;
-//                break;
-//        }
-//        return $schedDur;
-//    }
+    $intSchedDur = util_durToInt($strScheduleDuration);
 
-//    $intSchedDur = util_durToInt($strScheduleDuration);
-//
-//    # check if duration time matches reservation restrictions
-//    if(!($intSchedDur>$reservRestrictionMin && $intSchedDur<$reservRestrictionMax)){
-//        $results['note'] = 'not within reservation restrictions';
-//        echo json_encode($results);
-//        exit;
-//    }
+    # check if duration time matches reservation restrictions
+    # check this with a test?
+    if(!($intSchedDur>=$reservRestrictionMin && $intSchedDur<=$reservRestrictionMax)){
+        $results['note'] = 'not within reservation restrictions';
+        echo json_encode($results);
+        exit;
+    }
+
+    # check if duration interval matches reservation restrictions
+    if(!($intSchedDur%$reservRestrictionDur==0)){
+        $results['note'] = 'does not follow duration restriction';
+        echo json_encode($results);
+        exit;
+    }
 
 	# TODO: NOTE this is obsolete as the EqGroup::getOneFromDb above returns false if eq_group.flag_delete = true
 	# check that eq_group is active

@@ -2,6 +2,7 @@
 <input type="hidden" id="scheduleEqGroupID" name="eqGroupID" value="<?php echo $Requested_EqGroup->eq_group_id; ?>" />
 <input type="hidden" id="reservRestrictionMin" name="restrictionMin" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" />
 <input type="hidden" id="reservRestrictionMax" name="restrictionMax" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" />
+<input type="hidden" id="reservRestrictionDur" name="durationChunk" value="<?php echo $Requested_EqGroup->duration_chunk_minutes; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="" />
@@ -155,13 +156,17 @@
 <!--			<option value="10M">10 minutes</option>-->
             <?php
                 //restrict the durations that show up according to the min and maximum duration reservation restrictions
-                //this doesn't take into account if they put in their own values
-                //if rules edited, this changes after a refresh
-                $durationArray = array("15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
+                //detail: if rules edited, changes after a refresh
+                //only shows from the duration array
+                //****** WEB TEST ********
+                $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
                 foreach($durationArray as $dur){
                     if(util_durToInt($dur)>=$Requested_EqGroup->min_duration_minutes && util_durToInt($dur)<=$Requested_EqGroup->max_duration_minutes){
-                        $durString = util_durToString($dur);
-                        echo "<option value='".$dur."'>".$durString."</option>";
+                        //checks that the duration within chunk minutes
+                        if(util_durToInt($dur)%$Requested_EqGroup->duration_chunk_minutes==0) {
+                            $durString = util_durToString($dur);
+                            echo "<option value='" . $dur . "'>" . $durString . "</option>";
+                        }
                     }
                 }
             ?>
@@ -190,6 +195,7 @@
 <!--			<option value="28D">4 weeks</option>-->
 <!--            <option value="56D">8 weeks</option>-->
 		</select>
+<!--        should only show when applies-->
 		<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>
 	</div>
 </div>

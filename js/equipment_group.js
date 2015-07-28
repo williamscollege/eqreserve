@@ -5,10 +5,79 @@ $(document).ready(function () {
 	// Listeners
 	// ***************************
 
+	//function changeShownItems(month, year, show_which){
+	//	if(show_which=='0'){
+	//		$('.item-listing').each(function(){
+	//			if($(this).data('year')==year && $(this).data('month')=='month'){
+	//				if($(this).hasClass('hide')){
+	//					$(this).removeClass("hide");
+	//				}
+	//				if(("#managerView").hasClass('hide')){
+	//					$(".editing-control").removeClass("hide");
+	//				}
+	//			}
+	//		})
+	//	}else if(show_which=='1'){
+	//		$('.item-listing').each(function(){
+	//			if($(this).data('year')==year){
+	//				if($(this).hasClass('hide')){
+	//					$(this).removeClass("hide");
+	//				}
+	//			}
+	//			if(("#managerView").hasClass('hide')){
+	//				$(".editing-control").removeClass("hide");
+	//			}
+	//		})
+	//	}else if(show_which=='2'){
+	//		$('.item-listing').each(function(){
+	//			if($(this).hasClass('hide')){
+	//				$(this).removeClass("hide");
+	//			}
+	//		})
+	//		if(("#managerView").hasClass('hide')){
+	//			$(".editing-control").removeClass("hide");
+	//		}
+	//	}
+	//}
+    //
+	////****** related to showing reservations list
+	//$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
+	//	var show_which = $('.show-this-month').data('show-month');
+	//	var month = $('.show-this-month').data('thisMonth');
+	//	var year = $('.show-this-month').data('thisYear');
+	//	changeShownItems(month,year,show_which);
+    //
+	//	$('.show-this-month').addClass('hide');
+	//	$('.show-this-year').removeClass('hide');
+	//	$('.show-all').removeClass('hide');
+	//});
+    //
+	//$(document).on("click", "#show-reservations-buttons .show-this-year", function(){
+	//	var show_which = $('.show-this-year').data('show-this');
+	//	var year = $('.show-this-year').data('thisYear');
+	//	var month = 0;
+	//	changeShownItems(month,year,show_which);
+    //
+	//	$('.show-this-month').removeClass('hide');
+	//	$('.show-this-year').addClass('hide');
+	//	$('.show-all').removeClass('hide');
+	//});
+    //
+	//$(document).on("click", "#show-reservations-buttons .show-all", function(){
+	//	var show_which = $('.show-all').data('show-all');
+	//	var month = 0;
+	//	var year = 0;
+	//	changeShownItems(month,year,show_which);
+    //
+	//	$('.show-this-month').removeClass('hide');
+	//	$('.show-this-year').removeClass('hide');
+	//	$('.show-all').addClass('hide');
+	//});
+
 	// Toggle Equipment Group Settings (text or input fields)
 	$("#toggleGroupSettings").click(function () {
 		// toggle form or plain-text
-		$("#managerView, #managerEdit, .editing-control, .view-control").toggleClass("hide");
+		$("#managerView, #managerEdit, .view-control").toggleClass("hide");
 		// toggle button label
 		if ($("#managerView").hasClass('hide')) {
 			$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View Equipment Group');
@@ -16,15 +85,32 @@ $(document).ready(function () {
 			$("#btnReservationCancel").click();
 			// show special manager actions
 			$(".manager-action").removeClass("hide");
-
+            $(".editing-control").removeClass("hide");
             $(".subgroup-ul").removeClass("hide");
+			//$('#item').each(function(){
+			//	if($(".item-listing").hasClass('hide')){
+			//	}else{
+			//		var schedule = "delete-schedule-" + $(this).data('schedule');
+			//		var target = document.getElementById(schedule).className;
+			//		$(target).removeClass("hide");
+			//	}
+			//})
 		}
 		else {
 			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
 			// hide special manager actions
 			$(".manager-action").addClass("hide");
+            $(".editing-control").addClass("hide");
             $(".subgroup-ul").addClass("hide");
             $(".subgroup-ul").has("li.item-in-a-subgroup").removeClass("hide");
+			//$('.item-listing').each(function(){
+			//	if($(this).hasClass('hide')){
+			//	}else{
+			//		var schedule = "delete-schedule-" + $(this).data('schedule');
+			//		var target = document.getElementById(schedule).className;
+			//		$(target).addClass('hide');
+			//	}
+			//})
 
 		}
 	});
@@ -571,13 +657,11 @@ $(document).ready(function () {
 		return t;
 	}
 
-
 	$(".delete-schedule-btn").click(function () {
 		GLOBAL_confirmHandlerData = $(this).attr('data-for-schedule');
 		var confirmText = "<p>Are you sure you want to remove that schedule of reservations?</p>\n";
 		eqrUtil_launchConfirm(confirmText, handleDeleteSchedule);
 	});
-
 
 	function handleDeleteSchedule() {
 		// show status
@@ -1210,56 +1294,5 @@ $(document).ready(function () {
         $("#monthly_calendar_view").show();
         $("#daily_calendar_view").hide();
     });
-
-	$(document).on("click", "#show-reservations-buttons .show-this-year", function(){
-		$.ajax({
-			url: 'ajax_actions/ajax_calendar_handler.php',
-			dataType: 'html',
-			data: {
-				'show_this': $(this).attr('data-show-this'),
-				'year_num': $("#prev_nav").attr('data-yearnum'),
-				'eq_group_id': $("#managerView").attr('data-eid'),
-				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
-				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
-			}
-		})
-			.success(function(html){
-				$("#reservationList").html(html);
-		})
-	});
-
-	$(document).on("click", "#show-reservations-buttons .show-all", function(){
-		$.ajax({
-			url: 'ajax_actions/ajax_calendar_handler.php',
-			dataType: 'html',
-			data: {
-				'show_all': $(this).attr('data-show-all'),
-				'year_num': $("#prev_nav").attr('data-yearnum'),
-				'eq_group_id': $("#managerView").attr('data-eid'),
-				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
-				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
-			}
-		})
-			.success(function(html){
-				$("#reservationList").html(html);
-			})
-	});
-
-	$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
-		$.ajax({
-			url: 'ajax_actions/ajax_calendar_handler.php',
-			dataType: 'html',
-			data: {
-				'show_month': $(this).attr('data-show-month'),
-				'year_num': $("#prev_nav").attr('data-yearnum'),
-				'eq_group_id': $("#managerView").attr('data-eid'),
-				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
-				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
-			}
-		})
-			.success(function(html){
-				$("#reservationList").html(html);
-			})
-	});
 
 });
