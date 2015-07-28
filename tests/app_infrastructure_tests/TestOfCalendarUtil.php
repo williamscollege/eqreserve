@@ -83,6 +83,18 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
 
     }
 
+    function testTimeToInt() {
+        $this->assertEqual(timeToInt('00:00:00'), 1);
+        $this->assertEqual(timeToInt('17:00:00'), 69);
+        $this->assertEqual(timeToInt('test'), 0);
+    }
+
+    function testDurationToInt() {
+        $this->assertEqual(durationToInt('60M'),4);
+        $this->assertEqual(durationToInt('14D'),100);
+        $this->assertEqual(durationToInt('a'),0);
+        $this->assertEqual(durationToInt(7),0);
+    }
     // rendering tests:
     // schedules contains bad data (e.g. non-schedule objects)
     // schedules valid but not overlapping w/ time given e.g. time is 2015/04, but scheduled things are all in 2013

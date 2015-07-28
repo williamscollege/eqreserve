@@ -65,7 +65,6 @@
 //            util_prePrintR($all_schedules); //debugging purposes
             $month = util_getCurrentMonthNum();
             $year = util_getCurrentYearNum();
-            echo draw_MonthlyCalendar($month, $year,$all_items);
 
         echo draw_MonthlyCalendar($month, $year,$Requested_EqGroup->schedules);
 
