@@ -64,6 +64,10 @@
     if (strlen($clickedDay) < 2) {
         $clickedDay = '0' . $clickedDay;
     }
+
+    if (strlen($clickedMonth) < 2) {
+        $clickedMonth = '0' . $clickedMonth;
+    }
     $clickedDate_yyyymmdd = $year . '-' . $clickedMonth . '-' . $clickedDay;
 
     #------------------------------------------------#
@@ -85,6 +89,7 @@
         $items = [];
         $reserved_item_names = [];
         $reservations = [];
+
         //load all the schedules for the clicked day
         foreach ($Requested_EqGroup->schedules as $sched) {
             $sched->loadReservations();

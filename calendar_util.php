@@ -79,7 +79,6 @@ function renderDayHeader($month,$day) {
 /****** Add in items for daily view *****/
 function renderItemRows($items,$headings,$scheds) {
     /* draw the calendar for all pieces of equipment in each subgroup */
-    $durs = [];
     // Get start times and lengths of the reservations on this day
 //    foreach ($scheds as $sched) {
 //        array_push(timeToInt($sched->timeblock_start_time), $starts);
