@@ -1226,7 +1226,9 @@ $(document).ready(function () {
             data: {
                 //day clicked on in the month
                 'caldate': $(this).attr('data-caldate'),
-                'calmonth': $(this).attr('data-monthnum')
+                'calmonth': $(this).attr('data-monthnum'),
+				'year_num': $("#next_nav").attr('data-yearnum'),
+                'eq_group_id': $("#scheduleEqGroupID").attr('value')
                 //'items': $(this).attr('data-items') //this should be an array of the items
             }
         })

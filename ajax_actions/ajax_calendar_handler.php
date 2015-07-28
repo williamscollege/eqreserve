@@ -2,6 +2,7 @@
     require_once('head_ajax.php');
     require_once('../calendar_util.php');
     require_once('../classes/eq_group.class.php');
+    //require_once('../head_pre_output.php'); //DEV
 
 
     //Debugging purposes
@@ -57,16 +58,48 @@
     #------------------------------------------------#
     $clickedDay = htmlentities((isset($_REQUEST["caldate"])) ? util_quoteSmart($_REQUEST["caldate"]) : 0);
     $clickedMonth = htmlentities((isset($_REQUEST["calmonth"])) ? util_quoteSmart($_REQUEST["calmonth"]) : 0);
+    //pass in schedules (array)
+
+    //change day to dd form
+    if (strlen($clickedDay) < 2) {
+        $clickedDay = '0' . $clickedDay;
+    }
+    $clickedDate_yyyymmdd = $year . '-' . $clickedMonth . '-' . $clickedDay;
 
     #------------------------------------------------#
     # Carry out corresponding actions for views
     #------------------------------------------------#
 
     if($clickedDay!=0){
-        $items = array("things","other things","more things");
+
+        $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
+        $Requested_EqGroup->loadSchedules();
+        $Requested_EqGroup->loadEqItems();
+
+        //util_prePrintR(array_map(function($elt){return $elt->name;},$Requested_EqGroup->eq_items));
+
+        //util_prePrintR(array_map(function($elt){return $elt->schedule_id;},$Requested_EqGroup->schedules));
+
+        //stores schedules on this day
+        $day_sched = [];
+        $items = [];
+        $reserved_item_names = [];
+        $reservations = [];
+        //load all the schedules for the clicked day
+        foreach ($Requested_EqGroup->schedules as $sched) {
+            $sched->loadReservations();
+            if ( ($sched->start_on_date == $clickedDate_yyyymmdd) || ($sched->end_on_date == $clickedDate_yyyymmdd) ) {
+                array_push($day_sched, $sched);
+            }
+        }
+        //gets every item of the eq group and ensures uniqueness
+        foreach ($Requested_EqGroup->eq_items as $item) {
+            $reserved_item_names[$item->name] = 1;
+        }
+        $items = array_keys($reserved_item_names);
 
         //draw appropriate calendar
-        echo draw_SingleDayCalendar($clickedMonth, $clickedDay, $items);
+        echo draw_SingleDayCalendar($clickedMonth, $clickedDay, $items, $day_sched);
     }elseif($baseMonth!=0){
         //use util functions to find prev or next month?
         //next or previous month
@@ -83,7 +116,7 @@
         //draws appropriate calendar
         echo draw_MonthlyCalendar($month, $year, $Eq_Group->schedules);
     }
-//
+    //
 //    /********* SIMPLIFICATION WOULD BE NICE ***********/
 //    //if show all the reservations
 //    if(intval($show_all)==2){
