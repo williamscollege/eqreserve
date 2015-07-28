@@ -307,6 +307,33 @@
 		return "$first_part-$second_part";
 	}
 
+    //Same as above without the date
+    function util_timeRangeStringShort($tstart, $tstop){
+        if (!is_array($tstart)) {
+            $tstart = util_processTimeString($tstart);
+        }
+        if (!is_array($tstop)) {
+            $tstop = util_processTimeString($tstop);
+        }
+
+        $first_part  = $tstart['hap'] . ':' . $tstart['mi'];
+        $second_part = '';
+
+        if ($tstart['date'] != $tstop['date']) {
+            $first_part .= ' ' . $tstart['ap'];
+            $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+        }
+        elseif ($tstart['ap'] != $tstop['ap']) {
+            $first_part .= ' ' . $tstart['ap'];
+            $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+        }
+        else {
+            $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+        }
+
+        return "$first_part-$second_part";
+    }
+
 
 	#####################################
 	# Array Map Object Queries
@@ -357,4 +384,176 @@ function util_getNextYearNum($someDate){
     $interval = new DateInterval('P1Y');
     $someDate->add($interval);
     return $someDate->format('Y');
+}
+
+
+/*************************/
+function util_durToInt($schedDur)
+{
+    switch ($schedDur) {
+        case '5M':
+            $schedDur = 5;
+            break;
+        case '10M':
+            $schedDur = 10;
+            break;
+        case '15M':
+            $schedDur = 15;
+            break;
+        case '20M':
+            $schedDur = 20;
+            break;
+        case '30M':
+            $schedDur = 30;
+            break;
+        case '45M':
+            $schedDur = 45;
+            break;
+        case '60M':
+            $schedDur = 60;
+            break;
+        case '90M':
+            $schedDur = 90;
+            break;
+        case '2H':
+            $schedDur = 120;
+            break;
+        case '3H':
+            $schedDur = 180;
+            break;
+        case '4H':
+            $schedDur = 240;
+            break;
+        case '5H':
+            $schedDur = 300;
+            break;
+        case '6H':
+            $schedDur = 360;
+            break;
+        case '7H':
+            $schedDur = 420;
+            break;
+        case '8H':
+            $schedDur = 480;
+            break;
+        case '16H':
+            $schedDur = 960;
+            break;
+        case '1D':
+            $schedDur = 1440;
+            break;
+        case '2D':
+            $schedDur = 2880;
+            break;
+        case '3D':
+            $schedDur = 4320;
+            break;
+        case '4D':
+            $schedDur = 5760;
+            break;
+        case '5D':
+            $schedDur = 7200;
+            break;
+        case '6D':
+            $schedDur = 8640;
+            break;
+        case '7D':
+            $schedDur = 10080;
+            break;
+        case '14D':
+            $schedDur = 20160;
+            break;
+        case '28D':
+            $schedDur = 40320;
+            break;
+        case '56D':
+            $schedDur = 80640;
+            break;
+    }
+    return $schedDur;
+}
+
+function util_durToString($schedDur)
+{
+    switch ($schedDur) {
+        case '5M':
+            $schedDur = '5 minutes';
+            break;
+        case '10M':
+            $schedDur = '10 minutes';
+            break;
+        case '15M':
+            $schedDur = '15 minutes';
+            break;
+        case '20M':
+            $schedDur = '20 minutes';
+            break;
+        case '30M':
+            $schedDur = '30 minutes';
+            break;
+        case '45M':
+            $schedDur = '45 minutes';
+            break;
+        case '60M':
+            $schedDur = '60 minutes';
+            break;
+        case '90M':
+            $schedDur = '90 minutes';
+            break;
+        case '2H':
+            $schedDur = '2 hours';
+            break;
+        case '3H':
+            $schedDur = '3 hours';
+            break;
+        case '4H':
+            $schedDur = '4 hours';
+            break;
+        case '5H':
+            $schedDur = '5 hours';
+            break;
+        case '6H':
+            $schedDur = '6 hours';
+            break;
+        case '7H':
+            $schedDur = '7 hours';
+            break;
+        case '8H':
+            $schedDur = '8 hours';
+            break;
+        case '16H':
+            $schedDur = '16 hours';
+            break;
+        case '1D':
+            $schedDur = '24 hours';
+            break;
+        case '2D':
+            $schedDur = '2 days';
+            break;
+        case '3D':
+            $schedDur = '3 days';
+            break;
+        case '4D':
+            $schedDur = '4 days';
+            break;
+        case '5D':
+            $schedDur = '5 days';
+            break;
+        case '6D':
+            $schedDur = '6 days';
+            break;
+        case '7D':
+            $schedDur = '1 week (7 days)';
+            break;
+        case '14D':
+            $schedDur = '2 weeks';
+            break;
+        case '28D':
+            $schedDur = '4 weeks';
+            break;
+        case '56D':
+            $schedDur = '8 weeks';
+            break;
+    }
+    return $schedDur;
 }

@@ -56,9 +56,9 @@ function renderMonthHeader($month,$year){
     /* data-prev = tells calendar to decrease month */
     /* data-next = tells calendar to increase month */
     /* data-monthnum = current month */
-    $header = '<table cellpadding="0" cellspacing="0" class="calendar"><tr class = "calendar-row">
+    $header = '<tr class = "calendar-row">
                 <td id = "prev_nav" class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
-                <td id = "month_display" class="month-name" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
+                <td id = "month_display" class="month-name" data-monthnum ="'.$month.'" data-yearnum = "'.$year.'" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
                 <td id = "next_nav" class="nav_elt_month_next" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
     return $header;
@@ -127,7 +127,7 @@ function renderItemRows($items,$headings,$scheds) {
     return $rows;
 }
 
-/******* Add in all the cells with the appropriate days and items ******/
+///******* Add in all the cells with the appropriate days and items ******/
 function renderCalendarCells($month,$year,$schedule)
 {
     /* fill in the days */
@@ -144,61 +144,31 @@ function renderCalendarCells($month,$year,$schedule)
         $days_in_this_week++;
     endfor;
 
-    //CAUSING AN ERROR CHECK THIS
-//    $items = array("this", "that", "those");
-
-    $month_bool = FALSE;
-    $year_bool = FALSE;
-    //Extract month of the start on date and if it is not within the month then discard items
-    //Extract year of the start on date and if it is not within the year then discard items
-    foreach ($schedule as $sched) {
-        if (intval(substr($sched->start_on_date, 0, 4)) == $year) {
-            $year_bool = TRUE;
-        }
-        if (intval(substr($sched->start_on_date, 5, 2)) == $month) {
-            $month_bool = TRUE;
-        }
-    }
-
-    //Requested_EqGroup gets the schedule which gets the reservations which gets the eq_items which gets the eq_subgroup
-    //Way to get the name of the item
-//    foreach ($schedule as $sched) {
-//        foreach ($sched->reservations as $r) {
-//            $items[] = $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name;
-//        }
-//    }
-//
-//    util_prePrintR($items);
-
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
 
         $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'">';
         /* add in the day number */
         $cells.= '<div class="day-number">'.$list_day.'</div>';
 
+        $cells .= '<div class = "all-items">';
         /** add in items here */
-        //if list day is equal to the start_on_date day of the item then add in the item and keep on adding in until the list day equals the end_on_date day
-        foreach ($schedule as $sched) {
-            foreach ($sched->reservations as $r) {
-                if ($year_bool && $month_bool) {
-                    if (intval(substr($sched->start_on_date, 8, 2)) <= $list_day && $list_day <= intval(substr($sched->end_on_date, 8, 2))) {
-//                        util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
-                        $cells .= '<p class="monthly-items">' . $sched->toString() . $r->eq_item->eq_subgroup->name . ':' . $r->eq_item->name . '</p>';
-                    }else {
-                        '<p class="monthly-items"></p>';
+        //flag_delete: should display?
+        foreach($schedule as $sched) {
+            foreach ($sched->time_blocks as $tb) {
+                foreach ($sched->reservations as $r) {
+                    if (intval(substr($tb->start_datetime, 0, 4)) == $year && intval(substr($tb->start_datetime, 5, 2)) == $month && intval(substr($tb->start_datetime, 8, 2)) == $list_day) {
+                        //                    util_prePrintR('hello');
+                        //                    $r = Reservation::getOneFromDb($tb->schedule_id, $this->db);
+                        //                    util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
+                        $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                        start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
+                            '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+
                     }
-                }else{
-                    '<p class="monthly-items"></p>';
                 }
             }
         }
-        //check this using schedule array
-//
-//        if (is_array($items) || is_object($items)) {
-//            foreach ($items as $item) {
-//                $cells .= '<p class="monthly-items">' . $item . '</p>';
-//            }
-//        }
+        $cells .= '</div>';
 
         $cells.= '</td>';
         if($running_day == 6):
@@ -232,14 +202,14 @@ function renderCalendarCells($month,$year,$schedule)
 /*************** MONTHLY CALENDAR *********************/
 function draw_MonthlyCalendar($month,$year,$all_schedules) {
     /* render header for the monthly calendar */
-    $header = renderMonthHeader($month, $year);
+    $header = '<table cellpadding="0" cellspacing="0" class="calendar">';
+    $header .= renderMonthHeader($month, $year);
 
     /* draw table */
     $headings = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
     $calendar_days = '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
 
     /* make the cells with days and items */
-    //where should we decide which items are allowed in the calendar?
     $calendar_cells = renderCalendarCells($month, $year, $all_schedules);
 
 	/* end the table */

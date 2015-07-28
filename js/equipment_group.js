@@ -91,10 +91,16 @@ $(document).ready(function () {
 	});
 	// Reserve Equipment: timepicker
 	$("#scheduleStartTimeRaw").timepicker({
-		minuteStep: 15,
+		minuteStep: util_durationToInt($("#managerView").attr("data-duration-chunk")), /* takes into account time restrictions */
 		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
 	});
+
+    // Convert duration (ex: '5M') to integer (ex: 5)
+    function util_durationToInt(dur){
+        var intDur = dur.substring(0,dur.length);
+        return parseInt(intDur);
+    }
 
 	// Convert initial integer values to pretty text for standard output to screen
 	$('#print_minDurationMinutes').text(util_minutesToWords($('#print_minDurationMinutes').text()));
@@ -1163,7 +1169,8 @@ $(document).ready(function () {
             data: {
                 'prev': $(this).attr('data-prev'),
                 'month_num': $(this).attr('data-monthnum'),
-                'year_num': $(this).attr('data-yearnum')
+                'year_num': $(this).attr('data-yearnum'),
+                'eq_group_id': $("#managerView").attr('data-eid')
 			}
         })
 
@@ -1186,11 +1193,11 @@ $(document).ready(function () {
             url: 'ajax_actions/ajax_calendar_handler.php',
             dataType: 'html',
             data: {
-				//'schedule': scheduleId, //can get it from schedule.php
 				'next': $(this).attr('data-next'),
                 'month_num': $(this).attr('data-monthnum'),
-                'year_num': $(this).attr('data-yearnum')
-			}
+                'year_num': $(this).attr('data-yearnum'),
+                'eq_group_id': $("#managerView").attr('data-eid')
+            }
         })
 
             //replaces the current monthly view
@@ -1206,5 +1213,55 @@ $(document).ready(function () {
         $("#daily_calendar_view").hide();
     });
 
+	$(document).on("click", "#show-reservations-buttons .show-this-year", function(){
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'show_this': $(this).attr('data-show-this'),
+				'year_num': $("#prev_nav").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid'),
+				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
+				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
+			}
+		})
+			.success(function(html){
+				$("#reservationList").html(html);
+		})
+	});
+
+	$(document).on("click", "#show-reservations-buttons .show-all", function(){
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'show_all': $(this).attr('data-show-all'),
+				'year_num': $("#prev_nav").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid'),
+				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
+				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
+			}
+		})
+			.success(function(html){
+				$("#reservationList").html(html);
+			})
+	});
+
+	$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'show_month': $(this).attr('data-show-month'),
+				'year_num': $("#prev_nav").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid'),
+				'show_del_control_admin': $("#managerView").attr('data-show-del-isadmin'),
+				'show_del_control_manager': $("#managerView").attr('data-show-del-ismanager')
+			}
+		})
+			.success(function(html){
+				$("#reservationList").html(html);
+			})
+	});
 
 });

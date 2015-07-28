@@ -21,7 +21,9 @@
 			$this->addFile('web_page_tests/EqGroupPageReservationsTest.php');
 			$this->addFile('web_page_tests/AjaxEqGroupTest.php');
 
-			# Tests: Account management
+            $this->addFile('web_page_tests/AjaxCalendarHandlerTest.php');
+
+            # Tests: Account management
 			$this->addFile('web_page_tests/AcctMgtTest.php');
 
             # Tests: user search / find
@@ -42,7 +44,7 @@
             # no web access to command line scripts
             $this->addFile('web_page_tests/CommandLineBlockedTest.php');
 
-            # Sound Effect
+			# Sound Effect
 			$this->addFile('soundForTesting.php');
 		}
 	}

@@ -113,6 +113,11 @@ td.daily-items {
     border:2px solid #345;
 }
 
+/* takes care not to overlap with the day number */
+div.all-items{
+    padding-top: 50px;
+}
+
 p.monthly-items{
     background: #0099FF;
     /*font-weight:bold;*/
