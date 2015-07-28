@@ -5,74 +5,86 @@ $(document).ready(function () {
 	// Listeners
 	// ***************************
 
-	//function changeShownItems(month, year, show_which){
-	//	if(show_which=='0'){
-	//		$('.item-listing').each(function(){
-	//			if($(this).data('year')==year && $(this).data('month')=='month'){
-	//				if($(this).hasClass('hide')){
-	//					$(this).removeClass("hide");
-	//				}
-	//				if(("#managerView").hasClass('hide')){
-	//					$(".editing-control").removeClass("hide");
-	//				}
-	//			}
-	//		})
-	//	}else if(show_which=='1'){
-	//		$('.item-listing').each(function(){
-	//			if($(this).data('year')==year){
-	//				if($(this).hasClass('hide')){
-	//					$(this).removeClass("hide");
-	//				}
-	//			}
-	//			if(("#managerView").hasClass('hide')){
-	//				$(".editing-control").removeClass("hide");
-	//			}
-	//		})
-	//	}else if(show_which=='2'){
-	//		$('.item-listing').each(function(){
-	//			if($(this).hasClass('hide')){
-	//				$(this).removeClass("hide");
-	//			}
-	//		})
-	//		if(("#managerView").hasClass('hide')){
-	//			$(".editing-control").removeClass("hide");
-	//		}
-	//	}
-	//}
-    //
-	////****** related to showing reservations list
-	//$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
-	//	var show_which = $('.show-this-month').data('show-month');
-	//	var month = $('.show-this-month').data('thisMonth');
-	//	var year = $('.show-this-month').data('thisYear');
-	//	changeShownItems(month,year,show_which);
-    //
-	//	$('.show-this-month').addClass('hide');
-	//	$('.show-this-year').removeClass('hide');
-	//	$('.show-all').removeClass('hide');
-	//});
-    //
-	//$(document).on("click", "#show-reservations-buttons .show-this-year", function(){
-	//	var show_which = $('.show-this-year').data('show-this');
-	//	var year = $('.show-this-year').data('thisYear');
-	//	var month = 0;
-	//	changeShownItems(month,year,show_which);
-    //
-	//	$('.show-this-month').removeClass('hide');
-	//	$('.show-this-year').addClass('hide');
-	//	$('.show-all').removeClass('hide');
-	//});
-    //
-	//$(document).on("click", "#show-reservations-buttons .show-all", function(){
-	//	var show_which = $('.show-all').data('show-all');
-	//	var month = 0;
-	//	var year = 0;
-	//	changeShownItems(month,year,show_which);
-    //
-	//	$('.show-this-month').removeClass('hide');
-	//	$('.show-this-year').removeClass('hide');
-	//	$('.show-all').addClass('hide');
-	//});
+	function changeShownItems(month, year, show_which){
+		if(show_which==0){
+            var has = 1;
+			$('.item-listing').each(function(){
+				if($(this).data('year')==year && $(this).data('month')==month) {
+                    has++;
+					//$('.item-listing').addClass('hide');
+                    if ($(this).hasClass('hide')) {
+                        $(this).removeClass('hide');
+                    }
+                }
+                else {
+                    $(this).addClass("hide");
+                }
+			});
+            if(has===1){
+                $(".no-reserv-month").removeClass('hide');
+                $(".no-reserv-year").addClass('hide');
+            }
+		}else if(show_which==1){
+            var hasMonth = 1;
+            $('.item-listing').each(function(){
+				if($(this).data('year')==year) {
+                    hasMonth++;
+                    if ($(this).hasClass('hide')) {
+                        $(this).removeClass("hide");
+                    }
+                }else{
+                    $(this).addClass("hide");
+				}
+			});
+            if(hasMonth === 1 && $(".no-reserv-year").hasClass('hide')){
+                $(".no-reserv-year").removeClass('hide');
+                $(".no-reserv-month").addClass('hide');
+            }
+		}else if(show_which==2){
+            $('.item-listing').each(function(){
+				if($(this).hasClass('hide')){
+					$(this).removeClass("hide");
+                    $(".no-reserv-month").addClass('hide');
+                    $(".no-reserv-year").addClass('hide');
+                }
+			});
+		}
+	}
+
+	//****** related to showing reservations list
+	$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
+		var show_which = $('.show-this-month').attr('data-show-month');
+		var month = parseInt($('.show-this-month').attr('data-thisMonth'));
+		var year = parseInt($('.show-this-month').attr('data-thisYear')); //have to use attr here
+		changeShownItems(month,year,show_which);
+
+
+		$('.show-this-month').addClass('hide');
+		$('.show-this-year').removeClass('hide');
+		$('.show-all').removeClass('hide');
+	});
+
+	$(document).on("click", "#show-reservations-buttons .show-this-year", function(){
+		var show_which = $('.show-this-year').attr('data-show-this');
+		var year = parseInt($('.show-this-year').attr('data-thisYear')); //have to use attr here
+		var month = 0;
+		changeShownItems(month,year,show_which);
+
+		$('.show-this-month').removeClass('hide');
+		$('.show-this-year').addClass('hide');
+		$('.show-all').removeClass('hide');
+	});
+
+	$(document).on("click", "#show-reservations-buttons .show-all", function(){
+		var show_which = $('.show-all').attr('data-show-all');
+		var month = 0;
+		var year = 0;
+		changeShownItems(month,year,show_which);
+
+		$('.show-this-month').removeClass('hide');
+		$('.show-this-year').removeClass('hide');
+		$('.show-all').addClass('hide');
+	});
 
 	// Toggle Equipment Group Settings (text or input fields)
 	$("#toggleGroupSettings").click(function () {
@@ -85,33 +97,36 @@ $(document).ready(function () {
 			$("#btnReservationCancel").click();
 			// show special manager actions
 			$(".manager-action").removeClass("hide");
-            $(".editing-control").removeClass("hide");
             $(".subgroup-ul").removeClass("hide");
-			//$('#item').each(function(){
-			//	if($(".item-listing").hasClass('hide')){
-			//	}else{
-			//		var schedule = "delete-schedule-" + $(this).data('schedule');
-			//		var target = document.getElementById(schedule).className;
-			//		$(target).removeClass("hide");
-			//	}
-			//})
-		}
+
+            $(".editing-control").removeClass("hide");
+            $('.item-listing').removeClass('hide');
+            $('.show-this-month').addClass('hide');
+            $('.show-this-year').addClass('hide');
+            $('.show-all').addClass('hide');
+            $(".no-reserv-month").addClass('hide');
+            $(".no-reserv-year").addClass('hide');
+        }
 		else {
 			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
 			// hide special manager actions
 			$(".manager-action").addClass("hide");
-            $(".editing-control").addClass("hide");
             $(".subgroup-ul").addClass("hide");
             $(".subgroup-ul").has("li.item-in-a-subgroup").removeClass("hide");
-			//$('.item-listing').each(function(){
-			//	if($(this).hasClass('hide')){
-			//	}else{
-			//		var schedule = "delete-schedule-" + $(this).data('schedule');
-			//		var target = document.getElementById(schedule).className;
-			//		$(target).addClass('hide');
-			//	}
-			//})
 
+            if($("#item").hasClass("item-listing")){
+                $(".editing-control").addClass("hide");
+                $('.show-this-month').removeClass('hide');
+                $('.show-this-year').removeClass('hide');
+                $('.show-all').addClass('hide');
+            }else{
+                $(".none-at-all").removeClass('hide');
+                $(".no-reserv-month").addClass('hide');
+                $(".no-reserv-year").addClass('hide');
+                $('.show-this-month').addClass('hide');
+                $('.show-this-year').addClass('hide');
+                $('.show-all').addClass('hide');
+            }
 		}
 	});
 
