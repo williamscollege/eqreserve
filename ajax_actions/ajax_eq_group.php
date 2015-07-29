@@ -15,7 +15,6 @@
 	$intMaxDurationMinute = htmlentities((isset($_REQUEST["ajaxVal_MaxDurationMinute"])) ? $_REQUEST["ajaxVal_MaxDurationMinute"] : FALSE);
 	$intDurationIntervalMinutes = htmlentities((isset($_REQUEST["ajaxVal_DurationIntervalMinutes"])) ? $_REQUEST["ajaxVal_DurationIntervalMinutes"] : FALSE);
 
-
 	#------------------------------------------------#
 	# Set default return value
 	#------------------------------------------------#

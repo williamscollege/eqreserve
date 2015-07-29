@@ -285,11 +285,11 @@ $(document).ready(function () {
 		highlight: function (element) {
 			$(element).closest('.control-group').removeClass('success').addClass('error');
 		},
-//		success: function (element) {
-//			element
-//				.text('OK!').addClass('valid')
-//				.closest('.control-group').removeClass('error').addClass('success');
-//		},
+		//success: function (element) {
+		//	element
+		//		.text('OK!').addClass('valid')
+		//		.closest('.control-group').removeClass('error').addClass('success');
+		//},
 		submitHandler: function (form) {
 			// show loading text (button)
 			$("#btnSubmitEditGroup").button('loading');
@@ -310,14 +310,14 @@ $(document).ready(function () {
 				type: 'GET',
 				url: $("#frmAjaxGroup").attr('action'),
 				data: {
-					ajaxVal_Action: 'save-group',
-					ajaxVal_GroupID: $('#groupID').val(),
-					ajaxVal_Name: $('#groupName').val(),
-					ajaxVal_Description: $('#groupDescription').val(),
-					ajaxVal_StartMinute: $('#startMinute').val(),
-					ajaxVal_MinDurationMinute: $('#minDurationMinutes').val(),
-					ajaxVal_MaxDurationMinute: $('#maxDurationMinutes').val(),
-					ajaxVal_DurationIntervalMinutes: $('#durationIntervalMinutes').val()
+                    ajaxVal_Action: 'save-group',
+                    ajaxVal_GroupID: $('#groupID').val(),
+                    ajaxVal_Name: $('#groupName').val(),
+                    ajaxVal_Description: $('#groupDescription').val(),
+                    ajaxVal_StartMinute: $('#startMinute').val(),
+                    ajaxVal_MinDurationMinute: $('#minDurationMinutes').val(),
+                    ajaxVal_MaxDurationMinute: $('#maxDurationMinutes').val(),
+                    ajaxVal_DurationIntervalMinutes: $('#durationIntervalMinutes').val()
 				},
 				dataType: 'json',
 				success: function (data) {
@@ -336,8 +336,6 @@ $(document).ready(function () {
 
 		}
 	});
-
-
 	var validateAjaxSubgroup = $('#frmAjaxSubgroup').validate({
 		rules: {
 			ajaxSubgroupName: {
@@ -961,12 +959,21 @@ $(document).ready(function () {
 	// Cancel and cleanup
 	// ***************************
 
+    //validateAjaxGroup does not have the necessary information because managerEdit is not shown
 	function cleanUpForm(formName) {
 		// reset form
-		validateAjaxGroup.resetForm();
-		validateAjaxSubgroup.resetForm();
-		validateAjaxItem.resetForm();
-		validateAjaxScheduleReservations.resetForm();
+        if(validateAjaxGroup != undefined){
+    		validateAjaxGroup.resetForm();
+        }
+        if(validateAjaxSubgroup != undefined){
+            validateAjaxSubgroup.resetForm();
+        }
+        if(validateAjaxItem != undefined) {
+            validateAjaxItem.resetForm();
+        }
+        if(validateAjaxScheduleReservations != undefined) {
+            validateAjaxScheduleReservations.resetForm();
+        }
 		// manually remove input highlights
 		$(".control-group").removeClass('success').removeClass('error');
 	}
@@ -981,13 +988,30 @@ $(document).ready(function () {
 		$(".manager-action").addClass("hide");
 		// reset the submit button (avoid disabled state)
 		$("#btnSubmitEditGroup").button('reset');
+
+        //gets rid of the editing controls if shown
+        if($("#item").hasClass("item-listing")){
+            $(".editing-control").addClass("hide");
+            $('.show-this-month').removeClass('hide');
+            $('.show-this-year').removeClass('hide');
+            $('.show-all').addClass('hide');
+        }else{
+            $(".none-at-all").removeClass('hide');
+            $(".no-reserv-month").addClass('hide');
+            $(".no-reserv-year").addClass('hide');
+            $('.show-this-month').addClass('hide');
+            $('.show-this-year').addClass('hide');
+            $('.show-all').addClass('hide');
+        }
 	});
 
 	$("#btnReservationCancel").click(function () {
 		cleanUpForm("frmAjaxScheduleReservations");
 		// hide form fields, restore button label
 		$(".reservationForm").addClass("hide");
-		$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+        $(".subgroupRadiosControls").addClass("hide");
+        $(".subgroupCheckboxesControls").addClass("hide");
+        $("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
 		// strip out stored conflicts (if any exist)
 		$("#show_any_conflicts").text("").hide();
 		// any changes to form should hide the override button (if it exists)
