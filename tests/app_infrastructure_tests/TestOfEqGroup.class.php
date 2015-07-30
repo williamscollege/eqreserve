@@ -146,7 +146,7 @@
             $eg = EqGroup::getOneFromDb(['eq_group_id'=>201],$this->DB);
 
             $eg->getAllItems();
-            util_prePrintR($eg) ;
+//            util_prePrintR($eg) ;
 
         }
 

@@ -69,9 +69,9 @@ function renderDayHeader($month,$day) {
     $month_name = monthIntToString($month);
     $header = '<table cellpadding="0" cellspacing="0" class="calendar">
             <tr class = "calendar-row">
-            <td class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
+            <td id = "daily_prev_nav" class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
             <td class="day-name" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
-            <td class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
+            <td id = "daily_next_nav" class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
             </tr></table>';
     return $header;
 }
@@ -92,7 +92,6 @@ function renderItemRows($items,$headings,$scheds) {
         //gets any schedules that have this item reserved
         foreach ($scheds as $s) {
             $s->loadReservations();
-//            util_prePrintR($s);
             foreach ($s->reservations as $r) {
                 $r->loadEqItem();
 //                util_prePrintR($r);
@@ -103,16 +102,21 @@ function renderItemRows($items,$headings,$scheds) {
                 }
             }
         }
+
+        //need to take time blocks into consideration because only looks at beginning and the end
+        //gets in the way of most recent ones too
+        //shouldn't look at the timeblock of the schedule, should look at timeblock itself
         foreach ($itemSched as $sched) {
             $starts[timetoInt($sched->timeblock_start_time)] = durationToInt($sched->timeblock_duration);
+            //$starts[timetoInt($sched->time_blocks->start_datetime)] = durationToInt($sched->timeblock_duration);
         }
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
         /* draw all the time cells for a given piece of equipment */
         for ($x = 1; $x < count($headings); $x++):
             $isStart = array_key_exists($x, $starts);
-            if ( $isStart || $x < $endTime) {
-                if($isStart) {
+            if ($isStart || $x < $endTime) {
+                if ($isStart) {
                     $dur = $starts[$x];
                     $endTime = $dur + $x;
                 }
@@ -220,7 +224,6 @@ function draw_MonthlyCalendar($month,$year,$all_schedules) {
 
 /*************** DAILY CALENDAR *********************/
 function draw_SingleDayCalendar($month,$day,$items,$day_sched) {
-
     /* date header */
     $header = renderDayHeader($month,$day);
 

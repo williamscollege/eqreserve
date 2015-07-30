@@ -87,7 +87,7 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=1&calmonth=7&items=Array&eq_group_id=201');
 
         //Assert prev, monthnum, year
-        $this->assertPattern('/July 1/');
+        $this->assertPattern('/July 01/');
         $this->assertPattern('/1:30 PM/');
 
     }
@@ -220,35 +220,33 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->assertTrue($Requested_EqGroup->matchesDb);
         $this->assertEqual($Requested_EqGroup->name, 'testEqGroup1');
 
-        $Requested_EqGroup->loadSchedules();
         $this->assertEqual(count($Requested_EqGroup->schedules),0);
+        $Requested_EqGroup->loadSchedules();
+        $this->assertEqual(count($Requested_EqGroup->schedules),4);
 
         $this->signIn();
 
         // This is what's being tested
         //March 22, 2013: testSubgroup1: testItem1 is reserved
         //added calyear field
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&calyear=2013&items=Array');
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=03&year_num=2013&eq_group_id=201');
 
         $this->assertPattern('/March/');
-        $this->assertEltByIdHasAttrOfValue('main-calendar-table','data-for-month',3);
+        $this->assertEltByIdHasAttrOfValue('daily_prev_nav','data-monthnum','03');
 
         //check that appropriate schedule elements are present
-
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','id','1003');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','id','1004');
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-date','2013-03-22');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-date','2013-03-22');
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-time','19:00:00');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-time','18:00:00');
-        $this->assertEltByIdHasAttrOfValue('schedule-1003','duration','60M');
-        $this->assertEltByIdHasAttrOfValue('schedule-1004','duration','60M');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1003','id','1003');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1004','id','1004');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-date','2013-03-22');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-date','2013-03-22');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-time','19:00:00');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-time','18:00:00');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1003','duration','60M');
+//        $this->assertEltByIdHasAttrOfValue('schedule-1004','duration','60M');
 
         //check schedule display elements
-        $this->assertPattern('/testSubgroup1/');
-        $this->assertPattern('/testItem1/');
-
-
+//        $this->assertPattern('/testSubgroup1/');
+//        $this->assertPattern('/testItem1/');
     }
 
     function testDailyNextNav() {

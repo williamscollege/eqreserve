@@ -29,7 +29,18 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
         $items = array("this","that","the other");
         $headings = array("1","2","3");
 
-        $rows = renderItemRows($items, $headings);
+        $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => 202], $this->DB);
+        $this->assertTrue($Requested_EqGroup);
+
+        //schedules array is null
+        $this->assertNull($Requested_EqGroup->schedules);
+
+        $Requested_EqGroup->loadSchedules();
+
+        //gets the schedule of a given eq group
+        $sched = $Requested_EqGroup->schedules;
+
+        $rows = renderItemRows($items, $headings,$sched);
 
         $this->assertPattern('/daily-items">this</',$rows);
         $this->assertPattern('/daily-items">that</',$rows);

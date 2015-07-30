@@ -76,9 +76,7 @@
 
     if($clickedDay!=0){
 
-        $Requested_EqGroup = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
-        $Requested_EqGroup->loadSchedules();
-        $Requested_EqGroup->loadEqItems();
+        $Eq_Group->loadEqItems();
 
         //util_prePrintR(array_map(function($elt){return $elt->name;},$Requested_EqGroup->eq_items));
 
@@ -90,19 +88,21 @@
         $reserved_item_names = [];
         $reservations = [];
 
-        //load all the schedules for the clicked day
-        foreach ($Requested_EqGroup->schedules as $sched) {
-            $sched->loadReservations();
-            if ( ($sched->start_on_date == $clickedDate_yyyymmdd) || ($sched->end_on_date == $clickedDate_yyyymmdd) ) {
-                array_push($day_sched, $sched);
+        //load all the schedules using time blocks to account for repeated reservations for the clicked day
+        foreach($Eq_Group->schedules as $sched){
+            foreach($sched->time_blocks as $tb){
+                if((substr($tb->start_datetime,0,10)==$clickedDate_yyyymmdd)||(substr($tb->end_datetime,0,10)==$clickedDate_yyyymmdd)){
+                    array_push($day_sched,$sched);
+                }
             }
         }
         //gets every item of the eq group and ensures uniqueness
-        foreach ($Requested_EqGroup->eq_items as $item) {
+        foreach ($Eq_Group->eq_items as $item) {
             $reserved_item_names[$item->name] = 1;
         }
         $items = array_keys($reserved_item_names);
 
+//        util_prePrintR($day_sched);
         //draw appropriate calendar
         echo draw_SingleDayCalendar($clickedMonth, $clickedDay, $items, $day_sched);
     }elseif($baseMonth!=0){
