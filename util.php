@@ -386,7 +386,7 @@ function util_getNextYearNum($someDate){
 }
 
 
-/***** convert durations types (5M, 2H, 3D) ******/
+/***** convert durations types (5M, 2H, 3D) to integer minute form ******/
 function util_durToInt($schedDur)
 {
     $intReturn = 1;
@@ -405,6 +405,7 @@ function util_durToInt($schedDur)
     return $intReturn;
 }
 
+/***** convert duration types (5M, 2H, 3D) to string form ******/
 function util_durToString($schedDur)
 {
     $strReturn = '';
@@ -433,7 +434,7 @@ function util_durToString($schedDur)
     return $strReturn;
 }
 
-/***** reduce hours into strings (48 = 2 days) ******/
+/***** reduce minutes into strings (48 hours = 2 days) ******/
 function util_hourToString($hour)
 {
 

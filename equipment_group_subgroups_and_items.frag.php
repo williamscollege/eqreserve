@@ -148,14 +148,10 @@
 		<select id="scheduleDuration" name="scheduleDuration" class="input-large">
 <!--            the duration here should be within the duration chunk, be at least minimum and not exceed maximum-->
 			<option value="" title="Please select duration">Select duration</option>
-<!--            -->
-<!--			<option value="5M">5 minutes</option>-->
-<!--			<option value="10M">10 minutes</option>-->
             <?php
                 //restrict the durations that show up according to the min and maximum duration reservation restrictions
                 //detail: if rules edited, changes after a refresh
                 //only shows from the duration array
-                //****** WEB TEST ********
                 $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
                 foreach($durationArray as $dur){
                     if(util_durToInt($dur)>=$Requested_EqGroup->min_duration_minutes && util_durToInt($dur)<=$Requested_EqGroup->max_duration_minutes){
@@ -167,30 +163,6 @@
                     }
                 }
             ?>
-<!--			<option value="15M">15 minutes</option>-->
-<!--<!--			<option value="20M">20 minutes</option>-->-->
-<!--			<option value="30M">30 minutes</option>-->
-<!--			<option value="45M">45 minutes</option>-->
-<!--			<option value="60M">60 minutes</option>-->
-<!--			<option value="90M">90 minutes</option>-->
-<!--			<option value="2H">2 hours</option>-->
-<!--			<option value="3H">3 hours</option>-->
-<!--			<option value="4H">4 hours</option>-->
-<!--			<option value="5H">5 hours</option>-->
-<!--			<option value="6H">6 hours</option>-->
-<!--			<option value="7H">7 hours</option>-->
-<!--			<option value="8H">8 hours</option>-->
-<!--			<option value="16H">16 hours</option>-->
-<!--			<option value="1D">24 hours</option>-->
-<!--			<option value="2D">2 days</option>-->
-<!--			<option value="3D">3 days</option>-->
-<!--			<option value="4D">4 days</option>-->
-<!--			<option value="5D">5 days</option>-->
-<!--			<option value="6D">6 days</option>-->
-<!--			<option value="7D">1 week (7 days)</option>-->
-<!--			<option value="14D">2 weeks</option>-->
-<!--			<option value="28D">4 weeks</option>-->
-<!--            <option value="56D">8 weeks</option>-->
 		</select>
 <!--        should only show when applies-->
 		<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>

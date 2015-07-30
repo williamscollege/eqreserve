@@ -47,24 +47,25 @@
             $this->assertResponse(200);
 
             $this->assertText('Reservation Time Restrictions');
-            $this->assertText('Can be reserved for 15 minutes min., 60 minutes max., starting on the 0,15,30,45 hour for 15 minute intervals');
+            $this->assertText('Can be reserved for 15 minutes min, 60 minutes max, starting on the 0,15,30,45 hour for 15 minute intervals');
         }
 
         //To test application of reservation rules
-        //STILL WORKING ON IT.
-//        function TestOfCheckReservationRules(){
-//            $this->_loginUser();
-//            $this->assertResponse(200);
-//
-//            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
-//            $this->assertResponse(200);
-//
-//            // asserts should check for programmatically accessible (by javascript) data about reservation rules
-//            //CHECK THIS
-//            $this->assertText("var reservationInfo = document.getElementById('print_ReservationTimeRestrictions');");
-//
-//            //check this info somehow with the information we need
-        //}
+        function TestOfCheckReservationRules(){
+            $this->_loginUser();
+            $this->assertResponse(200);
+
+            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
+            $this->assertResponse(200);
+
+            //check that the options available to the user are within time restrictions
+            $this->assertNoPattern("/<option value='5M'>/");
+            $this->assertPattern("/<option value='15M'>/");
+            $this->assertPattern("/<option value='30M'>/");
+            $this->assertPattern("/<option value='45M'>/");
+            $this->assertPattern("/<option value='60M'>/");
+            $this->assertNoPattern("/<option value='2D'>/");
+        }
 
 		function TestOfDataExpectedForReservations() {
 			$this->_loginUser();
@@ -72,22 +73,6 @@
 
 			$this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
 			$this->assertResponse(200);
-
-//			$this->assertText("testEqGroup1");
-//
-//			$this->assertText("testSubgroup1");
-//			$this->assertText("testSubgroup2");
-//			$this->assertText("testSubgroup3");
-//			$this->assertText("testSubgroup4");
-//
-//			$this->assertText("testItem1");
-//			$this->assertText("testItem2");
-//			$this->assertText("testItem3");
-//			$this->assertText("testItem4");
-//			$this->assertText("testItem1");
-//
-//			$this->assertText("same priority as prev");
-//			$this->assertText("same name, different subgroup");
 
             $this->assertText('Existing Reservations');
             $this->assertText('2013/3/22 10:00-10:15 AM by you');
@@ -129,9 +114,8 @@
 
             $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
 
-            $this->assertEltByIdHasAttrOfValue('monthly_calendar_view', 'id');
-            $this->assertEltByIdHasAttrOfValue('daily_calendar_view', 'id');
-
+            $this->assertPattern('<div id="monthly_calendar_view">');
+            $this->assertPattern('<div id="daily_calendar_view">');
             $this->assertEltByIdHasAttrOfValue('prev_nav', 'class', 'nav_elt_month_prev');
             $this->assertEltByIdHasAttrOfValue('month_display', 'class', 'month-name');
             $this->assertEltByIdHasAttrOfValue('next_nav', 'class', 'nav_elt_month_next');
@@ -143,26 +127,6 @@
             $this->assertEltByIdHasAttrOfValue('prev_nav', 'data-prev', '-1');
             $this->assertEltByIdHasAttrOfValue('next_nav', 'data-next', '1');
             $this->assertEltByIdHasAttrOfValue('day_lists', 'data-caldate'); //All the days
-
-            //Idea: Check for the reservations
-            //But: How to get the right month for the reservations to check?
         }
 
-<<<<<<< HEAD
-        function TestOfItemsInCalendar(){
-            $this->_loginUser();
-            $this->assertResponse(200);
-            $this->get('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
-            $this->assertResponse(200);
-        }
-=======
-//          Do this in Ajax?
-//        function TestOfItemsInCalendar(){
-//            $this->_loginUser();
-//            $this->assertResponse(200);
-//            $this->('http://localhost'.LOCAL_WEBSERVER_PORT_SPEC.'/eqreserve/equipment_group.php?eid=201');
-//            $this->assertResponse(200);
-//        }
->>>>>>> origin/summer_2015
-        // NOTE: can't figure out how to check that a given text is hidden / not visible
     }
