@@ -352,7 +352,7 @@ $(document).ready(function () {
 			var formName = $("#frmAjaxSubgroup").attr('name');		// get name from the form element
 			var action = $('#' + formName + ' #ajaxSubgroupAction').val();
 			var group_id = $('#' + formName + ' #ajaxGroupID').val();
-			var subgroup_id = $('#' + formName + ' #ajaxSubgroupID').val();
+			var subgroup_id = $('#' + formName + ' #ajaxItemSubGroup').val();
 			var subgroup_ordering = $('#' + formName + ' #ajaxSubgroupOrdering').val();
 			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
 			var subgroup_description = $('#' + formName + ' #ajaxSubgroupDescription').val();
@@ -431,15 +431,18 @@ $(document).ready(function () {
 			// show loading text (button)
 			$("#btnAjaxItemSubmit").button('loading');
 
+			console.log($("#ajaxItemSubGroup").val()); //DEV
 			var formName = $("#frmAjaxItem").attr('name');		// get name from the form element
 			var action = $('#' + formName + ' #ajaxItemAction').val();
-			var subgroup_id = $('#' + formName + ' #ajaxSubgroupID').val();
+			console.log(action); //DEV
+			var subgroup_id = $('#ajaxItemSubGroup').val();
 			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
 			var item_id = $('#' + formName + ' #ajaxItemID').val();
 			var item_ordering = $('#' + formName + ' #ajaxItemOrdering').val();
 			var item_name = $('#' + formName + ' #ajaxItemName').val();
 			var item_description = $('#' + formName + ' #ajaxItemDescription').val();
 			var item_multiselect = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
+
             var item_image_file_name = 'none';
             if ($('#item-image-preview-area img')[0]) {
                 if ($('#item-image-preview-area img')[0].file) {
@@ -451,7 +454,7 @@ $(document).ready(function () {
 
             var ajax_data = {
                 ajaxVal_Action: action,
-                ajaxVal_SubgroupID: subgroup_id,
+				ajaxVal_SubgroupID: subgroup_id,
                 ajaxVal_SubgroupName: subgroup_name,
                 ajaxVal_ItemID: item_id,
                 ajaxVal_Order: item_ordering,
@@ -500,10 +503,17 @@ $(document).ready(function () {
 //                            console.log('edit response data: ');
 //                            console.dir(data);
 //
+							var currSubID = $("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id");
+							if (currSubID != subgroup_id) {
+								$('#ul-of-subgroup-' +subgroup_id+' li').last().before($('#list-of-item-' + item_id));
+							}
+
 							// update button data attributes
 							$("#btn-edit-item-id-" + item_id).attr("data-for-item-name", item_name);
 							$("#btn-edit-item-id-" + item_id).attr("data-for-item-descr", item_description);
 							$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-name", subgroup_name);
+							$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id", subgroup_id);
+
 							// update visible info
 							$("span#itemid-" + item_id).html("<strong>" + item_name + ": </strong>" + item_description);
                             if (data.has_no_image) {
@@ -521,6 +531,7 @@ $(document).ready(function () {
 					}
 				}
 			});
+			$("#btnAjaxItemSubmit").button('reset');
 
 		}
 	});
@@ -884,7 +895,9 @@ $(document).ready(function () {
 	});
 
 	$(document).on("click", ".eq-edit-item", function () {
+
 		var subgroup_name = $(this).attr("data-for-subgroup-name");
+		var subgroup_id = $(this).attr("data-for-subgroup-id");
 		var item_id = $(this).attr("data-for-item-id");
 		var item_name = $(this).attr("data-for-item-name");
 		var item_descr = $(this).attr("data-for-item-descr");
@@ -896,7 +909,9 @@ $(document).ready(function () {
 		// update modal values
 		$("INPUT#ajaxItemAction").val("edit-item");
 		$("H3#modalItemLabel").text('in '+subgroup_name);
+		$("INPUT#ajaxSubgroupName").val(subgroup_name);
 		$("INPUT#ajaxItemID").val(item_id);
+		$("INPUT#ajaxSubgroupID").val(subgroup_id);
 		$("INPUT#ajaxItemName").val(item_name);
 		$("INPUT#ajaxItemDescription").val(item_descr);
 //		if (multiselect == 0) {

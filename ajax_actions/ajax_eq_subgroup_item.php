@@ -89,8 +89,14 @@
 			echo json_encode($results);
 			exit;
 		}
+
+		#set field values for item
+		$ei->eq_subgroup_id = $intSubgroupID;
+		$ei->eq_subgroup = EqSubgroup::getOneFromDb(['eq_subgroup_id' => $ei->subgroup_id, 'flag_delete' => FALSE], $DB);
 		$ei->name  = $strName;
 		$ei->descr = $strDescription;
+
+		#set field values for subgroups
 
         $results['has_no_image']  = 0;
         if (! $strImageFileName || ($strImageFileName == 'none')) {

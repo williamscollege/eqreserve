@@ -66,45 +66,46 @@
         $allCount = count($Requested_EqGroup->schedules);
         $thisMonthCount = 0;
         foreach ($Requested_EqGroup->schedules as $sched) {
-            $li = Db_Linked::listItemTag('list-of-schedule-' . $sched->schedule_id);
-            //this toggles weirdly
-            if ($show_del_control) {
-                $li .= '<a id="delete-schedule-' . $sched->schedule_id . '" class="editing-control hide btn btn-mini btn-danger delete-schedule-btn" data-for-schedule="' . $sched->schedule_id . '"><i class="icon-trash icon-white"></i></a> ';
-            }
-//            $year = substr($sched->start_on_date, 0, 4);
-//            $month = substr($sched->start_on_date, 5, 2);
-//            $thisSched = $sched->schedule_id;
-//            if ((substr($sched->start_on_date, 0, 4) == util_getCurrentYearNum()) && (substr($sched->start_on_date, 5, 2) == util_getCurrentMonthNum())) {
-                $li .= "<span id=\"item\" class=\"item-listing\" data-sched=\"$thisSched\" data-year=\"$year\" data-month=\"$month\">";
-                if ($sched->type == 'manager') {
-                    $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
-                }
-                if ($sched->user_id == $USER->user_id) {
-                    $li .= '<strong><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1"> ' . $sched->toString() . '</a></strong> by you<br/>';
-                } else {
-                    $sched->loadUser();
-                    $li .= '<strong>' . $sched->toString() . '</strong> by ';
+			$li = Db_Linked::listItemTag('list-of-schedule-' . $sched->schedule_id);
+			//this toggles weirdly
+			if ($show_del_control) {
+				$li .= '<a id="delete-schedule-' . $sched->schedule_id . '" class="editing-control hide btn btn-mini btn-danger delete-schedule-btn" data-for-schedule="' . $sched->schedule_id . '"><i class="icon-trash icon-white"></i></a> ';
+			}
+			$year = substr($sched->start_on_date, 0, 4);
+			$month = substr($sched->start_on_date, 5, 2);
+			$thisSched = $sched->schedule_id;
+			if ((substr($sched->start_on_date, 0, 4) == util_getCurrentYearNum()) && (substr($sched->start_on_date, 5, 2) == util_getCurrentMonthNum())) {
+				$li .= "<span id=\"item\" class=\"item-listing\" data-sched=\"$thisSched\" data-year=\"$year\" data-month=\"$month\">";
+				if ($sched->type == 'manager') {
+					$li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
+				}
+				if ($sched->user_id == $USER->user_id) {
+					$li .= '<strong><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1"> ' . $sched->toString() . '</a></strong> by you<br/>';
+				} else {
+					$sched->loadUser();
+					$li .= '<strong>' . $sched->toString() . '</strong> by ';
 
-                    if (!$sched->user->matchesDb) {
-                        $del_user = User::getOneFromDb(['user_id' => $sched->user_id, 'flag_delete' => true], $DB);
-                        if (!$del_user->matchesDb) {
-                            $li .= '<i>could not determine the user</i> ';
-                        } else {
-                            $li .= '<i>user removed from system: ' . $del_user->fname . ' ' . $del_user->lname . '</i> ';
-                        }
-                    } else {
-                        //                        $li .= $sched->user->fname . ' ' . $sched->user->lname . '(TODO: add link/hover stuff)<br/>';
-                        $li .= $sched->user->renderRich();
-                    }
-                }
-                $li .= "<ul class=\"unstyled\">\n";
-                foreach ($sched->reservations as $r) {
-                    //                    util_prePrintR($sched);
-                    $li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
-                }
-                $li .= "</ul></li></span>\n";
-                echo $li;
-            }
+					if (!$sched->user->matchesDb) {
+						$del_user = User::getOneFromDb(['user_id' => $sched->user_id, 'flag_delete' => true], $DB);
+						if (!$del_user->matchesDb) {
+							$li .= '<i>could not determine the user</i> ';
+						} else {
+							$li .= '<i>user removed from system: ' . $del_user->fname . ' ' . $del_user->lname . '</i> ';
+						}
+					} else {
+						//                        $li .= $sched->user->fname . ' ' . $sched->user->lname . '(TODO: add link/hover stuff)<br/>';
+						$li .= $sched->user->renderRich();
+					}
+				}
+				$li .= "<ul class=\"unstyled\">\n";
+				foreach ($sched->reservations as $r) {
+					//                    util_prePrintR($sched);
+					$li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
+				}
+				$li .= "</ul></li></span>\n";
+				echo $li;
+			}
+		}
     //else{
 //                $li .= "<span id=\"item\" class=\"item-listing hide\" data-sched=\"$thisSched\" data-year=\"$year\" data-month=\"$month\">";
 //                if ($sched->type == 'manager') {

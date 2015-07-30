@@ -80,10 +80,7 @@
 					<label class="" for="item-<?php echo $item->eq_item_id; ?>">
 						<?php
 							if ($USER->flag_is_system_admin || $is_group_manager) {
-								# button: edit item
-								echo "<a id=\"btn-edit-item-id-" . $item->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $key->name . "\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" data-for-item-descr=\"" . $item->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
-								# button: delete item
-								echo "<a id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
+								echo drawItemEditor($key,$item);
 							}
 							if ($key->flag_is_multi_select == 0) {
 								# radio: single select
@@ -490,6 +487,19 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label" for="ajaxItemSubGroup">Subgroup</label>
+
+				<select id="ajaxItemSubGroup">
+				<?php
+					$menu = "";
+					foreach ($Requested_EqGroup->eq_subgroups as $group) {
+						$menu .= "<option value='" . $group->eq_subgroup_id . "'>" . $group->name . "</option>";
+					}
+					echo $menu;
+				?>
+				</select>
+			</div>
+			<div class="control-group">
 				<label class="control-label" for="ajaxItemDescription">Description</label>
 
 				<div class="controls">
@@ -516,3 +526,14 @@
 		</div>
 	</div>
 </form>
+
+<?php
+	function drawItemEditor($key, $item) {
+		$output = "";
+		#button: edit item
+		$output .= "<a id=\"btn-edit-item-id-" . $item->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" data-for-item-descr=\"" . $item->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+		# button: delete item
+		$output .= "<a id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
+		return $output;
+	}
+?>
