@@ -117,12 +117,13 @@ $Eq_Group = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
         }
         //gets every item of the eq group and ensures uniqueness
         //same item different subgroup should still be a different item
-        foreach ($Eq_Group->eq_items as $item) {
-            $reserved_item_names[$item->name] = 1;
+        foreach($Eq_Group->eq_subgroups as $subgroup) {
+            foreach ($subgroup->eq_items as $item) {
+                $name = $subgroup->name . ": " . $item->name;
+                array_push($items, $name);
+            }
         }
-        $items = array_keys($reserved_item_names);
 
-//        util_prePrintR($day_sched);
         //draw appropriate calendar
         echo draw_SingleDayCalendar($baseMonth, $baseDay, $year, $items, $day_sched);
     }elseif($baseMonth!=0){
