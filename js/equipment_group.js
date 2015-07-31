@@ -1016,7 +1016,6 @@ $(document).ready(function () {
 		$(".manager-action").addClass("hide");
 		// reset the submit button (avoid disabled state)
 		$("#btnSubmitEditGroup").button('reset');
-        //$(".schedule").removeClass('hide');
 
         //gets rid of the editing controls if shown
         if($("#item").hasClass("item-listing")){
@@ -1287,24 +1286,24 @@ $(document).ready(function () {
 
     $(document).on("click", "#reservations_view .show_reservation_list", function () {
         //Successfully gets the calendar day
-        if($(' .schedule').hasClass("hide")){
-            if($(' .calendar').hasClass('hide')){
-                $(' .calendar_day').addClass('hide');
+        if($('.schedule').hasClass("hide")){
+            if($('.calendar').hasClass('hide')){
+                $('.calendar_day').addClass('hide');
             }else{
-                $(' .calendar').addClass("hide");
+                $('.calendar').addClass("hide");
             }
-            $(' .schedule').removeClass("hide");
+            $('.schedule').removeClass("hide");
         }
     });
 
     $(document).on("click", "#reservations_view .show_reservation_calendar", function () {
-        if($(' .calendar').hasClass('hide')){
-            if($(' .schedule').hasClass('hide')){
-                $(' .calendar_day').addClass('hide');
+        if($('.calendar').hasClass('hide')){
+            if($('.schedule').hasClass('hide')){
+                $('.calendar_day').addClass('hide');
             }else{
-                $(' .schedule').addClass("hide");
+                $('.schedule').addClass("hide");
             }
-            $(' .calendar').removeClass("hide");
+            $('.calendar').removeClass("hide");
         }
     });
 
@@ -1426,8 +1425,8 @@ $(document).ready(function () {
 
     //show month on button click from daily
     $(document).on("click", "#daily_calendar_view .show_month_button", function () {
-        $(" .calendar").removeClass('hide');
-        $(" .calendar_day").addClass('hide');
+        $(".calendar").removeClass('hide');
+        $(".calendar_day").addClass('hide');
     });
 
 });
