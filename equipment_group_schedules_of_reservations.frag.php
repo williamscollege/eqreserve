@@ -1,7 +1,12 @@
 <div class="class=" form-horizontal">
 
-<legend class="pull-left row-fluid">Existing Reservations</legend><br clear="all" />
-<ul id="reservationSchedules" class="unstyled">
+<legend class="pull-left row-fluid">Existing Reservations
+    <span id = "reservations_view">
+        <a href="#" class="show_reservation_list btn btn-medium btn-primary">List View</a>
+        <a href="#" class="show_reservation_calendar btn btn-medium btn-primary">Monthly Calendar View</a></span>
+</legend><br clear="all" />
+
+<ul id="reservationSchedules" class="schedule unstyled hide">
     <?php
     $show_del_control = ($USER->flag_is_system_admin || $is_group_manager);
     if (count($Requested_EqGroup->schedules) > 0) {
@@ -107,7 +112,7 @@
 
 <!--calendar for displaying schedule-->
 <div>
-    <div id="monthly_calendar_view">
+    <div id="monthly_calendar_view" class="calendar">
 		<?php
         $month = util_getCurrentMonthNum();
         $year = util_getCurrentYearNum();
@@ -117,7 +122,7 @@
         ?>
     </div>
 
-    <div id="daily_calendar_view">
+    <div id="daily_calendar_view" class="calendar_day hide">
 
     </div>
     <?php

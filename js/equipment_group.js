@@ -1270,6 +1270,29 @@ $(document).ready(function () {
     //**********************************
     // Calendar related
 
+    $(document).on("click", "#reservations_view .show_reservation_list", function () {
+        //Successfully gets the calendar day
+        if($(' .schedule').hasClass("hide")){
+            if($(' .calendar').hasClass('hide')){
+                $(' .calendar_day').addClass('hide');
+            }else{
+                $(' .calendar').addClass("hide");
+            }
+            $(' .schedule').removeClass("hide");
+        }
+    });
+
+    $(document).on("click", "#reservations_view .show_reservation_calendar", function () {
+        if($(' .calendar').hasClass('hide')){
+            if($(' .schedule').hasClass('hide')){
+                $(' .calendar_day').addClass('hide');
+            }else{
+                $(' .schedule').addClass("hide");
+            }
+            $(' .calendar').removeClass("hide");
+        }
+    });
+
     //show daily on cell click from monthly
     $(document).on("click", "#monthly_calendar_view .calendar-day", function () {
         // create an ajax call to fetch the data for the day which was clicked, then use the results to populate the daily view, then toggle the display to show it
@@ -1288,11 +1311,11 @@ $(document).ready(function () {
         })
             .success(function(html){
                 console.log(html);
-                $("#monthly_calendar_view").hide();
+                $(" .calendar").addClass('hide');
 
                 //double call?
                 $("#daily_calendar_view").html(html);
-                $("#daily_calendar_view").show();
+                $(" .calendar_day").removeClass('hide');
 
             });
     });
@@ -1388,8 +1411,8 @@ $(document).ready(function () {
 
     //show month on button click from daily
     $(document).on("click", "#daily_calendar_view .show_month_button", function () {
-        $("#monthly_calendar_view").show();
-        $("#daily_calendar_view").hide();
+        $(" .calendar").removeClass('hide');
+        $(" .calendar_day").addClass('hide');
     });
 
 });
