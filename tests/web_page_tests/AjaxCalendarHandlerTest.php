@@ -39,7 +39,7 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
 
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?next=1&month_num=7&year_num=2015&eq_group_id=201');
 
-        //Assert monthnum, year
+        //Assert month_num, year
         $this->assertPattern('/August/');
         $this->assertPattern('/2015/');
     }
@@ -50,7 +50,7 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
 
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=7&year_num=2015&eq_group_id=201');
 
-        //Assert monthnum, year
+        //Assert month_num, year
         $this->assertPattern('/June/');
         $this->assertPattern('/2015/');
 
@@ -84,9 +84,9 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
     {
         $this->getToEquipmentGroupPage();
 
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=1&calmonth=7&items=Array&eq_group_id=201');
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?day_num=1&month_num=7&items=Array&eq_group_id=201');
 
-        //Assert prev, monthnum, year
+        //Assert prev, month_num, year
         $this->assertPattern('/July 01/');
         $this->assertPattern('/1:30 PM/');
 
@@ -228,31 +228,19 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
 
         // This is what's being tested
         //March 22, 2013: testSubgroup1: testItem1 is reserved
-        //added calyear field
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=03&year_num=2013&eq_group_id=201');
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?day_num=22&month_num=03&year_num=2013&eq_group_id=201');
 
         $this->assertPattern('/March/');
         $this->assertEltByIdHasAttrOfValue('daily_prev_nav','data-monthnum','03');
 
-        //check that appropriate schedule elements are present
-//        $this->assertEltByIdHasAttrOfValue('schedule-1003','id','1003');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1004','id','1004');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-date','2013-03-22');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-date','2013-03-22');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1003','start-time','19:00:00');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1004','start-time','18:00:00');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1003','duration','60M');
-//        $this->assertEltByIdHasAttrOfValue('schedule-1004','duration','60M');
-
         //check schedule display elements
-//        $this->assertPattern('/testSubgroup1/');
-//        $this->assertPattern('/testItem1/');
+        $this->assertPattern('/style="background:purple"/');
     }
 
     function testDailyNextNav() {
         $this->signIn();
 
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&calyear=2013&next=1&items=Array');
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?next=1&month_num=03&day_num=22&eq_group_id=201');
 
         $this->assertPattern('/March/');
         $this->assertPattern('/23/');
@@ -262,19 +250,23 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
     function testDailyPrevNav() {
         $this->signIn();
 
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&calyear=2013&prev=-1&items=Array');
-
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?prev=-1&month_num=03&day_num=22&eq_group_id=201');
         $this->assertPattern('/March/');
         $this->assertPattern('/21/');
 
     }
 
-    function testNoParameters() {
-        $this->fail("Todo");
-    }
+    function testAjaxDailyCalendarCorrectEID() {
+        $this->signIn();
 
-    function testMissingEqGroupID() {
-        $this->fail("Todo");
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&year_num=2013');
+        $this->assertText("Missing equipment group ID");
+
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&year_num=2013&eq_group_id=256');
+        $this->assertText("Equipment group does not exist");
+
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&year_num=2013&eq_group_id=b');
+        $this->assertText("Invalid equipment group ID");
     }
 
     function testGetAllItemsForEqGroup() {
@@ -282,7 +274,10 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
 
         $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?caldate=22&calmonth=3&calyear=2013&eq_group_id=201');
 
-        $this->assertText(testItem1);
-        $this->assertText(testItem2);
+        $eq = EqGroup::getOneFromDb(['eq_group_id' => 201], $this->DB);
+
+        $this->assertEqual(count($eq->eq_items),0);
+        $eq->loadEqItems();
+        $this->assertEqual(count($eq->eq_items),6);
     }
 }

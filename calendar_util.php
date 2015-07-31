@@ -65,12 +65,12 @@ function renderMonthHeader($month,$year){
 }
 
 /****** Header for day view (displays Month Day format) *****/
-function renderDayHeader($month,$day) {
+function renderDayHeader($month,$day,$year) {
     $month_name = monthIntToString($month);
     $header = '<table cellpadding="0" cellspacing="0" class="calendar">
             <tr class = "calendar-row">
             <td id = "daily_prev_nav" class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
-            <td class="day-name" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
+            <td id = "day_display" class="day-name" data-monthnum = "'.$month.'" data-daynum ="'.$day.'" data-yearnum ="'.$year.'" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
             <td id = "daily_next_nav" class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
             </tr></table>';
     return $header;
@@ -103,12 +103,8 @@ function renderItemRows($items,$headings,$scheds) {
             }
         }
 
-        //need to take time blocks into consideration because only looks at beginning and the end
-        //gets in the way of most recent ones too
-        //shouldn't look at the timeblock of the schedule, should look at timeblock itself
         foreach ($itemSched as $sched) {
             $starts[timetoInt($sched->timeblock_start_time)] = durationToInt($sched->timeblock_duration);
-            //$starts[timetoInt($sched->time_blocks->start_datetime)] = durationToInt($sched->timeblock_duration);
         }
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
@@ -149,7 +145,7 @@ function renderCalendarCells($month,$year,$schedule)
 
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
 
-        $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-caldate = "'.$list_day.'">';
+        $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-daynum = "'.$list_day.'">';
         /* add in the day number */
         $cells.= '<div class="day-number">'.$list_day.'</div>';
 
@@ -160,9 +156,6 @@ function renderCalendarCells($month,$year,$schedule)
             foreach ($sched->time_blocks as $tb) {
                 foreach ($sched->reservations as $r) {
                     if (intval(substr($tb->start_datetime, 0, 4)) == $year && intval(substr($tb->start_datetime, 5, 2)) == $month && intval(substr($tb->start_datetime, 8, 2)) == $list_day) {
-                        //                    util_prePrintR('hello');
-                        //                    $r = Reservation::getOneFromDb($tb->schedule_id, $this->db);
-                        //                    util_prePrintR($r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name);
                         $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
                         start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
                             '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
@@ -223,9 +216,9 @@ function draw_MonthlyCalendar($month,$year,$all_schedules) {
 }
 
 /*************** DAILY CALENDAR *********************/
-function draw_SingleDayCalendar($month,$day,$items,$day_sched) {
+function draw_SingleDayCalendar($month,$day,$year,$items,$day_sched) {
     /* date header */
-    $header = renderDayHeader($month,$day);
+    $header = renderDayHeader($month,$day,$year);
 
     /* table headings */
     $calendar = '<div style="overflow-x:scroll; width:925px"><table cellpadding="0" cellspacing="2" class="header">';

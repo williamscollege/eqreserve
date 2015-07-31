@@ -126,7 +126,7 @@
             $this->assertEltByIdHasAttrOfValue('next_nav', 'data-yearnum', $currentyear);
             $this->assertEltByIdHasAttrOfValue('prev_nav', 'data-prev', '-1');
             $this->assertEltByIdHasAttrOfValue('next_nav', 'data-next', '1');
-            $this->assertEltByIdHasAttrOfValue('day_lists', 'data-caldate'); //All the days
+            $this->assertEltByIdHasAttrOfValue('day_lists', 'data-daynum'); //All the days
         }
 
     }

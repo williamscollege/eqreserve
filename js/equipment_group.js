@@ -38,8 +38,9 @@ $(document).ready(function () {
 			});
             if(hasMonth === 1 && $(".no-reserv-year").hasClass('hide')){
                 $(".no-reserv-year").removeClass('hide');
-                $(".no-reserv-month").addClass('hide');
             }
+			$(".no-reserv-month").addClass('hide');
+
 		}else if(show_which==2){
             $('.item-listing').each(function(){
 				if($(this).hasClass('hide')){
@@ -1279,11 +1280,10 @@ $(document).ready(function () {
             dataType: 'html',
             data: {
                 //day clicked on in the month
-                'caldate': $(this).attr('data-caldate'),
-                'calmonth': $(this).attr('data-monthnum'),
+                'day_num': $(this).attr('data-daynum'),
+                'month_num': $(this).attr('data-monthnum'),
 				'year_num': $("#next_nav").attr('data-yearnum'),
-                'eq_group_id': $("#scheduleEqGroupID").attr('value')
-                //'items': $(this).attr('data-items') //this should be an array of the items
+                'eq_group_id': $("#managerView").attr('data-eid')
             }
         })
             .success(function(html){
@@ -1297,8 +1297,50 @@ $(document).ready(function () {
             });
     });
 
+	$(document).on("click", "#daily_calendar_view .nav_elt_day_prev", function () {
+
+			console.log($("#managerView").attr('data-eid'));
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'prev': $(this).attr('data-prev-day'),
+				'month_num': $(this).attr('data-monthnum'),
+				'day_num': $(this).attr('data-daynum'),
+				'year_num': $("#day-display").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid')
+			}
+		})
+
+			//replaces the current monthly view
+			.success(function(html){
+				$("#daily_calendar_view").html(html);
+			})
+
+	});
+
+	$(document).on("click", "#daily_calendar_view .nav_elt_day_next", function () {
+
+		$.ajax({
+			url: 'ajax_actions/ajax_calendar_handler.php',
+			dataType: 'html',
+			data: {
+				'next': $(this).attr('data-next-day'),
+				'month_num': $(this).attr('data-monthnum'),
+				'day_num': $(this).attr('data-daynum'),
+				'year_num': $("#day-display").attr('data-yearnum'),
+				'eq_group_id': $("#managerView").attr('data-eid')
+			}
+		})
+
+			//replaces the current monthly view
+			.success(function(html){
+				$("#daily_calendar_view").html(html);
+			})
+
+	});
+
     //Show the previous month, getting the month, year from calendar elements
-	//ADD IN ITEMS: NEED TO SEND SCHEDULE
     $(document).on("click", "#monthly_calendar_view .nav_elt_month_prev", function () {
 
         $.ajax({
@@ -1322,7 +1364,6 @@ $(document).ready(function () {
     //TO IMPLEMENT: DAY TO DAY VIEWS?
 
     //Show the next month, getting the month, year from calendar elements
-	//ADD IN ITEMS: NEED TO SEND IN SCHEDULE
     $(document).on("click", "#monthly_calendar_view .nav_elt_month_next", function () {
 
         //console.log('clicked calendar NEXT'); // DEBUG

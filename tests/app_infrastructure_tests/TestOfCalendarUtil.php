@@ -18,7 +18,7 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
     }
 
     function TestRenderDayHeader() {
-        $header = renderDayHeader(6,9);
+        $header = renderDayHeader(6,9,2015);
 
         $this->assertPattern('/June 9/',$header);
         $this->assertPattern('/day-name/',$header);
