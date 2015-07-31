@@ -100,13 +100,23 @@ $(document).ready(function () {
 			$(".manager-action").removeClass("hide");
             $(".subgroup-ul").removeClass("hide");
 
+            //list with delete buttons
+            $('.schedule').removeClass('hide');
             $(".editing-control").removeClass("hide");
             $('.item-listing').removeClass('hide');
+
+            //buttons
             $('.show-this-month').addClass('hide');
             $('.show-this-year').addClass('hide');
             $('.show-all').addClass('hide');
             $(".no-reserv-month").addClass('hide');
             $(".no-reserv-year").addClass('hide');
+
+            //calendar/list
+            $('.calendar').addClass('hide');
+            $('.calendar_day').addClass('hide');
+            $(".show_reservation_list").addClass('hide');
+            $(".show_reservation_calendar").addClass('hide');
         }
 		else {
 			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
@@ -128,6 +138,8 @@ $(document).ready(function () {
                 $('.show-this-year').addClass('hide');
                 $('.show-all').addClass('hide');
             }
+            $(".show_reservation_list").removeClass('hide');
+            $(".show_reservation_calendar").removeClass('hide');
 		}
 	});
 
@@ -149,7 +161,7 @@ $(document).ready(function () {
 			$(".manager-action").addClass("hide");
             $(".subgroupRadiosControls").removeClass("hide");
             $(".subgroupCheckboxesControls").removeClass("hide");
-		}
+        }
 	});
 
 	// Make easy to check or un-check a subgroup's items
@@ -1004,6 +1016,7 @@ $(document).ready(function () {
 		$(".manager-action").addClass("hide");
 		// reset the submit button (avoid disabled state)
 		$("#btnSubmitEditGroup").button('reset');
+        //$(".schedule").removeClass('hide');
 
         //gets rid of the editing controls if shown
         if($("#item").hasClass("item-listing")){
@@ -1019,6 +1032,8 @@ $(document).ready(function () {
             $('.show-this-year').addClass('hide');
             $('.show-all').addClass('hide');
         }
+        $(".show_reservation_list").removeClass('hide');
+        $(".show_reservation_calendar").removeClass('hide');
 	});
 
 	$("#btnReservationCancel").click(function () {
