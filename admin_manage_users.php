@@ -10,6 +10,7 @@ require_once('head_output.php');
         <?php
         if ($USER->flag_is_system_admin) {
             foreach ($all_users as $user) {
+                //links to all different accounts
                 echo '<a href="account_management.php?user='. $user->user_id.'" title="'.$user->username.'">'. $user->username .'</a>';
 
                 echo "<div id='" . $user->username . "'>";

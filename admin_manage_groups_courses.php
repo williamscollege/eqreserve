@@ -13,7 +13,7 @@ $all_inst_groups = InstGroup::getAllFromDb(['flag_delete'=>0],$DB);
                 foreach ($all_inst_groups as $inst_group) {
                     echo "<div id='".$inst_group->name."'>";
                     if ($inst_group->name) {
-                        echo $inst_group->name;
+                        echo $inst_group->toListItemLinked() . "\n";
                     }
 //                    $members = InstMembership::getAllFromDb(['inst_group_id'=>$inst_group->inst_group_id],$DB);
 //                    if($members){
