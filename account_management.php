@@ -36,7 +36,7 @@ require_once('head_output.php');
 				$.ajax({
 					url: 'ajax_comm_pref.php',
 					dataType: 'json',
-					data: {'comm_pref': comm_pref_id,
+					data: {'comm_pref': comm_pref_id,`
 						'commPrefAction': pref_action,
 						'actionVal': pref_state
 					}

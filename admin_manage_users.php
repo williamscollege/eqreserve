@@ -1,7 +1,7 @@
 <?php
     $pageTitle = 'Manage Users';
     require_once('head_pre_output.php');
-    require_once('head_output.php');
+require_once('head_output.php');
 
     //use a key that is always true
     $all_users = User::getAllFromDb(['flag_delete'=>0],$DB);
@@ -10,10 +10,11 @@
         <?php
         if ($USER->flag_is_system_admin) {
             foreach ($all_users as $user) {
+                echo '<a href="account_management.php?user='. $user->user_id.'" title="'.$user->username.'">'. $user->username .'</a>';
+
                 echo "<div id='" . $user->username . "'>";
-                echo "<strong>" . $user->fname . ' ' . $user->lname . "</strong>";
-                if ($user->username) {
-                    echo "<ul><li>Username: " . $user->username . "</li>";
+                if($user->fname && $user->lname){
+                    echo "<ul><li>Name: " . $user->fname . ' ' . $user->lname . "</li>";
                 }
                 if ($user->email) {
                     echo "<li>Email: " . $user->email . "</li>";
