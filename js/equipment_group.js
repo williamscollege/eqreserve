@@ -235,7 +235,7 @@ $(document).ready(function () {
 		return(sHours + ":" + sMinutes + ":00");
 	}
 
-	// Convert minute to pretty words using: days, hours, minutes
+	//Convert minute to pretty words using: days, hours, minutes
 	function util_minutesToWords(minutes) {
 		var ret = "";
 

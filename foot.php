@@ -16,7 +16,7 @@
                     echo '<ol>';
                     echo '<li><p>Your home page shows the list of groups that you have access to.</p></li>';
                     echo '<li><p>You can find your account information by clicking on your username in the top right-hand corner.</p></li>';
-                    echo '<li><p>Click on a link for more information about that group.</p></li>';
+                    echo '<li><p>Click on a group name for more information about that group.</p></li>';
                     echo '<li><p>If you are a manager, indicated by "(manager)," you will be able to edit certain aspects of that group.</p></li></ol>';
                 }else{
                     echo '<h3 id="modalHelpLabel">Help FAQ</h3></div><div class="modal-body">';
@@ -37,6 +37,7 @@
                 echo '<li><p>To reserve an item, click "Reserve Equipment." Choose at least one item to reserve, specify your date, time, duration, and any repeats, and then press submit.</p></li>';
                 echo '<li><p>Schedule conflicts or failure to follow the reservation restrictions will result in a reservation error.</p></li>';
                 echo '<li><p>Existing reservations for the items can be seen in a list, monthly, and daily view.</p></li>';
+                echo '<li><p>For more information about your reservation, click on the date of your reservation while in list view.</p></li>';
                 echo '<li><p>To see the reservations in a daily view, click on a day in the calendar.</p></li>';
                 echo '<li><p>If your reservation does not show up immediately, please refresh the page.</p></li>';
                 echo '</ol>';
@@ -73,7 +74,7 @@
 					echo "<p>Please contact: " . $managersList . "</p>";
 				}
 				else {
-					# show default suypport address
+					# show default support address
 					echo "<p>Please contact: <a href=\"mailto:itech@" . INSTITUTION_DOMAIN . "?subject=EqReserve_Help_Request\"><i class=\"icon-envelope\"></i> itech@williams.edu</a></p>";
 				}
 				?>

@@ -166,30 +166,48 @@
 		return $value;
 	}
 
-	//	# convert minute to pretty words using: days, hours, minutes
-	//	function util_minutesToWords($minutes) {
-	//		$ret = "";
-	//
-	//		/*** get the days ***/
-	//		$days = intval(intval($minutes) / (60 * 24));
-	//		if ($days > 0) {
-	//			$ret .= "$days days ";
-	//		}
-	//
-	//		/*** get the hours ***/
-	//		$hours = (intval($minutes) / 60) % 24;
-	//		if ($hours > 0) {
-	//			$ret .= "$hours hours ";
-	//		}
-	//
-	//		/*** get the minutes ***/
-	//		$minutes = intval($minutes) % 60;
-	//		if ($minutes > 0) {
-	//			$ret .= "$minutes minutes ";
-	//		}
-	//
-	//		return $ret;
-	//	}
+		# convert minute to pretty words using: days, hours, minutes
+		function util_minutesToWords($minutes) {
+            $ret = "";
+
+            /*** get the days ***/
+            $days = floor($minutes/ (60 * 24));
+            /*** get the weeks ***/
+            if($days>7){
+                $weeks = floor($days/7);
+                if($weeks == 1){
+                    $ret .= "$weeks week ";
+                }else{
+                    $ret .= "$weeks weeks ";
+                }
+                $days = floor($days%7);
+            }
+            if ($days > 0) {
+                if($days == 1){
+                    $ret .= "$days day ";
+                }else{
+                    $ret .= "$days days ";
+                }
+            }
+
+            /*** get the hours ***/
+            $hours = floor(($minutes / 60) % 24);
+            if ($hours > 0) {
+                if($hours == 1){
+                    $ret .= "$hours hour ";
+                }else{
+                    $ret .= "$hours hours ";
+                }
+            }
+
+            /*** get the minutes ***/
+            $mins = floor($minutes % 60);
+            if ($mins > 0) {
+                $ret .= "$mins minutes ";
+            }
+
+            return $ret;
+		}
 
 	# Output an object wrapped with HTML PRE tags for pretty output
 	function util_prePrintR($obj) {

@@ -79,11 +79,13 @@
 			$doSave           = TRUE;
 		}
 		if (($intMinDurationMinute) && ($intMinDurationMinute != $eg->min_duration_minutes)) {
-			$eg->min_duration_minutes = $intMinDurationMinute;
+//			util_prePrintR($intMinDurationMinute);
+            $eg->min_duration_minutes = $intMinDurationMinute;
 			$doSave                   = TRUE;
 		}
 		if (($intMaxDurationMinute) && ($intMaxDurationMinute != $eg->max_duration_minutes)) {
-			$eg->max_duration_minutes = $intMaxDurationMinute;
+//			util_prePrintR($intMaxDurationMinute);
+            $eg->max_duration_minutes = $intMaxDurationMinute;
 			$doSave                   = TRUE;
 		}
 		if (($intDurationIntervalMinutes) && ($intDurationIntervalMinutes != $eg->duration_chunk_minutes)) {

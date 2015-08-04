@@ -40,9 +40,9 @@ CREATE TABLE IF NOT EXISTS `eq_groups` (
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
     `start_minute` VARCHAR(255) NULL,
-    `min_duration_minutes` SMALLINT NOT NULL DEFAULT 30,
-    `max_duration_minutes` SMALLINT NOT NULL DEFAULT 120,
-    `duration_chunk_minutes` SMALLINT NOT NULL DEFAULT 30,
+    `min_duration_minutes` INT NOT NULL DEFAULT 30,
+    `max_duration_minutes` INT NOT NULL DEFAULT 120,
+    `duration_chunk_minutes` INT NOT NULL DEFAULT 30,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='top-level organizational unit; permisions/roles are managed with respect to eq_groups;';
 /* start_minute: comma separated list of minutes of the hour on which a time block may be created (e.g. 0,30) */
