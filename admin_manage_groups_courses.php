@@ -23,7 +23,8 @@ $all_inst_groups = InstGroup::getAllFromDb(['flag_delete'=>0],$DB);
 //                            util_prePrintR($member);
                             $user = User::getOneFromDb(['user_id'=>($member->user_id)],$DB);
 //                            util_prePrintR($user);
-                            if(!($user->flag_delete == '' || $user->flag_delete == '')){
+                            //get rid of deleted and banned members
+                            if(!($user->flag_delete == '' || $user->flag_is_banned == '')){
                                 echo "<li>" . $user->fname . ' ' . $user->lname . ' (' . $user->username . ')' . "</li>";
                             }
                         }
