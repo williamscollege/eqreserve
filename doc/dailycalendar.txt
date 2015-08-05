@@ -1,0 +1,10 @@
+Daily calendar:
+    Functionality:
+        -Displays all items in a given equipment group as rows and different times of the day in 15 minutes increments as columns to form a grid
+        -Cells are blocked out when an item is reserved for a given time
+        -Is reached when a user clicks on a day cell in the monthly calendar view
+        -Allows user to advance and retreat a day using arrows at the top of the calendar
+    Implementation:
+        -Interface is created in php
+        -Once a day is clicked, control is sent to the ajax calendar handler, where it creates the calendar and populates it with appropriate reservations
+        
