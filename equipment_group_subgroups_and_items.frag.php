@@ -152,6 +152,23 @@
                 //restrict the durations that show up according to the min and maximum duration reservation restrictions
                 //detail: if rules edited, changes after a refresh
                 //only shows from the duration array
+
+            //this version allows for all possibilities only on full days, full hours
+//                $full_day = false;
+//                $duration = $Requested_EqGroup->min_duration_minutes;
+//                while($duration<$Requested_EqGroup->max_duration_minutes){
+//                    if($duration == 1440){
+//                        $full_day = true;
+//                    }
+//                    $durForm = util_minutesToDur($duration);
+//                    $durString = util_minutesToWords($duration);
+//                    if((!(strpos($durForm, 'W ') && strpos($durForm, 'D '))) && !((strpos($durForm, 'D ') && strpos($durForm, 'H '))) && (!(strpos($durForm, 'H ') && strpos($durForm, 'M '))) && (!(strpos($durForm, 'D ') && strpos($durForm, 'M ')))){
+//                        echo "<option value='" . $durForm . "'>" . $durString . "</option>";
+//                    }
+//                    $duration+=$Requested_EqGroup->duration_chunk_minutes;
+//                }
+
+            //this version allows only for durations from the array
                 $full_day = false;
                 $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
                 foreach($durationArray as $dur){
@@ -161,14 +178,20 @@
                             if($dur=='1D'){
                                 $full_day = true;
                             }
-                            $durString = util_durToString($dur);
-                            echo "<option value='" . $dur . "'>" . $durString . "</option>";
+                            if(util_durToInt($dur)!=$Requested_EqGroup->max_duration_minutes){
+                                $durString = util_durToString($dur);
+                                echo "<option value='" . $dur . "'>" . $durString . "</option>";
+                            }
                         }
                     }
                 }
+                $max = util_minutesToWords($Requested_EqGroup->max_duration_minutes);
+                echo "<option value='" . $max . "'>" . $max . "</option>";
+
             ?>
 		</select>
         <?php
+        //Only allow 24 hours if it is within the restrictions
             if($full_day==true){
                 echo '<button type="button" id="btnAllDayEvent" name="btnAllDayEvent" class="btn btn-link">Reserve the entire 24-hour day</button>';
             }

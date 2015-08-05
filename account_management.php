@@ -123,7 +123,7 @@ require_once('head_output.php');
 							foreach ($for_user->eq_groups as $ueg) {
 								$isManager = ($ueg->permission && $ueg->permission->role && ($ueg->permission->role->priority == 1));
 								echo EqGroup::listItemTag();
-								echo $ueg->toHTML();
+								echo $ueg->toHTMLnoDesc();
 								//                            echo '<div class="view-control">'.$USER->comm_prefs[$ueg->eq_group_id]->toHTML()."</div>\n";
 								if (!array_key_exists($ueg->eq_group_id, $USER->comm_prefs)) {
 									// TODO: create new comm prefs for this group
@@ -138,7 +138,7 @@ require_once('head_output.php');
 
 									$new_cp->updateDb();
 									if (!$new_cp->matchesDb) {
-										echo '<div class="text-error"><b>failed to create initial communicaiton preferences for ' . $ueg->name . '</b></div>';
+										echo '<div class="text-error"><b>failed to create initial communication preferences for ' . $ueg->name . '</b></div>';
 									}
 									else {
 										$USER->comm_prefs[$ueg->eq_group_id] = $new_cp;

@@ -89,13 +89,14 @@ function renderItemRows($items,$headings,$scheds) {
         $isReserved = FALSE;
         $itemSched = [];
         $starts = [];
-        $itemName = substr($item, strpos($item, ": ") + 2);
         //gets any schedules that have this item reserved
         foreach ($scheds as $s) {
             $s->loadReservations();
             foreach ($s->reservations as $r) {
                 $r->loadEqItem();
-                if ($r->eq_item->name == $itemName) {
+                $id = key($items);
+
+                if ($r->eq_item->eq_item_id == $id) {
                     array_push($itemSched, $s);
                 }
             }
@@ -120,6 +121,7 @@ function renderItemRows($items,$headings,$scheds) {
             }
         endfor;
         $rows .= '</tr>';
+        next($items);
     }
     return $rows;
 }
@@ -207,7 +209,7 @@ function draw_MonthlyCalendar($month,$year,$all_schedules) {
     $calendar_cells = renderCalendarCells($month, $year, $all_schedules);
 
 	/* end the table */
-	$end= '</table>';
+	$end = '</table>';
 
 	/* all done, return result */
 	return $header.$calendar_days.$calendar_cells.$end;

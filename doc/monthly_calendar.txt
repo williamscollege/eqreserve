@@ -1,0 +1,44 @@
+Monthly Calendar
+
+The monthly calendar displays the equipment reservations in a calendar format.
+Allows user to navigate from month to month to see reservations.
+Displays reservations for each in time order.
+Can see a daily display if any day is clicked.
+
+========================================================================================================================
+
+The main building of the monthly calendar is within calendar_util.php using the main function draw_MonthlyCalendar.
+The functions renderMonthHeader and renderCalendarCells are used as helper methods.
+    - draw_MonthlyCalendar:
+        + Required parameters: current month and year and all the schedules for the requested equipment group.
+    - renderMonthHeader:
+        + Required parameters: current month and year
+    - renderCalendarCells:
+        + Required parameters: current month and year and all the schedules for the requested equipment group
+
+------------------------------------------------------------------------------------------------------------------------
+First the table is started in the main draw_MonthlyCalendar function.
+
+Call renderMonthHeader: draw the top part of the calendar (the navigation arrows, the month, and year)
+
+    - Takes $month (format: '2'), and converts it to actual month name (format: 'February').
+    - Create $header with previous and next month navigation and current month and year, embedding AJAX data for calling previous and next months.
+        + data-yearnum = current year aka $year (format: '2015')
+        + data-prev = tells calendar to decrease month (format if fetched: '-1')
+        + data-next = tells calendar to increase month (format if fetched: '1')
+        + data-monthnum = current month aka $month (format: '2')
+    - Returns $header
+
+Call renderCalendarCells: draw the cells and the items that are booked on that day.
+
+    - Use $running_day (keeps track of the weekly days) to fill in the blank days so that the current month displayed starts numbering on the correct day.
+    - Fill in all the dates for the days of the month by keeping track of the current day being drawn ($list_day) and making sure that it is less than
+      $days_in_month (total number of days in the $month (format: '2') in the specified $year (format: '2015')).
+        - For each day, if there is a corresponding time block (found by using $schedule) on that day, month, and year, present it.
+        - Take account of repeating reservations by comparing start and end times of time blocks and then use the reservation names to display.
+    - If reach end of a week (aka 7 days), wrap around.
+    - Do this until the $list_day is equal to the $days_in_month.
+    - If need be, fill in blank days.
+    - Returns $cells
+
+Returns the concatenated calendar.

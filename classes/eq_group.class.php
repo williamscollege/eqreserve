@@ -359,6 +359,19 @@
 
 			return $ret;
 		}
+
+        public
+        function toHTMLnoDesc() {
+            $ret = '<a href="equipment_group.php?eid=' . $this->eq_group_id . '" title="' . $this->name . '">' . $this->name . '</a>';
+            if ($this->permission &&
+                $this->permission->role &&
+                $this->permission->role->priority == 1
+            ) {
+                $ret .= " <b>(manager)</b>";
+            }
+
+            return $ret;
+        }
 	}
 
 ?>

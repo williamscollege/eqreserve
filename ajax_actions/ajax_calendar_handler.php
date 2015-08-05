@@ -119,8 +119,9 @@ $Eq_Group = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
         //same item different subgroup should still be a different item
         foreach($Eq_Group->eq_subgroups as $subgroup) {
             foreach ($subgroup->eq_items as $item) {
+                $id = $item->eq_item_id;
                 $name = $subgroup->name . ": " . $item->name;
-                array_push($items, $name);
+                $items[$id] = $name;
             }
         }
 
