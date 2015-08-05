@@ -347,6 +347,13 @@
 			return $li;
 		}
 
+        function toListItemLinkedNoDesc($id = '', $class_ar = [], $other_attr_hash = []) {
+            $li = parent::listItemTag($id, $class_ar, $other_attr_hash);
+            $li .= $this->toHTMLnoDesc();
+            $li .= '</li>';
+            return $li;
+        }
+
 		public
 		function toHTML() {
 			$ret = '<a href="equipment_group.php?eid=' . $this->eq_group_id . '" title="' . $this->name . '">' . $this->name . '</a>: ' . $this->descr;
