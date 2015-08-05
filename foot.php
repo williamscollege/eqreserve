@@ -45,25 +45,32 @@
                 echo '<h3 id="modalHelpLabel">Schedule of Reservations FAQ</h3></div><div class="modal-body">';
                 echo '<ol>';
                 echo '<li><p>The Schedule of Reservations Page gives a detailed look at your individual item reservation</p></li>';
-                echo '<li><p>If you are a manager of the Equipment Group you have reserved under, you can change the reservation to be a regular or a management schedule. This will show up on the Equipment Group Page as "MANAGEMENT."</p></li>';
+                echo '<li><p>If you are a manager of the equipment group you have reserved under, you can change the reservation to be a regular or a management schedule. This will show up on the Equipment Group Page as "MANAGEMENT."</p></li>';
                 echo '<li><p>Click edit to delete a part or all of your reservation.</p></li></ol>';
             }else if($USER->flag_is_system_admin && basename($_SERVER['PHP_SELF']) == 'admin_manage_users.php') {
                 echo '<h3 id="modalHelpLabel">Manage Users FAQ</h3></div><div class="modal-body">';
                 echo '<ol>';
                 echo '<li><p>This page is only available to administrators.</p></li>';
-                echo '<li><p>The Manage Users Page contains a list of all users in the system.</p></li></ol>';
+                echo '<li><p>The Manage Users Page contains a list of all users in the system.</p></li>';
+                echo '<li><p>You can edit user information by clicking on a username.</p></li></ol>';
             }else if($USER->flag_is_system_admin && basename($_SERVER['PHP_SELF']) == 'admin_manage_groups_courses.php') {
                 echo '<h3 id="modalHelpLabel">Manage Groups/Courses FAQ</h3></div><div class="modal-body">';
                 echo '<ol>';
                 echo '<li><p>This page is only available to administrators.</p></li>';
-                echo '<li><p>The Manage Groups/Courses Page contains a list of all groups/courses in the system.</p></li></ol>';
+                echo '<li><p>The Manage Groups/Courses Page contains a list of all groups/courses in the system, as well as all the members of each group.</p></li>';
+                echo '<li><p>Click on a group/course to see which equipment groups it has access to.</p></li></ol>';
+            }else if(basename($_SERVER['PHP_SELF']) == 'inst_group.php'){
+                echo '<h3 id="modalHelpLabel">Institutional Group FAQ</h3></div><div class="modal-body">';
+                echo '<ol>';
+                echo '<li><p>The Institutional Group Page shows the equipment groups that you have access to as a member of this group.</p></li>';
+                echo '<li><p>Click on an equipment group for more information.</p></li></ol>';
             }else if(basename($_SERVER['PHP_SELF']) == 'account_management.php'){
                 echo '<h3 id="modalHelpLabel">Account Management FAQ</h3></div><div class="modal-body">';
                 echo '<ol>';
                 echo '<li><p>This page holds a detailed look at your account.</p></li>';
                 echo '<li><p>You can find groups/courses that you are a member of as well as all reservations that you have made.</p></li>';
-                echo '<li><p>Turn on reminders for Equipment Groups that you have access to by checking the appropriate box.</p></li>';
-                echo '<li><p>If you are a manager of an Equipment Group, you can also turn on/off alerts for any reservations regarding that group.</p></li></ol>';
+                echo '<li><p>Turn on reminders for equipment groups that you have access to by checking the appropriate box.</p></li>';
+                echo '<li><p>If you are a manager of an equipment group, you can also turn on/off alerts for any reservations regarding that group.</p></li></ol>';
             }
             ?>
 			<p>&nbsp;</p>

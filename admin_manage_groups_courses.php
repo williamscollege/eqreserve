@@ -15,17 +15,20 @@ $all_inst_groups = InstGroup::getAllFromDb(['flag_delete'=>0],$DB);
                     if ($inst_group->name) {
                         echo $inst_group->toListItemLinked() . "\n";
                     }
-//                    $members = InstMembership::getAllFromDb(['inst_group_id'=>$inst_group->inst_group_id],$DB);
-//                    if($members){
-//                        echo "<ul>";
-//                        foreach($members as $member){
-//                            $user = User::getOneFromDb(['user_id'=>($member->user_id)],$DB);
-//                            if($user->flag_delete == 0) {
-//                                echo "<li>" . $user->fname . ' ' . $user->lname . ' (' . $user->username . ')' . "</li>";
-//                            }
-//                        }
-//                        echo "</ul></div>";
-//                    }
+                    $members = InstMembership::getAllFromDb(['inst_group_id'=>$inst_group->inst_group_id],$DB);
+//                    util_prePrintR($members);
+                    if($members){
+                        echo "<ul>";
+                        foreach($members as $member){
+//                            util_prePrintR($member);
+                            $user = User::getOneFromDb(['user_id'=>($member->user_id)],$DB);
+//                            util_prePrintR($user);
+                            if(!($user->flag_delete == '' || $user->flag_delete == '')){
+                                echo "<li>" . $user->fname . ' ' . $user->lname . ' (' . $user->username . ')' . "</li>";
+                            }
+                        }
+                        echo "</ul></div>";
+                    }
                 }
             }else{
                util_redirectToAppHome('failure', 51);
