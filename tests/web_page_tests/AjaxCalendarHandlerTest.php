@@ -84,10 +84,10 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
     {
         $this->getToEquipmentGroupPage();
 
-        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?day_num=1&month_num=7&items=Array&eq_group_id=201');
+        $this->get('http://localhost' . LOCAL_WEBSERVER_PORT_SPEC . '/eqreserve/ajax_actions/ajax_calendar_handler.php?day_num=1&month_num=7&year_num=2015&eq_group_id=201');
 
         //Assert prev, month_num, year
-        $this->assertPattern('/July 01/');
+        $this->assertPattern('/July 1/');
         $this->assertPattern('/1:30 PM/');
 
     }

@@ -47,7 +47,7 @@
             $this->assertResponse(200);
 
             $this->assertText('Reservation Time Restrictions');
-            $this->assertText('Can be reserved for 15 minutes min, 60 minutes max, starting on the 0,15,30,45 hour for 15 minute intervals');
+            $this->assertText('Can be reserved for 15 minutes min, 1 hour max, starting on the 0,15,30,45 hour for 15 minutes intervals.');
         }
 
         //To test application of reservation rules
