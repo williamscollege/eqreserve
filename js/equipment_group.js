@@ -1178,6 +1178,7 @@ $(document).ready(function () {
 		else if (frequency == 'monthly') {
 			frequency = 'Every ' + interval + ' months';
 		}
+		var start_date = ', starting on ' + $("#scheduleStartOnDate").val() + ', ';
 
 		var start_time = ' at ' + $("#scheduleStartTimeRaw").val();
 
@@ -1245,7 +1246,7 @@ $(document).ready(function () {
 		}
 
 		// Construct the summary string
-		$("#reservationSummary").text(frequency + start_time + duration + dates_selected + end_repeat);
+		$("#reservationSummary").text(frequency + start_time + start_date + duration + dates_selected + end_repeat);
 
 		// Update these values, in preparation of eventual form submit
 		$("#scheduleSummaryText").val($("#reservationSummary").text());

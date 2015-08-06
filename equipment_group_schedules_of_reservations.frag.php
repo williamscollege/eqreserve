@@ -15,7 +15,6 @@
         foreach ($Requested_EqGroup->schedules as $sched) {
 
             $li = Db_Linked::listItemTag('list-of-schedule-' . $sched->schedule_id);
-            //this toggles weirdly
             if ($show_del_control) {
                 $li .= '<a id="delete-schedule-' . $sched->schedule_id . '" class="editing-control hide btn btn-mini btn-danger delete-schedule-btn" data-for-schedule="' . $sched->schedule_id . '"><i class="icon-trash icon-white"></i></a> ';
             }
@@ -27,11 +26,16 @@
             if ($sched->type == 'manager') {
                 $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
             }
+            if($sched->frequency_type == 'monthly' || $sched->frequency_type == 'weekly'){
+                $output = $sched->summary;
+            }else{
+                $output = $sched->toString();
+            }
             if ($sched->user_id == $USER->user_id) {
-                $li .= '<strong><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1"> ' . $sched->toString() . '</a></strong> by you<br/>';
+                $li .= '<strong><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1"> ' . $output . '</a></strong> by you<br/>';
             } else {
                 $sched->loadUser();
-                $li .= '<strong>' . $sched->toString() . '</strong> by ';
+                $li .= '<strong>' . $output . '</strong> by ';
 
                 if (!$sched->user->matchesDb) {
                     $del_user = User::getOneFromDb(['user_id' => $sched->user_id, 'flag_delete' => true], $DB);
