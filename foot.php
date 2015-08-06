@@ -31,7 +31,7 @@
                 if($is_group_manager){
                     echo '<li><p>As a manager of this group, you can edit the equipment group by clicking edit equipment group.</p></li>';
                     echo '<li><p>Manager function include editing group information, changing reservation rules, deleting, editing, or inputting subgroups and items, and deleting existing reservations</p></li>';
-                    echo '<li><p>For reservation restrictions, either choose from the default times or input your own in the box.</p></li>';
+                    echo '<li><p>For reservation restrictions, either choose from the default times or input your own in the box. All restrictions must be in minute form.</p></li>';
                 }
                 echo '<li><p>Reservation restrictions tell a user the minimum and maximum time that an item can be reserved for, on what minutes of the hour the reservation can start on, and the intervals for which it can be reserved.</p></li>';
                 echo '<li><p>To reserve an item, click "Reserve Equipment." Choose at least one item to reserve, specify your date, time, duration, and any repeats, and then press submit.</p></li>';
