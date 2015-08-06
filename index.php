@@ -173,7 +173,7 @@
 			$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
 			if (count($UserEqGroups) > 0) {
 				foreach ($UserEqGroups as $ueg) {
-					echo $ueg->toListItemLinked();
+					echo $ueg->toListItemLinkedNoDesc();
 				}
 			}
 			else {

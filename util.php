@@ -209,6 +209,49 @@
             return $ret;
 		}
 
+    function util_minutesToDur($minutes){
+        $ret = "";
+
+        /*** get the days ***/
+        $days = floor($minutes/ (60 * 24));
+        /*** get the weeks ***/
+        if($days>7){
+            $weeks = floor($days/7);
+            if($weeks == 1){
+                $ret .= $weeks."W";
+            }else{
+                $ret .= $weeks."W";
+            }
+            $days = floor($days%7);
+        }
+        if ($days > 0) {
+            if($days == 1){
+                $ret .= $days."D";
+            }else{
+                $ret .= $days."D";
+            }
+        }
+
+        /*** get the hours ***/
+        $hours = floor(($minutes / 60) % 24);
+        if ($hours > 0) {
+            if($hours == 1){
+                $ret .= '60M';
+            }else{
+                $ret .= $hours."H";
+            }
+        }
+
+        /*** get the minutes ***/
+        $mins = floor($minutes % 60);
+        if ($mins > 0) {
+            $ret .= $mins."M";
+        }
+
+        return $ret;
+
+    }
+
 	# Output an object wrapped with HTML PRE tags for pretty output
 	function util_prePrintR($obj) {
 		echo "<pre>";
@@ -450,10 +493,4 @@ function util_durToString($schedDur)
     }
 
     return $strReturn;
-}
-
-/***** reduce minutes into strings (48 hours = 2 days) ******/
-function util_hourToString($hour)
-{
-
 }

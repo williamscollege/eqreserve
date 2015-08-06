@@ -16,7 +16,7 @@
                     echo '<ol>';
                     echo '<li><p>Your home page shows the list of groups that you have access to.</p></li>';
                     echo '<li><p>You can find your account information by clicking on your username in the top right-hand corner.</p></li>';
-                    echo '<li><p>Click on a group name for more information about that group.</p></li>';
+                    echo '<li><p>Click on a group name for more information.</p></li>';
                     echo '<li><p>If you are a manager, indicated by "(manager)," you will be able to edit certain aspects of that group.</p></li></ol>';
                 }else{
                     echo '<h3 id="modalHelpLabel">Help FAQ</h3></div><div class="modal-body">';
@@ -31,7 +31,7 @@
                 if($is_group_manager){
                     echo '<li><p>As a manager of this group, you can edit the equipment group by clicking edit equipment group.</p></li>';
                     echo '<li><p>Manager function include editing group information, changing reservation rules, deleting, editing, or inputting subgroups and items, and deleting existing reservations</p></li>';
-                    echo '<li><p>For reservation restrictions, either choose from the default times or input your own in the box.</p></li>';
+                    echo '<li><p>For reservation restrictions, either choose from the default times or input your own in the box. All restrictions must be in minute form.</p></li>';
                 }
                 echo '<li><p>Reservation restrictions tell a user the minimum and maximum time that an item can be reserved for, on what minutes of the hour the reservation can start on, and the intervals for which it can be reserved.</p></li>';
                 echo '<li><p>To reserve an item, click "Reserve Equipment." Choose at least one item to reserve, specify your date, time, duration, and any repeats, and then press submit.</p></li>';
@@ -69,6 +69,7 @@
                 echo '<ol>';
                 echo '<li><p>This page holds a detailed look at your account.</p></li>';
                 echo '<li><p>You can find groups/courses that you are a member of as well as all reservations that you have made.</p></li>';
+                echo '<li><p>Click on an equipment group for more information.</p></li>';
                 echo '<li><p>Turn on reminders for equipment groups that you have access to by checking the appropriate box.</p></li>';
                 echo '<li><p>If you are a manager of an equipment group, you can also turn on/off alerts for any reservations regarding that group.</p></li></ol>';
             }
