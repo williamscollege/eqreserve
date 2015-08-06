@@ -273,7 +273,7 @@ $(document).ready(function () {
 			},
 			groupDescription: {
 				minlength: 2,
-				required: true
+				required: false
 			},
 			startMinute: {
 				/* TODO: CSV List: strip spaces, ensure only integers and commas */
@@ -357,7 +357,7 @@ $(document).ready(function () {
 			},
 			ajaxSubgroupDescription: {
 				minlength: 2,
-				required: true
+				required: false
 			},
 			ajaxSubgroupIsMultiSelect: {
 				required: true
@@ -438,7 +438,7 @@ $(document).ready(function () {
 			},
 			ajaxItemDescription: {
 				minlength: 2,
-				required: true
+				required: false
 			},
             ajaxItemImage: {
                 required: false
