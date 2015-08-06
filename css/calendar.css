@@ -121,6 +121,7 @@ div.all-items{
 p.monthly-items{
     background: #0099FF;
     /*font-weight:bold;*/
+    font-size: small;
     text-align:center;
     width: auto;
     border:1px solid #345;
