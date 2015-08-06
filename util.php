@@ -218,17 +218,17 @@
         if($days>7){
             $weeks = floor($days/7);
             if($weeks == 1){
-                $ret .= "$weeks W ";
+                $ret .= $weeks."W";
             }else{
-                $ret .= "$weeks W ";
+                $ret .= $weeks."W";
             }
             $days = floor($days%7);
         }
         if ($days > 0) {
             if($days == 1){
-                $ret .= "$days D ";
+                $ret .= $days."D";
             }else{
-                $ret .= "$days D ";
+                $ret .= $days."D";
             }
         }
 
@@ -236,16 +236,16 @@
         $hours = floor(($minutes / 60) % 24);
         if ($hours > 0) {
             if($hours == 1){
-                $ret .= "$hours H ";
+                $ret .= '60M';
             }else{
-                $ret .= "$hours H ";
+                $ret .= $hours."H";
             }
         }
 
         /*** get the minutes ***/
         $mins = floor($minutes % 60);
         if ($mins > 0) {
-            $ret .= "$mins M ";
+            $ret .= $mins."M";
         }
 
         return $ret;

@@ -178,15 +178,17 @@
                             if($dur=='1D'){
                                 $full_day = true;
                             }
-                            if(util_durToInt($dur)!=$Requested_EqGroup->max_duration_minutes){
+//                            if(util_durToInt($dur)!=$Requested_EqGroup->max_duration_minutes){
                                 $durString = util_durToString($dur);
                                 echo "<option value='" . $dur . "'>" . $durString . "</option>";
-                            }
+                            //}
                         }
                     }
                 }
-                $max = util_minutesToWords($Requested_EqGroup->max_duration_minutes);
-                echo "<option value='" . $max . "'>" . $max . "</option>";
+            //allows for max time but then ajax tests reject because it is not within the duration array
+//                $max = util_minutesToWords($Requested_EqGroup->max_duration_minutes);
+//                $durDur = util_minutesToDur($Requested_EqGroup->max_duration_minutes);
+//                echo "<option value='" . $durDur . "'>" . $max . "</option>";
 
             ?>
 		</select>
