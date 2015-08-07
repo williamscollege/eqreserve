@@ -3,6 +3,7 @@
 <input type="hidden" id="reservRestrictionMin" name="restrictionMin" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" />
 <input type="hidden" id="reservRestrictionMax" name="restrictionMax" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" />
 <input type="hidden" id="reservRestrictionDur" name="durationChunk" value="<?php echo $Requested_EqGroup->duration_chunk_minutes; ?>" />
+<input type="hidden" id="reservRestrictionStart" name="startTimes" value="<?php echo $Requested_EqGroup->start_minute; ?>" />
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="" />

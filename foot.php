@@ -36,6 +36,7 @@
                 echo '<li><p>Reservation restrictions tell a user the minimum and maximum time that an item can be reserved for, on what minutes of the hour the reservation can start on, and the intervals for which it can be reserved.</p></li>';
                 echo '<li><p>To reserve an item, click "Reserve Equipment." Choose at least one item to reserve, specify your date, time, duration, and any repeats, and then press submit.</p></li>';
                 echo '<li><p>Schedule conflicts or failure to follow the reservation restrictions will result in a reservation error.</p></li>';
+                echo '<li><p>Example Reservation: <ul><li>Restrictions: Can be reserved for 30 minutes min, 1 hour max, starting on the 0,20,40 hour for 5 minutes intervals.</li><li>Acceptable: Starts at 10:20 AM for a duration of 45 minutes.</li><li>Unacceptable: Starts at 10:15 AM for a duration of 45 minutes</li></ul></p></li>';
                 echo '<li><p>Existing reservations for the items can be seen in a list, monthly, and daily view.</p></li>';
                 echo '<li><p>For more information about your reservation, click on the date of your reservation while in list view.</p></li>';
                 echo '<li><p>To see the reservations in a daily view, click on a day in the calendar.</p></li>';
