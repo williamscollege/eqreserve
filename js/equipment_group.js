@@ -205,7 +205,7 @@ $(document).ready(function () {
 	});
 	// Reserve Equipment: timepicker
 	$("#scheduleStartTimeRaw").timepicker({
-		minuteStep: util_durationToInt($("#managerView").attr("data-duration-chunk")), /* takes into account time restrictions */
+		minuteStep: util_durationToInt($("#managerView").attr("data-duration-start")), /* takes into account time restrictions */
 		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
 	});

@@ -117,12 +117,13 @@
 						</select>
 						<i class="icon-arrow-right"></i>
 						<input type="text" id="startMinute" class="input-medium" name="startMinute" value="<?php echo $Requested_EqGroup->start_minute; ?>" placeholder="Minutes (with commas)" maxlength="200" />
-						Reservations must start and end on one of these minutes of the hour.
+						Reservations must start on one of these minutes of the hour.
 					</div>
 				</div>
 				<?php
 					$defaultDuration = [
 						""    => "Select or Edit",
+                        5     => "5 minutes",
 						15    => "15 minutes",
 						30    => "30 minutes",
 						45    => "45 minutes",
@@ -230,11 +231,22 @@
 		echo "<legend class=\"pull-left row-fluid\">Equipment Group</legend>";
 	}
 
+    # start_minute comes as a string (eg: 0,20,40) so convert it to a duration (eg: 20) for the timepicker to use
+    $start_minute_step = $Requested_EqGroup->start_minute;
+    if($start_minute_step == '0'){
+        $start_minute_step = '60';
+    }else{
+        $start_minute_step = substr($start_minute_step,strlen($start_minute_step)-2);
+        $start_minute_step = 60 - intval($start_minute_step);
+        $start_minute_step = strval($start_minute_step);
+    }
+
 	# Show this to all authenticated users
-	echo "<div id=\"managerView\" data-show-del-isadmin =\"$USER->flag_is_system_admin\" data-show-del-ismanager=\"$is_group_manager\" data-eid =\"$Requested_EqGroup->eq_group_id\" data-duration-chunk=\"$Requested_EqGroup->duration_chunk_minutes\">\n";
+	echo "<div id=\"managerView\" data-show-del-isadmin =\"$USER->flag_is_system_admin\" data-show-del-ismanager=\"$is_group_manager\" data-eid =\"$Requested_EqGroup->eq_group_id\" data-duration-start=\"$start_minute_step\">\n";
 	echo "<strong>Name:</strong> <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
 	echo "<strong>Description:</strong> <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
-    //convert the minutes into prettier form
+
+    # convert the minutes into prettier form
     $min = util_minutesToWords($Requested_EqGroup->min_duration_minutes);
     $max = util_minutesToWords($Requested_EqGroup->max_duration_minutes);
     $dur = util_minutesToWords($Requested_EqGroup->duration_chunk_minutes);
