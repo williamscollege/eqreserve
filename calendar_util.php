@@ -175,32 +175,34 @@ function renderItemRows($items,$headings,$scheds)
                 $endTime = $dur + $x;
 
                 $starter = $x;
-                $ender = 100-$start_percent[$x];
 
-                #check if percentages are correct!!
+                $start_cell_perc = round($start_percent[$x]/5)*5;
+                $ender = 100-$start_cell_perc;
+
                 if($start_percent[$x] == 100){
                     $rows .= '<td class="calendar-time" style="background:#800080"></td>';
 
                 }else {
                     $rows .= '<td class="calendar-time"
-                        style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
-                        background: -moz-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
-                        background: -o-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
-                        background: -ms-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
-                        background: linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);"></td>';
+                        style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: -o-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"></td>';
                 }
             } else if ($x == $endTime) {
-                $ender = 100 - $end_percent[$starter];
+                $end_cell_perc = round($end_percent[$starter]/5)*5;
+                $ender = 100 - $end_cell_perc;
 
                 if($end_percent[$starter] == 100){
                     $rows .= '<td class="calendar-time"></td>';
                 }else {
                     $rows .= '<td class="calendar-time"
-                        style="background: -webkit-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
-                        background: -moz-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
-                        background: -o-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
-                        background: -ms-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
-                        background: linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);"></td>';
+                        style="background: -webkit-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -o-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"></td>';
                 }
             } else if ($x < $endTime) {
                 $rows .= '<td class="calendar-time" style="background:#800080"></td>';
