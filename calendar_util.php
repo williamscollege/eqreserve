@@ -77,7 +77,8 @@ function renderDayHeader($month,$day,$year) {
 }
 
 /****** Add in items for daily view *****/
-function renderItemRows($items,$headings,$scheds) {
+function renderItemRows($items,$headings,$scheds)
+{
     /* draw the calendar for all pieces of equipment in each subgroup */
     // Get start times and lengths of the reservations on this day
 //    foreach ($scheds as $sched) {
@@ -85,10 +86,13 @@ function renderItemRows($items,$headings,$scheds) {
 //        array_push(durationToInt($sched->timeblock_duration), $durs);
 //    }
     $rows = "";
-    foreach($items as $item) {
-        $isReserved = FALSE;
+//    util_prePrintR($items);
+    foreach ($items as $item) {
+//        $isReserved = FALSE;
         $itemSched = [];
         $starts = [];
+        $start_percent = [];
+        $end_percent = [];
         //gets any schedules that have this item reserved
         foreach ($scheds as $s) {
             $s->loadReservations();
@@ -102,20 +106,104 @@ function renderItemRows($items,$headings,$scheds) {
             }
         }
 
+        //for each schedule(so should all be in that for loop down below)
+        ## array for the start percentage (durationToInt($sched->timeblock_duration) -> percentage)
+        ## array for the end percentage (durationToInt($sched->timeblock_duration) -> percentage)
+        ## array for timetoInt to durationToInt
+
+        //timeblock start time minute %15 == 0 and end time minute %15 == 0 then use the timeblock_start_time as is
+        //**** add durationToInt($sched->timeblock_duration) to beginning and end as 100
+        //else if only end time minute % 15 == 0 then percentage for the beginning and end as is (eg: start at 12:20 and end at 12:35)
+        //**** find percentage based upon the TIMEBLOCK start times and store as durationToInt($sched->timeblock_duration) to percentage to use later
+        //**** then have to find the right timeblock_start_time to be used for timetoInt
+        //******** to do this: round the timeblock_start_time minutes to the nearest quarter hour (down) and then change from 24 to 12?
+        //******** OR headers are eg: 12:00 AM but timeblock start is eg: 2013-03-22 10:00:00 so header should change 12 to 24 (date_format($date, '?')
+        //******** shave down the hour
+        //******** shave down the header it is in (find the time it is between and take the beginning of that which is the header to use)
+        //**** when it is coloring the first one needs to be colored differently
+        //else if only start minute %15 == 0 then beginning as is and then percentage at the end (eg: start at 12:15 and end at 12:20)
+        //**** find percentage based upon the TIMEBLOCK end times and store as durationToInt($sched->timeblock_duration) to percentage to use later
+        //**** when it is coloring the end needs to be colored differently
+
+        //durationToInt does not allow for custom but we do not allow for custom durations so it should be fine but should change if we ever do
+
+        //do this using the header that you have found
+        //what if the duration spans days...
+
         foreach ($itemSched as $sched) {
-            $starts[timetoInt($sched->timeblock_start_time)] = durationToInt($sched->timeblock_duration);
+            foreach ($sched->time_blocks as $tb) {
+                $start_tb = $tb->start_datetime;
+                $end_tb = $tb->end_datetime;
+
+                $start_minute = intval(substr($start_tb, 14, 2));
+                $end_minute = intval(substr($end_tb, 14, 2));
+
+                if ($start_minute % 15 != 0) {
+                    while ($start_minute > 15) {
+                        $start_minute -= 15;
+                    }
+                    $starting_perc = round((float)($start_minute / 15) * 100);
+                    $sched_tb_round = round(strtotime($sched->timeblock_start_time) / (15 * 60)) * (15 * 60);
+                    $sched_tb_round = strval(date('H:i:s', $sched_tb_round)); //h,m,s in 24 hour format
+                    $start_percent[timetoInt($sched_tb_round)] = $starting_perc;
+                } else {
+                    $sched_tb_round = $sched->timeblock_start_time;
+                    $start_percent[timetoInt($sched_tb_round)] = 100;
+                }
+
+                if ($end_minute % 15 != 0) {
+                    while ($end_minute > 15) {
+                        $end_minute -= 15;
+                    }
+                    $end_perc = round((float)($end_minute / 15) * 100);
+                    $end_percent[timetoInt($sched_tb_round)] = $end_perc;
+                } else {
+                    $end_percent[timetoInt($sched_tb_round)] = 100;
+                }
+                $starts[timetoInt($sched_tb_round)] = durationToInt($sched->timeblock_duration);
+            }
         }
+
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
+        $starter = 0;
         /* draw all the time cells for a given piece of equipment */
         for ($x = 1; $x < count($headings); $x++):
             $isStart = array_key_exists($x, $starts);
-            if ($isStart || $x < $endTime) {
-                if ($isStart) {
-                    $dur = $starts[$x];
-                    $endTime = $dur + $x;
+            if ($isStart) {
+                $dur = $starts[$x];
+                $endTime = $dur + $x;
+
+                $starter = $x;
+                $ender = 100-$start_percent[$x];
+
+                #check if percentages are correct!!
+                if($start_percent[$x] == 100){
+                    $rows .= '<td class="calendar-time" style="background:#800080"></td>';
+
+                }else {
+                    $rows .= '<td class="calendar-time"
+                        style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
+                        background: -o-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);
+                        background: linear-gradient(left, #FFFFFF ' . $start_percent[$x] . '%, #800080 ' . $ender . '%);"></td>';
                 }
-                $rows .= '<td class="calendar-time" style="background:purple"></td>';
+            } else if ($x == $endTime) {
+                $ender = 100 - $end_percent[$starter];
+
+                if($end_percent[$starter] == 100){
+                    $rows .= '<td class="calendar-time"></td>';
+                }else {
+                    $rows .= '<td class="calendar-time"
+                        style="background: -webkit-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
+                        background: -o-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);
+                        background: linear-gradient(left, #800080 ' . $end_percent[$starter] . '%, #FFFFFF ' . $ender . '%);"></td>';
+                }
+            } else if ($x < $endTime) {
+                $rows .= '<td class="calendar-time" style="background:#800080"></td>';
             } else {
                 $rows .= '<td class="calendar-time"></td>';
             }

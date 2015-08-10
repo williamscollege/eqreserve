@@ -232,6 +232,7 @@
 	}
 
     # start_minute comes as a string (eg: 0,20,40) so convert it to a duration (eg: 20) for the timepicker to use
+    # this only makes sense if the start minutes have uniform intervals
     $start_minute_step = $Requested_EqGroup->start_minute;
     if($start_minute_step == '0'){
         $start_minute_step = '60';
