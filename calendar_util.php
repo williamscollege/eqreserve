@@ -86,9 +86,7 @@ function renderItemRows($items,$headings,$scheds)
 //        array_push(durationToInt($sched->timeblock_duration), $durs);
 //    }
     $rows = "";
-//    util_prePrintR($items);
     foreach ($items as $item) {
-//        $isReserved = FALSE;
         $itemSched = [];
         $starts = [];
         $start_percent = [];
@@ -106,29 +104,15 @@ function renderItemRows($items,$headings,$scheds)
             }
         }
 
-        //for each schedule(so should all be in that for loop down below)
+        //for each schedule
         ## array for the start percentage (durationToInt($sched->timeblock_duration) -> percentage)
         ## array for the end percentage (durationToInt($sched->timeblock_duration) -> percentage)
         ## array for timetoInt to durationToInt
 
-        //timeblock start time minute %15 == 0 and end time minute %15 == 0 then use the timeblock_start_time as is
-        //**** add durationToInt($sched->timeblock_duration) to beginning and end as 100
-        //else if only end time minute % 15 == 0 then percentage for the beginning and end as is (eg: start at 12:20 and end at 12:35)
-        //**** find percentage based upon the TIMEBLOCK start times and store as durationToInt($sched->timeblock_duration) to percentage to use later
-        //**** then have to find the right timeblock_start_time to be used for timetoInt
-        //******** to do this: round the timeblock_start_time minutes to the nearest quarter hour (down) and then change from 24 to 12?
-        //******** OR headers are eg: 12:00 AM but timeblock start is eg: 2013-03-22 10:00:00 so header should change 12 to 24 (date_format($date, '?')
-        //******** shave down the hour
-        //******** shave down the header it is in (find the time it is between and take the beginning of that which is the header to use)
-        //**** when it is coloring the first one needs to be colored differently
-        //else if only start minute %15 == 0 then beginning as is and then percentage at the end (eg: start at 12:15 and end at 12:20)
-        //**** find percentage based upon the TIMEBLOCK end times and store as durationToInt($sched->timeblock_duration) to percentage to use later
-        //**** when it is coloring the end needs to be colored differently
+        ## timeToInt finds the number of the starting point in terms of headers/boxes based upon the date time
+        ## durationToInt finds the number of boxes that the reservation should take up based upon the durations
 
         //durationToInt does not allow for custom but we do not allow for custom durations so it should be fine but should change if we ever do
-
-        //do this using the header that you have found
-        //what if the duration spans days...
 
         foreach ($itemSched as $sched) {
             foreach ($sched->time_blocks as $tb) {
@@ -138,6 +122,14 @@ function renderItemRows($items,$headings,$scheds)
                 $start_minute = intval(substr($start_tb, 14, 2));
                 $end_minute = intval(substr($end_tb, 14, 2));
 
+                ## if start time % 15 != 0 (eg: start at 12:20)
+                //**** find percentage based upon the TIMEBLOCK start times and store as timetoInt($sched->timeblock_duration) to percentage to use later
+                //**** find the rounded start time to find the correct time block to start on using timeToInt
+                //******** to find percentage:
+                //******** if start time (minute) >15, then reduce until under 15 and then use formula (rounded)
+                //******** to find rounded start time:
+                //******** round the timeblock_start_time minutes to the nearest quarter hour using the formula and convert to date
+                ## else if start time % 15 == 0 then use regular start time (not rounded) and have start percentage = 100
                 if ($start_minute % 15 != 0) {
                     while ($start_minute > 15) {
                         $start_minute -= 15;
@@ -151,6 +143,9 @@ function renderItemRows($items,$headings,$scheds)
                     $start_percent[timetoInt($sched_tb_round)] = 100;
                 }
 
+                ## if end time % 15 != 0 (eg: end at 12:40)
+                //**** find percentage based upon the TIMEBLOCK end times and store as timetoInt($sched->timeblock_duration) to percentage to use later
+                ## else if end time % 15 == 0 then use regular end time (not rounded) and have end percentage = 100
                 if ($end_minute % 15 != 0) {
                     while ($end_minute > 15) {
                         $end_minute -= 15;
@@ -160,6 +155,8 @@ function renderItemRows($items,$headings,$scheds)
                 } else {
                     $end_percent[timetoInt($sched_tb_round)] = 100;
                 }
+
+                ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
                 $starts[timetoInt($sched_tb_round)] = durationToInt($sched->timeblock_duration);
             }
         }
@@ -170,18 +167,23 @@ function renderItemRows($items,$headings,$scheds)
         /* draw all the time cells for a given piece of equipment */
         for ($x = 1; $x < count($headings); $x++):
             $isStart = array_key_exists($x, $starts);
+
+            ## If this is the starting box then...
             if ($isStart) {
                 $dur = $starts[$x];
                 $endTime = $dur + $x;
 
+                //Store to use later with the end_percent array
                 $starter = $x;
 
+                //Round to the nearest 5th because it looks prettier (will be solid after 50% mark)
                 $start_cell_perc = round($start_percent[$x]/5)*5;
                 $ender = 100-$start_cell_perc;
 
+                ## If the start percent is 100 (or the reservation starts on a quarter marker) then just fill in the box
+                ## Else have to fill in according to the percentages
                 if($start_percent[$x] == 100){
                     $rows .= '<td class="calendar-time" style="background:#800080"></td>';
-
                 }else {
                     $rows .= '<td class="calendar-time"
                         style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
@@ -190,10 +192,15 @@ function renderItemRows($items,$headings,$scheds)
                         background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
                         background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"></td>';
                 }
+
+                ## If we have found the end box then...
             } else if ($x == $endTime) {
+                //Round to the nearest 5th because it looks prettier (will be solid after 50% mark)
                 $end_cell_perc = round($end_percent[$starter]/5)*5;
                 $ender = 100 - $end_cell_perc;
 
+                ## If the end percent is 100 (or the reservation ends on a quarter marker) then leave it blank
+                ## Else have to fill according to the percentages
                 if($end_percent[$starter] == 100){
                     $rows .= '<td class="calendar-time"></td>';
                 }else {
@@ -204,8 +211,12 @@ function renderItemRows($items,$headings,$scheds)
                         background: -ms-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
                         background: linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"></td>';
                 }
+
+                ## If we're in between start and end, then continue coloring
             } else if ($x < $endTime) {
                 $rows .= '<td class="calendar-time" style="background:#800080"></td>';
+
+                ## If we have not yet found an item reservation for this time then leave the cell blank
             } else {
                 $rows .= '<td class="calendar-time"></td>';
             }
