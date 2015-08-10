@@ -86,6 +86,7 @@ function renderItemRows($items,$headings,$scheds) {
 //    }
     $rows = "";
     foreach($items as $item) {
+
         $isReserved = FALSE;
         $itemSched = [];
         $starts = [];
@@ -105,6 +106,10 @@ function renderItemRows($items,$headings,$scheds) {
         foreach ($itemSched as $sched) {
             $starts[timetoInt($sched->timeblock_start_time)] = durationToInt($sched->timeblock_duration);
         }
+        //checks to see if the item name will be too long to fit in the box
+        if (strlen($item) > 30) {
+
+        }
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
         /* draw all the time cells for a given piece of equipment */
@@ -120,9 +125,10 @@ function renderItemRows($items,$headings,$scheds) {
                 $rows .= '<td class="calendar-time"></td>';
             }
         endfor;
-        $rows .= '</tr>';
         next($items);
+        $rows .= "</tr>";
     }
+
     return $rows;
 }
 
@@ -235,10 +241,10 @@ function draw_SingleDayCalendar($month,$day,$year,$items,$day_sched) {
         '1:30 PM', '1:45 PM', '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM', '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM', '4:00 PM', '4:15 PM', '4:30 PM', '4:45 PM',
         '5:00 PM', '5:15 PM', '5:30 PM', '5:45 PM', '6:00 PM', '6:15 PM', '6:30 PM', '6:45 PM', '7:00 PM', '7:15 PM', '7:30 PM', '7:45 PM', '8:00 PM', '8:15 PM',
         '8:30 PM', '8:45 PM', '9:00 PM', '9:15 PM', '9:30 PM', '9:45 PM', '10:00 PM', '10:15 PM', '10:30 PM', '10:45 PM', '11:00 PM', '11:15 PM', '11:30 PM', '11:45 PM');
-    $calendar .= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+    $calendar .= '<td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
 
     /* row for 1st piece of equipment */
-    $calendar .= '<tr class="calendar-row">';
+    //$calendar .= '<tr class="calendar-row">';
 
     /* draw the calendar for all pieces of equipment in each subgroup */
     $calendar .= renderItemRows($items,$headings,$day_sched);
