@@ -28,8 +28,9 @@ $all_inst_groups = InstGroup::getAllFromDb(['flag_delete'=>0],$DB);
                                 echo "<li>" . $user->fname . ' ' . $user->lname . ' (' . $user->username . ')' . "</li>";
                             }
                         }
-                        echo "</ul></div>";
+                        echo "</ul>";
                     }
+                    echo "</div>";
                 }
             }else{
                util_redirectToAppHome('failure', 51);

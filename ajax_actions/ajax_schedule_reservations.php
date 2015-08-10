@@ -44,6 +44,7 @@
     $reservRestrictionMin     = isset($_REQUEST["restrictionMin"]) ? $_REQUEST["restrictionMin"] : 0;
     $reservRestrictionMax     = isset($_REQUEST["restrictionMax"]) ? $_REQUEST["restrictionMax"] : 0;
     $reservRestrictionDur     = isset($_REQUEST["durationChunk"]) ? $_REQUEST["durationChunk"] : 0;
+    $reservRestrictionStart   = isset($_REQUEST["startTimes"]) ? $_REQUEST["startTimes"] : 0;
 
 	# fetch repeating days (if any)
 	$repeat_dow = array();
@@ -111,6 +112,16 @@
 		echo json_encode($results);
 		exit;
 	}
+
+    # check if start time is according to restrictions
+    $legal_start_time = explode(",", $reservRestrictionStart);
+    $chosen_start_time = substr($dateScheduleTimeBlockStart, 3, 2);
+    if (!in_array($chosen_start_time, $legal_start_time)) {
+        $results['note'] = 'invalid start time';
+        echo json_encode($results);
+        exit;
+    }
+
 
 	//kills all tests
 //    $intSchedDur = util_durToInt($strScheduleDuration);

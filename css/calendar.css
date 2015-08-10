@@ -67,7 +67,7 @@ td.calendar-day-np {
 }
 
 td.calendar-day-head {
-    background:purple;
+    background:#800080;
     font-weight:bold;
     text-align:center;
     color: #ffffff;
@@ -80,7 +80,7 @@ td.calendar-day-head {
 
 /* is there a better way to position these things? */
 div.day-number	{
-    background:purple;
+    background:#800080;
     padding:10px;
     color:#fff;
     font-weight:bold;
@@ -134,7 +134,9 @@ div.all-items{
 p.monthly-items{
     background: #0099FF;
     /*font-weight:bold;*/
+    font-size: small;
     text-align:center;
     width: auto;
     border:1px solid #345;
 }
+

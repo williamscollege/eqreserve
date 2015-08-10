@@ -77,7 +77,8 @@ function renderDayHeader($month,$day,$year) {
 }
 
 /****** Add in items for daily view *****/
-function renderItemRows($items,$headings,$scheds) {
+function renderItemRows($items,$headings,$scheds)
+{
     /* draw the calendar for all pieces of equipment in each subgroup */
     // Get start times and lengths of the reservations on this day
 //    foreach ($scheds as $sched) {
@@ -85,11 +86,12 @@ function renderItemRows($items,$headings,$scheds) {
 //        array_push(durationToInt($sched->timeblock_duration), $durs);
 //    }
     $rows = "";
-    foreach($items as $item) {
 
-        $isReserved = FALSE;
+    foreach ($items as $item) {
         $itemSched = [];
         $starts = [];
+        $start_percent = [];
+        $end_percent = [];
         //gets any schedules that have this item reserved
         foreach ($scheds as $s) {
             $s->loadReservations();
@@ -103,24 +105,120 @@ function renderItemRows($items,$headings,$scheds) {
             }
         }
 
-        foreach ($itemSched as $sched) {
-            $starts[timetoInt($sched->timeblock_start_time)] = durationToInt($sched->timeblock_duration);
-        }
-        //checks to see if the item name will be too long to fit in the box
-        if (strlen($item) > 30) {
+        //for each schedule
+        ## array for the start percentage (durationToInt($sched->timeblock_duration) -> percentage)
+        ## array for the end percentage (durationToInt($sched->timeblock_duration) -> percentage)
+        ## array for timetoInt to durationToInt
 
+        ## timeToInt finds the number of the starting point in terms of headers/boxes based upon the date time
+        ## durationToInt finds the number of boxes that the reservation should take up based upon the durations
+
+        //durationToInt does not allow for custom but we do not allow for custom durations so it should be fine but should change if we ever do
+
+        foreach ($itemSched as $sched) {
+            foreach ($sched->time_blocks as $tb) {
+                $start_tb = $tb->start_datetime;
+                $end_tb = $tb->end_datetime;
+
+                $start_minute = intval(substr($start_tb, 14, 2));
+                $end_minute = intval(substr($end_tb, 14, 2));
+
+                ## if start time % 15 != 0 (eg: start at 12:20)
+                //**** find percentage based upon the TIMEBLOCK start times and store as timetoInt($sched->timeblock_duration) to percentage to use later
+                //**** find the rounded start time to find the correct time block to start on using timeToInt
+                //******** to find percentage:
+                //******** if start time (minute) >15, then reduce until under 15 and then use formula (rounded)
+                //******** to find rounded start time:
+                //******** round the timeblock_start_time minutes to the nearest quarter hour using the formula and convert to date
+                ## else if start time % 15 == 0 then use regular start time (not rounded) and have start percentage = 100
+                if ($start_minute % 15 != 0) {
+                    while ($start_minute > 15) {
+                        $start_minute -= 15;
+                    }
+                    $starting_perc = round((float)($start_minute / 15) * 100);
+                    $sched_tb_round = round(strtotime($sched->timeblock_start_time) / (15 * 60)) * (15 * 60);
+                    $sched_tb_round = strval(date('H:i:s', $sched_tb_round)); //h,m,s in 24 hour format
+                    $start_percent[timetoInt($sched_tb_round)] = $starting_perc;
+                } else {
+                    $sched_tb_round = $sched->timeblock_start_time;
+                    $start_percent[timetoInt($sched_tb_round)] = 100;
+                }
+
+                ## if end time % 15 != 0 (eg: end at 12:40)
+                //**** find percentage based upon the TIMEBLOCK end times and store as timetoInt($sched->timeblock_duration) to percentage to use later
+                ## else if end time % 15 == 0 then use regular end time (not rounded) and have end percentage = 100
+                if ($end_minute % 15 != 0) {
+                    while ($end_minute > 15) {
+                        $end_minute -= 15;
+                    }
+                    $end_perc = round((float)($end_minute / 15) * 100);
+                    $end_percent[timetoInt($sched_tb_round)] = $end_perc;
+                } else {
+                    $end_percent[timetoInt($sched_tb_round)] = 100;
+                }
+
+                ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
+                $starts[timetoInt($sched_tb_round)] = durationToInt($sched->timeblock_duration);
+            }
         }
+
+>
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
+        $starter = 0;
         /* draw all the time cells for a given piece of equipment */
         for ($x = 1; $x < count($headings); $x++):
             $isStart = array_key_exists($x, $starts);
-            if ($isStart || $x < $endTime) {
-                if ($isStart) {
-                    $dur = $starts[$x];
-                    $endTime = $dur + $x;
+
+            ## If this is the starting box then...
+            if ($isStart) {
+                $dur = $starts[$x];
+                $endTime = $dur + $x;
+
+                //Store to use later with the end_percent array
+                $starter = $x;
+
+                //Round to the nearest 5th because it looks prettier (will be solid after 50% mark)
+                $start_cell_perc = round($start_percent[$x]/5)*5;
+                $ender = 100-$start_cell_perc;
+
+                ## If the start percent is 100 (or the reservation starts on a quarter marker) then just fill in the box
+                ## Else have to fill in according to the percentages
+                if($start_percent[$x] == 100){
+                    $rows .= '<td class="calendar-time" style="background:#800080"></td>';
+                }else {
+                    $rows .= '<td class="calendar-time"
+                        style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: -o-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
+                        background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"></td>';
                 }
-                $rows .= '<td class="calendar-time" style="background:purple"></td>';
+
+                ## If we have found the end box then...
+            } else if ($x == $endTime) {
+                //Round to the nearest 5th because it looks prettier (will be solid after 50% mark)
+                $end_cell_perc = round($end_percent[$starter]/5)*5;
+                $ender = 100 - $end_cell_perc;
+
+                ## If the end percent is 100 (or the reservation ends on a quarter marker) then leave it blank
+                ## Else have to fill according to the percentages
+                if($end_percent[$starter] == 100){
+                    $rows .= '<td class="calendar-time"></td>';
+                }else {
+                    $rows .= '<td class="calendar-time"
+                        style="background: -webkit-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -o-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"></td>';
+                }
+
+                ## If we're in between start and end, then continue coloring
+            } else if ($x < $endTime) {
+                $rows .= '<td class="calendar-time" style="background:#800080"></td>';
+
+                ## If we have not yet found an item reservation for this time then leave the cell blank
             } else {
                 $rows .= '<td class="calendar-time"></td>';
             }
@@ -158,17 +256,27 @@ function renderCalendarCells($month,$year,$schedule)
         $cells .= '<div class = "all-items">';
         /** add in items here */
         //flag_delete: should display?
+        $num_schedules = 0;
         foreach($schedule as $sched) {
             foreach ($sched->time_blocks as $tb) {
                 foreach ($sched->reservations as $r) {
-                    if (intval(substr($tb->start_datetime, 0, 4)) == $year && intval(substr($tb->start_datetime, 5, 2)) == $month && intval(substr($tb->start_datetime, 8, 2)) == $list_day) {
-                        $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                        start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
-                            '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
-
+                        if (intval(substr($tb->start_datetime, 0, 4)) == $year && intval(substr($tb->start_datetime, 5, 2)) == $month && intval(substr($tb->start_datetime, 8, 2)) == $list_day) {
+                            //Only shows 3 schedules max 
+                            if($num_schedules>2){
+                                $num_schedules++;
+                                break;
+                            }else {
+                                $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                    start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
+                                    '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+                                $num_schedules++;
+                            }
+                        }
                     }
                 }
             }
+        if($num_schedules>3){
+            $cells .= '<p style="font-size: small; text-align: center">Click to view more reservations</p>';
         }
         $cells .= '</div>';
 

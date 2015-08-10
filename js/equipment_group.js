@@ -205,7 +205,7 @@ $(document).ready(function () {
 	});
 	// Reserve Equipment: timepicker
 	$("#scheduleStartTimeRaw").timepicker({
-		minuteStep: util_durationToInt($("#managerView").attr("data-duration-chunk")), /* takes into account time restrictions */
+		minuteStep: util_durationToInt($("#managerView").attr("data-duration-start")), /* takes into account time restrictions */
 		defaultTime: 'current', /* or set to a specific time: '11:45 AM' */
 		showMeridian: true  /* true is 12hr mode, false is 12hr mode */
 	});
@@ -273,7 +273,7 @@ $(document).ready(function () {
 			},
 			groupDescription: {
 				minlength: 2,
-				required: true
+				required: false
 			},
 			startMinute: {
 				/* TODO: CSV List: strip spaces, ensure only integers and commas */
@@ -357,7 +357,7 @@ $(document).ready(function () {
 			},
 			ajaxSubgroupDescription: {
 				minlength: 2,
-				required: true
+				required: false
 			},
 			ajaxSubgroupIsMultiSelect: {
 				required: true
@@ -438,7 +438,7 @@ $(document).ready(function () {
 			},
 			ajaxItemDescription: {
 				minlength: 2,
-				required: true
+				required: false
 			},
             ajaxItemImage: {
                 required: false
@@ -1178,6 +1178,7 @@ $(document).ready(function () {
 		else if (frequency == 'monthly') {
 			frequency = 'Every ' + interval + ' months';
 		}
+		var start_date = ', starting on ' + $("#scheduleStartOnDate").val() + ', ';
 
 		var start_time = ' at ' + $("#scheduleStartTimeRaw").val();
 
@@ -1245,7 +1246,7 @@ $(document).ready(function () {
 		}
 
 		// Construct the summary string
-		$("#reservationSummary").text(frequency + start_time + duration + dates_selected + end_repeat);
+		$("#reservationSummary").text(frequency + start_time + start_date + duration + dates_selected + end_repeat);
 
 		// Update these values, in preparation of eventual form submit
 		$("#scheduleSummaryText").val($("#reservationSummary").text());

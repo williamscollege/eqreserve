@@ -41,7 +41,7 @@
 						},
 						groupDescription: {
 							minlength: 2,
-							required: true
+							required: false
 						}
 					},
 					highlight: function (element) {
@@ -125,7 +125,7 @@
 			$UserEqGroups = EqGroup::getAllEqGroupsForAdminUser($USER);
 			if (count($UserEqGroups) > 0) {
 				foreach ($UserEqGroups as $ueg) {
-					echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a>: " . $ueg->descr . "</li>";
+					echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a></li>";
 				}
 			}
 			else {
