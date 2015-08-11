@@ -498,7 +498,7 @@
 				<?php
 					$menu = "";
 					foreach ($Requested_EqGroup->eq_subgroups as $group) {
-						$menu .= "<option value='" . $group->eq_subgroup_id . "'>" . $group->name . "</option>";
+						$menu .= "<option id='" . $group->eq_subgroup_id . "' value='" . $group->eq_subgroup_id . "'>" . $group->name . "</option>";
 					}
 					echo $menu;
 				?>

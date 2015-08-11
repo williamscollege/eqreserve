@@ -457,10 +457,8 @@ $(document).ready(function () {
 			// show loading text (button)
 			$("#btnAjaxItemSubmit").button('loading');
 
-			console.log($("#ajaxItemSubGroup").val()); //DEV
 			var formName = $("#frmAjaxItem").attr('name');		// get name from the form element
 			var action = $('#' + formName + ' #ajaxItemAction').val();
-			console.log(action); //DEV
 			var subgroup_id = $('#ajaxItemSubGroup').val();
 			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
 			var item_id = $('#' + formName + ' #ajaxItemID').val();
@@ -914,6 +912,7 @@ $(document).ready(function () {
 		// update modal values
 		$("INPUT#ajaxItemAction").val("add-item");
 		$("H3#modalItemLabel").text("in "+subgroup_name);
+		$("select#ajaxItemSubGroup").val(subgroup_id);
 		$("INPUT#ajaxSubgroupName").val(subgroup_name);
 		$("INPUT#ajaxSubgroupID").val(subgroup_id);
 		$("INPUT#ajaxItemOrdering").val(item_order);
@@ -935,6 +934,7 @@ $(document).ready(function () {
 		// update modal values
 		$("INPUT#ajaxItemAction").val("edit-item");
 		$("H3#modalItemLabel").text('in '+subgroup_name);
+		$("select#ajaxItemSubGroup").val(subgroup_id);
 		$("INPUT#ajaxSubgroupName").val(subgroup_name);
 		$("INPUT#ajaxItemID").val(item_id);
 		$("INPUT#ajaxSubgroupID").val(subgroup_id);
