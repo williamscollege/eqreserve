@@ -52,7 +52,6 @@
     //set at either 1 or 0
     $next = htmlentities((isset($_REQUEST["next"])) ? util_quoteSmart($_REQUEST["next"]) : 0);
     $year = htmlentities((isset($_REQUEST["year_num"])) ? util_quoteSmart($_REQUEST["year_num"]) : 0);
-    util_prePrintR($year);
 
     #------------------------------------------------#
     # Fetch AJAX values for month to day views
@@ -111,9 +110,6 @@
         //load all the schedules using time blocks to account for repeated reservations for the clicked day
         foreach($Eq_Group->schedules as $sched){
             foreach($sched->time_blocks as $tb){
-//                util_prePrintR($sched);
-//                util_prePrintR($tb);
-                util_prePrintR($clickedDate_yyyymmdd);
                 if((substr($tb->start_datetime,0,10)==$clickedDate_yyyymmdd)||(substr($tb->end_datetime,0,10)==$clickedDate_yyyymmdd)){
                     array_push($day_sched,$sched);
                 }
@@ -128,7 +124,6 @@
                 $items[$id] = $name;
             }
         }
-        util_prePrintR($day_sched);
 
         //draw appropriate calendar
         echo draw_SingleDayCalendar($baseMonth, $baseDay, $year, $items, $day_sched);
