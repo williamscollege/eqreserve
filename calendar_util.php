@@ -87,7 +87,15 @@ function renderItemRows($items,$headings,$scheds)
 //    }
     $rows = "";
 
+    //counter to keep track of number of rows
+    $i = 0;
     foreach ($items as $item) {
+        //inserts another row of times if there are too many items to see at the same time
+        if ($i > 8) {
+            $rows .= '<td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+            $i = $i - 8;
+        }
+        $i++;
         $itemSched = [];
         $starts = [];
         $start_percent = [];
@@ -162,7 +170,7 @@ function renderItemRows($items,$headings,$scheds)
             }
         }
 
->
+
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
         $starter = 0;
