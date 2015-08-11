@@ -162,7 +162,6 @@ function renderItemRows($items,$headings,$scheds)
             }
         }
 
->
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
         $starter = 0;
