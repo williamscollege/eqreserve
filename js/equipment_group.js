@@ -1345,7 +1345,7 @@ $(document).ready(function () {
 				'prev': $(this).attr('data-prev-day'),
 				'month_num': $(this).attr('data-monthnum'),
 				'day_num': $(this).attr('data-daynum'),
-				'year_num': $("#day-display").attr('data-yearnum'),
+				'year_num': $("#day_display").attr('data-yearnum'),
 				'eq_group_id': $("#managerView").attr('data-eid')
 			}
 		})
@@ -1366,7 +1366,7 @@ $(document).ready(function () {
 				'next': $(this).attr('data-next-day'),
 				'month_num': $(this).attr('data-monthnum'),
 				'day_num': $(this).attr('data-daynum'),
-				'year_num': $("#day-display").attr('data-yearnum'),
+				'year_num': $("#day_display").attr('data-yearnum'),
 				'eq_group_id': $("#managerView").attr('data-eid')
 			}
 		})

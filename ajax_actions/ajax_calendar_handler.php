@@ -24,7 +24,7 @@
     #------------------------------------------------#
     //Requested eqgroup id to use to get the schedule
     $eq_group_id = htmlentities((isset($_REQUEST["eq_group_id"])) ? util_quoteSmart($_REQUEST["eq_group_id"]) : 0);
-$Eq_Group = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
+    $Eq_Group = EqGroup::getOneFromDb(['eq_group_id' => $eq_group_id], $DB);
 
     //Check eq_group_id values
     if(strval($eq_group_id)=='0'){
