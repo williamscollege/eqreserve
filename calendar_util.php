@@ -256,6 +256,9 @@ function renderCalendarCells($month,$year,$schedule)
     endfor;
 
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+        if(strlen($list_day)<2){
+            $list_day = '0'.$list_day;
+        }
 
         $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-daynum = "'.$list_day.'">';
         /* add in the day number */
@@ -268,21 +271,21 @@ function renderCalendarCells($month,$year,$schedule)
         foreach($schedule as $sched) {
             foreach ($sched->time_blocks as $tb) {
                 foreach ($sched->reservations as $r) {
-                        if (intval(substr($tb->start_datetime, 0, 4)) == $year && intval(substr($tb->start_datetime, 5, 2)) == $month && intval(substr($tb->start_datetime, 8, 2)) == $list_day) {
-                            //Only shows 3 schedules max 
-                            if($num_schedules>2){
-                                $num_schedules++;
-                                break;
-                            }else {
-                                $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                    start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
-                                    '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
-                                $num_schedules++;
-                            }
+                    //Makes sure that shcedules that run for days/weeks/years are shown
+                    if(strtotime($tb->start_datetime)<=strtotime($year.'-'.$month.'-'.$list_day.' 23:59:59') && strtotime($year.'-'.$month.'-'.$list_day)<=strtotime($tb->end_datetime))
+                        if ($num_schedules > 2) {
+                            $num_schedules++;
+                            break;
+                        } else {
+                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
+                                '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+                            $num_schedules++;
                         }
-                    }
                 }
             }
+        }
+
         if($num_schedules>3){
             $cells .= '<p style="font-size: small; text-align: center">Click to view more reservations</p>';
         }
