@@ -365,6 +365,10 @@ $(document).ready(function () {
 				minlength: 2,
 				required: false
 			},
+            ajaxSubgroupReference: {
+                minlength: 2,
+                required: false
+            },
 			ajaxSubgroupIsMultiSelect: {
 				required: true
 			}
@@ -380,15 +384,18 @@ $(document).ready(function () {
 		submitHandler: function (form) {
 			// show loading text (button)
 			$("#btnAjaxSubgroupSubmit").button('loading');
+            console.log(form);
+            console.log($('#ajaxItemSubGroup').val());
 
 			var formName = $("#frmAjaxSubgroup").attr('name');		// get name from the form element
 			var action = $('#' + formName + ' #ajaxSubgroupAction').val();
 			var group_id = $('#' + formName + ' #ajaxGroupID').val();
-			var subgroup_id = $('#' + formName + ' #ajaxItemSubGroup').val();
+			var subgroup_id = $('#ajaxItemSubGroup').val();
 			var subgroup_ordering = $('#' + formName + ' #ajaxSubgroupOrdering').val();
 			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
 			var subgroup_description = $('#' + formName + ' #ajaxSubgroupDescription').val();
-			var subgroup_multiselect = $('#' + formName + ' input:radio[name=ajaxSubgroupIsMultiSelect]:checked').val();
+            var subgroup_reference = $('#' + formName + ' #ajaxSubgroupReference').val();
+            var subgroup_multiselect = $('#' + formName + ' input:radio[name=ajaxSubgroupIsMultiSelect]:checked').val();
 
 			$.ajax({
 				type: 'GET',
@@ -400,6 +407,7 @@ $(document).ready(function () {
 					ajaxVal_Order: subgroup_ordering,
 					ajaxVal_Name: subgroup_name,
 					ajaxVal_Description: subgroup_description,
+                    ajaxVal_Reference: subgroup_reference,
 					ajaxVal_MultiSelect: subgroup_multiselect
 				},
 				dataType: 'json',
@@ -420,6 +428,7 @@ $(document).ready(function () {
 							// update button data attributes
 							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-name", subgroup_name);
 							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-descr", subgroup_description);
+                            $("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-ref", subgroup_reference);
 							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-ismultiselect", subgroup_multiselect);
 							// update visible info
 							$("span#subgroupid-" + subgroup_id).html("<strong>" + subgroup_name + ": </strong>" + subgroup_description);
@@ -446,6 +455,10 @@ $(document).ready(function () {
 				minlength: 2,
 				required: false
 			},
+            ajaxItemReference: {
+                minlength: 2,
+                required: false
+            },
             ajaxItemImage: {
                 required: false
             }
@@ -471,6 +484,7 @@ $(document).ready(function () {
 			var item_ordering = $('#' + formName + ' #ajaxItemOrdering').val();
 			var item_name = $('#' + formName + ' #ajaxItemName').val();
 			var item_description = $('#' + formName + ' #ajaxItemDescription').val();
+            var item_reference = $('#' + formName + ' #ajaxItemReference').val();
 			var item_multiselect = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
 
             var item_image_file_name = 'none';
@@ -490,6 +504,7 @@ $(document).ready(function () {
                 ajaxVal_Order: item_ordering,
                 ajaxVal_Name: item_name,
                 ajaxVal_Description: item_description,
+                ajaxVal_Reference: item_reference,
                 ajaxVal_MultiSelect: item_multiselect,
                 ajaxVal_ImageFileName: item_image_file_name
             };
@@ -541,7 +556,8 @@ $(document).ready(function () {
 							// update button data attributes
 							$("#btn-edit-item-id-" + item_id).attr("data-for-item-name", item_name);
 							$("#btn-edit-item-id-" + item_id).attr("data-for-item-descr", item_description);
-							$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-name", subgroup_name);
+                            $("#btn-edit-item-id-" + item_id).attr("data-for-item-ref", item_reference);
+                            $("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-name", subgroup_name);
 							$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id", subgroup_id);
 
 							// update visible info
@@ -899,6 +915,7 @@ $(document).ready(function () {
         reader.readAsDataURL(f);
     }
 
+    //WORK IN PROGRESS
 	$(document).on("click", ".eq-add-item", function () {
 		var subgroup_id = $(this).attr("data-for-subgroup-id");
 		var subgroup_name = $(this).attr("data-for-subgroup-name");
@@ -925,6 +942,8 @@ $(document).ready(function () {
 		$("INPUT#ajaxItemIsMultiSelect").val(multiselect);
 	});
 
+
+    //WORK IN PROGRESS
 	$(document).on("click", ".eq-edit-item", function () {
 
 		var subgroup_name = $(this).attr("data-for-subgroup-name");
@@ -932,6 +951,7 @@ $(document).ready(function () {
 		var item_id = $(this).attr("data-for-item-id");
 		var item_name = $(this).attr("data-for-item-name");
 		var item_descr = $(this).attr("data-for-item-descr");
+        var item_ref = $(this).attr("data-for-item-ref");
 //		var multiselect = $(this).attr("data-for-ismultiselect");
 
         handleClearItemImage();
@@ -946,6 +966,7 @@ $(document).ready(function () {
 		$("INPUT#ajaxSubgroupID").val(subgroup_id);
 		$("INPUT#ajaxItemName").val(item_name);
 		$("INPUT#ajaxItemDescription").val(item_descr);
+        $("INPUT#ajaxItemReference").val(item_ref);
 //		if (multiselect == 0) {
 //			$("INPUT:radio[name='ajaxSubgroupIsMultiSelect'][value='0']").prop('checked', true);
 //		}
@@ -973,14 +994,16 @@ $(document).ready(function () {
 		var subgroup_id = $(this).attr("data-for-subgroup-id");
 		var subgroup_name = $(this).attr("data-for-subgroup-name");
 		var subgroup_descr = $(this).attr("data-for-subgroup-descr");
-		var multiselect = $(this).attr("data-for-ismultiselect");
+        var subgroup_ref = $(this).attr("data-for-subgroup-ref");
+        var multiselect = $(this).attr("data-for-ismultiselect");
 
 		// update modal values
 		$("INPUT#ajaxSubgroupAction").val("edit-subgroup");
 		$("INPUT#ajaxSubgroupID").val(subgroup_id);
 		$("INPUT#ajaxSubgroupName").val(subgroup_name);
 		$("INPUT#ajaxSubgroupDescription").val(subgroup_descr);
-		if (multiselect == 0) {
+        $("INPUT#ajaxSubgroupReference").val(subgroup_ref);
+        if (multiselect == 0) {
 			$("INPUT:radio[name='ajaxSubgroupIsMultiSelect'][value='0']").prop('checked', true);
 		}
 		else {

@@ -7,7 +7,6 @@
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="" />
-	<input type="hidden" id="userReserving" name="userReserving" value="<?php echo $USER->fname . " " .$USER->lname ?>" />
 <?php
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>
@@ -43,10 +42,10 @@
 			# Subgroup Title
 			if ($USER->flag_is_system_admin || $is_group_manager) {
 				# button: edit subgroup
-				echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+				echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" data-for-subgroup-id=\"" . $key->reference_link . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 				# button: delete subgroup
 				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
-				echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "</span>\n";
+				echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr ." (<a href = \"$key->reference_link\">".$key->reference_link."</a>)</span>\n";
 				echo "<li class=\"manager-action hide\">";
 				echo "<span class=\"noItemsExist\"><em>No items exist.</em><br /></span>";
 				# button: add item
@@ -59,11 +58,11 @@
 			# Subgroup Title
 			if ($USER->flag_is_system_admin || $is_group_manager) {
 				# button: edit subgroup
-				echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+				echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" data-for-subgroup-ref=\"" . $key->reference_link . "\"class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 				# button: delete subgroup
 				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-subgroup-name=\"" . $key->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 			}
-			echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "</span>\n";
+			echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . " (<a href = \"$key->reference_link\">".$key->reference_link."</a>)</span>\n";
 
 
 			if ($key->flag_is_multi_select == 0) {
@@ -92,7 +91,7 @@
 								# checkbox: multiple select
 								echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"subgroup-" . $key->eq_subgroup_id . "-" . $item->eq_item_id . "\" value=\"" . $item->eq_item_id . "\"  class=\"reservationForm hide\" /> ";
 							}
-							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . "</span>\n";
+							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . " (<a href =\"$item->reference_link\">".$item->reference_link."</a>)</span>\n";
                             echo "<span id=\"itemImageSpanFor" . $item->eq_item_id . "\">";
                             if ($item->image_file_name && ! $item->flag_image_to_be_uploaded) {
                                 echo "<br/><img src=\"item_image/".$item->image_file_name."\" id=\"itemImageFor" . $item->eq_item_id . "\" class=\"item-image\"  data-for-item-id=\"" . $item->eq_item_id . "\" />";
@@ -451,6 +450,13 @@
 					<input type="text" id="ajaxSubgroupDescription" class="input-xlarge" name="ajaxSubgroupDescription" value="" placeholder="Description of Subgroup" maxlength="200" />
 				</div>
 			</div>
+            <div class="control-group">
+                <label class="control-label" for="ajaxSubgroupReference">Reference Link</label>
+
+                <div class="controls">
+                    <input type="url" id="ajaxSubgroupReference" class="input-xlarge" name="ajaxSubgroupReference" value="" placeholder="Reference Link" maxlength="200" />
+                </div>
+            </div>
 			<div class="control-group">
 				<label class="control-label" for="ajaxSubgroupIsMultiSelect">Allow one or many items in this subgroup to be selected</label>
 
@@ -513,6 +519,13 @@
 				</div>
 			</div>
             <div class="control-group">
+                <label class="control-label" for="ajaxItemReference">Reference Link</label>
+
+                <div class="controls">
+                    <input type="url" id="ajaxItemReference" class="input-xlarge" name="ajaxItemReference" value="" placeholder="Reference Link" maxlength="200" />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="ajaxItemImage">Image (40K size limit)</label>
 
                 <div class="controls">
@@ -537,8 +550,8 @@
 	function drawItemEditor($key, $item) {
 		$output = "";
 		#button: edit item
-		$output .= "<a id=\"btn-edit-item-id-" . $item->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" data-for-item-descr=\"" . $item->descr . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
-		# button: delete item
+		$output .= "<a id=\"btn-edit-item-id-" . $item->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" data-for-item-descr=\"" . $item->descr . "\" data-for-item-ref=\"" . $item->reference_link . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+        # button: delete item
 		$output .= "<a id=\"delete-item-" . $item->eq_item_id . "\" class=\"manager-action hide btn btn-mini btn-danger eq-delete-item\" data-for-item-id=\"" . $item->eq_item_id . "\" data-for-item-name=\"" . $item->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 		return $output;
 	}

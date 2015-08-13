@@ -39,7 +39,6 @@
 	$strScheduleSummaryText      = htmlentities((isset($_REQUEST["scheduleSummaryText"])) ? util_quoteSmart($_REQUEST["scheduleSummaryText"]) : 0);
 	$strScheduleNotes            = htmlentities((isset($_REQUEST["scheduleNotes"])) ? util_quoteSmart($_REQUEST["scheduleNotes"]) : 0);
 	$confirmConflictOverrideFlag = isset($_REQUEST["scheduleConflictOverrideFlag"]) ? $_REQUEST["scheduleConflictOverrideFlag"] : 0;
-	$userReserving			     = htmlentities((isset($_REQUEST["userReserving"])) ? util_quoteSmart($_REQUEST["userReserving"]) : 0);
 
     //come as integers/in terms of hours (ex: 2 week is 20160)
     $reservRestrictionMin     = isset($_REQUEST["restrictionMin"]) ? $_REQUEST["restrictionMin"] : 0;
@@ -233,7 +232,6 @@
 
 			$reserv->eq_item_id  = $val;
 			$reserv->schedule_id = $sched->schedule_id;
-			$reserv->loadUser();
 
 			$reserv->updateDb();
 		}

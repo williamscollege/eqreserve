@@ -130,6 +130,7 @@
                 $items[$id] = $name;
             }
         }
+
         //draw appropriate calendar
         echo draw_SingleDayCalendar($baseMonth, $baseDay, $year, $items, $day_sched);
     }elseif($baseMonth!=0){

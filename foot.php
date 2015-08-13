@@ -17,6 +17,10 @@
                     echo '<li><p>Your home page shows the list of groups that you have access to.</p></li>';
                     echo '<li><p>You can find your account information by clicking on your username in the top right-hand corner.</p></li>';
                     echo '<li><p>Click on a group name for more information.</p></li>';
+                    if($USER->flag_is_system_admin){
+                        echo '<li><p>Add a group by clicking on the Add a new equipment group button.</p></li>';
+                        echo '<li><p>Example Reference Link: <ul><li>Valid: http://www.google.com. </li><li>Invalid: www.google.com</li></ul></p></li>';
+                    }
                     echo '<li><p>If you are a manager, indicated by "(manager)," you will be able to edit certain aspects of that group.</p></li></ol>';
                 }else{
                     echo '<h3 id="modalHelpLabel">Help FAQ</h3></div><div class="modal-body">';
@@ -30,7 +34,8 @@
                 echo '<li><p>The Equipment Group Page contains general information about the group, including items and reservations.</p></li>';
                 if($is_group_manager){
                     echo '<li><p>As a manager of this group, you can edit the equipment group by clicking edit equipment group.</p></li>';
-                    echo '<li><p>Manager function include editing group information, changing reservation rules, deleting, editing, or inputting subgroups and items, and deleting existing reservations</p></li>';
+                    echo '<li><p>Manager function include editing group information, adding a reference link, changing reservation rules, deleting, editing, or inputting subgroups and items, and deleting existing reservations</p></li>';
+                    echo '<li><p>Example Reference Link: <ul><li>Valid: http://www.google.com. </li><li>Invalid: www.google.com</li></ul></p></li>';
                     echo '<li><p>For reservation restrictions, either choose from the default times or input your own in the box. All restrictions must be in minute form.</p></li>';
                 }
                 echo '<li><p>Reservation restrictions tell a user the minimum and maximum time that an item can be reserved for, on what minutes of the hour the reservation can start on, and the intervals for which it can be reserved.</p></li>';

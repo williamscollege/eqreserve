@@ -16,6 +16,7 @@
 	$intOrder         = htmlentities((isset($_REQUEST["ajaxVal_Order"])) ? $_REQUEST["ajaxVal_Order"] : 0);
 	$strName          = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
 	$strDescription   = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
+    $strReference     = htmlentities((isset($_REQUEST["ajaxVal_Reference"])) ? util_quoteSmart($_REQUEST["ajaxVal_Reference"]) : 0);
 	$bitIsMultiSelect = htmlentities((isset($_REQUEST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_REQUEST["ajaxVal_MultiSelect"]) : 0);
     $strImageFileName = htmlentities((isset($_REQUEST["ajaxVal_ImageFileName"])) ? util_quoteSmart($_REQUEST["ajaxVal_ImageFileName"]) : 0);
 
@@ -47,6 +48,7 @@
 		$ei->ordering       = $intOrder;
 		$ei->name           = $strName;
 		$ei->descr          = $strDescription;
+        $ei->reference_link = $strReference;
         $ei->image_file_name = $strImageFileName;
         $ei->flag_image_to_be_uploaded = ($strImageFileName != '');
 
@@ -64,7 +66,7 @@
 		# Omit class="hide" as this is injected into the DOM
 		$results['html_output'] .= "<li id=\"list-of-item-" . $output->eq_item_id . "\"  class=\"item-in-a-subgroup\" data-for-item-order=\"" . $output->ordering . "\">";
 		$results['html_output'] .= "<label class=\"\" for=\"item-" . $output->eq_item_id . "\">";
-		$results['html_output'] .= "<a id=\"btn-edit-item-id-" . $output->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $intSubgroupName . "\" data-for-item-id=\"" . $output->eq_item_id . "\" data-for-item-name=\"" . $output->name . "\" data-for-item-descr=\"" . $output->descr . "\" class=\"manager-action btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
+		$results['html_output'] .= "<a id=\"btn-edit-item-id-" . $output->eq_item_id . "\" href=\"#modalItem\" data-toggle=\"modal\" data-for-subgroup-name=\"" . $intSubgroupName . "\" data-for-item-id=\"" . $output->eq_item_id . "\" data-for-item-name=\"" . $output->name . "\" data-for-item-descr=\"" . $output->descr . "\" data-for-item-ref=\"" . $output->reference_link . "\" class=\"manager-action btn btn-mini btn-primary eq-edit-item\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 		$results['html_output'] .= "<a id=\"delete-item-" . $output->eq_item_id . "\" class=\"manager-action btn btn-mini btn-danger eq-delete-item\"  data-for-item-name=\"" . $output->name . "\" data-for-item-id=\"" . $output->eq_item_id . "\"><i class=\"icon-trash icon-white\"></i> </a> ";
 		if ($bitIsMultiSelect == 0) {
 			# radio: single select
@@ -74,7 +76,7 @@
 			# checkbox: multiple select
 			$results['html_output'] .= "<input type=\"checkbox\" id=\"item-" . $output->eq_item_id . "\" name=\"subgroup-" . $output->eq_subgroup_id . "-" . $output->eq_item_id . "\" value=\"" . $output->eq_item_id . "\" class=\"reservationForm hide\" /> ";
 		}
-		$results['html_output'] .= "<span id=\"itemid-" . $output->eq_item_id . "\"><strong>" . $output->name . ": </strong>" . $output->descr . "</span>\n";
+		$results['html_output'] .= "<span id=\"itemid-" . $output->eq_item_id . "\"><strong>" . $output->name . ": </strong>" . $output->descr . "(". $output->reference_link .")</span>\n";
         $results['html_output'] .= "<span id=\"itemImageSpanFor" . $output->eq_item_id . "\"><i>[no image available]</i></span>";
 		$results['html_output'] .= "</label>";
 		$results['html_output'] .= "</li>";
@@ -95,6 +97,7 @@
 		$ei->eq_subgroup = EqSubgroup::getOneFromDb(['eq_subgroup_id' => $ei->subgroup_id, 'flag_delete' => FALSE], $DB);
 		$ei->name  = $strName;
 		$ei->descr = $strDescription;
+        $ei->reference_link = $strReference;
 
 		#set field values for subgroups
 

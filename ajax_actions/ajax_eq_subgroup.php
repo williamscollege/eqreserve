@@ -15,6 +15,7 @@
 	$intOrder         = htmlentities((isset($_REQUEST["ajaxVal_Order"])) ? $_REQUEST["ajaxVal_Order"] : 0);
 	$strName          = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
 	$strDescription   = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
+    $strReference     = htmlentities((isset($_REQUEST["ajaxVal_Reference"])) ? util_quoteSmart($_REQUEST["ajaxVal_Reference"]) : 0);
 	$bitIsMultiSelect = htmlentities((isset($_REQUEST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_REQUEST["ajaxVal_MultiSelect"]) : 0);
 
 
@@ -43,6 +44,7 @@
 		$esg->ordering             = $intOrder;
 		$esg->name                 = $strName;
 		$esg->descr                = $strDescription;
+        $esg->reference_link       = $strReference;
 		$esg->flag_is_multi_select = $bitIsMultiSelect;
 
 		$esg->updateDb();
@@ -76,6 +78,7 @@
 		}
 		$esg->name                 = $strName;
 		$esg->descr                = $strDescription;
+        $esg->reference_link       = $strReference;
 		$esg->flag_is_multi_select = $bitIsMultiSelect;
 
 		$esg->updateDb();

@@ -166,7 +166,7 @@
                         <label class="control-label" for="groupReference">Reference Link</label>
 
                         <div class="controls">
-                            <input type="text" id="groupReference" class="input-xlarge" name="groupReference" value="" placeholder="Reference Link" maxlength="200" />
+                            <input type="url" id="groupReference" class="input-xlarge" name="groupReference" value="" placeholder="Reference Link" maxlength="200" />
                         </div>
                     </div>
 					<div class="control-group">
