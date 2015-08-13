@@ -7,6 +7,7 @@
 <input type="hidden" id="scheduleStartTimeConverted" name="scheduleStartTimeConverted" value="" />
 <input type="hidden" id="scheduleSummaryText" name="scheduleSummaryText" value="" />
 <input type="hidden" id="scheduleConflictOverrideFlag" name="scheduleConflictOverrideFlag" value="" />
+	<input type="hidden" id="userReserving" name="userReserving" value="<?php echo $USER->fname . " " .$USER->lname ?>" />
 <?php
 	if ($USER->flag_is_system_admin || $is_group_manager) {
 		?>

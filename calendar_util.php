@@ -92,7 +92,7 @@ function renderItemRows($items,$headings,$scheds)
     foreach ($items as $item) {
         //inserts another row of times if there are too many items to see at the same time
         if ($i > 8) {
-            $rows .= '<td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+            $rows .= '<td class="calendar-day-head">' . implode('</td><td class="calendar-day-head">', $headings) . '</td></tr>';
             $i = $i - 8;
         }
         $i++;
@@ -105,6 +105,7 @@ function renderItemRows($items,$headings,$scheds)
             $s->loadReservations();
             foreach ($s->reservations as $r) {
                 $r->loadEqItem();
+                $r->loadUser();
                 $id = key($items);
 
                 if ($r->eq_item->eq_item_id == $id) {
@@ -166,7 +167,7 @@ function renderItemRows($items,$headings,$scheds)
                 }
 
                 ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
-                $starts[timetoInt($sched_tb_round)] = durationToInt($sched->timeblock_duration);
+                $starts[timetoInt($sched_tb_round)] = array(durationToInt($sched->timeblock_duration),$sched->reservations[0]->user);
             }
         }
 
@@ -174,57 +175,64 @@ function renderItemRows($items,$headings,$scheds)
         $rows .= '<td class="daily-items">' . $item . '</td>';
         $endTime = 0;
         $starter = 0;
+
         /* draw all the time cells for a given piece of equipment */
+        $userRes = NULL;
         for ($x = 1; $x < count($headings); $x++):
             $isStart = array_key_exists($x, $starts);
 
+
             ## If this is the starting box then...
             if ($isStart) {
-                $dur = $starts[$x];
+                $dur = $starts[$x][0];
                 $endTime = $dur + $x;
+                $user = $starts[$x][1];
+                $userRes = $user;
 
                 //Store to use later with the end_percent array
                 $starter = $x;
 
                 //Round to the nearest 5th because it looks prettier (will be solid after 50% mark)
-                $start_cell_perc = round($start_percent[$x]/5)*5;
-                $ender = 100-$start_cell_perc;
+                $start_cell_perc = round($start_percent[$x] / 5) * 5;
+                $ender = 100 - $start_cell_perc;
 
                 ## If the start percent is 100 (or the reservation starts on a quarter marker) then just fill in the box
                 ## Else have to fill in according to the percentages
-                if($start_percent[$x] == 100){
-                    $rows .= '<td class="calendar-time" style="background:#800080"></td>';
-                }else {
+                if ($start_percent[$x] == 100) {
+                    $rows .= '<td class="calendar-time" style="background:#800080" title="' . $user->fname . " " . $user->lname . '"></td>';
+                } else {
                     $rows .= '<td class="calendar-time"
                         style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
                         background: -moz-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
                         background: -o-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
                         background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
-                        background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"></td>';
+                        background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"
+                        title="' . $user->fname . " " . $user->lname . '"></td>';
                 }
 
                 ## If we have found the end box then...
             } else if ($x == $endTime) {
                 //Round to the nearest 5th because it looks prettier (will be solid after 50% mark)
-                $end_cell_perc = round($end_percent[$starter]/5)*5;
+                $end_cell_perc = round($end_percent[$starter] / 5) * 5;
                 $ender = 100 - $end_cell_perc;
 
                 ## If the end percent is 100 (or the reservation ends on a quarter marker) then leave it blank
                 ## Else have to fill according to the percentages
-                if($end_percent[$starter] == 100){
+                if ($end_percent[$starter] == 100) {
                     $rows .= '<td class="calendar-time"></td>';
-                }else {
+                } else {
                     $rows .= '<td class="calendar-time"
                         style="background: -webkit-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
                         background: -moz-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
                         background: -o-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
                         background: -ms-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
-                        background: linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"></td>';
+                        background: linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"
+                        title="' . $userRes->fname . " " . $userRes->lname . '"></td>';
                 }
 
                 ## If we're in between start and end, then continue coloring
             } else if ($x < $endTime) {
-                $rows .= '<td class="calendar-time" style="background:#800080"></td>';
+                $rows .= '<td class="calendar-time" style="background:#800080" title="' . $userRes->fname . " " . $userRes->lname . '"></td>';
 
                 ## If we have not yet found an item reservation for this time then leave the cell blank
             } else {
