@@ -53,6 +53,13 @@
                         <textarea rows="3" id="groupDescription" class="input-large" name="groupDescription" placeholder="Description of group"><?php echo $Requested_EqGroup->descr; ?></textarea>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="referenceLink">Reference Link</label>
+
+                    <div class="controls">
+                        <textarea rows="3" id="referenceLink" class="input-large" name="referenceLink" placeholder="Reference link"><?php echo $Requested_EqGroup->reference_link; ?></textarea>
+                    </div>
+                </div>
 				<div class="control-group">
 					<label class="control-label" for="groupManagers">Managed by</label>
 
@@ -246,11 +253,13 @@
 	echo "<div id=\"managerView\" data-show-del-isadmin =\"$USER->flag_is_system_admin\" data-show-del-ismanager=\"$is_group_manager\" data-eid =\"$Requested_EqGroup->eq_group_id\" data-duration-start=\"$start_minute_step\">\n";
 	echo "<strong>Name:</strong> <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
 	echo "<strong>Description:</strong> <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
+    echo "<strong>Reference Link:</strong> <span id=\"print_referenceLink\"><a href = " . $Requested_EqGroup->reference_link . ">" . $Requested_EqGroup->reference_link . "</a></span><br />\n";
 
     # convert the minutes into prettier form
     $min = util_minutesToWords($Requested_EqGroup->min_duration_minutes);
     $max = util_minutesToWords($Requested_EqGroup->max_duration_minutes);
     $dur = util_minutesToWords($Requested_EqGroup->duration_chunk_minutes);
+
     echo "<strong>Reservation Time Restrictions:</strong> <span id=\"print_reservationTimeRestrictions\">" . "Can be reserved for ". $min . " min, " . $max . " max, starting on the ". $Requested_EqGroup->start_minute . " hour for " . $dur . " intervals." . "</span><br />\n";
 	echo "<strong>Managed by:</strong> <ul id=\"displayListOfManagers\" class=\"inline\">";
 	echo join("\n",

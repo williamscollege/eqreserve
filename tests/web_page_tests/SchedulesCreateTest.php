@@ -102,6 +102,7 @@
 			$this->signIn();
 			$par = $this->getBaseUrlParamsArray();
 
+            util_prePrintR($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
 			$this->assertNoPattern('/cannot create manager reservation  - not a manager of this group/i');
