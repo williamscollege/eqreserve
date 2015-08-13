@@ -108,14 +108,14 @@
         $reserved_item_names = [];
         $reservations = [];
 
-        $int_year = intval($year);
-        $int_month = intval($baseMonth);
-        $int_day = intval($baseDay);
+//        $int_year = intval($year);
+//        $int_month = intval($baseMonth);
+//        $int_day = intval($baseDay);
 
         //continues to be printed at the same time (doesn't span the 24 hours) but it shows up on the correct days
         foreach($Eq_Group->schedules as $sched) {
             foreach ($sched->time_blocks as $tb) {
-                if (strtotime($tb->start_datetime) <= strtotime($year . '-' . $baseMonth . '-' . $baseDay) && strtotime($year . '-' . $baseMonth . '-' . $baseDay) <= strtotime($tb->end_datetime)) {
+                if (strtotime(substr($tb->start_datetime,0,10)) <= strtotime($year . '-' . $baseMonth . '-' . $baseDay) && strtotime($year . '-' . $baseMonth . '-' . $baseDay) <= strtotime(substr($tb->end_datetime,0,10))) {
                     array_push($day_sched, $sched);
                 }
             }
