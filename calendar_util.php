@@ -304,20 +304,36 @@ function renderCalendarCells($month,$year,$schedule)
         foreach($schedule as $sched) {
             foreach ($sched->time_blocks as $tb) {
                 foreach ($sched->reservations as $r) {
-                    //Makes sure that shcedules that run for days/weeks/years are shown
-                    if(strtotime($tb->start_datetime)<=strtotime($year.'-'.$month.'-'.$list_day.' 23:59:59') && strtotime($year.'-'.$month.'-'.$list_day)<=strtotime($tb->end_datetime))
+                    //Makes sure that schedules that run for days/weeks/years are shown
+                    if (strtotime($tb->start_datetime) <= strtotime($year . '-' . $month . '-' . $list_day . ' 23:59:59') && strtotime($year . '-' . $month . '-' . $list_day) <= strtotime($tb->end_datetime)) {
                         if ($num_schedules > 2) {
                             $num_schedules++;
                             break;
-                        } else {
+                        } elseif ((strtotime(substr($tb->start_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) && (strtotime(substr($tb->end_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day))) {
                             $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
                 start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
+                        } elseif (strtotime(substr($tb->start_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) {
+                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringStart() .
+                                '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+                            $num_schedules++;
+                        } elseif (strtotime(substr($tb->end_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) {
+                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringEnd() .
+                                '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+                            $num_schedules++;
+                        } else {
+                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '"> 12:00 AM-11:59 PM <br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+                            $num_schedules++;
                         }
+                    }
                 }
             }
         }
+
 
         if($num_schedules>3){
             $cells .= '<p style="font-size: small; text-align: center">Click to view more reservations</p>';
