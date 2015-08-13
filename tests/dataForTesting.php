@@ -64,14 +64,14 @@
 	function createTestData_EqGroups($dbConn) {
 		# EqGroup: eq_group_id, name, descr, start_minute, min_duration_minutes, max_duration_minutes, duration_chunk_minutes, flag_delete
 		$addTestEqGroupsSql  = "INSERT INTO " . EqGroup::$dbTable . " VALUES
-        (201,'testEqGroup1','on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals','0,15,30,45',15,60,15,0),
-        (202,'testEqGroup2','on the 1/2 hour with 30 minute min and 5 hour max by 30 minute intervals','0,30',30,300,30,0),
-        (203,'testEqGroup3','on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals','0,15,30,45',15,60,15,0),
-        (204,'testEqGroup4','on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals','0,15,30,45',15,60,15,0),
-        (205,'testEqGroup5','deleted eq group','0,15,30,45',15,60,15,1),
-        (206,'testEqGroup6','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0),
-        (207,'testEqGroup7','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0),
-        (208,'testEqGroup8','no one has access; on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals','0,15,30,45',15,1800,15,0)
+        (201,'testEqGroup1','on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals',NULL,'0,15,30,45',15,60,15,0),
+        (202,'testEqGroup2','on the 1/2 hour with 30 minute min and 5 hour max by 30 minute intervals',NULL,'0,30',30,300,30,0),
+        (203,'testEqGroup3','on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals',NULL,'0,15,30,45',15,60,15,0),
+        (204,'testEqGroup4','on the 1/4 hour with 15 minute min and 1 hour max by 15 minute intervals',NULL,'0,15,30,45',15,60,15,0),
+        (205,'testEqGroup5','deleted eq group',NULL,'0,15,30,45',15,60,15,1),
+        (206,'testEqGroup6','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals',NULL,'0,15,30,45',15,1800,15,0),
+        (207,'testEqGroup7','on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals',NULL,'0,15,30,45',15,1800,15,0),
+        (208,'testEqGroup8','no one has access; on the 1/4 hour with 15 minute min and 30 hour max by 15 minute intervals',NULL,'0,15,30,45',15,1800,15,0)
     ";
 		$addTestEqGroupsStmt = $dbConn->prepare($addTestEqGroupsSql);
 		$addTestEqGroupsStmt->execute();
@@ -86,16 +86,16 @@
 	function createTestData_EqSubgroups($dbConn) {
 		# EqSubgroup: eq_subgroup_id', 'eq_group_id', 'name','descr','ordering','flag_delete'
 		$addTestEqSubgroupsSql  = "INSERT INTO " . EqSubgroup::$dbTable . " VALUES
-        (301,201,'testSubgroup1','normal',1,0,0),
-        (302,201,'testSubgroup2','normal',2,1,0),
-        (303,201,'testSubgroup3','normal and same priority as prev',2,0,0),
-        (304,201,'testSubgroup4','normal',3,1,0),
-        (305,201,'testSubgroup5','deleted',4,0,1),
-        (306,202,'testSubgroup1','normal and same name, different group',1,1,0),
-        (307,205,'testSubgroup6','group is deleted',1,0,0),
-        (308,207,'testSubgroup7','normal',50,0,0),
-        (309,203,'testSubgroup1','normal and same name, different group',1,1,0),
-        (310,207,'testSubgroup8','normal',51,1,0)
+        (301,201,'testSubgroup1','normal',NULL,1,0,0),
+        (302,201,'testSubgroup2','normal',NULL,2,1,0),
+        (303,201,'testSubgroup3','normal and same priority as prev',NULL,2,0,0),
+        (304,201,'testSubgroup4','normal',NULL,3,1,0),
+        (305,201,'testSubgroup5','deleted',NULL,4,0,1),
+        (306,202,'testSubgroup1','normal and same name, different group',NULL,1,1,0),
+        (307,205,'testSubgroup6','group is deleted',NULL,1,0,0),
+        (308,207,'testSubgroup7','normal',NULL,50,0,0),
+        (309,203,'testSubgroup1','normal and same name, different group',NULL,1,1,0),
+        (310,207,'testSubgroup8','normal',NULL,51,1,0)
     ";
 		$addTestEqSubgroupsStmt = $dbConn->prepare($addTestEqSubgroupsSql);
 		$addTestEqSubgroupsStmt->execute();
@@ -110,21 +110,21 @@
 	function createTestData_EqItems($dbConn) {
 		# EqItem: 'eq_item_id', 'eq_subgroup_id', 'name','descr','image_file_name','flag_image_to_be_uploaded','ordering','flag_delete'
 		$addTestEqItemsSql  = "INSERT INTO " . EqItem::$dbTable . " VALUES
-        (401,301,'testItem1','normal','',0,1,0),
-        (402,301,'testItem2','normal','',0,2,0),
-        (403,301,'testItem3','same priority as prev','',0,2,0),
-        (404,301,'testItem4','normal','',0,3,0),
-        (405,301,'testItem5','deleted','',0,4,1),
-        (406,302,'testItem1','same name, different subgroup','',0,1,0),
-        (407,305,'testItem6','subgroup is deleted','',0,1,0),
-        (408,307,'testItem7','group is deleted','',0,1,0),
-        (409,306,'testItem8','normal','',0,10,0),
-        (410,308,'testItem9','normal','',0,20,0),
-        (411,306,'testItem10','normal','',0,12,0),
-        (412,302,'testItem11','another item, different subgroup','',0,25,0),
-        (413,309,'testItem12','another item, different subgroup','',0,1,0),
-        (414,310,'testItem13','normal','',0,21,0),
-        (415,309,'testItem14','another item, same subgroup','',0,2,0)
+        (401,301,'testItem1','normal',NULL,'',0,1,0),
+        (402,301,'testItem2','normal',NULL,'',0,2,0),
+        (403,301,'testItem3','same priority as prev',NULL,'',0,2,0),
+        (404,301,'testItem4','normal',NULL,'',0,3,0),
+        (405,301,'testItem5','deleted',NULL,'',0,4,1),
+        (406,302,'testItem1','same name, different subgroup',NULL,'',0,1,0),
+        (407,305,'testItem6','subgroup is deleted',NULL,'',0,1,0),
+        (408,307,'testItem7','group is deleted',NULL,'',0,1,0),
+        (409,306,'testItem8','normal',NULL,'',0,10,0),
+        (410,308,'testItem9','normal',NULL,'',0,20,0),
+        (411,306,'testItem10','normal',NULL,'',0,12,0),
+        (412,302,'testItem11','another item, different subgroup',NULL,'',0,25,0),
+        (413,309,'testItem12','another item, different subgroup',NULL,'',0,1,0),
+        (414,310,'testItem13','normal',NULL,'',0,21,0),
+        (415,309,'testItem14','another item, same subgroup',NULL,'',0,2,0)
     ";
 		$addTestEqItemsStmt = $dbConn->prepare($addTestEqItemsSql);
 		$addTestEqItemsStmt->execute();
