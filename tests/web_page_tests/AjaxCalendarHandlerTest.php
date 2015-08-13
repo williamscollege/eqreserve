@@ -234,7 +234,7 @@ class AjaxCalendarHandlerTest extends WMSWebTestCase
         $this->assertEltByIdHasAttrOfValue('daily_prev_nav','data-monthnum','03');
 
         //check schedule display elements
-        $this->assertPattern('/style="background:purple"/');
+        $this->assertPattern('/style="background:#800080"/');
     }
 
     function testDailyNextNav() {

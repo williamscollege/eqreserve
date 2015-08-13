@@ -51,6 +51,14 @@
             return util_timeRangeStringShort($this->start_datetime, $this->end_datetime);
         }
 
+        public function toStringStart(){
+            return util_timeRangeStringStart($this->start_datetime);
+        }
+
+        public function toStringEnd(){
+            return util_timeRangeStringEnd($this->end_datetime);
+        }
+
 		public function toString() {
 			return util_timeRangeString($this->start_datetime, $this->end_datetime);
 		}

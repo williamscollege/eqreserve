@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `eq_groups` (
     `eq_group_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
+    `reference_link` TEXT NULL,
     `start_minute` VARCHAR(255) NULL,
     `min_duration_minutes` INT NOT NULL DEFAULT 30,
     `max_duration_minutes` INT NOT NULL DEFAULT 120,
@@ -53,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `eq_subgroups` (
     `eq_group_id` INT NOT NULL,
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
+    `reference_link` TEXT NULL,
     `ordering` SMALLINT NOT NULL,
     `flag_is_multi_select` BIT(1) NOT NULL DEFAULT 0,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -65,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `eq_items` (
     `eq_subgroup_id` INT NOT NULL,
     `name` VARCHAR(255) NULL,
     `descr` TEXT NULL,
+    `reference_link` TEXT NULL,
     `image_file_name` VARCHAR(255) NULL,
     `flag_image_to_be_uploaded` BIT(1) NOT NULL DEFAULT 0,
     `ordering` SMALLINT NOT NULL,

@@ -42,7 +42,7 @@
             $c11 = EqItem::cmp($i1, $i1);  // identical
 
             $c45 = EqItem::cmp($i4, $i5); // same name, different ordering
-            $c46 = EqItem::cmp($i4, $i6); // same ordering, differnt name
+            $c46 = EqItem::cmp($i4, $i6); // same ordering, different name
 
             $c78 = EqItem::cmp($i7, $i8); // different subgroups
 

@@ -95,6 +95,7 @@
 
         $clickedDate_yyyymmdd = $year . '-' . $baseMonth . '-' . $baseDay;
 
+
         $Eq_Group->loadEqItems();
 
         //util_prePrintR(array_map(function($elt){return $elt->name;},$Requested_EqGroup->eq_items));
@@ -107,14 +108,19 @@
         $reserved_item_names = [];
         $reservations = [];
 
-        //load all the schedules using time blocks to account for repeated reservations for the clicked day
-        foreach($Eq_Group->schedules as $sched){
-            foreach($sched->time_blocks as $tb){
-                if((substr($tb->start_datetime,0,10)==$clickedDate_yyyymmdd)||(substr($tb->end_datetime,0,10)==$clickedDate_yyyymmdd)){
-                    array_push($day_sched,$sched);
+//        $int_year = intval($year);
+//        $int_month = intval($baseMonth);
+//        $int_day = intval($baseDay);
+
+        //continues to be printed at the same time (doesn't span the 24 hours) but it shows up on the correct days
+        foreach($Eq_Group->schedules as $sched) {
+            foreach ($sched->time_blocks as $tb) {
+                if (strtotime(substr($tb->start_datetime,0,10)) <= strtotime($year . '-' . $baseMonth . '-' . $baseDay) && strtotime($year . '-' . $baseMonth . '-' . $baseDay) <= strtotime(substr($tb->end_datetime,0,10))) {
+                    array_push($day_sched, $sched);
                 }
             }
         }
+
         //gets every item of the eq group and ensures uniqueness
         //same item different subgroup should still be a different item
         foreach($Eq_Group->eq_subgroups as $subgroup) {

@@ -40,7 +40,11 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
         //gets the schedule of a given eq group
         $sched = $Requested_EqGroup->schedules;
 
-        $rows = renderItemRows($items, $headings,$sched);
+        $month = util_getCurrentMonthNum();
+        $year = util_getCurrentYearNum();
+        $day = '01';
+
+        $rows = renderItemRows($items, $headings,$sched,$month,$day,$year);
 
         $this->assertPattern('/daily-items">this</',$rows);
         $this->assertPattern('/daily-items">that</',$rows);
@@ -80,8 +84,8 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
         $cells = renderCalendarCells($month,$year,$sched);
 
         //schedules valid but not overlapping with time
-        $this->assertNoPattern('/2015/', $cells);
-        $this->assertNoPattern('/05/', $cells);
+        $this->assertNoPattern('/2015/', $cells); //check year
+        $this->assertNoPattern('/data-monthnum = "05"/', $cells); //check month
         $this->assertPattern('/'.$year.'/', $cells);
         $this->assertPattern('/'.$month.'/', $cells);
 
@@ -90,7 +94,7 @@ class TestOfCalendarUtil extends WMSUnitTestCaseDB {
 
         $this->assertPattern('/="day-number">25/',$cells);
         $this->assertNoPattern('/="day-number">32/',$cells);
-        $this->assertNoPattern('/="day-number">0/',$cells);
+        $this->assertNoPattern('/="day-number">00/',$cells);
 
     }
 

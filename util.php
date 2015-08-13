@@ -395,6 +395,31 @@
         return "$first_part-$second_part";
     }
 
+    function util_timeRangeStringStart($tstart)
+    {
+        if (!is_array($tstart)) {
+            $tstart = util_processTimeString($tstart);
+        }
+
+        $first_part  = $tstart['hap'] . ':' . $tstart['mi'] . ' '.  $tstart['ap'];
+
+        $second_part = '11:59 PM';
+
+        return "$first_part-$second_part";
+    }
+
+    function util_timeRangeStringEnd($tstop)
+    {
+        if (!is_array($tstop)) {
+            $tstop = util_processTimeString($tstop);
+        }
+
+        $first_part  = '12:00 AM';
+        $second_part = $tstop['hap'] . ':' . $tstop['mi'] . ' ' . $tstop['ap'];
+
+        return "$first_part-$second_part";
+    }
+
 
 	#####################################
 	# Array Map Object Queries

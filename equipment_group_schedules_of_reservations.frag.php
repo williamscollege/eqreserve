@@ -26,6 +26,8 @@
             if ($sched->type == 'manager') {
                 $li .= '<strong><span class="text-warning">(MANAGEMENT)</span></strong> ';
             }
+
+                //shorten the shown reservation if it is a repeated schedule
             if($sched->frequency_type == 'monthly' || $sched->frequency_type == 'weekly'){
                 $output = $sched->summary;
             }else{

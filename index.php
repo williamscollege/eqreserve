@@ -42,7 +42,11 @@
 						groupDescription: {
 							minlength: 2,
 							required: false
-						}
+						},
+                        groupReference: {
+                            minlength: 2,
+                            required: false
+                        }
 					},
 					highlight: function (element) {
 						$(element).closest('.control-group').removeClass('success').addClass('error');
@@ -60,6 +64,7 @@
 						var action = $('#' + formName + ' #ajaxGroupAction').val();
 						var group_name = $('#' + formName + ' #groupName').val();
 						var group_description = $('#' + formName + ' #groupDescription').val();
+                        var group_reference = $('#' + formName + ' #groupReference').val();
 						// alert('formName=' + formName + '\n' + 'group_name=' + group_name + '\n' + 'group_description=' + group_description);
 
 						$.ajax({
@@ -68,7 +73,8 @@
 							data: {
 								ajaxVal_Action: action,
 								ajaxVal_Name: group_name,
-								ajaxVal_Description: group_description
+								ajaxVal_Description: group_description,
+                                ajaxVal_Reference: group_reference
 							},
 							dataType: 'json',
 							success: function (data) {
@@ -156,6 +162,13 @@
 							<input type="text" id="groupDescription" class="input-xlarge" name="groupDescription" value="" placeholder="Description of group" maxlength="200" />
 						</div>
 					</div>
+                    <div class="control-group">
+                        <label class="control-label" for="groupReference">Reference Link</label>
+
+                        <div class="controls">
+                            <input type="text" id="groupReference" class="input-xlarge" name="groupReference" value="" placeholder="Reference Link" maxlength="200" />
+                        </div>
+                    </div>
 					<div class="control-group">
 						<label class="control-label" for="btnSubmitAddEqGroup"></label>
 

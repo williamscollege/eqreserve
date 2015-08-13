@@ -275,6 +275,10 @@ $(document).ready(function () {
 				minlength: 2,
 				required: false
 			},
+            referenceLink: {
+                minlength: 2,
+                required: false
+            },
 			startMinute: {
 				/* TODO: CSV List: strip spaces, ensure only integers and commas */
 				required: true
@@ -310,7 +314,8 @@ $(document).ready(function () {
 			// Update printed text values on screen with submitted values
 			$("#print_groupName").text($("#groupName").val());
 			$("#print_groupDescription").text($("#groupDescription").val());
-			$("#print_startMinute").text($("#startMinute").val());
+            $("#print_referenceLink").html($("#referenceLink").val()); //WORK IN PROGRESS
+            $("#print_startMinute").text($("#startMinute").val());
 
 			// Convert input values to pretty text for standard output to screen
 			$("#print_minDurationMinutes").text(util_minutesToWords($("#minDurationMinutes").val()));
@@ -327,6 +332,7 @@ $(document).ready(function () {
                     ajaxVal_GroupID: $('#groupID').val(),
                     ajaxVal_Name: $('#groupName').val(),
                     ajaxVal_Description: $('#groupDescription').val(),
+                    ajaxVal_Reference: $('#referenceLink').val(),
                     ajaxVal_StartMinute: $('#startMinute').val(),
                     ajaxVal_MinDurationMinute: $('#minDurationMinutes').val(),
                     ajaxVal_MaxDurationMinute: $('#maxDurationMinutes').val(),
