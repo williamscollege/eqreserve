@@ -103,7 +103,6 @@
 			$this->signIn();
 			$par = $this->getBaseUrlParamsArray();
 
-//            util_prePrintR($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
 			$this->assertNoPattern('/cannot create manager reservation  - not a manager of this group/i');
@@ -478,7 +477,7 @@
 			unset($par['subgroup-302-406']);
 			unset($par['subgroup-302-412']);
 
-			$par['eqGroupID']                  = '203'; // set group to one which the user has consumer access and NOT manager access
+            $par['eqGroupID']                  = '203'; // set group to one which the user has consumer access and NOT manager access
 			$par['subgroup-309-413']           = '413'; // add necessary array element that corresponds to subgroup and subgroup item
 			$par['scheduleStartOnDate']        = '2013-07-01';
 			$par['scheduleEndOnDate']          = '2013-07-17';

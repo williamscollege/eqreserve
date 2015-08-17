@@ -38,6 +38,8 @@
                     echo '<li><p>Example Reference Link: <ul><li>Valid: http://www.google.com. </li><li>Invalid: www.google.com</li></ul></p></li>';
                     echo '<li><p>For reservation restrictions, either choose from the default times or input your own in the box. All restrictions must be in minute form.</p></li>';
                 }
+
+                echo '<li><p>Reference links provide more information about a group, subgroup, or item.</p></li>';
                 echo '<li><p>Reservation restrictions tell a user the minimum and maximum time that an item can be reserved for, on what minutes of the hour the reservation can start on, and the intervals for which it can be reserved.</p></li>';
                 echo '<li><p>To reserve an item, click "Reserve Equipment." Choose at least one item to reserve, specify your date, time, duration, and any repeats, and then press submit.</p></li>';
                 echo '<li><p>Schedule conflicts or failure to follow the reservation restrictions will result in a reservation error.</p></li>';

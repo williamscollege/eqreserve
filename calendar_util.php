@@ -161,11 +161,12 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                     //******** to find rounded start time:
                     //******** round the timeblock_start_time minutes to the nearest quarter hour using the formula and convert to date
                     ## else if start time % 15 == 0 then use regular start time (not rounded) and have start percentage = 100
-                    if ($start_minute == 'x') {
+                    if ($start_minute === 'x') {
                         $sched_tb_round = '00:00:00';
                         $start_percent[timetoInt($sched_tb_round)] = 100;
                         //the duration should only go until the end time block
                     } elseif ($start_minute % 15 != 0) {
+
                         while ($start_minute > 15) {
                             $start_minute -= 15;
                         }
@@ -192,17 +193,15 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                     }
 
                     ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
-                    $starts[timetoInt($sched_tb_round)] = durationToInt($duration);
-
+                    $starts[timetoInt($sched_tb_round)] = array(durationToInt($duration), $sched->reservations[0]->user);
 
                 } elseif (strtotime(substr($start_tb, 0, 10)) < strtotime($year . '-' . $month . '-' . $day) && strtotime($year . '-' . $month . '-' . $day) < strtotime(substr($end_tb, 0, 10))) {
                     $sched_tb_round = '00:00:00';
                     $start_percent[timetoInt($sched_tb_round)] = 100;
                     $end_percent[timetoInt($sched_tb_round)] = 100;
 
-                ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
-                $starts[timetoInt($sched_tb_round)] = array(durationToInt($sched->timeblock_duration),$sched->reservations[0]->user);
-
+                    ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
+                    $starts[timetoInt($sched_tb_round)] = array(durationToInt($sched->timeblock_duration),$sched->reservations[0]->user);
                 }
             }
         }
@@ -234,10 +233,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                 ## If the start percent is 100 (or the reservation starts on a quarter marker) then just fill in the box
                 ## Else have to fill in according to the percentages
                 if ($start_percent[$x] == 100) {
-
                     $rows .= '<td class="calendar-time" style="background:#800080" title="' . $user->fname . " " . $user->lname . '"></td>';
-
-
                 } else {
                     $rows .= '<td class="calendar-time"
                         style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);

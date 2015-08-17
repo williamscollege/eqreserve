@@ -123,26 +123,6 @@
     }
 
 
-	//kills all tests
-//    $intSchedDur = util_durToInt($strScheduleDuration);
-//util_prePrintR($intSchedDur);
-//util_prePrintR(($reservRestrictionMax));
-//util_prePrintR($reservRestrictionMin);
-//
-//    # check if duration time matches reservation restrictions
-//    # check this with a test?
-//		if (!($intSchedDur >= $reservRestrictionMin && $intSchedDur <= $reservRestrictionMax)) {
-//			$results['note'] = 'not within reservation restrictions';
-//			echo json_encode($results);
-//			exit;
-//		}
-//
-//    # check if duration interval matches reservation restrictions
-//		if (!($intSchedDur % $reservRestrictionDur == 0)) {
-//			$results['note'] = 'does not follow duration restriction';
-//			echo json_encode($results);
-//			exit;
-//		}
 
 	# TODO: NOTE this is obsolete as the EqGroup::getOneFromDb above returns false if eq_group.flag_delete = true
 	# check that eq_group is active
