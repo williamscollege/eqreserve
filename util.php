@@ -395,19 +395,21 @@
         return "$first_part-$second_part";
     }
 
+    //Only displays the start time of the reservation (for better display)
     function util_timeRangeStringStart($tstart)
     {
         if (!is_array($tstart)) {
             $tstart = util_processTimeString($tstart);
         }
 
-        $first_part  = $tstart['hap'] . ':' . $tstart['mi'] . ' '.  $tstart['ap'];
+        $first_part = $tstart['hap'] . ':' . $tstart['mi'] . ' ' . $tstart['ap'];
 
         $second_part = '11:59 PM';
 
         return "$first_part-$second_part";
     }
 
+    //Only displays the end time of the reservation (for better display)
     function util_timeRangeStringEnd($tstop)
     {
         if (!is_array($tstop)) {
@@ -431,91 +433,92 @@
 
 
 /***********FUNCTIONS TO FETCH DATE VALUES***********/
-function util_getMonthNumFromDate($date){
-    return $date->format('m');
-}
-
-function util_getCurrentMonthNum(){
-    return date("m");
-}
-
-function util_getPrevMonthNum($date){
-    $interval = new DateInterval('P1M');
-    $date->sub($interval);
-    return $date->format('m');
-}
-
-function util_getNextMonthNum($date){
-    $interval = new DateInterval('P1M');
-    $date->add($interval);
-    return $date->format('m');
-}
-
-function util_getYearNumFromDate($someDate){
-    return $someDate->format('Y');
-}
-
-function util_getCurrentYearNum(){
-    return date("Y");
-}
-
-function util_getPrevYearNum($someDate){
-    $interval = new DateInterval('P1Y');
-    $someDate->sub($interval);
-    return $someDate->format('Y');
-}
-
-function util_getNextYearNum($someDate){
-    $interval = new DateInterval('P1Y');
-    $someDate->add($interval);
-    return $someDate->format('Y');
-}
-
-
-/***** convert durations types (5M, 2H, 3D) to integer minute form ******/
-function util_durToInt($schedDur)
-{
-    $intReturn = 1;
-    $length = strlen($schedDur);
-
-    if(substr($schedDur, $length-1) == 'M'){
-        $intReturn = intval(substr($schedDur, 0, $length-1));
-    }elseif(substr($schedDur, $length-1) == 'H'){
-        $intReturn = intval(substr($schedDur, 0, $length-1));
-        $intReturn = $intReturn * 60;
-    }elseif(substr($schedDur, $length-1) == 'D'){
-        $intReturn = intval(substr($schedDur, 0, $length-1));
-        $intReturn = $intReturn * 60 * 24;
+    function util_getMonthNumFromDate($date){
+        return $date->format('m');
     }
 
-    return $intReturn;
-}
+    function util_getCurrentMonthNum(){
+        return date("m");
+    }
 
-/***** convert duration types (5M, 2H, 3D) to string form ******/
-function util_durToString($schedDur)
-{
-    $strReturn = '';
-    $length = strlen($schedDur);
+    function util_getPrevMonthNum($date){
+        $interval = new DateInterval('P1M');
+        $date->sub($interval);
+        return $date->format('m');
+    }
 
-    if(substr($schedDur, $length-1) == 'M'){
-        $strReturn = substr($schedDur, 0, $length-1);
-        $strReturn .= ' minutes';
-    }elseif(substr($schedDur, $length-1) == 'H'){
-        $strReturn = substr($schedDur, 0, $length-1);
-        $strReturn .= ' hours';
-    }elseif(substr($schedDur, $length-1) == 'D') {
-        if(intval(substr($schedDur,0,$length-1)) == 1){
-            $strReturn = '24 hours';
-        }elseif(intval(substr($schedDur,0,$length-1)) > 7){
-            $strReturn = intval(substr($schedDur, 0, $length - 1))/7;
-            $strReturn .= ' weeks';
-        }elseif(intval(substr($schedDur,0,$length-1)) == 7) {
-            $strReturn = '1 week (7 days)';
-        }else{
-            $strReturn = substr($schedDur, 0, $length - 1);
-            $strReturn .= ' days';
+    function util_getNextMonthNum($date){
+        $interval = new DateInterval('P1M');
+        $date->add($interval);
+        return $date->format('m');
+    }
+
+    function util_getYearNumFromDate($someDate){
+        return $someDate->format('Y');
+    }
+
+    function util_getCurrentYearNum(){
+        return date("Y");
+    }
+
+    function util_getPrevYearNum($someDate){
+        $interval = new DateInterval('P1Y');
+        $someDate->sub($interval);
+        return $someDate->format('Y');
+    }
+
+    function util_getNextYearNum($someDate){
+        $interval = new DateInterval('P1Y');
+        $someDate->add($interval);
+        return $someDate->format('Y');
+    }
+
+
+    /***** duration functions *****/
+    // convert durations types (5M, 2H, 3D) to integer minute form
+    function util_durToInt($schedDur)
+    {
+        $intReturn = 1;
+        $length = strlen($schedDur);
+
+        if(substr($schedDur, $length-1) == 'M'){
+            $intReturn = intval(substr($schedDur, 0, $length-1));
+        }elseif(substr($schedDur, $length-1) == 'H'){
+            $intReturn = intval(substr($schedDur, 0, $length-1));
+            $intReturn = $intReturn * 60;
+        }elseif(substr($schedDur, $length-1) == 'D'){
+            $intReturn = intval(substr($schedDur, 0, $length-1));
+            $intReturn = $intReturn * 60 * 24;
         }
+
+        return $intReturn;
     }
 
-    return $strReturn;
-}
+    // convert duration types (5M, 2H, 3D) to string form
+    function util_durToString($schedDur)
+    {
+        $strReturn = '';
+        $length = strlen($schedDur);
+
+        if(substr($schedDur, $length-1) == 'M'){
+            $strReturn = substr($schedDur, 0, $length-1);
+            $strReturn .= ' minutes';
+        }elseif(substr($schedDur, $length-1) == 'H'){
+            $strReturn = substr($schedDur, 0, $length-1);
+            $strReturn .= ' hours';
+        }elseif(substr($schedDur, $length-1) == 'D') {
+            if(intval(substr($schedDur,0,$length-1)) == 1){
+                $strReturn = '24 hours';
+            }elseif(intval(substr($schedDur,0,$length-1)) > 7){
+                $strReturn = intval(substr($schedDur, 0, $length - 1))/7;
+                $strReturn .= ' weeks';
+            }elseif(intval(substr($schedDur,0,$length-1)) == 7) {
+                $strReturn = '1 week (7 days)';
+            }else{
+                $strReturn = substr($schedDur, 0, $length - 1);
+                $strReturn .= ' days';
+            }
+        }
+
+        return $strReturn;
+    }

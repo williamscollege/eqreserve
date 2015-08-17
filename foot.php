@@ -9,7 +9,6 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
             <?php
-//            util_prePrintR(basename($_SERVER['PHP_SELF']));
             if(basename($_SERVER['PHP_SELF']) == 'index.php') {
                 if($IS_AUTHENTICATED){
                     echo '<h3 id="modalHelpLabel">Home Page FAQ</h3></div><div class="modal-body">';
@@ -32,6 +31,8 @@
                 echo '<h3 id="modalHelpLabel">Equipment Group FAQ</h3></div><div class="modal-body">';
                 echo '<ol>';
                 echo '<li><p>The Equipment Group Page contains general information about the group, including items and reservations.</p></li>';
+
+                //only displays if the user is the group manager
                 if($is_group_manager){
                     echo '<li><p>As a manager of this group, you can edit the equipment group by clicking edit equipment group.</p></li>';
                     echo '<li><p>Manager function include editing group information, adding a reference link, changing reservation rules, deleting, editing, or inputting subgroups and items, and deleting existing reservations</p></li>';

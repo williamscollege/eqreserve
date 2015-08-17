@@ -1,5 +1,7 @@
 <?php
-//****** Helper functions ******
+//******************************//
+//****** Helper functions ******//
+//******************************//
 /****** Converts month number to month name *****/
 function monthIntToString($month) {
     switch($month){
@@ -46,6 +48,44 @@ function monthIntToString($month) {
     return $month_name;
 }
 
+/*** Converts time (format: hour:minute:second) to an int ID ***/
+function timeToInt($time)
+{
+    $timeArray = array('00:00:00', '00:15:00', '00:30:00','00:45:00','01:00:00','01:15:00','01:30:00','01:45:00','02:00:00','02:15:00',
+        '02:30:00','02:45:00','03:00:00','03:15:00','03:30:00','03:45:00','04:00:00','04:15:00','04:30:00','04:45:00',
+        '05:00:00','05:15:00','05:30:00','05:45:00','06:00:00','06:15:00','06:30:00','06:45:00','07:00:00','07:15:00',
+        '07:30:00','07:45:00','08:00:00','08:15:00','08:30:00','08:45:00','09:00:00','09:15:00','09:30:00','09:45:00',
+        '10:00:00','10:15:00','10:30:00','10:45:00','11:00:00','11:15:00','11:30:00','11:45:00','12:00:00','12:15:00',
+        '12:30:00','12:45:00','13:00:00','13:15:00','13:30:00','13:45:00','14:00:00','14:15:00','14:30:00','14:45:00',
+        '15:00:00','15:15:00','15:30:00','15:45:00','16:00:00','16:15:00','16:30:00','16:45:00','17:00:00','17:15:00',
+        '17:30:00','17:45:00','18:00:00','18:15:00','18:30:00','18:45:00','19:00:00','19:15:00','19:30:00','19:45:00',
+        '20:00:00','20:15:00','20:30:00','20:45:00','21:00:00','21:15:00','21:30:00','21:45:00','22:00:00','22:15:00',
+        '22:30:00','22:45:00','23:00:00','23:15:00','23:30:00','23:45:00','24:00:00');
+    if (in_array($time, $timeArray)){
+        $timeID = array_search($time, $timeArray);
+    } else {
+        $timeID = -1;
+    }
+    return $timeID + 1;
+}
+
+/***** Converts duration (format: 15M) to minutes which are then converted to the number of blocks in the day ****/
+function durationToInt($duration) {
+    // 100 ensures it takes up the entire day
+
+    //convert duration to minutes
+    $duration = util_durToInt($duration);
+
+    //convert to number of blocks (each block is 15 min)
+    if($duration>=1440){
+        $blocks = 100;
+    }else{
+        $blocks = floor($duration/15);
+    }
+
+    return $blocks;
+}
+
 /****** Header for month view (displays Month Year format) *****/
 function renderMonthHeader($month,$year){
     $month_name = monthIntToString($month);
@@ -80,11 +120,6 @@ function renderDayHeader($month,$day,$year) {
 function renderItemRows($items,$headings,$scheds,$month,$day,$year)
 {
     /* draw the calendar for all pieces of equipment in each subgroup */
-    // Get start times and lengths of the reservations on this day
-//    foreach ($scheds as $sched) {
-//        array_push(timeToInt($sched->timeblock_start_time), $starts);
-//        array_push(durationToInt($sched->timeblock_duration), $durs);
-//    }
     $rows = "";
 
     //counter to keep track of number of rows
@@ -192,7 +227,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                         $end_percent[timetoInt($sched_tb_round)] = 100;
                     }
 
-                    ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
+                    ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration and the user who made the reservation
                     $starts[timetoInt($sched_tb_round)] = array(durationToInt($duration), $sched->reservations[0]->user);
 
                 } elseif (strtotime(substr($start_tb, 0, 10)) < strtotime($year . '-' . $month . '-' . $day) && strtotime($year . '-' . $month . '-' . $day) < strtotime(substr($end_tb, 0, 10))) {
@@ -200,7 +235,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                     $start_percent[timetoInt($sched_tb_round)] = 100;
                     $end_percent[timetoInt($sched_tb_round)] = 100;
 
-                    ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration
+                    ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration and the user who made the reservation
                     $starts[timetoInt($sched_tb_round)] = array(durationToInt($sched->timeblock_duration),$sched->reservations[0]->user);
                 }
             }
@@ -220,7 +255,10 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
             if ($isStart) {
                 $dur = $starts[$x][0];
                 $endTime = $dur + $x;
+
+                //user who made the reservation
                 $user = $starts[$x][1];
+                //store for later use
                 $userRes = $user;
 
                 //Store to use later with the end_percent array
@@ -280,7 +318,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
     return $rows;
 }
 
-///******* Add in all the cells with the appropriate days and items ******/
+/******* Add in all the cells with the appropriate days and items ******/
 function renderCalendarCells($month,$year,$schedule)
 {
     /* fill in the days */
@@ -307,8 +345,7 @@ function renderCalendarCells($month,$year,$schedule)
         $cells.= '<div class="day-number">'.$list_day.'</div>';
 
         $cells .= '<div class = "all-items">';
-        /** add in items here */
-        //flag_delete: should display?
+        /* add in items here */
         $num_schedules = 0;
         foreach($schedule as $sched) {
             foreach ($sched->time_blocks as $tb) {
@@ -343,10 +380,11 @@ function renderCalendarCells($month,$year,$schedule)
             }
         }
 
-
+        //prints message if more than 3 reservations for the day
         if($num_schedules>3){
             $cells .= '<p style="font-size: small; text-align: center">Click to view more reservations</p>';
         }
+
         $cells .= '</div>';
 
         $cells.= '</td>';
@@ -374,9 +412,9 @@ function renderCalendarCells($month,$year,$schedule)
     return $cells;
 }
 
-//********************************************************************************
-//****************** Draw actual calendars here **********************************
-//********************************************************************************
+//****************************************************************************
+//****************** Draw actual calendars  **********************************
+//****************************************************************************
 
 /*************** MONTHLY CALENDAR *********************/
 function draw_MonthlyCalendar($month,$year,$all_schedules) {
@@ -420,9 +458,6 @@ function draw_SingleDayCalendar($month,$day,$year,$items,$day_sched) {
         '8:30 PM', '8:45 PM', '9:00 PM', '9:15 PM', '9:30 PM', '9:45 PM', '10:00 PM', '10:15 PM', '10:30 PM', '10:45 PM', '11:00 PM', '11:15 PM', '11:30 PM', '11:45 PM');
     $calendar .= '<td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
 
-    /* row for 1st piece of equipment */
-    //$calendar .= '<tr class="calendar-row">';
-
     /* draw the calendar for all pieces of equipment in each subgroup */
     $calendar .= renderItemRows($items,$headings,$day_sched,$month,$day,$year);
 
@@ -431,42 +466,4 @@ function draw_SingleDayCalendar($month,$day,$year,$items,$day_sched) {
     $calendar .= '<button class="show_month_button">Go Back To Monthly View</button>';
 
     return $header.$calendar;
-}
-
-function getTimeBlock($schedule) {
-    //gets the time section that is reserved in a schedule
-}
-
-function timeToInt($time)
-{
-    $timeArray = array('00:00:00', '00:15:00', '00:30:00','00:45:00','01:00:00','01:15:00','01:30:00','01:45:00','02:00:00','02:15:00',
-                    '02:30:00','02:45:00','03:00:00','03:15:00','03:30:00','03:45:00','04:00:00','04:15:00','04:30:00','04:45:00',
-                    '05:00:00','05:15:00','05:30:00','05:45:00','06:00:00','06:15:00','06:30:00','06:45:00','07:00:00','07:15:00',
-                    '07:30:00','07:45:00','08:00:00','08:15:00','08:30:00','08:45:00','09:00:00','09:15:00','09:30:00','09:45:00',
-                    '10:00:00','10:15:00','10:30:00','10:45:00','11:00:00','11:15:00','11:30:00','11:45:00','12:00:00','12:15:00',
-                    '12:30:00','12:45:00','13:00:00','13:15:00','13:30:00','13:45:00','14:00:00','14:15:00','14:30:00','14:45:00',
-                    '15:00:00','15:15:00','15:30:00','15:45:00','16:00:00','16:15:00','16:30:00','16:45:00','17:00:00','17:15:00',
-                    '17:30:00','17:45:00','18:00:00','18:15:00','18:30:00','18:45:00','19:00:00','19:15:00','19:30:00','19:45:00',
-                    '20:00:00','20:15:00','20:30:00','20:45:00','21:00:00','21:15:00','21:30:00','21:45:00','22:00:00','22:15:00',
-                    '22:30:00','22:45:00','23:00:00','23:15:00','23:30:00','23:45:00','24:00:00');
-    if (in_array($time, $timeArray)){
-        $timeID = array_search($time, $timeArray);
-    } else {
-        $timeID = -1;
-    }
-    return $timeID + 1;
-}
-
-function durationToInt($duration) {
-    // takes duration and converts to minutes to be converted into 'blocks' in terms of 15
-    // 100 ensures it takes up the entire day
-    $duration = util_durToInt($duration);
-    $blocks = 0;
-    if($duration>=1440){
-        $blocks = 100;
-    }else{
-        $blocks = floor($duration/15);
-    }
-
-    return $blocks;
 }
