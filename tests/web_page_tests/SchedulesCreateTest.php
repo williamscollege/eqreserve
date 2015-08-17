@@ -42,7 +42,8 @@
 			, 'scheduleFrequencyType'        => 'no_repeat'
 			, 'scheduleRepeatInterval'       => '1'
 			, 'scheduleUserType'             => 'manager'
-			, 'repeat_dow_sun'               => '0'
+            , 'startTimes'                   => '0,30'
+            , 'repeat_dow_sun'               => '0'
 			, 'repeat_dow_mon'               => '0'
 			, 'repeat_dow_tue'               => '0'
 			, 'repeat_dow_wed'               => '0'
@@ -102,7 +103,7 @@
 			$this->signIn();
 			$par = $this->getBaseUrlParamsArray();
 
-            util_prePrintR($this->urlbase . "?" . $this->urlParamsArrayToString($par));
+//            util_prePrintR($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
 			$this->assertNoPattern('/cannot create manager reservation  - not a manager of this group/i');
@@ -115,7 +116,6 @@
 
 			$par                     = $this->getBaseUrlParamsArray();
 			$par['scheduleUserType'] = 'consumer';
-
 			$this->get($this->urlbase . "?" . $this->urlParamsArrayToString($par));
 
 			$this->assertNoPattern('/cannot create user reservation - not a user of this group/i');
