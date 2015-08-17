@@ -46,7 +46,7 @@
                 echo '<li><p>Example Reservation: <ul><li>Restrictions: Can be reserved for 30 minutes min, 1 hour max, starting on the 0,20,40 hour for 5 minutes intervals.</li><li>Acceptable: Starts at 10:20 AM for a duration of 45 minutes.</li><li>Unacceptable: Starts at 10:15 AM for a duration of 45 minutes</li></ul></p></li>';
                 echo '<li><p>Existing reservations for the items can be seen in a list, monthly, and daily view.</p></li>';
                 echo '<li><p>For more information about your reservation, click on the date of your reservation while in list view.</p></li>';
-                echo '<li><p>Mouse over a reserved cell in the daily calendar view to view which user reserved the equipment.</p></li>';
+                echo '<li><p>Rest mouse over a reserved cell in the daily calendar view to view which user reserved the equipment.</p></li>';
                 echo '<li><p>To see the reservations in a daily view, click on a day in the calendar.</p></li>';
                 echo '<li><p>If your reservation does not show up immediately, please refresh the page.</p></li>';
                 echo '</ol>';
