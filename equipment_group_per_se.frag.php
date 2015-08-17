@@ -57,7 +57,7 @@
                     <label class="control-label" for="referenceLink">Reference Link</label>
 
                     <div class="controls">
-                        <input type = "url" id="referenceLink" class="input-large" name="referenceLink" placeholder="Reference link"><?php echo $Requested_EqGroup->reference_link; ?></textarea>
+                        <input type = "url" id="referenceLink" class="input-large" name="referenceLink" placeholder="ex: http://www.williams.edu" maxlength="200"/>
                     </div>
                 </div>
 				<div class="control-group">

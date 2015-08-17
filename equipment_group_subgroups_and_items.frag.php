@@ -45,7 +45,12 @@
 				echo "<a id=\"btn-edit-subgroup-id-" . $key->eq_subgroup_id . "\" href=\"#modalSubgroup\" data-toggle=\"modal\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-ismultiselect=\"" . $key->flag_is_multi_select . "\" data-for-subgroup-name=\"" . $key->name . "\" data-for-subgroup-descr=\"" . $key->descr . "\" data-for-subgroup-id=\"" . $key->reference_link . "\" class=\"manager-action hide btn btn-mini btn-primary eq-edit-subgroup\" title=\"Edit\"><i class=\"icon-pencil icon-white\"></i> </a> ";
 				# button: delete subgroup
 				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
-				echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr ." (<a href = \"$key->reference_link\">".$key->reference_link."</a>)</span>\n";
+                echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr ."";
+                if($key->reference_link){
+                    echo " (<a href = \"$key->reference_link\">".$key->reference_link."</a>)</span>\n";
+                }else{
+                    echo "</span>\n";
+                }
 				echo "<li class=\"manager-action hide\">";
 				echo "<span class=\"noItemsExist\"><em>No items exist.</em><br /></span>";
 				# button: add item
@@ -62,8 +67,12 @@
 				# button: delete subgroup
 				echo "<a class=\"manager-action hide btn btn-mini btn-danger eq-delete-subgroup\" data-for-subgroup-id=\"" . $key->eq_subgroup_id . "\" data-for-subgroup-name=\"" . $key->name . "\" title=\"Delete\"><i class=\"icon-trash icon-white\"></i> </a> ";
 			}
-			echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . " (<a href = \"$key->reference_link\">".$key->reference_link."</a>)</span>\n";
-
+            echo "<span id=\"subgroupid-" . $key->eq_subgroup_id . "\" data-for-subgroup-order=\"" . $key->ordering . "\"><strong>" . $key->name . ": </strong>" . $key->descr . "";
+            if($key->reference_link){
+                echo " (<a href = \"$key->reference_link\">".$key->reference_link."</a>)</span>\n";
+            }else{
+                echo "</span>\n";
+            }
 
 			if ($key->flag_is_multi_select == 0) {
 				# Make easy to un-check a subgroup's items
@@ -91,7 +100,12 @@
 								# checkbox: multiple select
 								echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"subgroup-" . $key->eq_subgroup_id . "-" . $item->eq_item_id . "\" value=\"" . $item->eq_item_id . "\"  class=\"reservationForm hide\" /> ";
 							}
-							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . " (<a href =\"$item->reference_link\">".$item->reference_link."</a>)</span>\n";
+							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . "";
+                            if($item->reference_link){
+                                echo " (<a href =\"$item->reference_link\">".$item->reference_link."</a>)</span>\n";
+                            }else{
+                                echo "</span>\n";
+                            }
                             echo "<span id=\"itemImageSpanFor" . $item->eq_item_id . "\">";
                             if ($item->image_file_name && ! $item->flag_image_to_be_uploaded) {
                                 echo "<br/><img src=\"item_image/".$item->image_file_name."\" id=\"itemImageFor" . $item->eq_item_id . "\" class=\"item-image\"  data-for-item-id=\"" . $item->eq_item_id . "\" />";
@@ -454,11 +468,11 @@
                 <label class="control-label" for="ajaxSubgroupReference">Reference Link</label>
 
                 <div class="controls">
-                    <input type="url" id="ajaxSubgroupReference" class="input-xlarge" name="ajaxSubgroupReference" value="" placeholder="Reference Link" maxlength="200" />
+                    <input type="url" id="ajaxSubgroupReference" class="input-xlarge" name="ajaxSubgroupReference" value="" placeholder="ex: http://www.williams.edu" maxlength="200" />
                 </div>
             </div>
 			<div class="control-group">
-				<label class="control-label" for="ajaxSubgroupIsMultiSelect">Allow one or many items in this subgroup to be selected</label>
+				<label class="control-label" for="ajaxSubgroupIsMultiSelect">Allow one3 or many items in this subgroup to be selected</label>
 
 				<div class="controls">
 					<input type="radio" id="ajaxSubgroupSingle" name="ajaxSubgroupIsMultiSelect" value="0" /> Single Select (radio buttons)<br />
@@ -522,7 +536,7 @@
                 <label class="control-label" for="ajaxItemReference">Reference Link</label>
 
                 <div class="controls">
-                    <input type="url" id="ajaxItemReference" class="input-xlarge" name="ajaxItemReference" value="" placeholder="Reference Link" maxlength="200" />
+                    <input type="url" id="ajaxItemReference" class="input-xlarge" name="ajaxItemReference" value="" placeholder="ex: http://www.williams.edu" maxlength="200" />
                 </div>
             </div>
             <div class="control-group">
