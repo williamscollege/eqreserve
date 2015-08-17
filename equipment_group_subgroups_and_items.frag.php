@@ -472,7 +472,7 @@
                 </div>
             </div>
 			<div class="control-group">
-				<label class="control-label" for="ajaxSubgroupIsMultiSelect">Allow one3 or many items in this subgroup to be selected</label>
+				<label class="control-label" for="ajaxSubgroupIsMultiSelect">Allow one or many items in this subgroup to be selected</label>
 
 				<div class="controls">
 					<input type="radio" id="ajaxSubgroupSingle" name="ajaxSubgroupIsMultiSelect" value="0" /> Single Select (radio buttons)<br />
