@@ -1,8 +1,9 @@
 Monthly Calendar
 
 The monthly calendar displays the equipment reservations in a calendar format.
-Allows user to navigate from month to month to see reservations.
-Displays reservations for each in time order.
+Allows user to navigate from month to month (and year to year) to see reservations.
+Displays reservations on each day in time order in time and then item format.
+Only displays first three reservations if more than three reservations for that day.
 Can see a daily display if any day is clicked.
 
 ========================================================================================================================

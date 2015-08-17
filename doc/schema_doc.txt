@@ -3,6 +3,7 @@ tables:
 eq_groups - top-level organizational unit; permisions/roles are managed with respect to eq groups
     name
     descr
+    reference link
     start_minute - comma separated list of minutes of the hour on which a time block may be created (e.g. 0,30)
     min_duration_minutes - smallest allowed span between time block start and end
     max_duration_minutes - largest allowed span between time block start and end
@@ -12,6 +13,7 @@ eq_groups - top-level organizational unit; permisions/roles are managed with res
 eq_subgroups
     name
     descr
+    reference link
     ordering
     eq_group_id
     flag_delete
@@ -19,6 +21,7 @@ eq_subgroups
 eq_items
     name
     descr
+    reference link
     ordering
     eq_subgroup_id
     flag_delete
