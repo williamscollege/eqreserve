@@ -100,7 +100,7 @@
 								# checkbox: multiple select
 								echo "<input type=\"checkbox\" id=\"item-" . $item->eq_item_id . "\" name=\"subgroup-" . $key->eq_subgroup_id . "-" . $item->eq_item_id . "\" value=\"" . $item->eq_item_id . "\"  class=\"reservationForm hide\" /> ";
 							}
-							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . ": </strong>" . $item->descr . "";
+							echo "<span id=\"itemid-" . $item->eq_item_id . "\"><strong>" . $item->name . " </strong>" . $item->descr . "";
                             if($item->reference_link){
                                 echo " (<a href =\"$item->reference_link\">".$item->reference_link."</a>)</span>\n";
                             }else{
@@ -110,7 +110,7 @@
                             if ($item->image_file_name && ! $item->flag_image_to_be_uploaded) {
                                 echo "<br/><img src=\"item_image/".$item->image_file_name."\" id=\"itemImageFor" . $item->eq_item_id . "\" class=\"item-image\"  data-for-item-id=\"" . $item->eq_item_id . "\" />";
                             } else {
-                                echo "<i>[no image available]</i>";
+                                //echo "<i>[no image available]</i>";
                             }
                             echo "</span>";
 						?>
