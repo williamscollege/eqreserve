@@ -24,5 +24,5 @@ CREATE TABLE IF NOT EXISTS `dblinktest` (
     `dblinktest_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `charfield` VARCHAR(255) NULL,
     `intfield` INT NOT NULL,
-    `flagfield` BIT(1) NOT NULL DEFAULT 0
+    `flagfield` INT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='used for testing based DB-link class';
