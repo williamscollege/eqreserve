@@ -130,6 +130,33 @@ ul.subgroup-ul {
     margin-left: 25px;
 }
 
+#btnSubmitEditGroup {
+    font-size: 36px;
+    line-height: 36px;
+    color: #1b571b;
+    background-image: linear-gradient(to bottom,#82e482,#71c371);
+    background-repeat: repeat-x;
+    padding: 4px 18px;
+}
+
+
+#btnSubmitEditGroup:hover,
+#btnSubmitEditGroup:focus {
+  color: #333333;
+  text-decoration: none;
+  background-position: 0;
+  -webkit-transition: background-position 0 linear;
+     -moz-transition: background-position 0 linear;
+       -o-transition: background-position 0 linear;
+          transition: background-position 0 linear;
+}
+
+
+#btnCancelEditGroup {
+    font-size: 36px;
+    line-height: 36px;
+}
+
 /*-------------------------
 transient alert*/
 .transient_alert

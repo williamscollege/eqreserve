@@ -19,7 +19,7 @@
 	<?php
 	}
 ?>
-<legend class="pull-left row-fluid">Reserve Equipment
+<legend class="pull-left row-fluid">Equipment
 	<a href="#" id="toggleReserveEquipment" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Reserve Equipment</a></legend>
 
 <!--show any conflicts as list-->
@@ -169,7 +169,7 @@
                 //only shows from the duration array
 
                 $full_day = false;
-                $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
+                $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "10H", "12H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
                 foreach($durationArray as $dur){
                     if(util_durToInt($dur)>=$Requested_EqGroup->min_duration_minutes && util_durToInt($dur)<=$Requested_EqGroup->max_duration_minutes){
                         //checks that the duration within chunk minutes

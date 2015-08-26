@@ -1,4 +1,4 @@
-<div class="class=" form-horizontal">
+<div id="existingReservationsContainer" class="form-horizontal">
 
 <legend class="pull-left row-fluid">Existing Reservations
     <span id = "reservations_view">

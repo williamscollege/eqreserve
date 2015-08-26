@@ -89,81 +89,89 @@ $(document).ready(function () {
 
 	// Toggle Equipment Group Settings (text or input fields)
 	$("#toggleGroupSettings").click(function () {
-		// toggle form or plain-text
-		$("#managerView, #managerEdit, .view-control").toggleClass("hide");
-		// toggle button label
-		if ($("#managerView").hasClass('hide')) {
-			$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View Equipment Group');
-			// hide the other form
-			$("#btnReservationCancel").click();
-			// show special manager actions
-			$(".manager-action").removeClass("hide");
-            $(".subgroup-ul").removeClass("hide");
+	    // toggle form or plain-text
+	    $("#managerView, #managerEdit, .view-control").toggleClass("hide");
+	    // toggle button label
+	    if ($("#managerView").hasClass('hide')) {
+		$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View Equipment Group');
 
-            //list with delete buttons
-            $('.schedule').removeClass('hide');
-            $(".editing-control").removeClass("hide");
-            $('.item-listing').removeClass('hide');
+		// hide the other form
+		$("#btnReservationCancel").click();
 
-            //buttons
-            $('.show-this-month').addClass('hide');
-            $('.show-this-year').addClass('hide');
-            $('.show-all').addClass('hide');
-            $(".no-reserv-month").addClass('hide');
-            $(".no-reserv-year").addClass('hide');
+		// show special manager actions
+		$(".manager-action").removeClass("hide");
+		$(".subgroup-ul").removeClass("hide");
 
-            //calendar/list
-            $('.calendar').addClass('hide');
-            $('.calendar_day').addClass('hide');
-            $(".show_reservation_list").addClass('hide');
-            $(".show_reservation_calendar").addClass('hide');
-        }
-		else {
-			$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
-			// hide special manager actions
-			$(".manager-action").addClass("hide");
-            $(".subgroup-ul").addClass("hide");
-            $(".subgroup-ul").has("li.item-in-a-subgroup").removeClass("hide");
+		//list with delete buttons
+		$('.schedule').removeClass('hide');
+		$(".editing-control").removeClass("hide");
+		$('.item-listing').removeClass('hide');
 
-            if($("#item").hasClass("item-listing")){
-                $(".editing-control").addClass("hide");
-                $('.show-this-month').removeClass('hide');
-                $('.show-this-year').removeClass('hide');
-                $('.show-all').addClass('hide');
-            }else{
-                $(".none-at-all").removeClass('hide');
-                $(".no-reserv-month").addClass('hide');
-                $(".no-reserv-year").addClass('hide');
-                $('.show-this-month').addClass('hide');
-                $('.show-this-year').addClass('hide');
-                $('.show-all').addClass('hide');
+		//buttons
+		$('.show-this-month').addClass('hide');
+		$('.show-this-year').addClass('hide');
+		$('.show-all').addClass('hide');
+		$(".no-reserv-month").addClass('hide');
+		$(".no-reserv-year").addClass('hide');
+		$("#toggleReserveEquipment").addClass('hide');
+		
+		
+		//calendar/list
+		$('#existingReservationsContainer').addClass('hide');
+		$('.calendar').addClass('hide');
+		$('.calendar_day').addClass('hide');
+		$(".show_reservation_list").addClass('hide');
+		$(".show_reservation_calendar").addClass('hide');
             }
-            $(".show_reservation_list").removeClass('hide');
-            $(".show_reservation_calendar").removeClass('hide');
-		}
-	});
+	    else {
+		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
+		// hide special manager actions
+		$(".manager-action").addClass("hide");
+		$(".subgroup-ul").addClass("hide");
+		$(".subgroup-ul").has("li.item-in-a-subgroup").removeClass("hide");
 
+		$("#toggleReserveEquipment").removeClass('hide');
+		
+		if($("#item").hasClass("item-listing")){
+                    $(".editing-control").addClass("hide");
+                    $('.show-this-month').removeClass('hide');
+                    $('.show-this-year').removeClass('hide');
+                    $('.show-all').addClass('hide');
+		}else{
+                    $(".none-at-all").removeClass('hide');
+                    $(".no-reserv-month").addClass('hide');
+                    $(".no-reserv-year").addClass('hide');
+                    $('.show-this-month').addClass('hide');
+                    $('.show-this-year').addClass('hide');
+                    $('.show-all').addClass('hide');
+		}
+		$('#existingReservationsContainer').removeClass('hide');
+		$(".show_reservation_list").removeClass('hide');
+		$(".show_reservation_calendar").removeClass('hide');
+	    }
+	});
+    
 	// Toggle Reserve Equipment (show or hide form fields)
-	$("#toggleReserveEquipment").click(function () {
-		// toggle form or plain-text
-		$(".reservationForm").toggleClass("hide");
-		// toggle button label
-		if ($(".reservationForm").hasClass('hide')) {
-			$("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+    $("#toggleReserveEquipment").click(function () {
+	// toggle form or plain-text
+	$(".reservationForm").toggleClass("hide");
+	// toggle button label
+	if ($(".reservationForm").hasClass('hide')) {
+	    $("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
             $(".subgroupRadiosControls").addClass("hide");
             $(".subgroupCheckboxesControls").addClass("hide");
-		}
-		else {
-			$("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
-			// hide the other form
-			$("#btnCancelEditGroup").click();
-			// hide special manager actions
-			$(".manager-action").addClass("hide");
+	}
+	else {
+	    $("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
+	    // hide the other form
+	    $("#btnCancelEditGroup").click();
+	    // hide special manager actions
+	    $(".manager-action").addClass("hide");
             $(".subgroupRadiosControls").removeClass("hide");
             $(".subgroupCheckboxesControls").removeClass("hide");
         }
-	});
-
+    });
+    
 	// Make easy to check or un-check a subgroup's items
 	$(".uncheckSubgroupRadios, .uncheckSubgroupCheckboxes").click(function () {
 		$(this).parent().parent('UL').find("input[type='radio'], input[type='checkbox']").prop("checked", false);

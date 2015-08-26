@@ -32,7 +32,8 @@
 		}
 
 		?>
-		<legend class="pull-left row-fluid">Equipment Group
+		<legend class="pull-left row-fluid">
+<?php echo $Requested_EqGroup->name; ?>
 			<a href="#" id="toggleGroupSettings" class="btn btn-medium btn-primary"><i class="icon-white icon-pencil"></i> Edit Equipment Group</a></legend>
 
 		<div id="managerEdit" class="hide">
@@ -64,6 +65,109 @@ if ($Requested_EqGroup->reference_link) {
 ?>/>
                     </div>
                 </div>
+
+
+<!--				<legend>Reservation Rules</legend> -->
+
+				<div class="control-group">
+					<label class="control-label" for="goStartMinute">Restrict start time</label>
+
+					<div class="controls">
+						<?php
+							$defaultStartMinute = [
+								""           => "Select or Edit",
+								"00"         => "hourly (00)",
+								"0,30"       => "half hours (00,30)",
+								"0,15,30,45" => "quarter hours (00,15,30,45)"
+							];
+						?>
+						<select id="goStartMinute" class="span2">
+							<?php
+								foreach ($defaultStartMinute as $key => $val) {
+									echo "<option value=\"$key\">$val</option>\n";
+								}
+							?>
+						</select>
+						<i class="icon-arrow-right"></i>
+						<input type="text" id="startMinute" class="input-medium" name="startMinute" value="<?php echo $Requested_EqGroup->start_minute; ?>" placeholder="Minutes (with commas)" maxlength="200" />
+						Reservations must start on one of these minutes of the hour.
+					</div>
+				</div>
+				<?php
+					$defaultDuration = [
+						""    => "Select or Edit",
+                        5     => "5 minutes",
+						15    => "15 minutes",
+						30    => "30 minutes",
+						45    => "45 minutes",
+						60    => "1 hour",
+						120   => "2 hours",
+						240   => "4 hours",
+						480   => "8 hours",
+						540   => "9 hours",
+						600   => "10 hours",
+						720   => "12 hours",
+						960   => "16 hours",
+						1440  => "24 hours"
+					];
+
+//						2880  => "2 days",
+//						10080 => "1 week",
+//						20160 => "2 weeks",
+//						40320 => "4 weeks",
+//						80640 => "8 weeks"
+
+				?>
+				<div class="control-group">
+					<label class="control-label" for="goMinDurationMinutes">Restrict min duration</label>
+
+					<div class="controls">
+						<select id="goMinDurationMinutes" class="span2">
+							<?php
+								foreach ($defaultDuration as $key => $val) {
+									echo "<option value=\"$key\">$val</option>\n";
+								}
+							?>
+						</select>
+						<i class="icon-arrow-right"></i>
+						<input type="text" id="minDurationMinutes" class="input-mini" name="minDurationMinutes" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
+						The minimum length of time (in minutes) that can be reserved.
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="goMaxDurationMinutes">Restrict max duration</label>
+
+					<div class="controls">
+						<select id="goMaxDurationMinutes" class="span2">
+							<?php
+								foreach ($defaultDuration as $key => $val) {
+									echo "<option value=\"$key\">$val</option>\n";
+								}
+							?>
+						</select>
+						<i class="icon-arrow-right"></i>
+						<input type="text" id="maxDurationMinutes" class="input-mini" name="maxDurationMinutes" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
+						The maximum length of time (in minutes) that can be reserved.
+					</div>
+				</div>
+<!--
+				<div class="control-group">
+					<label class="control-label" for="goDurationIntervalMinutes">Restrict time quanta</label>
+
+					<div class="controls">
+						<select id="goDurationIntervalMinutes" class="span2">
+							<?php
+								foreach ($defaultDuration as $key => $val) {
+									echo "<option value=\"$key\">$val</option>\n";
+								}
+							?>
+						</select>
+						<i class="icon-arrow-right"></i>
+						<input type="text" id="durationIntervalMinutes" class="input-mini" name="durationIntervalMinutes" value="<?php echo $Requested_EqGroup->duration_chunk_minutes; ?>" placeholder="Duration" maxlength="6" />
+						The duration of each reservation (in minutes) must be a multiple of this.
+					</div>
+				</div>
+-->
 
 				<div class="control-group">
 					<label class="control-label" for="groupManagers">Managed by</label>
@@ -106,108 +210,17 @@ if ($Requested_EqGroup->reference_link) {
 					</div>
 				</div>
 
-				<legend>Reservation Rules</legend>
+
+
 
 				<div class="control-group">
-					<label class="control-label" for="goStartMinute">Start time (minutes)</label>
 
-					<div class="controls">
-						<?php
-							$defaultStartMinute = [
-								""           => "Select or Edit",
-								"00"         => "hourly (00)",
-								"0,30"       => "half hours (00,30)",
-								"0,15,30,45" => "quarter hours (00,15,30,45)"
-							];
-						?>
-						<select id="goStartMinute" class="span2">
-							<?php
-								foreach ($defaultStartMinute as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-							?>
-						</select>
-						<i class="icon-arrow-right"></i>
-						<input type="text" id="startMinute" class="input-medium" name="startMinute" value="<?php echo $Requested_EqGroup->start_minute; ?>" placeholder="Minutes (with commas)" maxlength="200" />
-						Reservations must start on one of these minutes of the hour.
-					</div>
-				</div>
-				<?php
-					$defaultDuration = [
-						""    => "Select or Edit",
-                        5     => "5 minutes",
-						15    => "15 minutes",
-						30    => "30 minutes",
-						45    => "45 minutes",
-						60    => "1 hour",
-						120   => "2 hours",
-						240   => "4 hours",
-						480   => "8 hours",
-						960   => "16 hours",
-						1440  => "24 hours",
-						2880  => "2 days",
-						10080 => "1 week",
-						20160 => "2 weeks",
-						40320 => "4 weeks",
-						80640 => "8 weeks"
-					];
-				?>
-				<div class="control-group">
-					<label class="control-label" for="goMinDurationMinutes">Min duration (minutes)</label>
+<!--					<label class="control-label" for="btnSubmitEditGroup"></label> -->
 
-					<div class="controls">
-						<select id="goMinDurationMinutes" class="span2">
-							<?php
-								foreach ($defaultDuration as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-							?>
-						</select>
-						<i class="icon-arrow-right"></i>
-						<input type="text" id="minDurationMinutes" class="input-mini" name="minDurationMinutes" value="<?php echo $Requested_EqGroup->min_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
-						The minimum length of time that can be reserved.
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="goMaxDurationMinutes">Max duration (minutes)</label>
-
-					<div class="controls">
-						<select id="goMaxDurationMinutes" class="span2">
-							<?php
-								foreach ($defaultDuration as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-							?>
-						</select>
-						<i class="icon-arrow-right"></i>
-						<input type="text" id="maxDurationMinutes" class="input-mini" name="maxDurationMinutes" value="<?php echo $Requested_EqGroup->max_duration_minutes; ?>" placeholder="Duration" maxlength="6" />
-						The maximum length of time that can be reserved.
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="goDurationIntervalMinutes">Duration unit (minutes)</label>
-
-					<div class="controls">
-						<select id="goDurationIntervalMinutes" class="span2">
-							<?php
-								foreach ($defaultDuration as $key => $val) {
-									echo "<option value=\"$key\">$val</option>\n";
-								}
-							?>
-						</select>
-						<i class="icon-arrow-right"></i>
-						<input type="text" id="durationIntervalMinutes" class="input-mini" name="durationIntervalMinutes" value="<?php echo $Requested_EqGroup->duration_chunk_minutes; ?>" placeholder="Duration" maxlength="6" />
-						The interval unit duration of time that can be reserved.
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="btnSubmitEditGroup"></label>
-
-					<div class="controls">
+<!-- 					<div class="controls"> -->
 						<button type="submit" id="btnSubmitEditGroup" class="btn btn-success" data-loading-text="Saving...">Save</button>
 						<button type="button" id="btnCancelEditGroup" class="btn btn-link btn-cancel">Cancel</button>
-					</div>
+<!-- 					</div> -->
 				</div>
 			</form>
 		</div>
@@ -240,7 +253,7 @@ if ($Requested_EqGroup->reference_link) {
 	<?php
 	} else {
 		# Show this to ordinary consumers (not-admin, not-manager)
-		echo "<legend class=\"pull-left row-fluid\">Equipment Group</legend>";
+		echo "<legend class=\"pull-left row-fluid\">".$Requested_EqGroup->name."</legend>";
 	}
 
     # start_minute comes as a string (eg: 0,20,40) so convert it to a duration (eg: 20) for the timepicker to use
@@ -256,17 +269,20 @@ if ($Requested_EqGroup->reference_link) {
 
 	# Show this to all authenticated users
 	echo "<div id=\"managerView\" data-show-del-isadmin =\"$USER->flag_is_system_admin\" data-show-del-ismanager=\"$is_group_manager\" data-eid =\"$Requested_EqGroup->eq_group_id\" data-duration-start=\"$start_minute_step\">\n";
-	echo "<strong>Name:</strong> <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
-	echo "<strong>Description:</strong> <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br />\n";
+//	echo "<strong>Name:</strong> <span id=\"print_groupName\">" . $Requested_EqGroup->name . "</span><br />\n";
+//	echo "<strong>Description:</strong> <span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br /><br />\n";
+	echo "<span id=\"print_groupDescription\">" . $Requested_EqGroup->descr . "</span><br /><br />\n";
 	if ($Requested_EqGroup->reference_link) {
-	   echo "<strong>Reference Link:</strong> <span id=\"print_referenceLink\"><a href = " . $Requested_EqGroup->reference_link . ">" . $Requested_EqGroup->reference_link . "</a></span><br />\n";
+	   echo "<strong>Reference:</strong> <span id=\"print_referenceLink\"><a href = " . $Requested_EqGroup->reference_link . ">" . $Requested_EqGroup->reference_link . "</a></span><br /><br/>\n";
 	}
     # convert the minutes into prettier form
     $min = util_minutesToWords($Requested_EqGroup->min_duration_minutes);
     $max = util_minutesToWords($Requested_EqGroup->max_duration_minutes);
     $dur = util_minutesToWords($Requested_EqGroup->duration_chunk_minutes);
+    $dur = substr($dur, 0, -2);
 
-    echo "<strong>Reservation Time Restrictions:</strong> <span id=\"print_reservationTimeRestrictions\">" . "Can be reserved for ". $min . " min, " . $max . " max, starting on the ". $Requested_EqGroup->start_minute . " hour for " . $dur . " intervals." . "</span><br />\n";
+//    echo "<strong>Reservation Restrictions:</strong> <span id=\"print_reservationTimeRestrictions\">" . "Can be reserved for ". $min . " min, " . $max . " max, starting on the ". $Requested_EqGroup->start_minute . " of each hour, with duration adjustable by " . $dur . " increments." . "</span><br /><br/>\n";
+    echo "<strong>Reservation Restrictions:</strong> <span id=\"print_reservationTimeRestrictions\">" . "Can be reserved for ". $min . " min, " . $max . " max, starting on the ". $Requested_EqGroup->start_minute . " of each hour.</span><br /><br/>\n";
 	echo "<strong>Managed by:</strong> <ul id=\"displayListOfManagers\" class=\"inline\">";
 	echo join("\n",
 		array_map(function ($m) {

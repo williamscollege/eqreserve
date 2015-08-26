@@ -19,6 +19,9 @@ tests/TestOfNarrowSuite.php
 item_image/*.jpg
 item_image/*.png
 item_image/*.gif
+item_image/*.JPG
+item_image/*.PNG
+item_image/*.GIF
 
 # =========================
 # Packages
