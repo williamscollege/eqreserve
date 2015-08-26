@@ -97,9 +97,9 @@ function renderMonthHeader($month,$year){
     /* data-next = tells calendar to increase month */
     /* data-monthnum = current month */
     $header = '<tr class = "calendar-row">
-                <td id = "prev_nav" class="nav_elt_month_prev" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
-                <td id = "month_display" class="month-name" data-monthnum ="'.$month.'" data-yearnum = "'.$year.'" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
-                <td id = "next_nav" class="nav_elt_month_next" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
+                <td id = "prev_nav" class="nav_elt_month_prev calendar_header_format" data-yearnum = "'.$year.'" data-prev = "-1" data-monthnum ="'.$month.'">&lt;</td>
+                <td id = "month_display" class="month-name calendar_header_format" data-monthnum ="'.$month.'" data-yearnum = "'.$year.'" colspan="5" style = "text-align: center">'.$month_name.' '.$year.'</td>
+                <td id = "next_nav" class="nav_elt_month_next calendar_header_format" data-yearnum = "'.$year.'" data-next = "1" data-monthnum ="'.$month.'">&gt;</td>
                 </tr>';
     return $header;
 }
@@ -109,9 +109,9 @@ function renderDayHeader($month,$day,$year) {
     $month_name = monthIntToString($month);
     $header = '<table cellpadding="0" cellspacing="0" class="calendar">
             <tr class = "calendar-row">
-            <td id = "daily_prev_nav" class="nav_elt_day_prev" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
-            <td id = "day_display" class="day-name" data-monthnum = "'.$month.'" data-daynum ="'.$day.'" data-yearnum ="'.$year.'" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
-            <td id = "daily_next_nav" class="nav_elt_day_next" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
+            <td id = "daily_prev_nav" class="nav_elt_day_prev calendar_header_format" data-monthnum = "'.$month.'" data-prev-day = "-1" data-daynum ="'.$day.'">&lt;</td>
+            <td id = "day_display" class="day-name calendar_header_format" data-monthnum = "'.$month.'" data-daynum ="'.$day.'" data-yearnum ="'.$year.'" style = "text-align: center">'.$month_name. ' ' . $day.'</td>
+            <td id = "daily_next_nav" class="nav_elt_day_next calendar_header_format" data-monthnum = "'.$month.'" data-next-day = "1" data-daynum ="'.$day.'">&gt;</td>
             </tr></table>';
     return $header;
 }
@@ -127,7 +127,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
     foreach ($items as $item) {
         //inserts another row of times if there are too many items to see at the same time
         if ($i > 8) {
-            $rows .= '<td class="calendar-day-head">' . implode('</td><td class="calendar-day-head">', $headings) . '</td></tr>';
+            $rows .= '<td class="calendar-day-head calendar-day-time-head calendar_header_format">' . implode('</td><td class="calendar-day-head calendar-day-time-head calendar_header_format">', $headings) . '</td></tr>';
             $i = $i - 8;
         }
         $i++;
@@ -228,7 +228,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                     }
 
                     ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration and the user who made the reservation
-                    $starts[timetoInt($sched_tb_round)] = array(durationToInt($duration), $sched->reservations[0]->user);
+                    $starts[timetoInt($sched_tb_round)] = array(durationToInt($duration), $sched->reservations[0]->user,$sched);
 
                 } elseif (strtotime(substr($start_tb, 0, 10)) < strtotime($year . '-' . $month . '-' . $day) && strtotime($year . '-' . $month . '-' . $day) < strtotime(substr($end_tb, 0, 10))) {
                     $sched_tb_round = '00:00:00';
@@ -236,7 +236,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                     $end_percent[timetoInt($sched_tb_round)] = 100;
 
                     ## finds the start box based upon the start time given (rounded or unrounded) and relates it to the duration and the user who made the reservation
-                    $starts[timetoInt($sched_tb_round)] = array(durationToInt($sched->timeblock_duration),$sched->reservations[0]->user);
+                    $starts[timetoInt($sched_tb_round)] = array(durationToInt($sched->timeblock_duration),$sched->reservations[0]->user,$sched);
                 }
             }
         }
@@ -258,6 +258,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
 
                 //user who made the reservation
                 $user = $starts[$x][1];
+                $sched = $starts[$x][2];
                 //store for later use
                 $userRes = $user;
 
@@ -268,10 +269,15 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                 $start_cell_perc = round($start_percent[$x] / 5) * 5;
                 $ender = 100 - $start_cell_perc;
 
+		// CSW TODO- branch on sched type (is mgt?) to use time-slot-in-use-mgt vs plain time-slot-in-use
+		// CSW TODO- add mgt info to title attrib and label text
+
                 ## If the start percent is 100 (or the reservation starts on a quarter marker) then just fill in the box
                 ## Else have to fill in according to the percentages
                 if ($start_percent[$x] == 100) {
-                    $rows .= '<td class="calendar-time" style="background:#800080" title="' . $user->fname . " " . $user->lname . '"></td>';
+                    $rows .= '<td class="calendar-time time-slot-in-use" title="' . $user->fname . " " . $user->lname . '">';
+                    $rows .= '<div class="slot-use-label"><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $user->fname . "&nbsp;" . $user->lname . '</a></div>';
+                    $rows .= '</td>';
                 } else {
                     $rows .= '<td class="calendar-time"
                         style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
@@ -279,7 +285,9 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                         background: -o-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
                         background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
                         background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"
-                        title="' . $user->fname . " " . $user->lname . '"></td>';
+                        title="' . $user->fname . " " . $user->lname . '">';
+                    $rows .= '<div class="slot-use-label"><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $user->fname . "&nbsp;" . $user->lname . '</a></div>';
+		    $rows .= '</td>';
                 }
 
                 ## If we have found the end box then...
@@ -304,7 +312,7 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
 
                 ## If we're in between start and end, then continue coloring
             } else if ($x < $endTime) {
-                $rows .= '<td class="calendar-time" style="background:#800080" title="' . $userRes->fname . " " . $userRes->lname . '"></td>';
+                $rows .= '<td class="calendar-time time-slot-in-use" title="' . $userRes->fname . " " . $userRes->lname . '"></td>';
 
                 ## If we have not yet found an item reservation for this time then leave the cell blank
             } else {
@@ -335,14 +343,36 @@ function renderCalendarCells($month,$year,$schedule)
         $days_in_this_week++;
     endfor;
 
+    $current_year = date('Y');
+    $current_month = date('m');
+    $current_day = date('d');
+
+//    echo "|||$current_year - $current_month - $current_day|||";
+
     for($list_day = 1; $list_day <= $days_in_month; $list_day++):
         if(strlen($list_day)<2){
             $list_day = '0'.$list_day;
         }
 
-        $cells .='<td id = "day_lists" class="calendar-day" data-monthnum = "'.$month.'" data-daynum = "'.$list_day.'">';
+	$cell_classes = "calendar-day";
+	if ($year < $current_year)
+	{
+	   $cell_classes .= " day-in-past";
+	} elseif ($month < $current_month)
+	{
+	   $cell_classes .= " day-in-past";
+	} elseif ($list_day < $current_day)
+	{
+	   $cell_classes .= " day-in-past";
+	} elseif (($year == $current_year) && ($month == $current_month) && ($list_day == $current_day))
+	{
+	   $cell_classes .= " day-today";
+	}
+	
+	$cell_title = date('l, F j Y', mktime(10, 10, 10, $month, $list_day, $year));
+        $cells .='<td id = "day_lists" class="'.$cell_classes.'" title="'.$cell_title.'" data-monthnum = "'.$month.'" data-daynum = "'.$list_day.'">';
         /* add in the day number */
-        $cells.= '<div class="day-number">'.$list_day.'</div>';
+        $cells.= '<div class="day-number calendar_header_format">'.$list_day.'</div>';
 
         $cells .= '<div class = "all-items">';
         /* add in items here */
@@ -424,7 +454,7 @@ function draw_MonthlyCalendar($month,$year,$all_schedules) {
 
     /* draw table */
     $headings = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
-    $calendar_days = '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+    $calendar_days = '<tr class="calendar-row"><td class="calendar-day-head calendar_header_format">'.implode('</td><td class="calendar-day-head calendar_header_format">',$headings).'</td></tr>';
 
     /* make the cells with days and items */
     $calendar_cells = renderCalendarCells($month, $year, $all_schedules);
@@ -456,14 +486,17 @@ function draw_SingleDayCalendar($month,$day,$year,$items,$day_sched) {
         '1:30 PM', '1:45 PM', '2:00 PM', '2:15 PM', '2:30 PM', '2:45 PM', '3:00 PM', '3:15 PM', '3:30 PM', '3:45 PM', '4:00 PM', '4:15 PM', '4:30 PM', '4:45 PM',
         '5:00 PM', '5:15 PM', '5:30 PM', '5:45 PM', '6:00 PM', '6:15 PM', '6:30 PM', '6:45 PM', '7:00 PM', '7:15 PM', '7:30 PM', '7:45 PM', '8:00 PM', '8:15 PM',
         '8:30 PM', '8:45 PM', '9:00 PM', '9:15 PM', '9:30 PM', '9:45 PM', '10:00 PM', '10:15 PM', '10:30 PM', '10:45 PM', '11:00 PM', '11:15 PM', '11:30 PM', '11:45 PM');
-    $calendar .= '<td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+
+	$headings = array_map(function($e){return substr($e,0,-1);},$headings);
+
+    $calendar .= '<td class="calendar-day-head calendar-day-time-head calendar_header_format">'.implode('</td><td class="calendar-day-head calendar-day-time-head calendar_header_format">',$headings).'</td></tr>';
 
     /* draw the calendar for all pieces of equipment in each subgroup */
     $calendar .= renderItemRows($items,$headings,$day_sched,$month,$day,$year);
 
     $calendar .= '</table></div>';
 
-    $calendar .= '<button class="show_month_button">Go Back To Monthly View</button>';
+//    $calendar .= '<button class="show_month_button">Go Back To Monthly View</button>';
 
     return $header.$calendar;
 }
