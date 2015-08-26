@@ -5,6 +5,8 @@ cfg.php
 config.php
 *.cfg.php
 *.config.php
+institution.cfg.php.live
+institution.cfg.php.dev
 *.bak
 *~
 _archives
