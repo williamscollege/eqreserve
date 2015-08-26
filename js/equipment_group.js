@@ -87,71 +87,51 @@ $(document).ready(function () {
 		$('.show-all').addClass('hide');
 	});
 
+
+    // this function hides/shows different parts of the page and
+    // alters some button text for either editing or viewing
+    function setPageDisplayMode(forEditing) {
+	if (forEditing) {
+	    // set toggle button label
+	    $("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View Equipment Group');
+
+	    // hide the reservations form
+	    cancelReservationsForm();
+
+	    // reveal special manager actions
+	    $(".manager-action").removeClass("hide");
+
+	    // disable ability to make reservations (can't do that while editing)
+	    $("#toggleReserveEquipment").addClass('hide');
+
+	    // hide existing reservations
+	    $('#existingReservationsContainer').addClass('hide');
+
+	} else  // for viewing
+	{
+	    // set toggle button label
+	    $("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
+
+	    // hide special manager actions
+	    $(".manager-action").addClass("hide");
+
+	    // enable ability to make reservations (can't do that while editing)
+	    $("#toggleReserveEquipment").removeClass('hide');
+
+	    // show existing reservations
+	    $('#existingReservationsContainer').removeClass('hide');
+	}
+    }
+
+
 	// Toggle Equipment Group Settings (text or input fields)
 	$("#toggleGroupSettings").click(function () {
 	    // toggle form or plain-text
 	    $("#managerView, #managerEdit, .view-control").toggleClass("hide");
-	    // toggle button label
-	    if ($("#managerView").hasClass('hide')) {
-		$("#toggleGroupSettings").html('<i class="icon-white icon-ok"></i> View Equipment Group');
-
-		// hide the other form
-		$("#btnReservationCancel").click();
-
-		// show special manager actions
-		$(".manager-action").removeClass("hide");
-		$(".subgroup-ul").removeClass("hide");
-
-		//list with delete buttons
-		$('.schedule').removeClass('hide');
-		$(".editing-control").removeClass("hide");
-		$('.item-listing').removeClass('hide');
-
-		//buttons
-		$('.show-this-month').addClass('hide');
-		$('.show-this-year').addClass('hide');
-		$('.show-all').addClass('hide');
-		$(".no-reserv-month").addClass('hide');
-		$(".no-reserv-year").addClass('hide');
-		$("#toggleReserveEquipment").addClass('hide');
-		
-		
-		//calendar/list
-		$('#existingReservationsContainer').addClass('hide');
-		$('.calendar').addClass('hide');
-		$('.calendar_day').addClass('hide');
-		$(".show_reservation_list").addClass('hide');
-		$(".show_reservation_calendar").addClass('hide');
-            }
-	    else {
-		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
-		// hide special manager actions
-		$(".manager-action").addClass("hide");
-		$(".subgroup-ul").addClass("hide");
-		$(".subgroup-ul").has("li.item-in-a-subgroup").removeClass("hide");
-
-		$("#toggleReserveEquipment").removeClass('hide');
-		
-		if($("#item").hasClass("item-listing")){
-                    $(".editing-control").addClass("hide");
-                    $('.show-this-month').removeClass('hide');
-                    $('.show-this-year').removeClass('hide');
-                    $('.show-all').addClass('hide');
-		}else{
-                    $(".none-at-all").removeClass('hide');
-                    $(".no-reserv-month").addClass('hide');
-                    $(".no-reserv-year").addClass('hide');
-                    $('.show-this-month').addClass('hide');
-                    $('.show-this-year').addClass('hide');
-                    $('.show-all').addClass('hide');
-		}
-		$('#existingReservationsContainer').removeClass('hide');
-		$(".show_reservation_list").removeClass('hide');
-		$(".show_reservation_calendar").removeClass('hide');
-	    }
+	    setPageDisplayMode($("#managerView").hasClass('hide'));
 	});
     
-	// Toggle Reserve Equipment (show or hide form fields)
+    // Toggle Reserve Equipment (show or hide form fields)
     $("#toggleReserveEquipment").click(function () {
 	// toggle form or plain-text
 	$(".reservationForm").toggleClass("hide");
@@ -163,8 +143,7 @@ $(document).ready(function () {
 	}
 	else {
 	    $("#toggleReserveEquipment").html('<i class="icon-white icon-ok"></i> View Equipment');
-	    // hide the other form
-	    $("#btnCancelEditGroup").click();
+
 	    // hide special manager actions
 	    $(".manager-action").addClass("hide");
             $(".subgroupRadiosControls").removeClass("hide");
@@ -1043,36 +1022,35 @@ $(document).ready(function () {
 		$(".control-group").removeClass('success').removeClass('error');
 	}
 
-	$("#btnCancelEditGroup").click(function () {
-		cleanUpForm("frmAjaxGroup");
-		// hide form fields
-		$("#managerEdit").addClass("hide");
-		$("#managerView").removeClass("hide");
-		$("#toggleGroupSettings").html('<i class="icon-white icon-pencil"></i> Edit Equipment Group');
-		// hide special manager actions
-		$(".manager-action").addClass("hide");
-		// reset the submit button (avoid disabled state)
-		$("#btnSubmitEditGroup").button('reset');
+    $("#btnCancelEditGroup").click(function () {
+	cleanUpForm("frmAjaxGroup");
 
-        //gets rid of the editing controls if shown
-        if($("#item").hasClass("item-listing")){
-            $(".editing-control").addClass("hide");
-            $('.show-this-month').removeClass('hide');
-            $('.show-this-year').removeClass('hide');
-            $('.show-all').addClass('hide');
-        }else{
-            $(".none-at-all").removeClass('hide');
-            $(".no-reserv-month").addClass('hide');
-            $(".no-reserv-year").addClass('hide');
-            $('.show-this-month').addClass('hide');
-            $('.show-this-year').addClass('hide');
-            $('.show-all').addClass('hide');
+	// reset the submit button (avoid disabled state)
+	$("#btnSubmitEditGroup").button('reset');
+	
+	$("#managerView, #managerEdit, .view-control").toggleClass("hide");	
+
+	setPageDisplayMode(false);	
+    });
+
+    function cancelReservationsForm() {
+	cleanUpForm("frmAjaxScheduleReservations");
+        // hide form fields, restore button label
+        $(".reservationForm").addClass("hide");
+        $(".subgroupRadiosControls").addClass("hide");
+        $(".subgroupCheckboxesControls").addClass("hide");
+        $("#toggleReserveEquipment").html('<i class="icon-white icon-pencil"></i> Reserve Equipment');
+        // strip out stored conflicts (if any exist)
+        $("#show_any_conflicts").text("").hide();
+        // any changes to form should hide the override button (if it exists)
+        if (!$("#btnReservationOverrideConflicts").hasClass("hide")) {
+            $("#btnReservationOverrideConflicts").addClass("hide");
         }
-        $(".show_reservation_list").removeClass('hide');
-        $(".show_reservation_calendar").removeClass('hide');
-	});
+    }
 
 	$("#btnReservationCancel").click(function () {
+	    cancelReservationsForm();
+/*
 		cleanUpForm("frmAjaxScheduleReservations");
 		// hide form fields, restore button label
 		$(".reservationForm").addClass("hide");
@@ -1085,6 +1063,7 @@ $(document).ready(function () {
 		if (!$("#btnReservationOverrideConflicts").hasClass("hide")) {
 			$("#btnReservationOverrideConflicts").addClass("hide");
 		}
+*/
 	});
 
 	$('#btnAjaxItemCancel').click(function () {
