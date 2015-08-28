@@ -10,7 +10,7 @@
     define('FINGERPRINT_SALT', 'yoursaltstringhere');
 
 	# application folder path
-	define('APP_FOLDER',	   'http://localhost/eqreserve');
+	define('APP_FOLDER',	   'http://thehostname.edu/eqreserve');
 
 	# database connection
 	define('DB_SERVER',	'yourdbserver'); // e.g. mysql.college.edu
