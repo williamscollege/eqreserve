@@ -8,10 +8,10 @@
 	#------------------------------------------------#
 	$strAction = htmlentities((isset($_REQUEST["ajaxVal_Action"])) ? util_quoteSmart($_REQUEST["ajaxVal_Action"]) : 0);
 	$intGroupID = htmlentities((isset($_REQUEST["ajaxVal_GroupID"])) ? $_REQUEST["ajaxVal_GroupID"] : FALSE);
-	$strName = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : FALSE);
-	$strDescription = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : FALSE);
-	$strReferenceLink = htmlentities((isset($_REQUEST["ajaxVal_Reference"]))? util_quoteSmart($_REQUEST["ajaxVal_Reference"]):FALSE);
-    $strStartMinute = htmlentities((isset($_REQUEST["ajaxVal_StartMinute"])) ? util_quoteSmart($_REQUEST["ajaxVal_StartMinute"]) : FALSE);
+	$strName = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : '');
+	$strDescription = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : '');
+	$strReferenceLink = htmlentities((isset($_REQUEST["ajaxVal_Reference"]))? util_quoteSmart($_REQUEST["ajaxVal_Reference"]):'');
+        $strStartMinute = htmlentities((isset($_REQUEST["ajaxVal_StartMinute"])) ? util_quoteSmart($_REQUEST["ajaxVal_StartMinute"]) : FALSE);
 	$intMinDurationMinute = htmlentities((isset($_REQUEST["ajaxVal_MinDurationMinute"])) ? $_REQUEST["ajaxVal_MinDurationMinute"] : FALSE);
 	$intMaxDurationMinute = htmlentities((isset($_REQUEST["ajaxVal_MaxDurationMinute"])) ? $_REQUEST["ajaxVal_MaxDurationMinute"] : FALSE);
 	$intDurationIntervalMinutes = htmlentities((isset($_REQUEST["ajaxVal_DurationIntervalMinutes"])) ? $_REQUEST["ajaxVal_DurationIntervalMinutes"] : FALSE);
@@ -38,7 +38,7 @@
 		}
 		$eg->name  = $strName;
 		$eg->descr = $strDescription;
-        $eg->reference_link = $strReferenceLink;
+                $eg->reference_link = $strReferenceLink;
 		$eg->updateDb();
 
 		$output = EqGroup::getOneFromDb(['name' => $strName], $DB);
@@ -68,14 +68,15 @@
 		}
 
 		$doSave = FALSE;
-		if (($strName) && ($strName != $eg->name)) {
+		if ($strName != $eg->name) {
 			$eg->name = $strName;
 			$doSave   = TRUE;
 		}
-        if (($strDescription) && ($strDescription != $eg->descr)) {
+        if ($strDescription != $eg->descr) {
             $eg->descr = $strDescription;
             $doSave    = TRUE;
-        }if (($strReferenceLink) && ($strReferenceLink != $eg->reference_link)) {
+        }
+        if ($strReferenceLink != $eg->reference_link) {
             $eg->reference_link = $strReferenceLink;
             $doSave    = TRUE;
         }

@@ -332,6 +332,12 @@ $(document).ready(function () {
 
 					if (data.status == 'success') {
 						// nothing more to do
+					    // bit of a hack here, but it works
+					    // ideally we'd be manipulating the DOM to update the relevant elements, but
+					    // with the constraint of the semester starting soon we're going with the ugly
+					    // yet reliable option of a page reload
+					    window.location.reload();
+					    
 					}
 					else {
 						// error message
@@ -371,18 +377,20 @@ $(document).ready(function () {
 		submitHandler: function (form) {
 			// show loading text (button)
 			$("#btnAjaxSubgroupSubmit").button('loading');
-            console.log(form);
-            console.log($('#ajaxItemSubGroup').val());
+//            console.log(form);
+//            console.log($('#ajaxItemSubGroup').val());
 
 			var formName = $("#frmAjaxSubgroup").attr('name');		// get name from the form element
 			var action = $('#' + formName + ' #ajaxSubgroupAction').val();
 			var group_id = $('#' + formName + ' #ajaxGroupID').val();
-			var subgroup_id = $('#ajaxItemSubGroup').val();
+			var subgroup_id = $('#ajaxSubgroupID').val();
 			var subgroup_ordering = $('#' + formName + ' #ajaxSubgroupOrdering').val();
 			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
 			var subgroup_description = $('#' + formName + ' #ajaxSubgroupDescription').val();
             var subgroup_reference = $('#' + formName + ' #ajaxSubgroupReference').val();
             var subgroup_multiselect = $('#' + formName + ' input:radio[name=ajaxSubgroupIsMultiSelect]:checked').val();
+
+//		    console.log('subgroup_id='+subgroup_id);
 
 			$.ajax({
 				type: 'GET',
@@ -394,7 +402,7 @@ $(document).ready(function () {
 					ajaxVal_Order: subgroup_ordering,
 					ajaxVal_Name: subgroup_name,
 					ajaxVal_Description: subgroup_description,
-                    ajaxVal_Reference: subgroup_reference,
+				        ajaxVal_Reference: subgroup_reference,
 					ajaxVal_MultiSelect: subgroup_multiselect
 				},
 				dataType: 'json',
@@ -404,26 +412,32 @@ $(document).ready(function () {
 					$("#btnAjaxSubgroupCancel").click();
 
 					if (data.status == 'success') {
-						// remove error messages
-						$('DIV.alert-error').remove();
-
-						if (data.which_action == 'add-subgroup') {
-							// update element with resultant ajax data
-							$("UL#displayAllSubgroups").append(data.html_output);
+					    // remove error messages
+					    $('DIV.alert-error').remove();
+					    
+					    if (data.which_action == 'add-subgroup') {
+						// update element with resultant ajax data
+						$("UL#displayAllSubgroups").append(data.html_output);
+					    }
+					    else if (data.which_action == 'edit-subgroup') {
+						// update button data attributes
+						$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-name", subgroup_name);
+						$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-descr", subgroup_description);
+						$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-ref", subgroup_reference);
+						$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-ismultiselect", subgroup_multiselect);
+						
+						// update visible info
+						var referenceDisplayString = "";
+						if (subgroup_reference) {
+						    referenceDisplayString = ' (<a href="'+subgroup_reference+'">'+subgroup_reference+'</a>)';
 						}
-						else if (data.which_action == 'edit-subgroup') {
-							// update button data attributes
-							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-name", subgroup_name);
-							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-descr", subgroup_description);
-                            $("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-subgroup-ref", subgroup_reference);
-							$("#btn-edit-subgroup-id-" + subgroup_id).attr("data-for-ismultiselect", subgroup_multiselect);
-							// update visible info
-							$("span#subgroupid-" + subgroup_id).html("<strong>" + subgroup_name + ": </strong>" + subgroup_description);
-						}
+						$("span#subgroupid-" + subgroup_id).html("<strong>" + subgroup_name + ": </strong>" + subgroup_description + referenceDisplayString);
+					    }
 					}
 					else {
 						// error message
-						$("UL#displayAllSubgroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
+						$("UL#displayAllSubgroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> </div>');
+					    console.dir(data);
 					}
 				}
 			});

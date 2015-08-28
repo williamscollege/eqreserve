@@ -16,9 +16,9 @@
 	$intOrder         = htmlentities((isset($_REQUEST["ajaxVal_Order"])) ? $_REQUEST["ajaxVal_Order"] : 0);
 	$strName          = htmlentities((isset($_REQUEST["ajaxVal_Name"])) ? util_quoteSmart($_REQUEST["ajaxVal_Name"]) : 0);
 	$strDescription   = htmlentities((isset($_REQUEST["ajaxVal_Description"])) ? util_quoteSmart($_REQUEST["ajaxVal_Description"]) : 0);
-    $strReference     = htmlentities((isset($_REQUEST["ajaxVal_Reference"])) ? util_quoteSmart($_REQUEST["ajaxVal_Reference"]) : 0);
+        $strReference     = htmlentities((isset($_REQUEST["ajaxVal_Reference"])) ? util_quoteSmart($_REQUEST["ajaxVal_Reference"]) : 0);
 	$bitIsMultiSelect = htmlentities((isset($_REQUEST["ajaxVal_MultiSelect"])) ? util_quoteSmart($_REQUEST["ajaxVal_MultiSelect"]) : 0);
-    $strImageFileName = htmlentities((isset($_REQUEST["ajaxVal_ImageFileName"])) ? util_quoteSmart($_REQUEST["ajaxVal_ImageFileName"]) : 0);
+        $strImageFileName = htmlentities((isset($_REQUEST["ajaxVal_ImageFileName"])) ? util_quoteSmart($_REQUEST["ajaxVal_ImageFileName"]) : 0);
 
 
 
