@@ -367,10 +367,10 @@ function renderCalendarCells($month,$year,$schedule)
 	if ($year < $current_year)
 	{
 	   $cell_classes .= " day-in-past";
-	} elseif ($month < $current_month)
+	} elseif (($year == $current_year) && ($month < $current_month))
 	{
 	   $cell_classes .= " day-in-past";
-	} elseif ($list_day < $current_day)
+	} elseif (($year == $current_year) && ($month == $current_month) && ($list_day < $current_day))
 	{
 	   $cell_classes .= " day-in-past";
 	} elseif (($year == $current_year) && ($month == $current_month) && ($list_day == $current_day))
