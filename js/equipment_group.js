@@ -1361,12 +1361,12 @@ $(document).ready(function () {
                 //day clicked on in the month
                 'day_num': $(this).attr('data-daynum'),
                 'month_num': $(this).attr('data-monthnum'),
-				'year_num': $("#next_nav").attr('data-yearnum'),
+		'year_num': $("#next_nav").attr('data-yearnum'),
                 'eq_group_id': $("#managerView").attr('data-eid')
             }
         })
             .success(function(html){
-                console.log(html);
+                //console.log(html);
                 $(" .calendar").addClass('hide');
 
                 //double call?

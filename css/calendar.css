@@ -95,7 +95,7 @@ td.calendar-day-np {
     margin:-8px -8px 0 0;}
 
 td.calendar-time {
-    height:50px;
+    height:30px;
     border:2px solid;
 }
 
@@ -108,8 +108,8 @@ td.calendar-time {
 }
 
 td.daily-items {
-    margin-top:10px;
-    margin-left:4px;
+    margin-top:5px;
+    margin-left:20px;
     padding: 0 4px;
     position:absolute;
     font-weight:bold;
@@ -124,23 +124,26 @@ td.daily-items {
 }
 
 .time-slot-in-use {
-    background: #777;
+    background: #09f;
 }
 .time-slot-in-use-mgt {
-    background: #977;
+    background: #f95;
 }
 
 .slot-use-label a {
     float: left;
     width: 10px;
     color: white;
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+/*    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;*/
+/*    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black, -2px -2px black, -2px 2px black, 2px -2px black, 2px -2px black; */
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, -1px -1px black, -1px 1px black, 1px -1px black, 1px -1px black;
     margin-left: 4px;
 }
 .slot-use-label a:hover {
     text-decoration: none;
     color: #08c;
-    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+/*    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white; */
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white, -1px -1px white, -1px 1px white, 1px -1px white, 1px -1px white;
 }
 
 /* takes care not to overlap with the day number */
@@ -156,6 +159,19 @@ p.monthly-items{
     width: auto;
     padding-top: 2px;
     border:1px solid #666;    
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+p.monthly-items-mgr {
+    background: #FF9955;
+    /*font-weight:bold;*/
+    font-size: 11px;
+    text-align:center;
+    width: auto;
+    padding-top: 2px;
+    border:3px solid #a66;    
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;

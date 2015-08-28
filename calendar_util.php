@@ -272,21 +272,30 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
 		// CSW TODO- branch on sched type (is mgt?) to use time-slot-in-use-mgt vs plain time-slot-in-use
 		// CSW TODO- add mgt info to title attrib and label text
 
+		$used_cell_class = 'time-slot-in-use';
+		$used_cell_color = '#09f';
+		$label_suffix = '';
+		if ($sched->type == 'manager') {
+		   $used_cell_class = 'time-slot-in-use-mgt';
+		   $used_cell_color = '#f95';
+		   $label_suffix = '&nbsp(mgt&nbsp;reservation)';
+		}
+
                 ## If the start percent is 100 (or the reservation starts on a quarter marker) then just fill in the box
                 ## Else have to fill in according to the percentages
                 if ($start_percent[$x] == 100) {
-                    $rows .= '<td class="calendar-time time-slot-in-use" title="' . $user->fname . " " . $user->lname . '">';
-                    $rows .= '<div class="slot-use-label"><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $user->fname . "&nbsp;" . $user->lname . '</a></div>';
+                    $rows .= '<td class="calendar-time '.$used_cell_class.'" title="' . $user->fname . " " . $user->lname . $label_suffix .'">';
+                    $rows .= '<div class="slot-use-label"><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $user->fname . "&nbsp;" . $user->lname . $label_suffix .'</a></div>';
                     $rows .= '</td>';
                 } else {
                     $rows .= '<td class="calendar-time"
-                        style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
-                        background: -moz-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
-                        background: -o-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
-                        background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);
-                        background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, #800080 ' . $ender . '%);"
-                        title="' . $user->fname . " " . $user->lname . '">';
-                    $rows .= '<div class="slot-use-label"><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $user->fname . "&nbsp;" . $user->lname . '</a></div>';
+                        style="background: -webkit-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, '.$used_cell_color.' ' . $ender . '%);
+                        background: -moz-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, '.$used_cell_color.' ' . $ender . '%);
+                        background: -o-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, '.$used_cell_color.' ' . $ender . '%);
+                        background: -ms-linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, '.$used_cell_color.' ' . $ender . '%);
+                        background: linear-gradient(left, #FFFFFF ' . $start_cell_perc . '%, '.$used_cell_color.' ' . $ender . '%);"
+                        title="' . $user->fname . " " . $user->lname . $label_suffix.'">';
+                    $rows .= '<div class="slot-use-label"><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $user->fname . "&nbsp;" . $user->lname . $label_suffix .'</a></div>';
 		    $rows .= '</td>';
                 }
 
@@ -302,20 +311,20 @@ function renderItemRows($items,$headings,$scheds,$month,$day,$year)
                     $rows .= '<td class="calendar-time"></td>';
                 } else {
                     $rows .= '<td class="calendar-time"
-                        style="background: -webkit-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
-                        background: -moz-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
-                        background: -o-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
-                        background: -ms-linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
-                        background: linear-gradient(left, #800080 ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"
-                        title="' . $userRes->fname . " " . $userRes->lname . '"></td>';
+                        style="background: -webkit-linear-gradient(left, '.$used_cell_color.' ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -moz-linear-gradient(left, '.$used_cell_color.' ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -o-linear-gradient(left, '.$used_cell_color.' ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: -ms-linear-gradient(left, '.$used_cell_color.' ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);
+                        background: linear-gradient(left, '.$used_cell_color.' ' . $end_cell_perc . '%, #FFFFFF ' . $ender . '%);"
+                        title="' . $userRes->fname . " " . $userRes->lname . $label_suffix .'"></td>';
                 }
 
-                ## If we're in between start and end, then continue coloring
             } else if ($x < $endTime) {
-                $rows .= '<td class="calendar-time time-slot-in-use" title="' . $userRes->fname . " " . $userRes->lname . '"></td>';
+                ## If we're in between start and end, then continue coloring
+                $rows .= '<td class="calendar-time '.$used_cell_class.'" title="' . $userRes->fname . " " . $userRes->lname . $label_suffix.'"></td>';
 
-                ## If we have not yet found an item reservation for this time then leave the cell blank
             } else {
+                ## If we have not yet found an item reservation for this time then leave the cell blank
                 $rows .= '<td class="calendar-time"></td>';
             }
         endfor;
@@ -378,6 +387,13 @@ function renderCalendarCells($month,$year,$schedule)
         /* add in items here */
         $num_schedules = 0;
         foreach($schedule as $sched) {
+	    $sched_block_class = 'monthly-items';
+	    $mgr_label = '';
+//	    util_prePrintR($sched); exit; // DEBUG
+	    if ($sched->type == 'manager') {
+	       $sched_block_class = 'monthly-items-mgr';
+	       $mgr_label = '(MGT) ';
+	    }
             foreach ($sched->time_blocks as $tb) {
                 foreach ($sched->reservations as $r) {
                     //Makes sure that schedules that run for days/weeks/years are shown
@@ -386,23 +402,23 @@ function renderCalendarCells($month,$year,$schedule)
                             $num_schedules++;
                             break;
                         } elseif ((strtotime(substr($tb->start_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) && (strtotime(substr($tb->end_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day))) {
-                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringShort() .
+                            $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $mgr_label.$tb->toStringShort() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
                         } elseif (strtotime(substr($tb->start_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) {
-                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringStart() .
+                            $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $mgr_label.$tb->toStringStart() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
                         } elseif (strtotime(substr($tb->end_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) {
-                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $tb->toStringEnd() .
+                            $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $mgr_label.$tb->toStringEnd() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
                         } else {
-                            $cells .= '<p class="monthly-items" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
-                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '"> 12:00 AM-11:59 PM <br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+                            $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+                start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '"> '.$mgr_label.'All Day <br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
                         }
                     }
