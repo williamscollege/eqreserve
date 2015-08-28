@@ -437,7 +437,7 @@ $(document).ready(function () {
 					else {
 						// error message
 						$("UL#displayAllSubgroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> </div>');
-					    console.dir(data);
+					    //console.dir(data);
 					}
 				}
 			});
@@ -473,116 +473,127 @@ $(document).ready(function () {
 //                .closest('.control-group').removeClass('error').addClass('success');
                 .closest('.control-group').removeClass('error');
 		},
-		submitHandler: function (form) {
-			// show loading text (button)
-			$("#btnAjaxItemSubmit").button('loading');
-
-			var formName = $("#frmAjaxItem").attr('name');		// get name from the form element
-			var action = $('#' + formName + ' #ajaxItemAction').val();
-			var subgroup_id = $('#ajaxItemSubGroup').val();
-			var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
-			var item_id = $('#' + formName + ' #ajaxItemID').val();
-			var item_ordering = $('#' + formName + ' #ajaxItemOrdering').val();
-			var item_name = $('#' + formName + ' #ajaxItemName').val();
-			var item_description = $('#' + formName + ' #ajaxItemDescription').val();
-            var item_reference = $('#' + formName + ' #ajaxItemReference').val();
-			var item_multiselect = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
-
-            var item_image_file_name = 'none';
-            if ($('#item-image-preview-area img')[0]) {
-                if ($('#item-image-preview-area img')[0].file) {
-                    item_image_file_name = $('#item-image-preview-area img')[0].file.name;
-                } else {
-                    item_image_file_name = 'nochange';
-                }
-            }
-
-            var ajax_data = {
-                ajaxVal_Action: action,
-				ajaxVal_SubgroupID: subgroup_id,
-                ajaxVal_SubgroupName: subgroup_name,
-                ajaxVal_ItemID: item_id,
-                ajaxVal_Order: item_ordering,
-                ajaxVal_Name: item_name,
-                ajaxVal_Description: item_description,
-                ajaxVal_Reference: item_reference,
-                ajaxVal_MultiSelect: item_multiselect,
-                ajaxVal_ImageFileName: item_image_file_name
-            };
-            console.log('ajax data: ');
-            console.dir(ajax_data);
-
-			$.ajax({
-                url: $("#frmAjaxItem").attr('action'),
-				type: 'GET',
-//				data: {
-//					ajaxVal_Action: action,
-//					ajaxVal_SubgroupID: subgroup_id,
-//					ajaxVal_SubgroupName: subgroup_name,
-//					ajaxVal_ItemID: item_id,
-//					ajaxVal_Order: item_ordering,
-//					ajaxVal_Name: item_name,
-//					ajaxVal_Description: item_description,
-//					ajaxVal_MultiSelect: item_multiselect,
-//                    ajaxVal_ImageFileName: item_image_file_name
-//				},
-                data: ajax_data,
-                dataType: 'json',
-				success: function (data) {
-					// hide and reset form
-					$("#btnAjaxItemCancel").click();
-					$("#btnAjaxSubgroupCancel").click();
-
-					if (data.status == 'success') {
-						// remove error messages
-						$('DIV.alert-error').remove();
-
-						// hide message: 'No items exist.'
-						$("UL#ul-of-subgroup-" + subgroup_id + " span.noItemsExist").addClass("hide");
-
-						if (data.which_action == 'add-item') {
-							// update element with resultant ajax data
-							$("UL#ul-of-subgroup-" + subgroup_id + " li.manager-action").before(data.html_output);
-						}
-						else if (data.which_action == 'edit-item') {
-//
-//                            console.log('edit response data: ');
-//                            console.dir(data);
-//
-							var currSubID = $("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id");
-							if (currSubID != subgroup_id) {
-								$('#ul-of-subgroup-' +subgroup_id+' li').last().before($('#list-of-item-' + item_id));
-							}
-
-							// update button data attributes
-							$("#btn-edit-item-id-" + item_id).attr("data-for-item-name", item_name);
-							$("#btn-edit-item-id-" + item_id).attr("data-for-item-descr", item_description);
-                            $("#btn-edit-item-id-" + item_id).attr("data-for-item-ref", item_reference);
-                            $("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-name", subgroup_name);
-							$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id", subgroup_id);
-
-							// update visible info
-							$("span#itemid-" + item_id).html("<strong>" + item_name + ": </strong>" + item_description);
-                            if (data.has_no_image) {
-                                $("#itemImageSpanFor"+item_id).html('<i>[no image available]</i>');
-                            }
-						}
-//                        console.dir($('#item-image-preview-area img'));
-                        if ($('#item-image-preview-area img')[0]) {
-                            sendFile($('#item-image-preview-area img')[0].file,data.for_item_id);
-                        }
+	    submitHandler: function (form) {
+		// show loading text (button)
+		$("#btnAjaxItemSubmit").button('loading');
+		
+		var formName = $("#frmAjaxItem").attr('name');		// get name from the form element
+		var action = $('#' + formName + ' #ajaxItemAction').val();
+		var subgroup_id = $('#ajaxItemSubGroup').val();
+		var subgroup_name = $('#' + formName + ' #ajaxSubgroupName').val();
+		var item_id = $('#' + formName + ' #ajaxItemID').val();
+		var item_ordering = $('#' + formName + ' #ajaxItemOrdering').val();
+		var item_name = $('#' + formName + ' #ajaxItemName').val();
+		var item_description = $('#' + formName + ' #ajaxItemDescription').val();
+		var item_reference = $('#' + formName + ' #ajaxItemReference').val();
+		var item_multiselect = $('#' + formName + ' #ajaxItemIsMultiSelect').val();
+		
+		var item_image_file_name = 'none';
+		if ($('#item-image-preview-area img')[0]) {
+                    if ($('#item-image-preview-area img')[0].file) {
+			item_image_file_name = $('#item-image-preview-area img')[0].file.name;
+                    } else {
+			item_image_file_name = 'nochange';
                     }
-					else {
-						// error message
-						$("UL#ul-of-subgroup-" + subgroup_id + " li.manager-action").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4>'+data.message+'.</div>');
-					}
-				}
-			});
-			$("#btnAjaxItemSubmit").button('reset');
-
 		}
-	});
+		
+		var ajax_data = {
+                    ajaxVal_Action: action,
+		    ajaxVal_SubgroupID: subgroup_id,
+                    ajaxVal_SubgroupName: subgroup_name,
+                    ajaxVal_ItemID: item_id,
+                    ajaxVal_Order: item_ordering,
+                    ajaxVal_Name: item_name,
+                    ajaxVal_Description: item_description,
+                    ajaxVal_Reference: item_reference,
+                    ajaxVal_MultiSelect: item_multiselect,
+                    ajaxVal_ImageFileName: item_image_file_name
+		};
+		//console.log('ajax data: ');
+		//console.dir(ajax_data);
+		
+		$.ajax({
+                    url: $("#frmAjaxItem").attr('action'),
+		    type: 'GET',
+		    //				data: {
+		    //					ajaxVal_Action: action,
+		    //					ajaxVal_SubgroupID: subgroup_id,
+		    //					ajaxVal_SubgroupName: subgroup_name,
+		    //					ajaxVal_ItemID: item_id,
+		    //					ajaxVal_Order: item_ordering,
+		    //					ajaxVal_Name: item_name,
+		    //					ajaxVal_Description: item_description,
+		    //					ajaxVal_MultiSelect: item_multiselect,
+		    //                    ajaxVal_ImageFileName: item_image_file_name
+		    //				},
+                data: ajax_data,
+                    dataType: 'json',
+		    success: function (data) {
+			// hide and reset form
+			$("#btnAjaxItemCancel").click();
+			$("#btnAjaxSubgroupCancel").click();
+			
+			if (data.status == 'success') {
+			    // remove error messages
+			    $('DIV.alert-error').remove();
+			    
+			    // hide message: 'No items exist.'
+			    $("UL#ul-of-subgroup-" + subgroup_id + " span.noItemsExist").addClass("hide");
+			    
+			    if (data.which_action == 'add-item') {
+				// update element with resultant ajax data
+				$("UL#ul-of-subgroup-" + subgroup_id + " li.manager-action").before(data.html_output);
+			    }
+			    else if (data.which_action == 'edit-item') {
+				//
+				//                            console.log('edit response data: ');
+				//                            console.dir(data);
+				//
+				var currSubID = $("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id");
+				if (currSubID != subgroup_id) {
+				    $('#ul-of-subgroup-' +subgroup_id+' li').last().before($('#list-of-item-' + item_id));
+				}
+				
+				// update button data attributes
+				$("#btn-edit-item-id-" + item_id).attr("data-for-item-name", item_name);
+				$("#btn-edit-item-id-" + item_id).attr("data-for-item-descr", item_description);
+				$("#btn-edit-item-id-" + item_id).attr("data-for-item-ref", item_reference);
+				$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-name", subgroup_name);
+				$("#btn-edit-item-id-" + item_id).attr("data-for-subgroup-id", subgroup_id);
+				
+				// update visible info
+				//$("span#itemid-" + item_id).html("<strong>" + item_name + ": </strong>" + item_description);
+				var infoString = "<strong>" + item_name + "</strong>";
+				    //+ item_description;
+				if (item_description) {
+				    infoString += ' '+item_description;
+				}
+				if (item_reference) {
+				    infoString += ' (<a href="'+item_reference+'">'+item_reference+'</a>)';
+				}
+				$("span#itemid-" + item_id).html(infoString);
 
+				if (data.has_no_image) {
+				    // $("#itemImageSpanFor"+item_id).html('<i>[no image available]</i>');
+				    $("#itemImageSpanFor"+item_id).html(' ');
+				}
+			    }
+			    //                        console.dir($('#item-image-preview-area img'));
+			    if ($('#item-image-preview-area img')[0]) {
+				sendFile($('#item-image-preview-area img')[0].file,data.for_item_id);
+			    }
+			}
+			else {
+			    // error message
+			    $("UL#ul-of-subgroup-" + subgroup_id + " li.manager-action").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4>'+data.message+'.</div>');
+			}
+		    }
+		});
+		$("#btnAjaxItemSubmit").button('reset');
+		
+	    }
+	});
+    
 
     function sendFile(f,item_id) {
 //        alert('sendFile called! Using '+ f.name + ' for item '+item_id);
