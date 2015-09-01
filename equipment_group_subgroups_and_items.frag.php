@@ -170,10 +170,12 @@
 
                 $full_day = false;
                 $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "10H", "12H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
+
                 foreach($durationArray as $dur){
                     if(util_durToInt($dur)>=$Requested_EqGroup->min_duration_minutes && util_durToInt($dur)<=$Requested_EqGroup->max_duration_minutes){
                         //checks that the duration within chunk minutes
-                        if(util_durToInt($dur)%$Requested_EqGroup->duration_chunk_minutes==0) {
+			// NOTE: as of 2015/09/01 this check is disabled - decided to remove the user confusion re: time chunk size for this release
+                        if(TRUE || util_durToInt($dur)%$Requested_EqGroup->duration_chunk_minutes==0) {
                             if($dur=='1D'){
                                 $full_day = true;
                             }
