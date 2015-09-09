@@ -694,11 +694,16 @@ $(document).ready(function () {
 
 	function parseConflicts(data) {
 		var t = "";
+	    if (data.status == 'failure') {
+		t = t + "<strong>Action Failure:</strong><br/>";
+		t = t + data['note'] + "<br /><br />";
+		return t;
+	    }
 		$.each(data, function (id, val) {
-			if (id == "status" && val == "scheduling-conflict") {
-				t = t + "<strong>Scheduling conflicts exist!</strong><br />Managers may override existing reservations (the former are deleted and a message is sent to the original creator).<br /><br />";
-			}
-			else {
+		    if (id == "status" && val == "scheduling-conflict") {
+			t = t + "<strong>Scheduling conflicts exist!</strong><br />Managers may override existing reservations (the former are deleted and a message is sent to the original creator).<br /><br />";
+		    }
+		    else {
 				if (id == "conflicts_by_datetime") {
 					t = t + "<strong>Sorted by datetime:</strong>";
 				}

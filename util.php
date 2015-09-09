@@ -478,17 +478,28 @@
     // convert durations types (5M, 2H, 3D) to integer minute form
     function util_durToInt($schedDur)
     {
-        $intReturn = 1;
-        $length = strlen($schedDur);
+	$processString = preg_replace('/M/','M,',$schedDur);
+	$processString = preg_replace('/H/','H,',$processString);
+	$processString = preg_replace('/D/','D,',$processString);
 
-        if(substr($schedDur, $length-1) == 'M'){
-            $intReturn = intval(substr($schedDur, 0, $length-1));
-        }elseif(substr($schedDur, $length-1) == 'H'){
-            $intReturn = intval(substr($schedDur, 0, $length-1));
-            $intReturn = $intReturn * 60;
-        }elseif(substr($schedDur, $length-1) == 'D'){
-            $intReturn = intval(substr($schedDur, 0, $length-1));
-            $intReturn = $intReturn * 60 * 24;
+//	error_log("|processString is $processString|");
+
+	$processParts = explode(',',$processString);
+
+        $intReturn = 1;
+
+	foreach ($processParts as $schedPart) {
+	  $length = strlen($schedPart);
+	  if ($length < 1) { continue; }
+   	  if (substr($schedPart, $length-1) == 'M'){
+              $intReturn += intval(substr($schedPart, 0, $length-1));
+          }elseif(substr($schedPart, $length-1) == 'H'){
+              $intReturn += intval(substr($schedPart, 0, $length-1)) * 60;
+//              $intReturn = $intReturn * 60;
+          }elseif(substr($schedPart, $length-1) == 'D'){
+              $intReturn += intval(substr($schedPart, 0, $length-1)) * 60 * 24;
+//              $intReturn = $intReturn * 60 * 24;
+          }
         }
 
         return $intReturn;
@@ -497,28 +508,41 @@
     // convert duration types (5M, 2H, 3D) to string form
     function util_durToString($schedDur)
     {
-        $strReturn = '';
-        $length = strlen($schedDur);
+	$processString = preg_replace('/M/','M,',$schedDur);
+	$processString = preg_replace('/H/','H,',$processString);
+	$processString = preg_replace('/D/','D,',$processString);
 
-        if(substr($schedDur, $length-1) == 'M'){
-            $strReturn = substr($schedDur, 0, $length-1);
+//	error_log("|processString is $processString|");
+
+	$processParts = explode(',',$processString);
+
+        $strReturn = '';
+
+	foreach ($processParts as $schedPart) {
+          $length = strlen($schedPart);
+	  if ($length < 1) { continue; }
+
+          if(substr($schedPart, $length-1) == 'M'){
+            $strReturn .= ' '.substr($schedPart, 0, $length-1);
             $strReturn .= ' minutes';
-        }elseif(substr($schedDur, $length-1) == 'H'){
-            $strReturn = substr($schedDur, 0, $length-1);
+          }elseif(substr($schedPart, $length-1) == 'H'){
+            $strReturn .= ' '.substr($schedPart, 0, $length-1);
             $strReturn .= ' hours';
-        }elseif(substr($schedDur, $length-1) == 'D') {
-            if(intval(substr($schedDur,0,$length-1)) == 1){
-                $strReturn = '24 hours';
-            }elseif(intval(substr($schedDur,0,$length-1)) > 7){
-                $strReturn = intval(substr($schedDur, 0, $length - 1))/7;
+          }elseif(substr($schedPart, $length-1) == 'D') {
+            if(intval(substr($schedPart,0,$length-1)) == 1){
+                $strReturn .= ' 1 day';
+            }elseif(intval(substr($schedPart,0,$length-1)) > 7){
+                $strReturn .= ' '.intval(substr($schedPart, 0, $length - 1))/7;
                 $strReturn .= ' weeks';
-            }elseif(intval(substr($schedDur,0,$length-1)) == 7) {
-                $strReturn = '1 week (7 days)';
+            }elseif(intval(substr($schedPart,0,$length-1)) == 7) {
+                $strReturn .= ' 1 week (7 days)';
             }else{
-                $strReturn = substr($schedDur, 0, $length - 1);
+                $strReturn .= ' '.substr($schedPart, 0, $length - 1);
                 $strReturn .= ' days';
             }
-        }
+          }
+	}
+
 
         return $strReturn;
     }
