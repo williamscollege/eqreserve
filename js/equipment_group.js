@@ -1476,4 +1476,8 @@ $(document).ready(function () {
         $(".calendar_day").addClass('hide');
     });
 
+    var cur_day_cell = $('#monthly_calendar_view .day-today');
+    if (cur_day_cell) {
+	cur_day_cell.click();
+    }
 });

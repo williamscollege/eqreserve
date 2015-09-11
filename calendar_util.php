@@ -379,7 +379,8 @@ function renderCalendarCells($month,$year,$schedule)
 	}
 	
 	$cell_title = date('l, F j Y', mktime(10, 10, 10, $month, $list_day, $year));
-        $cells .='<td id = "day_lists" class="'.$cell_classes.'" title="'.$cell_title.'" data-monthnum = "'.$month.'" data-daynum = "'.$list_day.'">';
+	$cell_id = 'day_lists_'.$year.'_'.$month.'_'.$list_day;
+        $cells .='<td id = "'.$cell_id.'" class="'.$cell_classes.'" title="'.$cell_title.'" data-monthnum = "'.$month.'" data-daynum = "'.$list_day.'">';
         /* add in the day number */
         $cells.= '<div class="day-number calendar_header_format">'.$list_day.'</div>';
 
