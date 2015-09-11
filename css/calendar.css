@@ -178,3 +178,11 @@ p.monthly-items-mgr {
     border-radius: 5px;
 }
 
+#calendar-legend {
+    font-size: 12px;
+    float: right;
+}
+
+.legend-box {
+    padding: 2px;
+}

@@ -5,9 +5,13 @@
         <a href="#" class="show_reservation_list btn btn-medium btn-primary">List View</a>
         <a href="#" class="show_reservation_calendar btn btn-medium btn-primary">Monthly Calendar View</a>
     </span>
-</legend>
-<br clear="all" />
 
+    <div id="calendar-legend">
+     <b>legend:</b> <span class="legend-box time-slot-in-use-mgt">manager reservation</span>  <span class="legend-box time-slot-in-use">user reservation</span>
+    </div>
+</legend>
+
+<br clear="all" />
 <ul id="reservationSchedules" class="schedule unstyled hide">
     <?php
     $show_del_control = ($USER->flag_is_system_admin || $is_group_manager);
