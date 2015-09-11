@@ -169,7 +169,7 @@
                 //only shows from the duration array
 
                 $full_day = false;
-                $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "2H30M", "3H", "3H30M", "4H", "4H30M", "5H", "5H30M", "6H", "6H30M", "7H", "7H30M", "8H", "8H30M", "9H", "9H30M", "10H", "10H30M", "11H", "11H30M", "12H", "14H", "16H", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
+                $durationArray = array("5M", "15M", "30M", "45M", "60M", "90M", "2H", "2H30M", "3H", "3H30M", "4H", "4H30M", "5H", "5H30M", "6H", "6H30M", "7H", "7H30M", "8H", "8H30M", "9H", "9H30M", "10H", "10H30M", "11H", "11H30M", "12H", "12H30M", "13H", "13H30M", "14H", "14H30M", "15H", "15H30M", "16H", "16H30M", "17H", "17H30M", "18H", "18H30M", "19H", "19H30M", "20H", "20H30M", "21H", "21H30M", "22H", "22H30M", "23H", "23H30M", "1D", "2D", "3D", "4D", "5D", "6D", "7D", "14D", "28D", "56D");
 
                 foreach($durationArray as $dur){
                     if(util_durToInt($dur)>=$Requested_EqGroup->min_duration_minutes && util_durToInt($dur)<=$Requested_EqGroup->max_duration_minutes){
