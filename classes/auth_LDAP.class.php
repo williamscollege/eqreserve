@@ -104,7 +104,10 @@
                 $filter = "(&(".AUTH_LDAP_FIRSTNAME_ATTR_LABEL."=*" . $term_parts[0] . "*)(".AUTH_LDAP_LASTNAME_ATTR_LABEL."=*" . $term_parts[1] . "*))";
             }
 
+
             $search_results = $this->doLDAPSearch($filter,$this->user_info_attrs);
+
+
 
             if (! $search_results) {
                 return FALSE;
@@ -118,13 +121,12 @@
                     array_key_exists(AUTH_LDAP_USERNAME_ATTR_LABEL,$e)
                     && array_key_exists(AUTH_LDAP_USER_DN_ATTR_LABEL,$e)
                     && array_key_exists(AUTH_LDAP_FIRSTNAME_ATTR_LABEL,$e)
-//                    && array_key_exists(AUTH_LDAP_MIDDLEINITIALS_ATTR_LABEL,$e)
                     && array_key_exists(AUTH_LDAP_LASTNAME_ATTR_LABEL,$e)
-                    && array_key_exists(AUTH_LDAP_FULLNAME_ATTR_LABEL,$e)
                     && array_key_exists(AUTH_LDAP_EMAIL_ATTR_LABEL,$e)
                     && array_key_exists(AUTH_LDAP_GROUPMEMBERSHIP_ATTR_LABEL,$e)
                     ;
             });
+
 
             return array_map(function($e) {
                         return $this->convertAuthInfoToUserDataStructure($e);
@@ -132,6 +134,7 @@
         }
 
         public function doLDAPSearch($filterString,$attrList=[]) {
+
             if (! $this->connectToLDAP()) {
                 return FALSE;
             }
