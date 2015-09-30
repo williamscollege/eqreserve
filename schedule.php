@@ -11,11 +11,20 @@
 //	}
 
 	$SCHED->loadReservationsDeeply();
+	$sched_group_id = '';
+	$sched_group_name = '';
+	foreach ($SCHED->reservations as $r) {
+	    $sched_group_id = $r->eq_item->eq_group->eq_group_id;
+	    $sched_group_name = $r->eq_item->eq_group->name;
+	    if ($sched_group_id) {
+	       break;
+	    }
+	}
 
     require_once('head_output.php');
 ?>
 	<script type="text/javascript">
-		var headToOnScheduleGone = '<?php echo (isset($_REQUEST["returnToEqGroup"]))?('equipment_group.php?eid='.$SCHED->reservations[0]->eq_item->eq_group->eq_group_id):'account_management.php'; ?>';
+		var headToOnScheduleGone = '<?php echo (isset($_REQUEST["returnToEqGroup"]))?('equipment_group.php?eid='.$sched_group_id):'account_management.php'; ?>';
 		var scheduleId = <?php echo $SCHED->schedule_id; ?>;
 	</script>
 	<script type="text/javascript" src="js/schedule.js"></script>
@@ -30,7 +39,9 @@
 		<a href="#" id="toggleEditMode" class="btn btn-medium btn-primary" data-cur-mode="view"><i class="icon-white icon-pencil"></i> Edit</a><?php } ?></legend>
 
 	<div class="control-group">
-		<label class="control-label" for="reservations">Reservations on
+		<label class="control-label" for="reservations"><?php 
+echo $sched_group_name;
+?> reservations on
 			<ul id="time_blocks" class="unstyled">
 				<?php
 					$SCHED->loadTimeBlocks();
@@ -61,7 +72,7 @@
 			else {
 				echo '<p id="sched-is-manager-view" class="view-control text-info"><i class="icon-user"></i> <strong id="sched-is-manager-view-text">This is a regular user schedule</strong></p>';
 			}
-			if ($USER->canManageEqGroup($SCHED->reservations[0]->eq_item->eq_group->eq_group_id)) {
+			if ($USER->canManageEqGroup($sched_group_id)) {
 			    if ($canEditSchedule) {
 				?>
 				<div class="editing-control hide text-warning">
@@ -80,7 +91,8 @@
 		?>
 		<div class="controls">
 			For
-			<a href="equipment_group.php?eid=<?php echo $SCHED->reservations[0]->eq_item->eq_group->eq_group_id; ?>"><?php echo $SCHED->reservations[0]->eq_item->eq_group->name; ?></a>
+			<a href="equipment_group.php?eid=
+<?php echo $sched_group_id; ?>"><?php echo $sched_group_name; ?></a>
 			you have reserved:
 
 			<ul id="reservations">
