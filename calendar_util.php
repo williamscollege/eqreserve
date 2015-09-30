@@ -403,20 +403,27 @@ function renderCalendarCells($month,$year,$schedule)
                             $num_schedules++;
                             break;
                         } elseif ((strtotime(substr($tb->start_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) && (strtotime(substr($tb->end_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day))) {
-                            $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+			    if ($r->eq_item->name) { 
+                           $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
                 start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $mgr_label.$tb->toStringShort() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
+			    }
                         } elseif (strtotime(substr($tb->start_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) {
+			    if ($r->eq_item->name) {
                             $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
                 start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $mgr_label.$tb->toStringStart() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
                             $num_schedules++;
+			    }
                         } elseif (strtotime(substr($tb->end_datetime, 0, 10)) == strtotime($year . '-' . $month . '-' . $list_day)) {
-                            $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
+			    if ($r->eq_item->name) {
+                            $cells .= '<p data-findit="findthisthing" class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
                 start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '">' . $mgr_label.$tb->toStringEnd() .
                                 '<br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';
+
                             $num_schedules++;
+}
                         } else {
                             $cells .= '<p class="'.$sched_block_class.'" id="schedule-' . $sched->schedule_id . '" start-date="' . $sched->start_on_date . '"
                 start-time="' . $sched->timeblock_start_time . '" duration="' . $sched->timeblock_duration . '"> '.$mgr_label.'All Day <br>' . $r->eq_item->eq_subgroup->name . ':<br>' . $r->eq_item->name . '</p>';

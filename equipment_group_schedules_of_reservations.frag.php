@@ -70,7 +70,9 @@
 
                 //Print out the corresponding reservations
                 foreach ($sched->reservations as $r) {
-                    $li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
+		    if ($r->eq_item->name) {
+                        $li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
+		    }
                 }
                 $li .= "</ul></li></span>\n";
                 echo $li;
@@ -100,7 +102,9 @@
                 $li .= "<ul class=\"unstyled\">\n";
                 foreach ($sched->reservations as $r) {
                     //                    util_prePrintR($sched);
-                    $li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
+		    if ($r->eq_item->name) {
+                        $li .= '<li>' . $r->eq_item->eq_subgroup->name . ': ' . $r->eq_item->name . "</li>\n";
+                    }
                 }
                 $li .= "</ul></li></span>\n";
                 echo $li;
