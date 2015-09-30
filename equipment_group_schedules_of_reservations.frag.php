@@ -51,7 +51,7 @@
                     $li .= '<strong><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1"> ' . $output . '</a></strong> by you<br/>';
                 } else {
                     $sched->loadUser();
-                    $li .= '<strong>' . $output . '</strong> by ';
+                    $li .= '<strong><a href="schedule.php?schedule=' . $sched->schedule_id . '&returnToEqGroup=1">' . $output . '</a></strong> by ';
 
                     if (!$sched->user->matchesDb) {
                         $del_user = User::getOneFromDb(['user_id' => $sched->user_id, 'flag_delete' => true], $DB);
