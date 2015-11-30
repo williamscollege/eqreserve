@@ -97,7 +97,12 @@
 			if (! array_key_exists($item_label,$schedule_transpose)) {
 			   $schedule_transpose[$item_label] = [];
 			}
-			array_push($schedule_transpose[$item_label],"$output - $user_label");
+	                if ($sched->type == 'manager') {
+   	                  //$li .= ' class="list-items-mgr">';
+			  array_push($schedule_transpose[$item_label],"<span class=\"list-items-mgr\">$output - $user_label</span>");
+	    		} else {
+			  array_push($schedule_transpose[$item_label],"$output - $user_label");
+			}
 		    }
                 }
                 $li .= "</ul></li></span>\n";
