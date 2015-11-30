@@ -82,13 +82,14 @@ Purpose: CSS that's not an extension / modification of the bootstrap framework
 }
 
 .rendered-object > .render-hover-info {
-    position: fixed;
+    position: relative;
     border: 1px solid #000000;
     background-color: #ddd;
     max-width: 300px;
     margin: 0;
     padding: 8px;
     visibility: hidden;
+    float: right;
 }
 
 .rendered-object:hover > .render-hover-info {
@@ -108,7 +109,7 @@ input[type="checkbox"].comm_pref-checkbox {
     padding-bottom: 5px;
 }
 
-#reservationSchedules > li {
+#reservationSchedules > li .item-listing ul {
     padding-bottom: 7px;
 }
 
@@ -155,6 +156,10 @@ ul.subgroup-ul {
 #btnCancelEditGroup {
     font-size: 36px;
     line-height: 36px;
+}
+
+.mgt-reservation-legend-item-strikethrough {
+    text-decoration: line-through;
 }
 
 /*-------------------------

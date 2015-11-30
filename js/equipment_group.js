@@ -52,6 +52,15 @@ $(document).ready(function () {
 		}
 	}
 
+	$(document).on("click", "#mgt-reservation-legend-item", function(){
+	    $("#mgt-reservation-legend-item").toggleClass("mgt-reservation-legend-item-strikethrough");
+	    if ($("#mgt-reservation-legend-item").hasClass("mgt-reservation-legend-item-strikethrough")) {
+		$(".list-items-mgr").addClass("hide");
+	    } else {
+		$(".list-items-mgr").removeClass("hide");
+	    }
+	});
+
 	//****** related to showing reservations list
 	$(document).on("click", "#show-reservations-buttons .show-this-month", function(){
 		var show_which = $('.show-this-month').attr('data-show-month');
@@ -1365,6 +1374,23 @@ var durationsJSON = '{
     //**********************************
     // Calendar related
 
+    $(document).on("click", "#reservations_view .show_reservation_report", function () {
+        //Successfully gets the calendar day
+        if($('.report').hasClass("hide")){
+            if($('.calendar').hasClass('hide')){
+                $('.calendar_day').addClass('hide');
+            }else{
+                $('.calendar').addClass("hide");
+            }
+            if($('.schedule').hasClass('hide')){
+                $('.calendar_day').addClass('hide');
+            }else{
+                $('.schedule').addClass("hide");
+            }
+            $('.report').removeClass("hide");
+        }
+    });
+
     $(document).on("click", "#reservations_view .show_reservation_list", function () {
         //Successfully gets the calendar day
         if($('.schedule').hasClass("hide")){
@@ -1372,6 +1398,11 @@ var durationsJSON = '{
                 $('.calendar_day').addClass('hide');
             }else{
                 $('.calendar').addClass("hide");
+            }
+            if($('.report').hasClass('hide')){
+                $('.calendar_day').addClass('hide');
+            }else{
+                $('.report').addClass("hide");
             }
             $('.schedule').removeClass("hide");
         }
@@ -1383,6 +1414,11 @@ var durationsJSON = '{
                 $('.calendar_day').addClass('hide');
             }else{
                 $('.schedule').addClass("hide");
+            }
+            if($('.report').hasClass('hide')){
+                $('.calendar_day').addClass('hide');
+            }else{
+                $('.report').addClass("hide");
             }
             $('.calendar').removeClass("hide");
         }
