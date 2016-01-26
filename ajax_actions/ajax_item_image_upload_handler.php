@@ -38,7 +38,7 @@ if (! $ei->matchesDb) {
 }
 
 if ($ei->image_file_name != $_FILES['ajaxVal_file']['name']) {
-    $results['message']       = 'The specified item has a different image associated with it';
+    $results['message']       = 'The specified item has a different image associated with it ("'.$ei->image_file_name.'" vs "'.$_FILES['ajaxVal_file']['name'].'")';
     echo json_encode($results);
     exit;
 }

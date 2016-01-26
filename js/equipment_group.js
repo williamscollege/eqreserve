@@ -446,7 +446,8 @@ $(document).ready(function () {
 					else {
 						// error message
 						$("UL#displayAllSubgroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> </div>');
-					    //console.dir(data);
+					    alert('DEBUG INFO: '+JSON.stringify(data));
+					    console.dir(data);
 					}
 				}
 			});

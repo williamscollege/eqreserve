@@ -519,8 +519,7 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="ajaxItemImage">Image (40K size limit)</label>
-
+                <label class="control-label" for="ajaxItemImage">Image (40K size limit; name uses only letter, number, underscore, and '.')</label>
                 <div class="controls">
                     <input type="file" id="ajaxItemImage" class="input-xlarge" name="ajaxItemImage" value="" placeholder="Image of Item" maxlength="200" />
 <!--                    <input type="text" id="ajaxItemImage" class="input-xlarge" name="ajaxItemImage" value="" placeholder="Image of Item" maxlength="200" /> -->
