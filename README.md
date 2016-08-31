@@ -1,8 +1,6 @@
 # EQRESERVE
-
-**Author:** David Keiser-Clark (dwk2@williams.edu), Office for Information Technology, Williams College
-
-**Author:** Chris Warren, Office for Information Technology, Williams College
+ - **Author:** David Keiser-Clark (dwk2@williams.edu), Office for Information Technology, Williams College
+ - **Author:** Chris Warren, Office for Information Technology, Williams College
 
 ## DESCRIPTION
 An equipment reservation site that allows users to reserve equipment items which are then displayed in list and calendar format.
