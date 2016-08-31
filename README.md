@@ -1,6 +1,7 @@
 # EQRESERVE
 
 **Author:** David Keiser-Clark (dwk2@williams.edu), Office for Information Technology, Williams College
+
 **Author:** Chris Warren, Office for Information Technology, Williams College
 
 ## DESCRIPTION
