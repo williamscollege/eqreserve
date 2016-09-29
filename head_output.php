@@ -46,7 +46,7 @@
 
 			<div class="nav-collapse collapse">
 				<ul class="nav">
-					<li class="active"><a href="/eqreserve/"><i class="icon-home icon-white"></i> Home</a></li>
+					<li class="active"><a href="<?php echo APP_FOLDER; ?>"><i class="icon-home icon-white"></i> Home</a></li>
 					<?php
 						if ($IS_AUTHENTICATED) {
 							# is system admin?

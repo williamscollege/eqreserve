@@ -160,7 +160,7 @@
         }
 
         // TAKES: a username, a password
-        // RETURNS: true if the username and password matches an LDAP entry (i.e. has relevatn data and can bind), false otherwise
+        // RETURNS: true if the username and password matches an LDAP entry (i.e. has relevant data and can bind), false otherwise
 		public function checkLDAP($user = "", $pass = "", $ldap_server = AUTH_SERVER) {
 
 			if (!$user) {
@@ -181,7 +181,7 @@
 
             // try to Sign in NOTE: this is the actual auth check!
             $this->connectToLDAP();
-//            echo $found_user[AUTH_LDAP_USER_DN_ATTR_LABEL];
+            // print_r($found_user[AUTH_LDAP_USER_DN_ATTR_LABEL]); exit;
             $authed_ldap_link = ldap_bind($this->ldap_link, $found_user['auth_identifier'], $pass);
             ldap_close($this->ldap_link);
             if ($authed_ldap_link == FALSE) {

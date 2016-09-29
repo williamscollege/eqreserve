@@ -33,11 +33,12 @@
 			$this->msg   = '';
 			$this->debug = '';
 
-			//echo "authenticating...\n";
-			//echo 'user='.$user."\n";
-			//echo 'TESTINGUSER='.TESTINGUSER."\n";
-			//echo 'pass='.$pass."\n";
-			//echo 'TESTINGPASSWORD='.TESTINGPASSWORD."\n";
+//			echo "authenticating...\n";
+//			echo 'user='.$username."\n";
+//			echo 'TESTINGUSER='.TESTINGUSER."\n";
+//			echo 'pass='.$pass."\n";
+//			echo 'TESTINGPASSWORD='.TESTINGPASSWORD."\n";
+//			exit;
 
 			if (($username == TESTINGUSER) && ($pass == TESTINGPASSWORD)) {
 				$this->fname       = self::$TEST_FNAME;

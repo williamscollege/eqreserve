@@ -5,6 +5,7 @@ require_once('head_output.php');
 
     //use a key that is always true
     $all_users = User::getAllFromDb(['flag_delete'=>0],$DB);
+    usort($all_users, "User::cmp");
 ?>
         <legend>Manage Users</legend>
         <?php

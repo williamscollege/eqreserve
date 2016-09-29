@@ -253,15 +253,28 @@
 						$new_user->flag_is_system_admin = FALSE;
 						$new_user->flag_is_banned       = FALSE;
 						$new_user->flag_delete          = FALSE;
-						$new_user->updateDb();
-						if ($new_user->matchesDb) {
-							$permission_entity_id = $new_user->user_id;
+
+						// START
+						// DKC 20160929 - bug fix attempt to eliminate duplicate user accounts
+						// DKC added check: doublecheck that this user does not currently exist
+						$double_check_to_avoid_duplicate_records = User::getOneFromDb(['username' => $auth_source_data['username']], $DB);
+						if ($double_check_to_avoid_duplicate_records->matchesDb) {
+							// the new ldap user already exists in our local database! no need to create a new record.
+							$permission_entity_id = $double_check_to_avoid_duplicate_records->user_id;
 						}
 						else {
-							$results['note'] = 'failed to create new user from auth data for ' . $permission_username;
-							echo json_encode($results);
-							exit;
+							// DKC: save this original code block
+							$new_user->updateDb();
+							if ($new_user->matchesDb) {
+								$permission_entity_id = $new_user->user_id;
+							}
+							else {
+								$results['note'] = 'failed to create new user from auth data for ' . $permission_username;
+								echo json_encode($results);
+								exit;
+							}
 						}
+						// END
 					}
 					else {
 						$results['note'] = 'failed to get auth data for ' . $permission_username;
